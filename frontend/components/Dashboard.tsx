@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Plus, Search, Filter, Calendar, Clock, CheckCircle, Bell, FileText, TrendingUp } from 'lucide-react'
+import { Plus, Search, Filter, Calendar, Clock, CheckCircle, Bell, FileText, TrendingUp, Circle } from 'lucide-react'
 import { VoiceRecorder } from './VoiceRecorder'
 import { Calendar as CalendarComponent } from './Calendar'
 
