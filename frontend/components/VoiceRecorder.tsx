@@ -107,6 +107,16 @@ export function VoiceRecorder() {
     }
   }, [])
 
+  // Stop recording
+  const stopRecording = useCallback(() => {
+    if (mediaRecorderRef.current && isRecording) {
+      mediaRecorderRef.current.stop()
+      if (streamRef.current) {
+        streamRef.current.getTracks().forEach(track => track.stop())
+      }
+    }
+  }, [isRecording])
+
   // Handle mouse/touch events for press and hold
   const handleMouseDown = useCallback(() => {
     if (!isRecording) {
@@ -125,16 +135,6 @@ export function VoiceRecorder() {
       stopRecording()
     }
   }, [isRecording, stopRecording])
-
-  // Stop recording
-  const stopRecording = useCallback(() => {
-    if (mediaRecorderRef.current && isRecording) {
-      mediaRecorderRef.current.stop()
-      if (streamRef.current) {
-        streamRef.current.getTracks().forEach(track => track.stop())
-      }
-    }
-  }, [isRecording])
 
   // Pause/Resume recording
   const togglePause = useCallback(() => {
