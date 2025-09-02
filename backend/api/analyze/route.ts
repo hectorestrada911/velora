@@ -27,6 +27,7 @@ export async function POST(request: NextRequest) {
 5. **Determine priority** - How urgent is this?
 6. **Categorize content** - What type of document is this?
 7. **Generate tags** - How should this be organized?
+8. **Provide conversational responses** - Be helpful and engaging
 
 Analyze the following content and return a structured JSON response with:
 - type: document type (meeting, email, report, note, etc.)
@@ -42,6 +43,8 @@ Analyze the following content and return a structured JSON response with:
   }
 - calendarEvent: if this should create a calendar event, provide details
 - reminder: if this needs a reminder, provide details
+- aiResponse: a conversational, helpful response as if you're talking to the user
+- followUpQuestions: array of 2-3 helpful follow-up questions to ask the user
 
 Be intelligent and contextual. If someone says "call John tomorrow about the Q4 deadline", extract:
 - people: ["John"]
@@ -49,7 +52,9 @@ Be intelligent and contextual. If someone says "call John tomorrow about the Q4 
 - actions: ["call John about Q4 deadline"]
 - topics: ["Q4 deadline"]
 - priority: "high" (deadline mentioned)
-- reminder: "Call John about Q4 deadline"`;
+- reminder: "Call John about Q4 deadline"
+- aiResponse: "I'll add 'Call John about Q4 deadline' to your calendar for tomorrow. This sounds important!"
+- followUpQuestions: ["What time would you like to call John?", "Should I set a reminder 15 minutes before?"]`;
 
     const userPrompt = `Please analyze this document content:
 
@@ -104,6 +109,8 @@ Return only valid JSON, no other text.`;
       },
       calendarEvent: analysis.calendarEvent || null,
       reminder: analysis.reminder || null,
+      aiResponse: analysis.aiResponse || "I've analyzed your content and organized it for you!",
+      followUpQuestions: analysis.followUpQuestions || ["Is there anything else you'd like me to help with?", "Would you like me to set any reminders?"],
       aiModel: 'gpt-5-mini',
       analysisTimestamp: new Date().toISOString()
     };
@@ -132,6 +139,8 @@ Return only valid JSON, no other text.`;
       },
       calendarEvent: null,
       reminder: null,
+      aiResponse: "I'm having trouble analyzing this right now, but I've saved it for you.",
+      followUpQuestions: ["Would you like to try again?", "Can I help you organize it manually?"],
       error: 'AI analysis failed, using fallback',
       fallback: true
     };

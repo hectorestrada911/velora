@@ -31,6 +31,8 @@ export interface AnalyzedContent {
     priority: string
     description?: string
   }
+  aiResponse?: string
+  followUpQuestions?: string[]
 }
 
 // Priority detection patterns

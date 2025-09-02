@@ -2,7 +2,7 @@
 
 import { useState, useRef, useCallback, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Mic, MicOff, Play, Square, Clock, Save, Edit, Tag, Bell, Type, Keyboard, Calendar, CheckCircle, AlertCircle } from 'lucide-react'
+import { Mic, MicOff, Play, Square, Clock, Save, Edit, Tag, Bell, Type, Keyboard, Calendar, CheckCircle, AlertCircle, Brain } from 'lucide-react'
 import toast from 'react-hot-toast'
 import { analyzeContent, AnalyzedContent } from '@/lib/smartAnalyzer'
 
@@ -284,6 +284,17 @@ export function VoiceRecorder() {
       console.error('Reminder creation error:', error)
       toast.error('Failed to create reminder. Please try again.')
     }
+  }
+
+  // Handle follow-up questions
+  const handleFollowUpQuestion = (question: string) => {
+    // TODO: Implement follow-up question handling
+    console.log('Follow-up question:', question)
+    toast.success(`Processing: ${question}`)
+    
+    // For now, just add it to the text input for the user to respond
+    setTextInput(question)
+    setInputMode('text')
   }
 
   return (
@@ -587,7 +598,7 @@ export function VoiceRecorder() {
                   )}
                   
                   {/* Extracted Data */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                     {analyzedContent.extractedData.people && analyzedContent.extractedData.people.length > 0 && (
                       <div>
                         <h5 className="text-sm font-medium text-gray-300 mb-2">People</h5>
@@ -614,6 +625,48 @@ export function VoiceRecorder() {
                       </div>
                     )}
                   </div>
+
+                  {/* AI Response */}
+                  {analyzedContent.aiResponse && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="mb-4 p-4 bg-blue-500/10 border border-blue-500/20 rounded-lg"
+                    >
+                      <div className="flex items-start space-x-3">
+                        <div className="w-8 h-8 bg-blue-500/20 rounded-full flex items-center justify-center flex-shrink-0">
+                          <Brain className="w-4 h-4 text-blue-400" />
+                        </div>
+                        <div className="flex-1">
+                          <p className="text-blue-100 text-sm leading-relaxed">
+                            {analyzedContent.aiResponse}
+                          </p>
+                        </div>
+                      </div>
+                    </motion.div>
+                  )}
+
+                  {/* Follow-up Questions */}
+                  {analyzedContent.followUpQuestions && analyzedContent.followUpQuestions.length > 0 && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="border-t border-gray-700 pt-4"
+                    >
+                      <h5 className="text-sm font-medium text-gray-300 mb-3">Would you like me to:</h5>
+                      <div className="space-y-2">
+                        {analyzedContent.followUpQuestions.map((question, index) => (
+                          <button
+                            key={index}
+                            onClick={() => handleFollowUpQuestion(question)}
+                            className="w-full text-left p-3 bg-gray-800/50 hover:bg-gray-700/50 rounded-lg border border-gray-700 hover:border-blue-500/30 transition-all duration-200 text-sm text-gray-200 hover:text-blue-100"
+                          >
+                            {question}
+                          </button>
+                        ))}
+                      </div>
+                    </motion.div>
+                  )}
                 </motion.div>
               )}
             </motion.div>

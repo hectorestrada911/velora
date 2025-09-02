@@ -201,6 +201,15 @@ This makes your documents searchable and actionable!`;
     setFiles(prev => prev.filter(f => f.id !== fileId));
   };
 
+  const handleFollowUpQuestion = (question: string) => {
+    // TODO: Implement follow-up question handling
+    console.log('Follow-up question:', question);
+    toast.success(`Processing: ${question}`);
+    
+    // For now, just log the question
+    // In the future, this could trigger additional AI processing
+  };
+
   const getStatusIcon = (status: string) => {
     switch (status) {
       case 'uploading':
@@ -341,6 +350,24 @@ This makes your documents searchable and actionable!`;
                     animate={{ opacity: 1, height: 'auto' }}
                     className="mt-4 pt-4 border-t border-gray-700"
                   >
+                    {/* AI Response */}
+                    {file.analysis.aiResponse && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="mb-4 p-3 bg-blue-500/10 border border-blue-500/20 rounded-lg"
+                      >
+                        <div className="flex items-start space-x-2">
+                          <div className="w-6 h-6 bg-blue-500/20 rounded-full flex items-center justify-center flex-shrink-0">
+                            <Brain className="w-3 h-3 text-blue-400" />
+                          </div>
+                          <p className="text-blue-100 text-sm leading-relaxed">
+                            {file.analysis.aiResponse}
+                          </p>
+                        </div>
+                      </motion.div>
+                    )}
+
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
                       <div>
                         <span className="text-gray-400">Type:</span>
@@ -376,6 +403,28 @@ This makes your documents searchable and actionable!`;
                         </div>
                       </div>
                     </div>
+
+                    {/* Follow-up Questions */}
+                    {file.analysis.followUpQuestions && file.analysis.followUpQuestions.length > 0 && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="mt-4 pt-4 border-t border-gray-700"
+                      >
+                        <h5 className="text-sm font-medium text-gray-300 mb-3">Would you like me to:</h5>
+                        <div className="space-y-2">
+                          {file.analysis.followUpQuestions.map((question: string, index: number) => (
+                            <button
+                              key={index}
+                              onClick={() => handleFollowUpQuestion(question)}
+                              className="w-full text-left p-2 bg-gray-800/50 hover:bg-gray-700/50 rounded-lg border border-gray-700 hover:border-blue-500/30 transition-all duration-200 text-sm text-gray-200 hover:text-blue-100"
+                            >
+                              {question}
+                            </button>
+                          ))}
+                        </div>
+                      </motion.div>
+                    )}
                   </motion.div>
                 )}
               </motion.div>
