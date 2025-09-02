@@ -392,26 +392,26 @@ export function VoiceRecorder() {
                       animate={{ opacity: 1 }}
                       className="text-gray-300 text-lg"
                     >
-                      {isTranscribing ? 'Processing your voice...' : 'Press and hold to record, release when done'}
+                      {isTranscribing ? 'Processing your voice...' : 'Speak what you need to remember. We\'ll never let you forget it.'}
                     </motion.p>
                   )}
                 </>
               ) : (
                 <>
-                  {/* Text Input Interface */}
-                  <div className="text-center">
-                    <div className="w-16 h-16 bg-gradient-to-br from-accent-600 to-accent-500 rounded-full flex items-center justify-center mx-auto mb-4 shadow-glow">
-                      <Keyboard className="w-8 h-8 text-white" />
-                    </div>
-                    
-                    <div className="space-y-4">
-                      <textarea
-                        value={textInput}
-                        onChange={(e) => setTextInput(e.target.value)}
-                        placeholder="Type your thoughts, tasks, or ideas here..."
-                        className="input-field min-h-[120px] resize-none"
-                        disabled={isTranscribing}
-                      />
+                                           {/* Text Input Interface */}
+                         <div className="text-center">
+                           <div className="w-16 h-16 bg-gradient-to-br from-accent-600 to-accent-500 rounded-full flex items-center justify-center mx-auto mb-4 shadow-glow">
+                             <Keyboard className="w-8 h-8 text-white" />
+                           </div>
+
+                           <div className="space-y-4">
+                             <textarea
+                               value={textInput}
+                               onChange={(e) => setTextInput(e.target.value)}
+                               placeholder="Don't let this thought disappear. Type it here and we'll remember it forever..."
+                               className="input-field min-h-[120px] resize-none"
+                               disabled={isTranscribing}
+                             />
                       
                       <button
                         onClick={handleTextSubmit}

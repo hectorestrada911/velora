@@ -109,7 +109,7 @@ export function Calendar({ events = [], onEventClick, onDateClick }: CalendarPro
           ) : (
             <div className="text-center py-8 text-gray-400">
               <CalendarIcon className="w-12 h-12 mx-auto mb-2 opacity-50" />
-              <p>No events for this day</p>
+              <p>Your day is clear. Perfect time to capture new thoughts and ideas!</p>
             </div>
           )}
         </div>
@@ -249,12 +249,12 @@ export function Calendar({ events = [], onEventClick, onDateClick }: CalendarPro
 
   return (
     <div className="bg-background-card rounded-xl p-6 border border-gray-800/50 shadow-card-glow">
-      {/* Header */}
-      <div className="flex items-center justify-between mb-6">
-        <div className="flex items-center space-x-4">
-          <CalendarIcon className="w-6 h-6 text-electric-400" />
-          <h2 className="text-xl font-semibold text-gray-100">Calendar</h2>
-        </div>
+              {/* Header */}
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center space-x-4">
+            <CalendarIcon className="w-6 h-6 text-electric-400" />
+            <h2 className="text-xl font-semibold text-gray-100">Never Miss What Matters</h2>
+          </div>
         
         <div className="flex items-center space-x-2">
           <button

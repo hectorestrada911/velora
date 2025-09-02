@@ -59,8 +59,8 @@ export default function HomePage() {
               transition={{ duration: 0.6 }}
               className="text-5xl md:text-7xl font-bold text-gray-100 mb-6"
             >
-              Speak. We{' '}
-              <span className="text-gradient-primary glow-text">organize.</span>
+              Never Forget Another{' '}
+              <span className="text-gradient-primary glow-text">Thought Again</span>
             </motion.h1>
             
             <motion.p 
@@ -69,7 +69,7 @@ export default function HomePage() {
               transition={{ duration: 0.6, delay: 0.1 }}
               className="text-xl md:text-2xl text-gray-300 mb-12 max-w-3xl mx-auto"
             >
-              Capture ideas and tasks with your voice. Get searchable notes, smart reminders, and a weekly recap—automatically.
+              Your mind is a goldmine of ideas. Don't let them slip away. Speak what you need to remember, and we'll make sure you never lose track of what matters.
             </motion.p>
 
             <motion.div 
@@ -82,7 +82,7 @@ export default function HomePage() {
                 onClick={() => setShowDashboard(true)}
                 className="btn-primary text-lg px-8 py-4 animate-glow"
               >
-                Try Dashboard
+                Start Capturing Your Thoughts
               </button>
             </motion.div>
           </div>
@@ -104,10 +104,10 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-gray-100 mb-4">
-              Why Voice-First Works
+              Stop Losing Your Brilliant Ideas
             </h2>
             <p className="text-xl text-gray-300 max-w-2xl mx-auto">
-              We've learned from the failures of other voice apps. Here's what makes Velora different.
+              Your mind works faster than your fingers. Don't let great thoughts disappear into thin air.
             </p>
           </div>
           
@@ -132,10 +132,10 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-gray-100 mb-4">
-              How It Works
+              Never Miss Another Important Thought
             </h2>
             <p className="text-xl text-gray-300 max-w-2xl mx-auto">
-              Three simple steps to turn your voice into organized, actionable content.
+              Three simple steps to ensure your ideas are captured, organized, and never forgotten.
             </p>
           </div>
 
@@ -150,8 +150,8 @@ export default function HomePage() {
               <div className="w-16 h-16 bg-gradient-to-br from-electric-500 to-electric-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-glow">
                 <span className="text-2xl font-bold text-white">1</span>
               </div>
-              <h3 className="text-xl font-semibold text-gray-100 mb-3">Record</h3>
-              <p className="text-gray-400">Tap and hold to record your thoughts, ideas, or tasks.</p>
+              <h3 className="text-xl font-semibold text-gray-100 mb-3">Capture Everything</h3>
+              <p className="text-gray-400">Speak what's on your mind before it slips away. No more forgotten ideas.</p>
             </motion.div>
 
             <motion.div 
@@ -164,8 +164,8 @@ export default function HomePage() {
               <div className="w-16 h-16 bg-gradient-to-br from-electric-500 to-electric-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-glow">
                 <span className="text-2xl font-bold text-white">2</span>
               </div>
-              <h3 className="text-xl font-semibold text-gray-100 mb-3">Process</h3>
-              <p className="text-gray-400">AI transcribes and extracts tasks, dates, and key information.</p>
+              <h3 className="text-xl font-semibold text-gray-100 mb-3">Smart Processing</h3>
+              <p className="text-gray-400">AI understands what matters and turns your ramblings into actionable insights.</p>
             </motion.div>
 
             <motion.div 
@@ -178,8 +178,8 @@ export default function HomePage() {
               <div className="w-16 h-16 bg-gradient-to-br from-electric-500 to-electric-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-glow">
                 <span className="text-2xl font-bold text-white">3</span>
               </div>
-              <h3 className="text-xl font-semibold text-gray-100 mb-3">Organize</h3>
-              <p className="text-gray-400">Get searchable notes, smart reminders, and weekly summaries.</p>
+              <h3 className="text-xl font-semibold text-gray-100 mb-3">Stay Organized</h3>
+              <p className="text-gray-400">Everything you need, when you need it. Never lose track of what matters again.</p>
             </motion.div>
           </div>
         </div>

@@ -170,16 +170,17 @@ export function Dashboard() {
         </motion.div>
       </div>
 
-      {/* Quick Capture */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.3 }}
-        className="bg-background-card rounded-xl p-6 border border-gray-800/50 shadow-card-glow"
-      >
-        <h3 className="text-lg font-semibold text-gray-100 mb-4">Quick Capture</h3>
-        <VoiceRecorder />
-      </motion.div>
+              {/* Quick Capture */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+          className="bg-background-card rounded-xl p-6 border border-gray-800/50 shadow-card-glow"
+        >
+          <h3 className="text-lg font-semibold text-gray-100 mb-4">Capture Your Thoughts Before They Disappear</h3>
+          <p className="text-gray-400 mb-4">Don't let that brilliant idea slip away. Speak it now and we'll remember it forever.</p>
+          <VoiceRecorder />
+        </motion.div>
 
       {/* Upcoming Reminders */}
       <motion.div
@@ -222,7 +223,7 @@ export function Dashboard() {
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
           <input
             type="text"
-            placeholder="Search notes..."
+            placeholder="Find that thought you had yesterday... or last week... or whenever..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full pl-10 pr-4 py-2 bg-background-elevated border border-gray-700 rounded-lg text-gray-200 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-electric-500 focus:border-transparent"
@@ -332,17 +333,17 @@ export function Dashboard() {
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-100 mb-2">Velora Dashboard</h1>
-          <p className="text-gray-400">Organize your thoughts, tasks, and reminders</p>
+          <h1 className="text-3xl font-bold text-gray-100 mb-2">Your Mind, Perfectly Organized</h1>
+          <p className="text-gray-400">Never lose another brilliant idea. Everything you think, captured and organized.</p>
         </div>
 
         {/* Navigation Tabs */}
         <div className="flex flex-wrap gap-2 mb-8">
           {([
-            { id: 'overview', label: 'Overview', icon: TrendingUp },
-            { id: 'notes', label: 'Notes', icon: FileText },
-            { id: 'reminders', label: 'Reminders', icon: Bell },
-            { id: 'calendar', label: 'Calendar', icon: Calendar }
+            { id: 'overview', label: 'Your Mind at a Glance', icon: TrendingUp },
+            { id: 'notes', label: 'All Your Thoughts', icon: FileText },
+            { id: 'reminders', label: 'Never Forget', icon: Bell },
+            { id: 'calendar', label: 'Stay on Track', icon: Calendar }
           ] as const).map((tab) => (
             <button
               key={tab.id}
