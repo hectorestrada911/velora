@@ -2,8 +2,9 @@
 
 import { useState, useRef, useCallback, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Mic, MicOff, Play, Square, Clock, Save, Edit, Tag, Bell, Type, Keyboard } from 'lucide-react'
+import { Mic, MicOff, Play, Square, Clock, Save, Edit, Tag, Bell, Type, Keyboard, Calendar, CheckCircle, AlertCircle } from 'lucide-react'
 import toast from 'react-hot-toast'
+import { analyzeContent, AnalyzedContent } from '@/lib/smartAnalyzer'
 
 interface TranscriptionResult {
   text: string
@@ -32,6 +33,7 @@ export function VoiceRecorder() {
   const [isTranscribing, setIsTranscribing] = useState(false)
   const [transcription, setTranscription] = useState<TranscriptionResult | null>(null)
   const [parsedContent, setParsedContent] = useState<ParsedContent | null>(null)
+  const [analyzedContent, setAnalyzedContent] = useState<AnalyzedContent | null>(null)
   const [isEditing, setIsEditing] = useState(false)
   const [editedText, setEditedText] = useState('')
   const [showSuggestions, setShowSuggestions] = useState(false)
@@ -172,18 +174,20 @@ export function VoiceRecorder() {
       setTranscription(mockTranscription)
       setEditedText(textInput)
       
-      // Parse content for suggestions
+      // Use smart analyzer to understand the content
+      const analyzed = analyzeContent(textInput)
+      setAnalyzedContent(analyzed)
+      
+      // Convert to legacy format for backward compatibility
       const mockParsed: ParsedContent = {
-        reminders: [
-          {
-            dueAt: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
-            summary: "Text note reminder"
-          }
-        ],
-        tags: ["text-note"],
+        reminders: analyzed.reminder ? [{
+          dueAt: analyzed.reminder.dueDate.toISOString(),
+          summary: analyzed.reminder.title
+        }] : [],
+        tags: analyzed.suggestedTags,
         entities: {
-          people: [],
-          topics: []
+          people: analyzed.extractedData.people || [],
+          topics: analyzed.extractedData.topics || []
         }
       }
       
@@ -216,22 +220,20 @@ export function VoiceRecorder() {
       setTranscription(mockTranscription)
       setEditedText(mockTranscription.text)
       
-      // Parse content for suggestions with improved parsing
+      // Use smart analyzer to understand the content
+      const analyzed = analyzeContent(mockTranscription.text)
+      setAnalyzedContent(analyzed)
+      
+      // Convert to legacy format for backward compatibility
       const mockParsed: ParsedContent = {
-        reminders: [
-          {
-            dueAt: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
-            summary: "Call John about project deadline"
-          },
-          {
-            dueAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
-            summary: "Follow up on project status"
-          }
-        ],
-        tags: ["project", "deadline", "follow-up", "high-priority"],
+        reminders: analyzed.reminder ? [{
+          dueAt: analyzed.reminder.dueDate.toISOString(),
+          summary: analyzed.reminder.title
+        }] : [],
+        tags: analyzed.suggestedTags,
         entities: {
-          people: ["John"],
-          topics: ["project", "deadline", "follow-up"]
+          people: analyzed.extractedData.people || [],
+          topics: analyzed.extractedData.topics || []
         }
       }
       
@@ -497,53 +499,121 @@ export function VoiceRecorder() {
                 </button>
               </div>
 
-              {/* Smart Suggestions */}
-              {showSuggestions && parsedContent && (
+              {/* Smart AI Analysis */}
+              {showSuggestions && analyzedContent && (
                 <motion.div
                   initial={{ opacity: 0, height: 0 }}
                   animate={{ opacity: 1, height: 'auto' }}
-                  className="p-4 bg-electric-900/20 rounded-xl border border-electric-500/30"
+                  className="p-4 bg-background-elevated rounded-xl border border-gray-700"
                 >
-                  <h4 className="font-medium text-electric-300 mb-3">Smart Suggestions</h4>
+                  <h4 className="text-lg font-semibold text-gray-100 mb-3 flex items-center">
+                    <CheckCircle className="w-5 h-5 text-electric-400 mr-2" />
+                    AI Analysis
+                  </h4>
                   
-                  {parsedContent.reminders.length > 0 && (
-                    <div className="mb-4">
-                      <p className="text-sm text-electric-300 mb-2">Detected reminders:</p>
-                      {parsedContent.reminders.map((reminder, index) => (
-                        <div key={index} className="flex items-center justify-between p-3 bg-background-card rounded-lg border border-electric-500/30">
-                          <div>
-                            <p className="font-medium text-gray-200">{reminder.summary}</p>
-                            <p className="text-sm text-gray-400">
-                              {new Date(reminder.dueAt).toLocaleDateString()}
-                            </p>
-                          </div>
-                          <button
-                            onClick={() => handleCreateReminder(reminder)}
-                            className="flex items-center space-x-2 px-3 py-1.5 rounded-lg bg-gradient-to-r from-electric-600 to-electric-500 hover:from-electric-700 hover:to-electric-600 text-white text-sm transition-colors duration-200 shadow-glow"
-                          >
-                            <Bell className="w-4 h-4" />
-                            <span>Set</span>
-                          </button>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-
-                  {parsedContent.tags.length > 0 && (
-                    <div>
-                      <p className="text-sm text-electric-300 mb-2">Suggested tags:</p>
-                      <div className="flex flex-wrap gap-2">
-                        {parsedContent.tags.map((tag, index) => (
-                          <span
-                            key={index}
-                            className="px-3 py-1 bg-electric-900/30 text-electric-300 rounded-full text-sm font-medium border border-electric-500/30"
-                          >
-                            {tag}
-                          </span>
-                        ))}
+                  {/* Content Type & Priority */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <div className="p-3 bg-background-tertiary rounded-lg">
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-sm font-medium text-gray-300">Type</span>
+                        <span className={`px-2 py-1 text-xs rounded-full ${
+                          analyzedContent.type === 'task' ? 'bg-blue-600/20 text-blue-400' :
+                          analyzedContent.type === 'reminder' ? 'bg-yellow-600/20 text-yellow-400' :
+                          analyzedContent.type === 'meeting' ? 'bg-purple-600/20 text-purple-400' :
+                          analyzedContent.type === 'idea' ? 'bg-green-600/20 text-green-400' :
+                          'bg-gray-600/20 text-gray-400'
+                        }`}>
+                          {analyzedContent.type.charAt(0).toUpperCase() + analyzedContent.type.slice(1)}
+                        </span>
                       </div>
+                      <p className="text-gray-200 text-sm">{analyzedContent.summary}</p>
+                    </div>
+                    
+                    <div className="p-3 bg-background-tertiary rounded-lg">
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-sm font-medium text-gray-300">Priority</span>
+                        <span className={`px-2 py-1 text-xs rounded-full ${
+                          analyzedContent.priority === 'urgent' ? 'bg-red-600/20 text-red-400' :
+                          analyzedContent.priority === 'high' ? 'bg-orange-600/20 text-orange-400' :
+                          analyzedContent.priority === 'medium' ? 'bg-yellow-600/20 text-yellow-400' :
+                          'bg-green-600/20 text-green-400'
+                        }`}>
+                          {analyzedContent.priority.charAt(0).toUpperCase() + analyzedContent.priority.slice(1)}
+                        </span>
+                      </div>
+                      <p className="text-gray-200 text-sm">Confidence: {Math.round(analyzedContent.confidence * 100)}%</p>
+                    </div>
+                  </div>
+                  
+                  {/* Calendar Event */}
+                  {analyzedContent.calendarEvent && (
+                    <div className="mb-4 p-3 bg-background-tertiary rounded-lg border-l-4 border-electric-500">
+                      <div className="flex items-center justify-between mb-2">
+                        <h5 className="text-sm font-medium text-gray-300 flex items-center">
+                          <Calendar className="w-4 h-4 mr-2" />
+                          Calendar Event
+                        </h5>
+                        <button className="px-3 py-1 bg-electric-600 hover:bg-electric-700 text-white text-sm rounded-lg transition-colors">
+                          Add to Calendar
+                        </button>
+                      </div>
+                      <p className="text-gray-200 text-sm mb-1">{analyzedContent.calendarEvent.title}</p>
+                      <p className="text-gray-400 text-xs">
+                        {analyzedContent.calendarEvent.startTime.toLocaleDateString()} at {analyzedContent.calendarEvent.startTime.toLocaleTimeString()}
+                      </p>
                     </div>
                   )}
+                  
+                  {/* Reminder */}
+                  {analyzedContent.reminder && (
+                    <div className="mb-4 p-3 bg-background-tertiary rounded-lg border-l-4 border-yellow-500">
+                      <div className="flex items-center justify-between mb-2">
+                        <h5 className="text-sm font-medium text-gray-300 flex items-center">
+                          <Bell className="w-4 h-4 mr-2" />
+                          Reminder
+                        </h5>
+                        <button 
+                          onClick={() => handleCreateReminder(analyzedContent.reminder)}
+                          className="px-3 py-1 bg-yellow-600 hover:bg-yellow-700 text-white text-sm rounded-lg transition-colors"
+                        >
+                          Create Reminder
+                        </button>
+                      </div>
+                      <p className="text-gray-200 text-sm mb-1">{analyzedContent.reminder.title}</p>
+                      <p className="text-gray-400 text-xs">
+                        Due: {analyzedContent.reminder.dueDate.toLocaleDateString()}
+                      </p>
+                    </div>
+                  )}
+                  
+                  {/* Extracted Data */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {analyzedContent.extractedData.people && analyzedContent.extractedData.people.length > 0 && (
+                      <div>
+                        <h5 className="text-sm font-medium text-gray-300 mb-2">People</h5>
+                        <div className="flex flex-wrap gap-2">
+                          {analyzedContent.extractedData.people.map((person, index) => (
+                            <span key={index} className="px-2 py-1 bg-accent-600/20 text-accent-400 text-sm rounded-full">
+                              {person}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                    
+                    {analyzedContent.suggestedTags.length > 0 && (
+                      <div>
+                        <h5 className="text-sm font-medium text-gray-300 mb-2">Tags</h5>
+                        <div className="flex flex-wrap gap-2">
+                          {analyzedContent.suggestedTags.map((tag, index) => (
+                            <span key={index} className="px-2 py-1 bg-electric-600/20 text-electric-400 text-sm rounded-full">
+                              {tag}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
                 </motion.div>
               )}
             </motion.div>
