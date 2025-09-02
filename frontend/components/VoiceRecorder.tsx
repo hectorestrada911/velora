@@ -107,6 +107,25 @@ export function VoiceRecorder() {
     }
   }, [])
 
+  // Handle mouse/touch events for press and hold
+  const handleMouseDown = useCallback(() => {
+    if (!isRecording) {
+      startRecording()
+    }
+  }, [isRecording, startRecording])
+
+  const handleMouseUp = useCallback(() => {
+    if (isRecording) {
+      stopRecording()
+    }
+  }, [isRecording, stopRecording])
+
+  const handleMouseLeave = useCallback(() => {
+    if (isRecording) {
+      stopRecording()
+    }
+  }, [isRecording, stopRecording])
+
   // Stop recording
   const stopRecording = useCallback(() => {
     if (mediaRecorderRef.current && isRecording) {
@@ -189,7 +208,7 @@ export function VoiceRecorder() {
       await new Promise(resolve => setTimeout(resolve, 2000))
       
       const mockTranscription: TranscriptionResult = {
-        text: "This is a sample transcription. Remember to call John tomorrow at 3pm about the project deadline.",
+        text: "This is a sample transcription. Remember to call John tomorrow at 3pm about the project deadline. This is high priority and I need to follow up next week.",
         language: "en",
         confidence: 0.95
       }
@@ -197,18 +216,22 @@ export function VoiceRecorder() {
       setTranscription(mockTranscription)
       setEditedText(mockTranscription.text)
       
-      // Parse content for suggestions
+      // Parse content for suggestions with improved parsing
       const mockParsed: ParsedContent = {
         reminders: [
           {
             dueAt: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
             summary: "Call John about project deadline"
+          },
+          {
+            dueAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
+            summary: "Follow up on project status"
           }
         ],
-        tags: ["project", "deadline", "John"],
+        tags: ["project", "deadline", "follow-up", "high-priority"],
         entities: {
           people: ["John"],
-          topics: ["project", "deadline"]
+          topics: ["project", "deadline", "follow-up"]
         }
       }
       
@@ -304,20 +327,27 @@ export function VoiceRecorder() {
             >
               {inputMode === 'voice' ? (
                 <>
-                  {/* Voice Recording Interface */}
+                  {/* Voice Recording Interface - Press & Hold */}
                   <div className="flex justify-center">
                     <motion.button
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
-                      onClick={isRecording ? stopRecording : startRecording}
+                      onMouseDown={handleMouseDown}
+                      onMouseUp={handleMouseUp}
+                      onMouseLeave={handleMouseLeave}
+                      onTouchStart={handleMouseDown}
+                      onTouchEnd={handleMouseUp}
                       className={`w-24 h-24 rounded-full flex items-center justify-center transition-all duration-300 ${
                         isRecording 
-                          ? 'bg-gradient-to-br from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 shadow-lg shadow-red-500/30' 
+                          ? 'bg-gradient-to-br from-red-500 to-red-600 shadow-lg shadow-red-500/30 animate-pulse' 
                           : 'bg-gradient-to-br from-electric-600 to-electric-500 hover:from-electric-700 hover:to-electric-600 shadow-glow hover:shadow-glow-accent'
                       }`}
                     >
                       {isRecording ? (
-                        <Square className="w-8 h-8 text-white" />
+                        <div className="relative">
+                          <div className="absolute inset-0 w-8 h-8 bg-white rounded-full animate-ping opacity-75"></div>
+                          <Mic className="w-8 h-8 text-white relative z-10" />
+                        </div>
                       ) : (
                         <Mic className="w-8 h-8 text-white" />
                       )}
@@ -362,7 +392,7 @@ export function VoiceRecorder() {
                       animate={{ opacity: 1 }}
                       className="text-gray-300 text-lg"
                     >
-                      {isTranscribing ? 'Processing your voice...' : 'Tap and hold to start recording'}
+                      {isTranscribing ? 'Processing your voice...' : 'Press and hold to record, release when done'}
                     </motion.p>
                   )}
                 </>

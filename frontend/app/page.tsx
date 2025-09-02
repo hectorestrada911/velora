@@ -6,10 +6,16 @@ import { Mic, MicOff, Play, Square, Clock, Search, Bell, Calendar, Download } fr
 import { VoiceRecorder } from '@/components/VoiceRecorder'
 import { FeatureCard } from '@/components/FeatureCard'
 import { PricingSection } from '@/components/PricingSection'
+import { Dashboard } from '@/components/Dashboard'
 import { Header } from '@/components/Header'
 
 export default function HomePage() {
   const [isRecording, setIsRecording] = useState(false)
+  const [showDashboard, setShowDashboard] = useState(false)
+
+  if (showDashboard) {
+    return <Dashboard />
+  }
 
   const features = [
     {
@@ -72,8 +78,11 @@ export default function HomePage() {
               transition={{ duration: 0.6, delay: 0.2 }}
               className="mb-16"
             >
-              <button className="btn-primary text-lg px-8 py-4 animate-glow">
-                Start Capturing
+              <button 
+                onClick={() => setShowDashboard(true)}
+                className="btn-primary text-lg px-8 py-4 animate-glow"
+              >
+                Try Dashboard
               </button>
             </motion.div>
           </div>
