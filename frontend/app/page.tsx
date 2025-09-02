@@ -8,6 +8,7 @@ import { FeatureCard } from '@/components/FeatureCard'
 import { PricingSection } from '@/components/PricingSection'
 import { Dashboard } from '@/components/Dashboard'
 import { Header } from '@/components/Header'
+import FileUpload from '@/components/FileUpload'
 
 export default function HomePage() {
   const [isRecording, setIsRecording] = useState(false)
@@ -95,6 +96,24 @@ export default function HomePage() {
             className="max-w-2xl mx-auto"
           >
             <VoiceRecorder />
+          </motion.div>
+
+          {/* Document Upload Section */}
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8, delay: 0.5 }}
+            className="max-w-4xl mx-auto mt-16"
+          >
+            <div className="text-center mb-8">
+              <h3 className="text-2xl font-semibold text-gray-100 mb-3">
+                Or Upload Documents for AI Analysis
+              </h3>
+              <p className="text-gray-400">
+                Drop PDFs, Word docs, or text files. Our AI will read, understand, and organize everything intelligently.
+              </p>
+            </div>
+            <FileUpload onContentAnalyzed={(data) => console.log('Document analyzed:', data)} />
           </motion.div>
         </div>
       </section>

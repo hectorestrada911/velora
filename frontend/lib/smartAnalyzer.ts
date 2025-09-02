@@ -162,7 +162,7 @@ function determineContentType(text: string): AnalyzedContent['type'] {
         scores[intent as keyof typeof scores] += 1
       }
     })
-  }
+  });
   
   // Find the highest scoring type
   const maxScore = Math.max(...Object.values(scores))
@@ -229,16 +229,20 @@ function extractData(text: string) {
     patterns.forEach(pattern => {
       const matches = text.match(pattern)
       if (matches) {
-        extractedData.topics.push(...matches)
+        if (extractedData.topics) {
+          extractedData.topics.push(...matches)
+        }
       }
     })
-  }
+  })
   
   // Extract actions
   const actionVerbs = ['call', 'email', 'meet', 'review', 'prepare', 'submit', 'follow up', 'check']
   actionVerbs.forEach(verb => {
     if (text.toLowerCase().includes(verb)) {
-      extractedData.actions.push(verb)
+      if (extractedData.actions) {
+        extractedData.actions.push(verb)
+      }
     }
   })
   
@@ -397,7 +401,7 @@ function generateTags(text: string, type: string, extractedData: any): string[] 
   if (text.includes('personal') || text.includes('family') || text.includes('health')) tags.push('personal')
   if (text.includes('idea') || text.includes('brainstorm') || text.includes('innovation')) tags.push('creative')
   
-  return [...new Set(tags)]
+  return Array.from(new Set(tags))
 }
 
 function createCalendarEvent(text: string, extractedData: any, summary: string) {

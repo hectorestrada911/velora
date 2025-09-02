@@ -3,8 +3,10 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Plus, Search, Filter, Calendar, Clock, CheckCircle, Bell, FileText, TrendingUp, Circle } from 'lucide-react'
+import { toast } from 'react-hot-toast'
 import { VoiceRecorder } from './VoiceRecorder'
 import { Calendar as CalendarComponent } from './Calendar'
+import FileUpload from './FileUpload'
 
 interface Note {
   id: string
@@ -28,6 +30,14 @@ export function Dashboard() {
   const [activeTab, setActiveTab] = useState<'overview' | 'notes' | 'reminders' | 'calendar'>('overview')
   const [searchQuery, setSearchQuery] = useState('')
   const [filterType, setFilterType] = useState<'all' | 'voice' | 'text'>('all')
+
+  // Handle file content analysis
+  const handleFileContentAnalyzed = (fileData: any) => {
+    console.log('File analyzed:', fileData);
+    // Here you can add the analyzed content to your notes, reminders, etc.
+    // For now, we'll just log it
+    toast.success(`Document "${fileData.fileName}" analyzed and organized!`);
+  }
 
   // Mock data
   const mockNotes: Note[] = [
@@ -182,11 +192,23 @@ export function Dashboard() {
           <VoiceRecorder />
         </motion.div>
 
+        {/* Document Upload */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4 }}
+          className="bg-background-card rounded-xl p-6 border border-gray-800/50 shadow-card-glow"
+        >
+          <h3 className="text-lg font-semibold text-gray-100 mb-4">Upload Documents for AI Analysis</h3>
+          <p className="text-gray-400 mb-4">Drop PDFs, Word docs, or text files. Our AI will read, understand, and organize everything intelligently.</p>
+          <FileUpload onContentAnalyzed={handleFileContentAnalyzed} />
+        </motion.div>
+
       {/* Upcoming Reminders */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.4 }}
+        transition={{ delay: 0.5 }}
         className="bg-background-card rounded-xl p-6 border border-gray-800/50 shadow-card-glow"
       >
         <div className="flex items-center justify-between mb-4">
