@@ -1,270 +1,104 @@
-# Velora: Cursor Prompt — Build "TalkNotes"
+# Velora - Voice-First Productivity App
 
-> **Voice-First Productivity App** - Capture ideas and tasks with your voice. Get searchable notes, smart reminders, and a weekly recap—automatically.
+A sophisticated voice-first productivity application with dual-input interface (voice + text), smart parsing, and beautiful dark theme.
 
-## 🎯 Project Overview
+## 🏗️ Project Structure
 
-Velora is a sophisticated voice-first productivity application that transforms how you capture and organize your thoughts. Unlike traditional voice apps that failed due to poor UX and limited functionality, Velora focuses on:
+This project is organized into two main parts:
 
-- **Comfortable Voice Experience** - One-tap recording with intelligent auto-stop
-- **Smart Content Processing** - AI-powered transcription + automatic task/reminder extraction
-- **Actionable Organization** - Searchable notes, smart tags, and calendar integration
-- **Privacy-First Design** - Audio deleted after transcription by default
-
-## 🚀 Key Features
-
-### Core Functionality
-- **Voice Recording** - Browser-based recording with MediaRecorder API
-- **AI Transcription** - OpenAI Whisper integration for accurate speech-to-text
-- **Smart Parsing** - Automatic extraction of reminders, dates, and entities
-- **Search & Organization** - Full-text search with tags and filters
-- **Reminder System** - Email + Web Push notifications with calendar sync
-
-### User Experience
-- **Modern UI/UX** - Sophisticated design system with smooth animations
-- **Cross-Platform** - Web-first with mobile-responsive design
-- **Real-time Feedback** - Live transcription status and smart suggestions
-- **Export Options** - Markdown, text, and CSV export capabilities
-
-## 🏗️ Architecture
-
-### Tech Stack
-- **Frontend**: Next.js 14 (App Router), React 18, TypeScript
-- **Styling**: Tailwind CSS with custom design system
-- **Backend**: Next.js API routes, Node.js 18+
-- **Database**: Firebase Firestore
-- **Storage**: Firebase Cloud Storage
-- **Authentication**: Firebase Auth
-- **Payments**: Stripe Checkout
-- **AI**: OpenAI Whisper API
-- **Email**: Resend
-- **Push Notifications**: Web Push API
-
-### Data Models
-```typescript
-// Core entities
-User: { uid, email, plan, settings }
-Note: { id, uid, text, tags, entities, createdAt }
-Reminder: { id, uid, dueAt, status, channel, summary }
-Usage: { uid, monthKey, transcriptionsCount, reminderCount }
+```
+Velora/
+├── frontend/          # Next.js frontend application
+├── backend/           # API routes and backend logic
+└── README.md          # This file
 ```
 
-## 🚀 Getting Started
+## 🚀 Quick Start
 
-### Prerequisites
-- Node.js 18+ 
-- npm or yarn
-- Firebase project
-- OpenAI API key
-- Stripe account
-- Resend account
-
-### Installation
-
-1. **Clone the repository**
-   ```bash
-   git clone <repository-url>
-   cd velora-cursor-prompt
-   ```
-
-2. **Install dependencies**
-   ```bash
-   npm install
-   # or
-   yarn install
-   ```
-
-3. **Environment Setup**
-   ```bash
-   cp env.example .env.local
-   ```
-   
-   Fill in your API keys and configuration:
-   ```env
-   OPENAI_API_KEY=your_openai_key
-   FIREBASE_PROJECT_ID=your_project_id
-   STRIPE_SECRET_KEY=sk_test_...
-   RESEND_API_KEY=re_...
-   ```
-
-4. **Firebase Setup**
-   - Create a new Firebase project
-   - Enable Authentication, Firestore, and Storage
-   - Download service account key
-   - Update environment variables
-
-5. **Run the development server**
-   ```bash
-   npm run dev
-   # or
-   yarn dev
-   ```
-
-6. **Open your browser**
-   Navigate to [http://localhost:3000](http://localhost:3000)
-
-## 🔧 Configuration
-
-### Firebase Security Rules
-```javascript
-// Firestore rules
-rules_version = '2';
-service cloud.firestore {
-  match /databases/{database}/documents {
-    match /users/{userId} {
-      allow read, write: if request.auth != null && request.auth.uid == userId;
-    }
-    match /notes/{noteId} {
-      allow read, write: if request.auth != null && 
-        resource.data.uid == request.auth.uid;
-    }
-  }
-}
-```
-
-### Stripe Webhooks
-Configure webhooks for:
-- `checkout.session.completed`
-- `customer.subscription.updated`
-- `customer.subscription.deleted`
-
-## 📱 Usage
-
-### Recording Voice Notes
-1. **Start Recording** - Tap the microphone button
-2. **Speak Naturally** - Talk about your thoughts, tasks, or ideas
-3. **Auto-Processing** - AI transcribes and extracts actionable items
-4. **Review & Edit** - Edit transcription and confirm suggestions
-5. **Save & Organize** - Save with tags and set reminders
-
-### Smart Features
-- **Automatic Reminder Detection** - "Call John tomorrow at 3pm" → Creates reminder
-- **Entity Extraction** - People, projects, and topics automatically tagged
-- **Context-Aware Suggestions** - Smart recommendations based on content
-- **Search & Filter** - Find notes by content, tags, or date
-
-## 🧪 Testing
-
-### Unit Tests
+### Frontend (Vercel Deployment Ready)
 ```bash
-npm run test
+cd frontend
+npm install
+npm run dev
 ```
+Open [http://localhost:3000](http://localhost:3000)
 
-### E2E Tests
+### Backend (API Routes)
 ```bash
-npm run test:e2e
+cd backend
+npm install
+npm run dev
 ```
+API routes available at `/api/*`
 
-### Test Coverage
-- Parser logic for reminder extraction
-- Voice recorder functionality
-- API endpoint validation
-- Authentication flows
+## ✨ Features
+
+- 🎤 **Voice Recording** - High-quality audio capture with transcription
+- ⌨️ **Text Input** - Alternative input method for quick notes
+- 🎨 **Dark Theme** - Sophisticated UI with electric blue accents
+- 🧠 **Smart Parsing** - AI-powered reminder and tag extraction
+- 💳 **Pricing Plans** - Freemium model with Stripe integration
+- 📱 **Responsive Design** - Works on all devices
+
+## 🛠️ Tech Stack
+
+- **Next.js 14** - React framework with App Router
+- **TypeScript** - Type-safe development
+- **Tailwind CSS** - Utility-first CSS framework
+- **Framer Motion** - Smooth animations
+- **Firebase** - Authentication and database
+- **Stripe** - Payment processing
+- **OpenAI Whisper** - Speech-to-text transcription
+
+## 📁 Directory Details
+
+### Frontend (`/frontend`)
+Contains the complete Next.js application ready for Vercel deployment:
+- React components and pages
+- Tailwind CSS styling
+- TypeScript definitions
+- All UI logic and state management
+
+### Backend (`/backend`)
+Contains API routes and backend logic:
+- `/api/transcribe` - Audio transcription
+- `/api/parse` - Natural language understanding
+- `/api/stripe/checkout` - Payment processing
 
 ## 🚀 Deployment
 
-### Vercel (Recommended)
-1. Connect your GitHub repository
-2. Set environment variables
-3. Deploy automatically on push
+### Frontend to Vercel
+1. Connect your GitHub repository to Vercel
+2. Set the root directory to `frontend`
+3. Deploy automatically on push to main branch
 
-### Manual Deployment
-```bash
-npm run build
-npm start
-```
+### Backend Options
+- Deploy as separate Vercel project
+- Deploy to other platforms (Railway, Render, etc.)
+- Integrate with frontend deployment
 
-### Environment Variables
-Ensure all required environment variables are set in production:
-- API keys for external services
+## 🔧 Development
+
+Each folder has its own `package.json` and dependencies. Work in the appropriate directory for your changes:
+
+- **UI/UX changes** → `frontend/`
+- **API/Backend changes** → `backend/`
+
+## 📝 Environment Variables
+
+Copy `env.example` to `.env.local` in each directory and fill in your API keys:
+- OpenAI API key for transcription
 - Firebase configuration
-- Stripe webhook secrets
-- VAPID keys for push notifications
-
-## 🔒 Security & Privacy
-
-### Data Protection
-- **Encryption**: AES-256 at rest, TLS in transit
-- **Privacy**: Audio deleted after transcription (configurable)
-- **Access Control**: User-specific data isolation
-- **GDPR Compliance**: Data export and deletion capabilities
-
-### Best Practices
-- Rate limiting on API endpoints
-- Input validation and sanitization
-- Secure authentication flows
-- Regular security audits
-
-## 📊 Analytics & Monitoring
-
-### User Metrics
-- Recording session duration
-- Transcription accuracy rates
-- Feature adoption rates
-- User retention metrics
-
-### Technical Monitoring
-- API response times
-- Error rates and types
-- Database performance
-- Service health checks
-
-## 🎨 Design System
-
-### Color Palette
-- **Primary**: Sophisticated blues (#1e40af, #3b82f6)
-- **Accent**: Teal/cyan (#06b6d4)
-- **Neutral**: Clean grays (#f8fafc, #1e293b)
-
-### Components
-- **Buttons**: Rounded with hover states and shadows
-- **Cards**: Elevated with subtle shadows and borders
-- **Forms**: Clean inputs with focus states
-- **Animations**: Smooth transitions and micro-interactions
-
-## 🔮 Roadmap
-
-### Phase 2 (Post-MVP)
-- [ ] Streaming dictation with partial results
-- [ ] Semantic search with embeddings
-- [ ] Notion/Obsidian integration
-- [ ] Mobile PWA with offline support
-- [ ] Team collaboration features
-
-### Phase 3 (Advanced Features)
-- [ ] AI-powered note summarization
-- [ ] Voice command interface
-- [ ] Advanced analytics dashboard
-- [ ] Multi-language support
-- [ ] Enterprise features
+- Stripe keys for payments
+- Resend API key for emails
 
 ## 🤝 Contributing
 
-### Development Guidelines
-1. **Code Style** - Follow TypeScript and React best practices
-2. **Testing** - Write tests for new features
-3. **Documentation** - Update docs for API changes
-4. **Code Review** - All changes require review
-
-### Getting Help
-- **Issues**: Report bugs and feature requests
-- **Discussions**: Ask questions and share ideas
-- **Documentation**: Check the docs first
+1. Fork the repository
+2. Create a feature branch
+3. Make changes in the appropriate directory
+4. Submit a pull request
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🙏 Acknowledgments
-
-- **OpenAI** for Whisper API
-- **Firebase** for backend infrastructure
-- **Stripe** for payment processing
-- **Tailwind CSS** for the design system
-- **Framer Motion** for animations
-
----
-
-**Built with ❤️ by the Velora team**
-
-*Transform your voice into organized, actionable productivity.*
+This project is private and proprietary.
