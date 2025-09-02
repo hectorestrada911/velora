@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "next build --debug",
     "start": "next start",
     "lint": "next lint"
   },
@@ -22,12 +22,12 @@
     "resend": "^2.1.0",
     "web-push": "^3.6.6",
     "date-fns": "^2.30.0",
-    "zod": "^3.22.4"
-  },
-  "devDependencies": {
+    "zod": "^3.22.4",
     "autoprefixer": "^10.4.16",
     "postcss": "^8.4.32",
-    "tailwindcss": "^3.4.0",
+    "tailwindcss": "^3.4.0"
+  },
+  "devDependencies": {
     "eslint": "^8.56.0",
     "eslint-config-next": "14.0.4"
   }
