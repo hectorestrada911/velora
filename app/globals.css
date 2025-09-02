@@ -1,0 +1,107 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  body {
+    @apply bg-background text-gray-100 antialiased;
+    background: linear-gradient(135deg, #0a0a0a 0%, #111111 50%, #1a1a1a 100%);
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-gradient-to-r from-electric-600 to-electric-500 hover:from-electric-700 hover:to-electric-600 text-white font-medium py-3 px-6 rounded-xl transition-all duration-300 shadow-glow hover:shadow-glow-accent transform hover:scale-105;
+  }
+  
+  .btn-secondary {
+    @apply bg-background-elevated hover:bg-background-tertiary text-gray-300 font-medium py-3 px-6 rounded-xl transition-all duration-300 border border-gray-700 hover:border-gray-600;
+  }
+  
+  .card {
+    @apply bg-background-card rounded-2xl shadow-dark border border-gray-800/50 backdrop-blur-sm;
+  }
+  
+  .card-glow {
+    @apply bg-background-card rounded-2xl shadow-glow border border-electric-500/20 backdrop-blur-sm;
+  }
+  
+  .input-field {
+    @apply w-full px-4 py-3 bg-background-elevated border border-gray-700 rounded-xl focus:ring-2 focus:ring-electric-500 focus:border-electric-500 transition-all duration-300 text-gray-100 placeholder-gray-500;
+  }
+  
+  .gradient-bg {
+    background: linear-gradient(135deg, #0a0a0a 0%, #111111 50%, #1a1a1a 100%);
+  }
+  
+  .electric-gradient {
+    background: linear-gradient(135deg, #0ea5e9 0%, #38bdf8 50%, #7dd3fc 100%);
+  }
+  
+  .accent-gradient {
+    background: linear-gradient(135deg, #14b8a6 0%, #2dd4bf 50%, #5eead4 100%);
+  }
+  
+  .glass-effect {
+    @apply backdrop-blur-xl bg-background-card/80 border border-gray-700/50;
+  }
+  
+  .glow-border {
+    @apply border border-electric-500/30 shadow-glow;
+  }
+  
+  .glow-text {
+    text-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
+  }
+}
+
+@layer utilities {
+  .text-gradient {
+    @apply bg-gradient-to-r from-electric-500 to-accent-500 bg-clip-text text-transparent;
+  }
+  
+  .text-gradient-primary {
+    @apply bg-gradient-to-r from-primary-400 to-electric-500 bg-clip-text text-transparent;
+  }
+  
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+  
+  .animate-glow {
+    animation: glow 2s ease-in-out infinite alternate;
+  }
+  
+  .bg-mesh {
+    background-image: 
+      radial-gradient(at 40% 20%, rgba(59, 130, 246, 0.1) 0px, transparent 50%),
+      radial-gradient(at 80% 0%, rgba(20, 184, 166, 0.1) 0px, transparent 50%),
+      radial-gradient(at 0% 50%, rgba(59, 130, 246, 0.1) 0px, transparent 50%),
+      radial-gradient(at 80% 50%, rgba(20, 184, 166, 0.1) 0px, transparent 50%),
+      radial-gradient(at 0% 100%, rgba(59, 130, 246, 0.1) 0px, transparent 50%),
+      radial-gradient(at 80% 100%, rgba(20, 184, 166, 0.1) 0px, transparent 50%),
+      radial-gradient(at 0% 0%, rgba(59, 130, 246, 0.1) 0px, transparent 50%);
+  }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-20px); }
+}
+
+@keyframes glow {
+  0% { 
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+    filter: brightness(1);
+  }
+  100% { 
+    box-shadow: 0 0 30px rgba(59, 130, 246, 0.6);
+    filter: brightness(1.1);
+  }
+}
