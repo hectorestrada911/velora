@@ -90,10 +90,10 @@ function parseContent(text: string): ParsedContent {
 
   return {
     reminders,
-    tags: [...new Set(tags)], // Remove duplicates
+    tags: Array.from(new Set(tags)), // Remove duplicates
     entities: {
-      people: [...new Set(people)],
-      topics: [...new Set(topics)]
+      people: Array.from(new Set(people)),
+      topics: Array.from(new Set(topics))
     }
   }
 }
