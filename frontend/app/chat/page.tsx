@@ -208,67 +208,67 @@ export default function ChatPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background-primary via-background-secondary to-background-tertiary">
+    <div className="min-h-screen bg-black">
       {/* Header */}
-      <header className="bg-background-elevated/50 backdrop-blur-sm border-b border-gray-700/50 p-4">
+      <header className="bg-gray-900/80 backdrop-blur-sm border-b border-gray-700/50 p-3 md:p-4">
         <div className="max-w-6xl mx-auto flex items-center justify-between">
-          <div className="flex items-center space-x-4">
-            <h1 className="text-2xl font-bold bg-gradient-to-r from-electric-400 via-purple-400 to-electric-500 bg-clip-text text-transparent">Velora</h1>
-            <div className="flex items-center space-x-2 text-sm bg-gradient-to-r from-electric-300 via-cyan-300 to-electric-400 bg-clip-text text-transparent">
+          <div className="flex items-center space-x-2 md:space-x-4">
+            <h1 className="text-xl md:text-2xl font-bold bg-gradient-to-r from-electric-400 via-purple-400 to-electric-500 bg-clip-text text-transparent">Velora</h1>
+            <div className="hidden md:flex items-center space-x-2 text-sm bg-gradient-to-r from-electric-300 via-cyan-300 to-electric-400 bg-clip-text text-transparent">
               <Brain className="w-4 h-4" />
               <span>AI Assistant</span>
             </div>
           </div>
           
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-2 md:space-x-4">
             <button 
               onClick={() => window.location.href = '/calendar'}
-              className="p-2 text-gray-400 hover:text-white transition-colors duration-200 hover:bg-background-tertiary rounded-lg"
+              className="p-2 md:p-2 text-gray-400 hover:text-white transition-colors duration-200 hover:bg-gray-800 rounded-lg"
               title="View Calendar"
             >
-              <Calendar className="w-5 h-5" />
+              <Calendar className="w-4 h-4 md:w-5 md:h-5" />
             </button>
             <button 
               onClick={() => window.location.href = '/reminders'}
-              className="p-2 text-gray-400 hover:text-white transition-colors duration-200 hover:bg-background-tertiary rounded-lg"
+              className="p-2 md:p-2 text-gray-400 hover:text-white transition-colors duration-200 hover:bg-gray-800 rounded-lg"
               title="View Reminders"
             >
-              <Bell className="w-5 h-5" />
+              <Bell className="w-4 h-4 md:w-5 md:h-5" />
             </button>
-            <button className="p-2 text-gray-400 hover:text-white transition-colors duration-200 hover:bg-background-tertiary rounded-lg">
-              <Settings className="w-5 h-5" />
+            <button className="p-2 md:p-2 text-gray-400 hover:text-white transition-colors duration-200 hover:bg-gray-800 rounded-lg">
+              <Settings className="w-4 h-4 md:w-5 md:h-5" />
             </button>
           </div>
         </div>
       </header>
 
-      <div className="max-w-6xl mx-auto p-4">
+      <div className="max-w-6xl mx-auto p-3 md:p-4">
         {/* Suggestions */}
         {showSuggestions && messages.length === 0 && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="mb-8"
+            className="mb-6 md:mb-8"
           >
-            <h2 className="text-xl font-semibold text-electric-400 mb-4 text-center">
+            <h2 className="text-lg md:text-xl font-semibold text-electric-400 mb-4 text-center">
               What would you like me to help you with today?
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-3 md:gap-4">
               {suggestions.map((suggestion) => (
                 <motion.button
                   key={suggestion.id}
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   onClick={() => handleSuggestionClick(suggestion)}
-                  className="p-4 bg-background-elevated rounded-xl border border-gray-700 hover:border-gray-600 transition-all duration-200 text-left group"
+                  className="p-3 md:p-4 bg-gray-900 rounded-xl border border-gray-700 hover:border-gray-600 transition-all duration-200 text-left group"
                 >
                   <div className="flex items-center space-x-3">
-                    <div className="w-10 h-10 bg-gradient-to-r from-electric-600 via-purple-600 to-electric-500 rounded-lg flex items-center justify-center text-white group-hover:scale-110 transition-transform duration-200">
+                    <div className="w-8 h-8 md:w-10 md:h-10 bg-gradient-to-r from-electric-600 via-purple-600 to-electric-500 rounded-lg flex items-center justify-center text-white group-hover:scale-110 transition-transform duration-200">
                       {suggestion.icon}
                     </div>
-                    <div>
-                      <p className="text-electric-300 font-medium">{suggestion.text}</p>
-                      <p className="text-gray-400 text-sm capitalize">{suggestion.category}</p>
+                    <div className="flex-1">
+                      <p className="text-electric-300 font-medium text-sm md:text-base">{suggestion.text}</p>
+                      <p className="text-gray-400 text-xs md:text-sm capitalize">{suggestion.category}</p>
                     </div>
                   </div>
                 </motion.button>
@@ -278,7 +278,7 @@ export default function ChatPage() {
         )}
 
         {/* Chat Messages */}
-        <div className="space-y-6 mb-6">
+        <div className="space-y-4 md:space-y-6 mb-20 md:mb-6">
           {messages.map((message) => (
             <motion.div
               key={message.id}
@@ -287,13 +287,13 @@ export default function ChatPage() {
               className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}
             >
               <div
-                className={`max-w-3xl p-4 rounded-2xl ${
+                className={`max-w-[85%] md:max-w-3xl p-3 md:p-4 rounded-xl md:rounded-2xl ${
                   message.type === 'user'
                     ? 'bg-electric-600 text-white'
-                    : 'bg-background-elevated text-gray-200 border border-gray-700'
+                    : 'bg-gray-900 text-gray-200 border border-gray-700'
                 }`}
               >
-                <p className="text-sm leading-relaxed">{message.content}</p>
+                <p className="text-sm md:text-base leading-relaxed">{message.content}</p>
                 
                 {message.analysis && (
                   <div className="mt-3 pt-3 border-t border-gray-600/30">
@@ -302,7 +302,7 @@ export default function ChatPage() {
                       <span>AI Analysis</span>
                     </div>
                     <div className="space-y-2">
-                      <div className="flex items-center space-x-2">
+                      <div className="flex flex-wrap items-center gap-2">
                         <span className="text-xs bg-blue-500/20 text-blue-400 px-2 py-1 rounded-full">
                           {message.analysis.type}
                         </span>
@@ -357,7 +357,7 @@ export default function ChatPage() {
               animate={{ opacity: 1, y: 0 }}
               className="flex justify-start"
             >
-              <div className="bg-background-elevated border border-gray-700 rounded-2xl p-4">
+              <div className="bg-gray-900 border border-gray-700 rounded-xl md:rounded-2xl p-3 md:p-4">
                 <div className="flex items-center space-x-2">
                   <div className="w-2 h-2 bg-electric-400 rounded-full animate-bounce"></div>
                   <div className="w-2 h-2 bg-electric-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
@@ -371,16 +371,16 @@ export default function ChatPage() {
         </div>
 
         {/* Input Area */}
-        <div className="fixed bottom-0 left-0 right-0 bg-background-elevated/80 backdrop-blur-sm border-t border-gray-700/50 p-4">
+        <div className="fixed bottom-0 left-0 right-0 bg-gray-900/95 backdrop-blur-sm border-t border-gray-700/50 p-3 md:p-4">
           <div className="max-w-6xl mx-auto">
-            <div className="flex items-end space-x-4">
+            <div className="flex items-end space-x-3 md:space-x-4">
               <div className="flex-1 relative">
                 <textarea
                   value={inputValue}
                   onChange={(e) => setInputValue(e.target.value)}
                   onKeyPress={handleKeyPress}
                   placeholder="Tell me what you need to remember, schedule, or organize..."
-                  className="w-full bg-background-tertiary border border-gray-600 rounded-xl px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:border-electric-500 focus:ring-1 focus:ring-electric-500 transition-all duration-200 resize-none"
+                  className="w-full bg-gray-800 border border-gray-600 rounded-xl px-3 md:px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:border-electric-500 focus:ring-1 focus:ring-electric-500 transition-all duration-200 resize-none text-sm md:text-base"
                   rows={1}
                   style={{ minHeight: '48px', maxHeight: '120px' }}
                 />
@@ -389,21 +389,21 @@ export default function ChatPage() {
               <div className="flex items-center space-x-2">
                 <button
                   onClick={() => setIsRecording(!isRecording)}
-                  className={`p-3 rounded-xl transition-all duration-200 ${
+                  className={`p-2.5 md:p-3 rounded-xl transition-all duration-200 ${
                     isRecording
                       ? 'bg-red-600 hover:bg-red-700 text-white'
-                      : 'bg-background-tertiary hover:bg-background-secondary text-gray-400 hover:text-white border border-gray-600'
+                      : 'bg-gray-800 hover:bg-gray-700 text-gray-400 hover:text-white border border-gray-600'
                   }`}
                 >
-                  {isRecording ? <MicOff className="w-5 h-5" /> : <Mic className="w-5 h-5" />}
+                  {isRecording ? <MicOff className="w-4 h-4 md:w-5 md:h-5" /> : <Mic className="w-4 h-4 md:w-5 md:h-5" />}
                 </button>
                 
                 <button
                   onClick={handleSendMessage}
                   disabled={!inputValue.trim() || isLoading}
-                  className="p-3 bg-gradient-to-r from-electric-600 via-purple-600 to-electric-500 hover:from-electric-700 hover:via-purple-700 hover:to-electric-600 text-white rounded-xl transition-all duration-200 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+                  className="p-2.5 md:p-3 bg-gradient-to-r from-electric-600 via-purple-600 to-electric-500 hover:from-electric-700 hover:via-purple-700 hover:to-electric-600 text-white rounded-xl transition-all duration-200 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
                 >
-                  <Send className="w-5 h-5" />
+                  <Send className="w-4 h-4 md:w-5 md:h-5" />
                 </button>
               </div>
             </div>
