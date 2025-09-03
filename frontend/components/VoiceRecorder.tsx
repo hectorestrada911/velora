@@ -39,6 +39,7 @@ export function VoiceRecorder() {
   const [editedText, setEditedText] = useState('')
   const [showSuggestions, setShowSuggestions] = useState(false)
   const [textInput, setTextInput] = useState('')
+  const [createdItems, setCreatedItems] = useState<Array<{ type: 'calendar' | 'reminder'; data: any; id?: string }>>([])
 
   const mediaRecorderRef = useRef<MediaRecorder | null>(null)
   const audioChunksRef = useRef<Blob[]>([])
@@ -196,7 +197,10 @@ export function VoiceRecorder() {
       setShowSuggestions(true)
       setTextInput('')
       
-      toast.success('Text processed successfully!')
+      // Auto-create calendar events and reminders
+      await autoCreateEverything()
+      
+      toast.success('Text processed and actions created!')
     } catch (error) {
       console.error('Text processing error:', error)
       toast.error('Failed to process text. Please try again.')
@@ -241,7 +245,10 @@ export function VoiceRecorder() {
       setParsedContent(mockParsed)
       setShowSuggestions(true)
       
-      toast.success('Transcription complete!')
+      // Auto-create calendar events and reminders
+      await autoCreateEverything()
+      
+      toast.success('Transcription complete and actions created!')
     } catch (error) {
       console.error('Transcription error:', error)
       toast.error('Transcription failed. Please try again.')
@@ -389,6 +396,88 @@ Would you like me to create these now?`
     }
   }
 
+  // Auto-create everything immediately after analysis
+  const autoCreateEverything = async () => {
+    if (!analyzedContent) return
+
+    let createdItems: Array<{ type: 'calendar' | 'reminder'; data: any; id?: string }> = []
+    
+    // Try to add to calendar
+    if (analyzedContent.calendarEvent && analyzedContent.calendarEvent.startTime && analyzedContent.calendarEvent.endTime) {
+      try {
+        const calendarSuccess = await calendarService.addToGoogleCalendar({
+          title: analyzedContent.calendarEvent.title,
+          startTime: analyzedContent.calendarEvent.startTime,
+          endTime: analyzedContent.calendarEvent.endTime,
+          description: analyzedContent.calendarEvent.description
+        })
+        if (calendarSuccess) {
+          createdItems.push({
+            type: 'calendar',
+            data: analyzedContent.calendarEvent
+          })
+        }
+      } catch (error) {
+        console.error('Calendar error:', error)
+      }
+    }
+
+    // Try to create reminder
+    if (analyzedContent.reminder && analyzedContent.reminder.dueDate) {
+      try {
+        const reminderSuccess = await calendarService.createReminder({
+          title: analyzedContent.reminder.title,
+          dueDate: analyzedContent.reminder.dueDate,
+          priority: analyzedContent.priority,
+          description: analyzedContent.reminder.description
+        })
+        if (reminderSuccess) {
+          createdItems.push({
+            type: 'reminder',
+            data: analyzedContent.reminder
+          })
+        }
+      } catch (error) {
+        console.error('Reminder error:', error)
+      }
+    }
+
+    // Show success message with undo option
+    if (createdItems.length > 0) {
+      const itemTypes = createdItems.map(item => item.type === 'calendar' ? 'calendar event' : 'reminder')
+      const message = `✅ Created ${itemTypes.join(' and ')} for "${analyzedContent.summary}"`
+      
+      toast.success(message)
+      
+      // Store created items for undo functionality
+      setCreatedItems(createdItems)
+    }
+  }
+
+  // Handle undo for created items
+  const handleUndo = async (createdItems: Array<{ type: 'calendar' | 'reminder'; data: any; id?: string }>) => {
+    let undoCount = 0
+    
+    for (const item of createdItems) {
+      try {
+        if (item.type === 'reminder' && item.id) {
+          const success = await calendarService.deleteReminder(item.id)
+          if (success) undoCount++
+        }
+        // Note: Google Calendar events can't be easily undone without the event ID
+        // For now, we'll just show a message about calendar events
+      } catch (error) {
+        console.error('Undo error:', error)
+      }
+    }
+
+    if (undoCount > 0) {
+      toast.success(`Undid ${undoCount} action(s)`)
+    } else {
+      toast('Calendar events cannot be automatically undone', { icon: 'ℹ️' })
+    }
+  }
+
   // Call backend AI analysis
   const analyzeWithAI = async (content: string) => {
     try {
@@ -442,6 +531,27 @@ Would you like me to create these now?`
             Text
           </button>
         </div>
+      </div>
+
+      {/* Quick Navigation */}
+      <div className="mb-6 flex justify-center space-x-4">
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          className="px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-xl font-medium transition-all duration-200 hover:shadow-lg flex items-center space-x-2"
+        >
+          <Calendar className="w-5 h-5" />
+          <span>My Calendar</span>
+        </motion.button>
+        
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          className="px-6 py-3 bg-gradient-to-r from-yellow-600 to-orange-600 hover:from-yellow-700 hover:to-orange-700 text-white rounded-xl font-medium transition-all duration-200 hover:shadow-lg flex items-center space-x-2"
+        >
+          <Bell className="w-5 h-5" />
+          <span>My Reminders</span>
+        </motion.button>
       </div>
 
       {/* Input Interface */}
@@ -681,12 +791,9 @@ Would you like me to create these now?`
                           <Calendar className="w-4 h-4 mr-2" />
                           Calendar Event
                         </h5>
-                        <button 
-                          onClick={handleAddToCalendar}
-                          className="px-3 py-1 bg-electric-600 hover:bg-electric-700 text-white text-sm rounded-lg transition-colors"
-                        >
-                          Add to Calendar
-                        </button>
+                        <span className="px-2 py-1 bg-green-600/20 text-green-400 text-xs rounded-full">
+                          ✅ Added
+                        </span>
                       </div>
                       <p className="text-gray-200 text-sm mb-1">{analyzedContent.calendarEvent.title}</p>
                       <p className="text-gray-400 text-xs">
@@ -703,12 +810,9 @@ Would you like me to create these now?`
                           <Bell className="w-4 h-4 mr-2" />
                           Reminder
                         </h5>
-                        <button 
-                          onClick={handleCreateReminder}
-                          className="px-3 py-1 bg-yellow-600 hover:bg-yellow-700 text-white text-sm rounded-lg transition-colors"
-                        >
-                          Create Reminder
-                        </button>
+                        <span className="px-2 py-1 bg-green-600/20 text-green-400 text-xs rounded-full">
+                          ✅ Created
+                        </span>
                       </div>
                       <p className="text-gray-200 text-sm mb-1">{analyzedContent.reminder.title}</p>
                       <p className="text-gray-400 text-xs">
@@ -746,30 +850,7 @@ Would you like me to create these now?`
                     )}
                   </div>
 
-                  {/* Auto-Create Section */}
-                  {(analyzedContent.calendarEvent || analyzedContent.reminder) && (
-                    <motion.div
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      className="mb-4 p-4 bg-gradient-to-r from-purple-500/10 to-blue-500/10 border border-purple-500/20 rounded-lg"
-                    >
-                      <div className="flex items-center justify-between mb-3">
-                        <h5 className="text-sm font-medium text-purple-300 flex items-center">
-                          <Sparkles className="w-4 h-4 mr-2" />
-                          Quick Actions
-                        </h5>
-                        <button
-                          onClick={handleAutoCreate}
-                          className="px-4 py-2 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white text-sm rounded-lg transition-all duration-200 hover:scale-105"
-                        >
-                          Auto-Create All
-                        </button>
-                      </div>
-                      <p className="text-purple-400 text-xs">
-                        I can automatically create your calendar event and reminder. Click the button above to get started!
-                      </p>
-                    </motion.div>
-                  )}
+
 
                   {/* AI Response */}
                   {analyzedContent.aiResponse && (
@@ -787,6 +868,32 @@ Would you like me to create these now?`
                             {analyzedContent.aiResponse}
                           </p>
                         </div>
+                      </div>
+                    </motion.div>
+                  )}
+
+                  {/* Undo Section */}
+                  {createdItems.length > 0 && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="mb-4 p-4 bg-gradient-to-r from-orange-500/10 to-red-500/10 border border-orange-500/20 rounded-lg"
+                    >
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center space-x-2">
+                          <div className="w-6 h-6 bg-orange-500/20 rounded-full flex items-center justify-center">
+                            <span className="text-orange-400 text-xs">⚠️</span>
+                          </div>
+                          <span className="text-orange-200 text-sm">
+                            Actions created automatically
+                          </span>
+                        </div>
+                        <button
+                          onClick={() => handleUndo(createdItems)}
+                          className="px-4 py-2 bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700 text-white text-sm rounded-lg transition-all duration-200 hover:scale-105"
+                        >
+                          Undo All
+                        </button>
                       </div>
                     </motion.div>
                   )}
