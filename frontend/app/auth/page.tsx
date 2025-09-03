@@ -60,10 +60,10 @@ export default function AuthPage() {
               transition={{ delay: 0.2 }}
               className="mb-8"
             >
-              <h1 className="text-5xl font-bold text-white mb-3">
+              <h1 className="text-7xl md:text-8xl font-extrabold text-white mb-4 leading-tight">
                 Velora
               </h1>
-              <p className="text-gray-400 text-xl">
+              <p className="text-electric-300 text-2xl md:text-3xl mb-10 font-semibold">
                 Your AI Productivity Assistant
               </p>
             </motion.div>
@@ -75,13 +75,12 @@ export default function AuthPage() {
               transition={{ delay: 0.4 }}
               className="mb-8"
             >
-              <h2 className="text-3xl font-bold text-white mb-6 leading-tight">
+              <h2 className="text-6xl md:text-7xl font-extrabold text-white mb-8 leading-tight">
                 Never Forget Another<br />
                 <span className="text-gradient-primary glow-text">Thought Again</span>
               </h2>
-              <p className="text-gray-300 text-lg leading-relaxed">
-                Your mind is a goldmine of ideas. Don't let them slip away. 
-                Speak what you need to remember, and we'll make sure you never lose track of what matters.
+              <p className="text-gray-300 text-xl md:text-2xl leading-relaxed mb-10">
+                Turn your thoughts into action. Never lose another brilliant idea again.
               </p>
             </motion.div>
 
@@ -96,19 +95,19 @@ export default function AuthPage() {
                 <div className="w-16 h-16 bg-blue-500/20 rounded-full flex items-center justify-center mx-auto mb-3">
                   <Brain className="w-8 h-8 text-blue-400" />
                 </div>
-                <p className="text-gray-400 font-medium">AI Assistant</p>
+                <p className="text-electric-300 text-xl font-semibold">AI Assistant</p>
               </div>
               <div className="text-center">
                 <div className="w-16 h-16 bg-purple-500/20 rounded-full flex items-center justify-center mx-auto mb-3">
                   <Calendar className="w-8 h-8 text-purple-400" />
                 </div>
-                <p className="text-gray-400 font-medium">Smart Calendar</p>
+                <p className="text-purple-300 text-xl font-semibold">Smart Calendar</p>
               </div>
               <div className="text-center">
                 <div className="w-16 h-16 bg-yellow-500/20 rounded-full flex items-center justify-center mx-auto mb-3">
                   <Bell className="w-8 h-8 text-yellow-400" />
                 </div>
-                <p className="text-gray-400 font-medium">Smart Reminders</p>
+                <p className="text-yellow-300 text-xl font-semibold">Smart Reminders</p>
               </div>
             </motion.div>
 
