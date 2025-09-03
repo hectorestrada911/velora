@@ -89,7 +89,6 @@ Return only valid JSON, no other text.`
     const response = await openai.responses.create({
       model: "gpt-5-mini", // Using GPT-5 mini as per your platform
       input: `${systemPrompt}\n\n${userPrompt}`,
-      temperature: 0.3, // Lower temperature for more consistent analysis
     })
 
     const aiResponse = response.output_text
