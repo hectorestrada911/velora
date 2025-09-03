@@ -78,7 +78,7 @@ export default function AuthPage() {
               >
                 Velora
               </motion.h1>
-              <p className="bg-gradient-to-r from-electric-300 via-cyan-300 to-electric-400 bg-clip-text text-transparent text-xl md:text-2xl mb-8 font-semibold">
+              <p className="text-electric-300 text-xl md:text-2xl mb-8 font-semibold">
                 Your AI Productivity Assistant
               </p>
             </motion.div>
@@ -92,9 +92,9 @@ export default function AuthPage() {
             >
               <h2 className="text-4xl md:text-5xl font-extrabold text-white mb-6 leading-tight">
                 Never Forget Another<br />
-                <span className="bg-gradient-to-r from-purple-500 via-pink-500 to-orange-500 bg-clip-text text-transparent glow-text">Thought Again</span>
+                <span className="text-electric-400 glow-text">Thought Again</span>
               </h2>
-              <p className="bg-gradient-to-r from-gray-300 via-gray-200 to-gray-300 bg-clip-text text-transparent text-lg md:text-xl leading-relaxed mb-8">
+              <p className="text-gray-300 text-lg md:text-xl leading-relaxed mb-8">
                 Turn your thoughts into action. Never lose another brilliant idea again.
               </p>
             </motion.div>
@@ -104,25 +104,25 @@ export default function AuthPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.6 }}
-              className="grid grid-cols-3 gap-6 mb-8"
+              className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8"
             >
               <div className="text-center">
-                <div className="w-16 h-16 bg-gradient-to-br from-electric-600/20 to-purple-600/20 rounded-full flex items-center justify-center mx-auto mb-3 border border-electric-500/30">
+                <div className="w-16 h-16 bg-electric-600/20 rounded-full flex items-center justify-center mx-auto mb-3 border border-electric-500/30">
                   <Brain className="w-8 h-8 text-electric-400" />
                 </div>
-                <p className="bg-gradient-to-r from-electric-400 via-cyan-400 to-electric-500 bg-clip-text text-transparent text-lg font-semibold">AI Assistant</p>
+                <p className="text-electric-300 text-lg font-semibold">AI Assistant</p>
               </div>
               <div className="text-center">
-                <div className="w-16 h-16 bg-gradient-to-br from-purple-600/20 to-pink-600/20 rounded-full flex items-center justify-center mx-auto mb-3 border border-purple-500/30">
+                <div className="w-16 h-16 bg-purple-600/20 rounded-full flex items-center justify-center mx-auto mb-3 border border-purple-500/30">
                   <Calendar className="w-8 h-8 text-purple-400" />
                 </div>
-                <p className="bg-gradient-to-r from-purple-400 via-pink-400 to-purple-500 bg-clip-text text-transparent text-lg font-semibold">Smart Calendar</p>
+                <p className="text-purple-300 text-lg font-semibold">Smart Calendar</p>
               </div>
               <div className="text-center">
-                <div className="w-16 h-16 bg-gradient-to-br from-yellow-600/20 to-orange-600/20 rounded-full flex items-center justify-center mx-auto mb-3 border border-yellow-500/30">
+                <div className="w-16 h-16 bg-yellow-600/20 rounded-full flex items-center justify-center mx-auto mb-3 border border-yellow-500/30">
                   <Bell className="w-8 h-8 text-yellow-400" />
                 </div>
-                <p className="bg-gradient-to-r from-yellow-400 via-orange-400 to-yellow-500 bg-clip-text text-transparent text-lg font-semibold">Smart Reminders</p>
+                <p className="text-yellow-300 text-lg font-semibold">Smart Reminders</p>
               </div>
             </motion.div>
 
@@ -135,7 +135,7 @@ export default function AuthPage() {
             >
               <button
                 onClick={() => setAuthMode('signup')}
-                className="w-full bg-gradient-to-r from-electric-600 via-purple-600 to-electric-500 hover:from-electric-700 hover:via-purple-700 hover:to-electric-600 text-white font-semibold py-4 px-6 rounded-xl transition-all duration-200 hover:scale-105 hover:shadow-glow flex items-center justify-center space-x-2"
+                className="w-full bg-electric-600 hover:bg-electric-700 text-white font-semibold py-4 px-6 rounded-xl transition-all duration-200 hover:scale-105 hover:shadow-glow flex items-center justify-center space-x-2"
               >
                 <span>Get Started</span>
                 <ArrowRight className="w-5 h-5" />
@@ -244,10 +244,10 @@ export default function AuthPage() {
           className="bg-background-elevated rounded-2xl p-8 border border-gray-700"
         >
           <div className="text-center mb-8">
-            <h2 className="text-2xl font-bold bg-gradient-to-r from-electric-400 to-purple-400 bg-clip-text text-transparent mb-2">
+            <h2 className="text-2xl font-bold text-electric-400 mb-2">
               {authMode === 'signup' ? 'Create Account' : 'Welcome Back'}
             </h2>
-            <p className="bg-gradient-to-r from-gray-400 via-gray-300 to-gray-400 bg-clip-text text-transparent">
+            <p className="text-gray-300">
               {authMode === 'signup' 
                 ? 'Start your productivity journey with Velora' 
                 : 'Sign in to continue your journey'
@@ -375,10 +375,10 @@ export default function AuthPage() {
               transition={{ delay: 0.3 }}
               className="mb-8"
             >
-              <h2 className="text-3xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-blue-500 bg-clip-text text-transparent mb-3">
+              <h2 className="text-3xl font-bold text-blue-400 mb-3">
                 Reset Your Password
               </h2>
-              <p className="bg-gradient-to-r from-gray-300 via-gray-200 to-gray-300 bg-clip-text text-transparent text-lg leading-relaxed">
+              <p className="text-gray-300 text-lg leading-relaxed">
                 Enter your email address and we'll send you a link to reset your password. 
                 You'll be back to productivity in no time!
               </p>

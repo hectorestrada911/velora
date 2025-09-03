@@ -181,7 +181,7 @@ export default function RemindersView() {
             <motion.h1 
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="text-5xl md:text-6xl font-extrabold bg-gradient-to-r from-yellow-400 via-orange-400 to-yellow-500 bg-clip-text text-transparent mb-3 leading-tight"
+              className="text-5xl md:text-6xl font-extrabold text-yellow-400 mb-3 leading-tight"
             >
               My Reminders
             </motion.h1>
@@ -189,7 +189,7 @@ export default function RemindersView() {
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
-              className="bg-gradient-to-r from-yellow-300 via-orange-300 to-yellow-400 bg-clip-text text-transparent text-xl md:text-2xl font-semibold"
+              className="text-yellow-300 text-xl md:text-2xl font-semibold"
             >
               Never miss an important task or deadline
             </motion.p>
@@ -286,7 +286,7 @@ export default function RemindersView() {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-start justify-between mb-2">
                       <h3 className={`font-semibold ${
-                        reminder.completed ? 'text-gray-500 line-through' : 'bg-gradient-to-r from-electric-400 via-cyan-400 to-electric-500 bg-clip-text text-transparent'
+                        reminder.completed ? 'text-gray-500 line-through' : 'text-electric-400'
                       }`}>
                         {reminder.title}
                       </h3>
@@ -372,7 +372,7 @@ export default function RemindersView() {
                 className="bg-background-elevated rounded-2xl p-6 w-full max-w-md border border-gray-700"
               >
                 <div className="flex items-center justify-between mb-6">
-                  <h3 className="text-xl font-semibold bg-gradient-to-r from-yellow-400 via-orange-400 to-yellow-500 bg-clip-text text-transparent">Add New Reminder</h3>
+                  <h3 className="text-xl font-semibold text-yellow-400">Add New Reminder</h3>
                   <button
                     onClick={() => setShowAddReminder(false)}
                     className="text-gray-400 hover:text-white transition-colors duration-200"

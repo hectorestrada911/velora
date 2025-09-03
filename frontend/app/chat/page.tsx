@@ -226,7 +226,7 @@ export default function ChatPage() {
             animate={{ opacity: 1, y: 0 }}
             className="mb-8"
           >
-            <h2 className="text-xl font-semibold bg-gradient-to-r from-electric-400 via-purple-400 to-electric-500 bg-clip-text text-transparent mb-4 text-center">
+            <h2 className="text-xl font-semibold text-electric-400 mb-4 text-center">
               What would you like me to help you with today?
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -243,7 +243,7 @@ export default function ChatPage() {
                       {suggestion.icon}
                     </div>
                     <div>
-                      <p className="bg-gradient-to-r from-electric-300 via-cyan-300 to-electric-400 bg-clip-text text-transparent font-medium">{suggestion.text}</p>
+                      <p className="text-electric-300 font-medium">{suggestion.text}</p>
                       <p className="text-gray-400 text-sm capitalize">{suggestion.category}</p>
                     </div>
                   </div>
@@ -273,7 +273,7 @@ export default function ChatPage() {
                 
                 {message.analysis && (
                   <div className="mt-3 pt-3 border-t border-gray-600/30">
-                    <div className="flex items-center space-x-2 text-xs bg-gradient-to-r from-electric-300 via-cyan-300 to-electric-400 bg-clip-text text-transparent mb-2">
+                    <div className="flex items-center space-x-2 text-xs text-electric-300 mb-2">
                       <Sparkles className="w-3 h-3" />
                       <span>AI Analysis</span>
                     </div>

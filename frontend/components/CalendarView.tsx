@@ -138,7 +138,7 @@ export default function CalendarView() {
             <motion.h1 
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="text-5xl md:text-6xl font-extrabold bg-gradient-to-r from-electric-400 via-purple-400 to-electric-500 bg-clip-text text-transparent mb-3 leading-tight"
+              className="text-5xl md:text-6xl font-extrabold text-electric-400 mb-3 leading-tight"
             >
               My Calendar
             </motion.h1>
@@ -146,7 +146,7 @@ export default function CalendarView() {
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
-              className="bg-gradient-to-r from-electric-300 via-cyan-300 to-electric-400 bg-clip-text text-transparent text-xl md:text-2xl font-semibold"
+              className="text-electric-300 text-xl md:text-2xl font-semibold"
             >
               Manage your schedule and events
             </motion.p>
@@ -180,7 +180,7 @@ export default function CalendarView() {
             <ChevronLeft className="w-6 h-6" />
           </motion.button>
           
-          <h2 className="text-3xl font-bold bg-gradient-to-r from-purple-400 via-pink-400 to-purple-500 bg-clip-text text-transparent">
+          <h2 className="text-3xl font-bold text-purple-400">
             {monthNames[currentDate.getMonth()]} {currentDate.getFullYear()}
           </h2>
           
@@ -204,9 +204,9 @@ export default function CalendarView() {
           {/* Day Headers */}
           <div className="grid grid-cols-7 gap-2 mb-6">
             {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
-              <div key={day} className="text-center bg-gradient-to-r from-electric-400 via-cyan-400 to-electric-500 bg-clip-text text-transparent font-semibold py-3 text-lg">
-                {day}
-              </div>
+                              <div key={day} className="text-center text-electric-400 font-semibold py-3 text-lg">
+                  {day}
+                </div>
             ))}
           </div>
           
@@ -273,7 +273,7 @@ export default function CalendarView() {
             className="mt-8 bg-background-elevated rounded-2xl p-6 border border-gray-700"
           >
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-xl font-semibold bg-gradient-to-r from-purple-400 via-pink-400 to-purple-500 bg-clip-text text-transparent">
+              <h3 className="text-xl font-semibold text-purple-400">
                 {selectedDate.toLocaleDateString('en-US', { 
                   weekday: 'long', 
                   year: 'numeric', 
@@ -303,7 +303,7 @@ export default function CalendarView() {
                   >
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
-                        <h4 className="bg-gradient-to-r from-electric-400 via-cyan-400 to-electric-500 bg-clip-text text-transparent font-semibold mb-2">{event.title}</h4>
+                        <h4 className="text-electric-400 font-semibold mb-2">{event.title}</h4>
                         {event.description && (
                           <p className="text-gray-300 text-sm mb-2">{event.description}</p>
                         )}
@@ -357,7 +357,7 @@ export default function CalendarView() {
                 className="bg-background-elevated rounded-2xl p-6 w-full max-w-md border border-gray-700"
               >
                 <div className="flex items-center justify-between mb-6">
-                  <h3 className="text-xl font-semibold bg-gradient-to-r from-electric-400 via-purple-400 to-electric-500 bg-clip-text text-transparent">Add New Event</h3>
+                  <h3 className="text-xl font-semibold text-electric-400">Add New Event</h3>
                   <button
                     onClick={() => setShowAddEvent(false)}
                     className="text-gray-400 hover:text-white transition-colors duration-200"
