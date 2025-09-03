@@ -78,7 +78,7 @@ export default function AuthPage() {
               >
                 Velora
               </motion.h1>
-              <p className="text-electric-300 text-xl md:text-2xl mb-8 font-semibold">
+              <p className="bg-gradient-to-r from-electric-300 via-cyan-300 to-electric-400 bg-clip-text text-transparent text-xl md:text-2xl mb-8 font-semibold">
                 Your AI Productivity Assistant
               </p>
             </motion.div>
@@ -94,7 +94,7 @@ export default function AuthPage() {
                 Never Forget Another<br />
                 <span className="bg-gradient-to-r from-purple-500 via-pink-500 to-orange-500 bg-clip-text text-transparent glow-text">Thought Again</span>
               </h2>
-              <p className="text-gray-300 text-lg md:text-xl leading-relaxed mb-8">
+              <p className="bg-gradient-to-r from-gray-300 via-gray-200 to-gray-300 bg-clip-text text-transparent text-lg md:text-xl leading-relaxed mb-8">
                 Turn your thoughts into action. Never lose another brilliant idea again.
               </p>
             </motion.div>
@@ -107,22 +107,22 @@ export default function AuthPage() {
               className="grid grid-cols-3 gap-6 mb-8"
             >
               <div className="text-center">
-                <div className="w-16 h-16 bg-blue-500/20 rounded-full flex items-center justify-center mx-auto mb-3">
-                  <Brain className="w-8 h-8 text-blue-400" />
+                <div className="w-16 h-16 bg-gradient-to-br from-electric-600/20 to-purple-600/20 rounded-full flex items-center justify-center mx-auto mb-3 border border-electric-500/30">
+                  <Brain className="w-8 h-8 text-electric-400" />
                 </div>
-                <p className="text-electric-300 text-lg font-semibold">AI Assistant</p>
+                <p className="bg-gradient-to-r from-electric-400 via-cyan-400 to-electric-500 bg-clip-text text-transparent text-lg font-semibold">AI Assistant</p>
               </div>
               <div className="text-center">
-                <div className="w-16 h-16 bg-purple-500/20 rounded-full flex items-center justify-center mx-auto mb-3">
+                <div className="w-16 h-16 bg-gradient-to-br from-purple-600/20 to-pink-600/20 rounded-full flex items-center justify-center mx-auto mb-3 border border-purple-500/30">
                   <Calendar className="w-8 h-8 text-purple-400" />
                 </div>
-                <p className="text-purple-300 text-lg font-semibold">Smart Calendar</p>
+                <p className="bg-gradient-to-r from-purple-400 via-pink-400 to-purple-500 bg-clip-text text-transparent text-lg font-semibold">Smart Calendar</p>
               </div>
               <div className="text-center">
-                <div className="w-16 h-16 bg-yellow-500/20 rounded-full flex items-center justify-center mx-auto mb-3">
+                <div className="w-16 h-16 bg-gradient-to-br from-yellow-600/20 to-orange-600/20 rounded-full flex items-center justify-center mx-auto mb-3 border border-yellow-500/30">
                   <Bell className="w-8 h-8 text-yellow-400" />
                 </div>
-                <p className="text-yellow-300 text-lg font-semibold">Smart Reminders</p>
+                <p className="bg-gradient-to-r from-yellow-400 via-orange-400 to-yellow-500 bg-clip-text text-transparent text-lg font-semibold">Smart Reminders</p>
               </div>
             </motion.div>
 
@@ -135,7 +135,7 @@ export default function AuthPage() {
             >
               <button
                 onClick={() => setAuthMode('signup')}
-                className="w-full bg-gradient-to-r from-electric-600 to-electric-500 hover:from-electric-700 hover:to-electric-600 text-white font-semibold py-4 px-6 rounded-xl transition-all duration-200 hover:scale-105 hover:shadow-glow flex items-center justify-center space-x-2"
+                className="w-full bg-gradient-to-r from-electric-600 via-purple-600 to-electric-500 hover:from-electric-700 hover:via-purple-700 hover:to-electric-600 text-white font-semibold py-4 px-6 rounded-xl transition-all duration-200 hover:scale-105 hover:shadow-glow flex items-center justify-center space-x-2"
               >
                 <span>Get Started</span>
                 <ArrowRight className="w-5 h-5" />
@@ -191,7 +191,7 @@ export default function AuthPage() {
             <motion.div
               animate={{ y: [-10, 10, -10] }}
               transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-              className="absolute -top-4 -right-4 w-8 h-8 bg-blue-500/30 rounded-full flex items-center justify-center"
+              className="absolute -top-4 -right-4 w-8 h-8 bg-gradient-to-br from-blue-500/40 to-cyan-500/40 rounded-full flex items-center justify-center border border-blue-400/30"
             >
               <Calendar className="w-4 h-4 text-blue-400" />
             </motion.div>
@@ -199,7 +199,7 @@ export default function AuthPage() {
             <motion.div
               animate={{ y: [10, -10, 10] }}
               transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-              className="absolute -bottom-4 -left-4 w-8 h-8 bg-yellow-500/30 rounded-full flex items-center justify-center"
+              className="absolute -bottom-4 -left-4 w-8 h-8 bg-gradient-to-br from-yellow-500/40 to-orange-500/40 rounded-full flex items-center justify-center border border-yellow-400/30"
             >
               <Bell className="w-4 h-4 text-yellow-400" />
             </motion.div>
@@ -207,7 +207,7 @@ export default function AuthPage() {
             <motion.div
               animate={{ y: [-15, 15, -15] }}
               transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut" }}
-              className="absolute top-1/2 -right-8 w-6 h-6 bg-purple-500/30 rounded-full flex items-center justify-center"
+              className="absolute top-1/2 -right-8 w-6 h-6 bg-gradient-to-br from-purple-500/40 to-pink-500/40 rounded-full flex items-center justify-center border border-purple-400/30"
             >
               <Sparkles className="w-3 h-3 text-purple-400" />
             </motion.div>
@@ -244,10 +244,10 @@ export default function AuthPage() {
           className="bg-background-elevated rounded-2xl p-8 border border-gray-700"
         >
           <div className="text-center mb-8">
-            <h2 className="text-2xl font-bold text-white mb-2">
+            <h2 className="text-2xl font-bold bg-gradient-to-r from-electric-400 to-purple-400 bg-clip-text text-transparent mb-2">
               {authMode === 'signup' ? 'Create Account' : 'Welcome Back'}
             </h2>
-            <p className="text-gray-400">
+            <p className="bg-gradient-to-r from-gray-400 via-gray-300 to-gray-400 bg-clip-text text-transparent">
               {authMode === 'signup' 
                 ? 'Start your productivity journey with Velora' 
                 : 'Sign in to continue your journey'
@@ -375,10 +375,10 @@ export default function AuthPage() {
               transition={{ delay: 0.3 }}
               className="mb-8"
             >
-              <h2 className="text-3xl font-bold text-white mb-3">
+              <h2 className="text-3xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-blue-500 bg-clip-text text-transparent mb-3">
                 Reset Your Password
               </h2>
-              <p className="text-gray-300 text-lg leading-relaxed">
+              <p className="bg-gradient-to-r from-gray-300 via-gray-200 to-gray-300 bg-clip-text text-transparent text-lg leading-relaxed">
                 Enter your email address and we'll send you a link to reset your password. 
                 You'll be back to productivity in no time!
               </p>
@@ -411,7 +411,7 @@ export default function AuthPage() {
 
               <button
                 type="submit"
-                className="w-full bg-gradient-to-r from-electric-600 to-electric-500 hover:from-electric-700 hover:to-electric-600 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 hover:scale-105 hover:shadow-glow"
+                className="w-full bg-gradient-to-r from-blue-600 via-purple-600 to-blue-500 hover:from-blue-700 hover:via-purple-700 hover:to-blue-600 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 hover:scale-105 hover:shadow-glow"
               >
                 Send Reset Link
               </button>
@@ -493,7 +493,7 @@ export default function AuthPage() {
                 x: [-5, 5, -5]
               }}
               transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-              className="absolute -top-4 -right-4 w-8 h-8 bg-green-500/30 rounded-full flex items-center justify-center"
+              className="absolute -top-4 -right-4 w-8 h-8 bg-gradient-to-br from-green-500/40 to-emerald-500/40 rounded-full flex items-center justify-center border border-green-400/30"
             >
               <CheckCircle className="w-4 h-4 text-green-400" />
             </motion.div>
@@ -504,7 +504,7 @@ export default function AuthPage() {
                 x: [5, -5, 5]
               }}
               transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-              className="absolute -bottom-4 -left-4 w-8 h-8 bg-purple-500/30 rounded-full flex items-center justify-center"
+              className="absolute -bottom-4 -left-4 w-8 h-8 bg-gradient-to-br from-purple-500/40 to-pink-500/40 rounded-full flex items-center justify-center border border-purple-400/30"
             >
               <Sparkles className="w-4 h-4 text-purple-400" />
             </motion.div>
@@ -518,7 +518,7 @@ export default function AuthPage() {
                 y: { duration: 3.5, repeat: Infinity, ease: "easeInOut" },
                 rotate: { duration: 8, repeat: Infinity, ease: "linear" }
               }}
-              className="absolute top-1/2 -right-8 w-6 h-6 bg-yellow-500/30 rounded-full flex items-center justify-center"
+              className="absolute top-1/2 -right-8 w-6 h-6 bg-gradient-to-br from-yellow-500/40 to-orange-500/40 rounded-full flex items-center justify-center border border-yellow-400/30"
             >
               <Clock className="w-3 h-3 text-yellow-400" />
             </motion.div>
