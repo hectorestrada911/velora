@@ -69,6 +69,14 @@ export default function ChatPage() {
     setShowSuggestions(false)
   }
 
+  const handleFollowUpQuestion = (question: string) => {
+    setInputValue(question)
+    // Automatically send the follow-up question
+    setTimeout(() => {
+      handleSendMessage()
+    }, 100)
+  }
+
   const handleSendMessage = async () => {
     if (!inputValue.trim()) return
 
@@ -85,40 +93,56 @@ export default function ChatPage() {
     setShowSuggestions(false)
 
     try {
-      // Simulate AI response and analysis
-      await new Promise(resolve => setTimeout(resolve, 1500))
+      // Call real AI backend
+      const response = await fetch('/api/analyze', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ content: inputValue }),
+      })
+
+      if (!response.ok) {
+        throw new Error('AI analysis failed')
+      }
+
+      const analysis = await response.json()
       
       const aiMessage: Message = {
         id: (Date.now() + 1).toString(),
         type: 'ai',
-        content: `I've analyzed your request: "${inputValue}" and created the necessary items.`,
+        content: analysis.aiResponse || `I've analyzed your request: "${inputValue}"`,
         timestamp: new Date(),
-        analysis: {
-          type: 'task',
-          priority: 'medium',
-          summary: inputValue,
-          calendarEvent: {
-            title: inputValue,
-            startTime: new Date(Date.now() + 24 * 60 * 60 * 1000), // Tomorrow
-            endTime: new Date(Date.now() + 24 * 60 * 60 * 1000 + 60 * 60 * 1000), // 1 hour later
-            description: inputValue
-          },
-          reminder: {
-            title: inputValue,
-            dueDate: new Date(Date.now() + 24 * 60 * 60 * 1000),
-            description: inputValue
-          }
-        }
+        analysis: analysis
       }
 
       setMessages(prev => [...prev, aiMessage])
       
-      // Auto-create calendar event and reminder
-      await autoCreateFromMessage(aiMessage.analysis)
+      // Auto-create calendar event and reminder if AI suggests them
+      if (analysis.calendarEvent || analysis.reminder) {
+        await autoCreateFromMessage(analysis)
+      }
       
     } catch (error) {
       console.error('Error processing message:', error)
-      toast.error('Failed to process message')
+      
+      // Fallback message if AI fails
+      const fallbackMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        type: 'ai',
+        content: "I'm having trouble processing that right now, but I've saved your message. Can you try rephrasing?",
+        timestamp: new Date(),
+        analysis: {
+          type: 'note',
+          priority: 'medium',
+          summary: inputValue,
+          calendarEvent: null,
+          reminder: null
+        }
+      }
+      
+      setMessages(prev => [...prev, fallbackMessage])
+      toast.error('AI processing failed, please try again')
     } finally {
       setIsLoading(false)
     }
@@ -299,6 +323,24 @@ export default function ChatPage() {
                         </div>
                       )}
                     </div>
+                    
+                    {/* Follow-up Questions */}
+                    {message.analysis.followUpQuestions && message.analysis.followUpQuestions.length > 0 && (
+                      <div className="mt-3 pt-3 border-t border-gray-600/30">
+                        <p className="text-xs text-gray-400 mb-2">Follow-up questions:</p>
+                        <div className="space-y-2">
+                          {message.analysis.followUpQuestions.map((question: string, index: number) => (
+                            <button
+                              key={index}
+                              onClick={() => handleFollowUpQuestion(question)}
+                              className="block w-full text-left text-xs text-electric-300 hover:text-electric-400 p-2 rounded-lg hover:bg-electric-500/10 transition-colors duration-200"
+                            >
+                              {question}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    )}
                   </div>
                 )}
                 
