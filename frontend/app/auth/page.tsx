@@ -74,7 +74,7 @@ export default function AuthPage() {
                   repeat: Infinity, 
                   ease: "easeInOut" 
                 }}
-                className="text-6xl md:text-7xl font-black text-gradient-primary glow-text mb-4 leading-tight"
+                className="text-6xl md:text-7xl font-bold text-gradient-primary glow-text mb-4 leading-tight"
               >
                 Velora
               </motion.h1>
