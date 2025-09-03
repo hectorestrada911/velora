@@ -193,7 +193,9 @@ This makes your documents searchable and actionable!`;
         dates: [],
         actions: [],
         topics: []
-      }
+      },
+      aiResponse: "I've analyzed your document and organized it for you!",
+      followUpQuestions: ["Would you like me to create any reminders?", "Should I add this to your calendar?"]
     };
   };
 

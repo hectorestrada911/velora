@@ -2,9 +2,10 @@
 
 import { useState, useRef, useCallback, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Mic, MicOff, Play, Square, Clock, Save, Edit, Tag, Bell, Type, Keyboard, Calendar, CheckCircle, AlertCircle, Brain } from 'lucide-react'
+import { Mic, MicOff, Play, Square, Clock, Save, Edit, Tag, Bell, Type, Keyboard, Calendar, CheckCircle, AlertCircle, Brain, Sparkles } from 'lucide-react'
 import toast from 'react-hot-toast'
 import { analyzeContent, AnalyzedContent } from '@/lib/smartAnalyzer'
+import { calendarService } from '@/lib/calendarService'
 
 interface TranscriptionResult {
   text: string
@@ -174,8 +175,8 @@ export function VoiceRecorder() {
       setTranscription(mockTranscription)
       setEditedText(textInput)
       
-      // Use smart analyzer to understand the content
-      const analyzed = analyzeContent(textInput)
+      // Use AI analysis to understand the content
+      const analyzed = await analyzeWithAI(textInput)
       setAnalyzedContent(analyzed)
       
       // Convert to legacy format for backward compatibility
@@ -220,8 +221,8 @@ export function VoiceRecorder() {
       setTranscription(mockTranscription)
       setEditedText(mockTranscription.text)
       
-      // Use smart analyzer to understand the content
-      const analyzed = analyzeContent(mockTranscription.text)
+      // Use AI analysis to understand the content
+      const analyzed = await analyzeWithAI(mockTranscription.text)
       setAnalyzedContent(analyzed)
       
       // Convert to legacy format for backward compatibility
@@ -272,19 +273,7 @@ export function VoiceRecorder() {
     }
   }
 
-  // Create reminder
-  const handleCreateReminder = async (reminder: any) => {
-    try {
-      // Simulate API call - replace with actual reminder endpoint
-      await new Promise(resolve => setTimeout(resolve, 1000))
-      
-      toast.success(`Reminder set for ${new Date(reminder.dueAt).toLocaleDateString()}`)
-      setShowSuggestions(false)
-    } catch (error) {
-      console.error('Reminder creation error:', error)
-      toast.error('Failed to create reminder. Please try again.')
-    }
-  }
+
 
   // Handle follow-up questions
   const handleFollowUpQuestion = (question: string) => {
@@ -295,6 +284,134 @@ export function VoiceRecorder() {
     // For now, just add it to the text input for the user to respond
     setTextInput(question)
     setInputMode('text')
+  }
+
+  // Handle adding to calendar
+  const handleAddToCalendar = async () => {
+    if (!analyzedContent?.calendarEvent || !analyzedContent.calendarEvent.startTime || !analyzedContent.calendarEvent.endTime) {
+      toast.error('No valid calendar event found to add')
+      return
+    }
+
+    try {
+      const success = await calendarService.addToGoogleCalendar({
+        title: analyzedContent.calendarEvent.title,
+        startTime: analyzedContent.calendarEvent.startTime,
+        endTime: analyzedContent.calendarEvent.endTime,
+        description: analyzedContent.calendarEvent.description
+      })
+
+      if (success) {
+        toast.success('Added to Google Calendar!')
+      } else {
+        toast.error('Failed to add to calendar')
+      }
+    } catch (error) {
+      console.error('Calendar error:', error)
+      toast.error('Failed to add to calendar')
+    }
+  }
+
+  // Handle creating reminder
+  const handleCreateReminder = async () => {
+    if (!analyzedContent?.reminder || !analyzedContent.reminder.dueDate) {
+      toast.error('No valid reminder found to create')
+      return
+    }
+
+    try {
+      const success = await calendarService.createReminder({
+        title: analyzedContent.reminder.title,
+        dueDate: analyzedContent.reminder.dueDate,
+        priority: analyzedContent.priority,
+        description: analyzedContent.reminder.description
+      })
+
+      if (success) {
+        toast.success('Reminder created successfully!')
+      } else {
+        toast.error('Failed to create reminder')
+      }
+    } catch (error) {
+      console.error('Reminder error:', error)
+      toast.error('Failed to create reminder')
+    }
+  }
+
+  // Auto-create calendar event and reminder with user confirmation
+  const handleAutoCreate = async () => {
+    if (!analyzedContent) return
+
+    const confirmMessage = `I can automatically create:
+• Calendar event: ${analyzedContent.calendarEvent?.title || 'N/A'}
+• Reminder: ${analyzedContent.reminder?.title || 'N/A'}
+
+Would you like me to create these now?`
+
+    if (window.confirm(confirmMessage)) {
+      let successCount = 0
+      
+      // Try to add to calendar
+      if (analyzedContent.calendarEvent && analyzedContent.calendarEvent.startTime && analyzedContent.calendarEvent.endTime) {
+        try {
+          const calendarSuccess = await calendarService.addToGoogleCalendar({
+            title: analyzedContent.calendarEvent.title,
+            startTime: analyzedContent.calendarEvent.startTime,
+            endTime: analyzedContent.calendarEvent.endTime,
+            description: analyzedContent.calendarEvent.description
+          })
+          if (calendarSuccess) successCount++
+        } catch (error) {
+          console.error('Calendar error:', error)
+        }
+      }
+
+      // Try to create reminder
+      if (analyzedContent.reminder && analyzedContent.reminder.dueDate) {
+        try {
+          const reminderSuccess = await calendarService.createReminder({
+            title: analyzedContent.reminder.title,
+            dueDate: analyzedContent.reminder.dueDate,
+            priority: analyzedContent.priority,
+            description: analyzedContent.reminder.description
+          })
+          if (reminderSuccess) successCount++
+        } catch (error) {
+          console.error('Reminder error:', error)
+        }
+      }
+
+      if (successCount > 0) {
+        toast.success(`Successfully created ${successCount} item(s)!`)
+      } else {
+        toast.error('Failed to create items')
+      }
+    }
+  }
+
+  // Call backend AI analysis
+  const analyzeWithAI = async (content: string) => {
+    try {
+      // Use environment variable for API URL, fallback to relative path
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || '/api/analyze';
+      const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ content }),
+      });
+
+      if (!response.ok) {
+        throw new Error('AI analysis failed');
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error('AI analysis error:', error);
+      // Fallback to local analysis
+      return analyzeContent(content);
+    }
   }
 
   return (
@@ -564,7 +681,10 @@ export function VoiceRecorder() {
                           <Calendar className="w-4 h-4 mr-2" />
                           Calendar Event
                         </h5>
-                        <button className="px-3 py-1 bg-electric-600 hover:bg-electric-700 text-white text-sm rounded-lg transition-colors">
+                        <button 
+                          onClick={handleAddToCalendar}
+                          className="px-3 py-1 bg-electric-600 hover:bg-electric-700 text-white text-sm rounded-lg transition-colors"
+                        >
                           Add to Calendar
                         </button>
                       </div>
@@ -584,7 +704,7 @@ export function VoiceRecorder() {
                           Reminder
                         </h5>
                         <button 
-                          onClick={() => handleCreateReminder(analyzedContent.reminder)}
+                          onClick={handleCreateReminder}
                           className="px-3 py-1 bg-yellow-600 hover:bg-yellow-700 text-white text-sm rounded-lg transition-colors"
                         >
                           Create Reminder
@@ -625,6 +745,31 @@ export function VoiceRecorder() {
                       </div>
                     )}
                   </div>
+
+                  {/* Auto-Create Section */}
+                  {(analyzedContent.calendarEvent || analyzedContent.reminder) && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="mb-4 p-4 bg-gradient-to-r from-purple-500/10 to-blue-500/10 border border-purple-500/20 rounded-lg"
+                    >
+                      <div className="flex items-center justify-between mb-3">
+                        <h5 className="text-sm font-medium text-purple-300 flex items-center">
+                          <Sparkles className="w-4 h-4 mr-2" />
+                          Quick Actions
+                        </h5>
+                        <button
+                          onClick={handleAutoCreate}
+                          className="px-4 py-2 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white text-sm rounded-lg transition-all duration-200 hover:scale-105"
+                        >
+                          Auto-Create All
+                        </button>
+                      </div>
+                      <p className="text-purple-400 text-xs">
+                        I can automatically create your calendar event and reminder. Click the button above to get started!
+                      </p>
+                    </motion.div>
+                  )}
 
                   {/* AI Response */}
                   {analyzedContent.aiResponse && (

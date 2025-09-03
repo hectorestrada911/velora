@@ -143,7 +143,9 @@ export function analyzeContent(text: string): AnalyzedContent {
     summary,
     suggestedTags,
     calendarEvent,
-    reminder
+    reminder,
+    aiResponse: generateAIResponse(text, type, extractedData),
+    followUpQuestions: generateFollowUpQuestions(text, type, extractedData)
   }
 }
 
@@ -446,4 +448,46 @@ function calculateConfidence(text: string, type: string, extractedData: any): nu
   if (text.length > 100) confidence += 0.1
   
   return Math.min(confidence, 1.0)
+}
+
+function generateAIResponse(text: string, type: string, extractedData: any): string {
+  const people = extractedData.people?.length > 0 ? extractedData.people.join(', ') : 'you'
+  const dueDate = extractedData.dueDate ? ` by ${extractedData.dueDate.toLocaleDateString()}` : ''
+  
+  switch (type) {
+    case 'task':
+      return `I've identified this as a task for ${people}${dueDate}. This sounds important!`
+    case 'reminder':
+      return `I'll set a reminder for ${people}${dueDate}. Don't worry, I won't let you forget!`
+    case 'meeting':
+      return `I've detected a meeting with ${people}${dueDate}. Should I add it to your calendar?`
+    case 'contact':
+      return `I've found contact information for ${people}. Would you like me to save this?`
+    case 'idea':
+      return `Great idea! I've captured this for you. Would you like me to create a reminder to follow up?`
+    default:
+      return `I've analyzed your note and organized it for you!`
+  }
+}
+
+function generateFollowUpQuestions(text: string, type: string, extractedData: any): string[] {
+  const questions = []
+  
+  if (extractedData.dueDate) {
+    questions.push(`Should I set a reminder for ${extractedData.dueDate.toLocaleDateString()}?`)
+  }
+  
+  if (extractedData.people?.length > 0) {
+    questions.push(`Would you like me to add this to your contacts?`)
+  }
+  
+  if (type === 'task' || type === 'reminder') {
+    questions.push(`Should I add this to your calendar?`)
+  }
+  
+  if (questions.length === 0) {
+    questions.push(`Is there anything else you'd like me to help with?`)
+  }
+  
+  return questions.slice(0, 3) // Limit to 3 questions
 }
