@@ -135,61 +135,93 @@ export default function CalendarView() {
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-white mb-2">My Calendar</h1>
-            <p className="text-gray-400">Manage your schedule and events</p>
+            <motion.h1 
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="text-5xl md:text-6xl font-extrabold text-white mb-3 leading-tight"
+            >
+              My Calendar
+            </motion.h1>
+            <motion.p 
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 }}
+              className="text-electric-300 text-xl md:text-2xl font-semibold"
+            >
+              Manage your schedule and events
+            </motion.p>
           </div>
           
-          <button
+          <motion.button
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.2 }}
             onClick={() => setShowAddEvent(true)}
-            className="bg-gradient-to-r from-electric-600 to-electric-500 hover:from-electric-700 hover:to-electric-600 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-200 hover:scale-105 hover:shadow-glow flex items-center space-x-2"
+            className="bg-gradient-to-r from-electric-600 to-electric-500 hover:from-electric-700 hover:to-electric-600 text-white px-8 py-4 rounded-xl font-bold transition-all duration-200 hover:scale-105 hover:shadow-glow flex items-center space-x-3 shadow-lg"
           >
-            <Plus className="w-5 h-5" />
+            <Plus className="w-6 h-6" />
             <span>Add Event</span>
-          </button>
+          </motion.button>
         </div>
 
         {/* Calendar Navigation */}
-        <div className="flex items-center justify-between mb-6">
-          <button
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+          className="flex items-center justify-between mb-8"
+        >
+          <motion.button
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.95 }}
             onClick={() => setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1))}
-            className="p-2 text-gray-400 hover:text-white transition-colors duration-200"
+            className="p-3 text-gray-400 hover:text-electric-400 transition-colors duration-200 hover:bg-background-elevated rounded-lg"
           >
             <ChevronLeft className="w-6 h-6" />
-          </button>
+          </motion.button>
           
-          <h2 className="text-2xl font-semibold text-white">
+          <h2 className="text-3xl font-bold text-white">
             {monthNames[currentDate.getMonth()]} {currentDate.getFullYear()}
           </h2>
           
-          <button
+          <motion.button
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.95 }}
             onClick={() => setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1))}
-            className="p-2 text-gray-400 hover:text-white transition-colors duration-200"
+            className="p-3 text-gray-400 hover:text-electric-400 transition-colors duration-200 hover:bg-background-elevated rounded-lg"
           >
             <ChevronRight className="w-6 h-6" />
-          </button>
-        </div>
+          </motion.button>
+        </motion.div>
 
         {/* Calendar Grid */}
-        <div className="bg-background-elevated rounded-2xl p-6 border border-gray-700">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4 }}
+          className="bg-background-elevated rounded-2xl p-8 border border-gray-700 shadow-xl"
+        >
           {/* Day Headers */}
-          <div className="grid grid-cols-7 gap-1 mb-4">
+          <div className="grid grid-cols-7 gap-2 mb-6">
             {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
-              <div key={day} className="text-center text-gray-400 font-medium py-2">
+              <div key={day} className="text-center text-gray-300 font-semibold py-3 text-lg">
                 {day}
               </div>
             ))}
           </div>
           
           {/* Calendar Days */}
-          <div className="grid grid-cols-7 gap-1">
+          <div className="grid grid-cols-7 gap-2">
             {days.map((day, index) => (
-              <div
+              <motion.div
                 key={index}
-                className={`min-h-[120px] p-2 border border-gray-700 rounded-lg ${
-                  day ? 'bg-background-tertiary hover:bg-background-secondary cursor-pointer' : 'bg-transparent'
+                whileHover={{ scale: day ? 1.02 : 1 }}
+                whileTap={{ scale: day ? 0.98 : 1 }}
+                className={`min-h-[140px] p-3 border rounded-xl transition-all duration-200 ${
+                  day ? 'bg-background-tertiary hover:bg-background-secondary cursor-pointer border-gray-600 hover:border-electric-500/50' : 'bg-transparent border-transparent'
                 } ${
                   day && day.toDateString() === new Date().toDateString() 
-                    ? 'ring-2 ring-electric-500' 
+                    ? 'ring-2 ring-electric-500 shadow-glow' 
                     : ''
                 }`}
                 onClick={() => day && setSelectedDate(day)}
@@ -207,28 +239,31 @@ export default function CalendarView() {
                     </div>
                     
                     {/* Events for this day */}
-                    <div className="space-y-1">
+                    <div className="space-y-2">
                       {getEventsForDate(day).slice(0, 2).map((event, eventIndex) => (
-                        <div
+                        <motion.div
                           key={eventIndex}
-                          className="text-xs p-1 bg-electric-600/20 text-electric-300 rounded truncate"
+                          initial={{ opacity: 0, scale: 0.8 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          transition={{ delay: eventIndex * 0.1 }}
+                          className="text-xs p-2 bg-gradient-to-r from-electric-600/30 to-purple-600/30 text-white rounded-lg truncate border border-electric-500/20 shadow-sm"
                           title={event.title}
                         >
                           {event.title}
-                        </div>
+                        </motion.div>
                       ))}
                       {getEventsForDate(day).length > 2 && (
-                        <div className="text-xs text-gray-500 text-center">
+                        <div className="text-xs text-gray-400 text-center bg-background-secondary/50 rounded-lg p-1">
                           +{getEventsForDate(day).length - 2} more
                         </div>
                       )}
                     </div>
                   </>
                 )}
-              </div>
+              </motion.div>
             ))}
           </div>
-        </div>
+        </motion.div>
 
         {/* Selected Date Events */}
         {selectedDate && (

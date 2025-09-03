@@ -178,39 +178,62 @@ export default function RemindersView() {
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-white mb-2">My Reminders</h1>
-            <p className="text-gray-400">Never miss an important task or deadline</p>
+            <motion.h1 
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="text-5xl md:text-6xl font-extrabold text-white mb-3 leading-tight"
+            >
+              My Reminders
+            </motion.h1>
+            <motion.p 
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 }}
+              className="text-yellow-300 text-xl md:text-2xl font-semibold"
+            >
+              Never miss an important task or deadline
+            </motion.p>
           </div>
           
-          <button
+          <motion.button
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.2 }}
             onClick={() => setShowAddReminder(true)}
-            className="bg-gradient-to-r from-yellow-600 to-orange-600 hover:from-yellow-700 hover:to-orange-700 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-200 hover:scale-105 hover:shadow-glow flex items-center space-x-2"
+            className="bg-gradient-to-r from-yellow-600 to-orange-600 hover:from-yellow-700 hover:to-orange-700 text-white px-8 py-4 rounded-xl font-bold transition-all duration-200 hover:scale-105 hover:shadow-glow flex items-center space-x-3 shadow-lg"
           >
-            <Plus className="w-5 h-5" />
+            <Plus className="w-6 h-6" />
             <span>Add Reminder</span>
-          </button>
+          </motion.button>
         </div>
 
         {/* Filter Tabs */}
-        <div className="flex space-x-2 mb-6">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+          className="flex space-x-3 mb-8"
+        >
           {[
             { key: 'all', label: 'All', count: reminders.length },
             { key: 'pending', label: 'Pending', count: reminders.filter(r => !r.completed).length },
             { key: 'completed', label: 'Completed', count: reminders.filter(r => r.completed).length }
           ].map((tab) => (
-            <button
+            <motion.button
               key={tab.key}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
               onClick={() => setFilter(tab.key as any)}
-              className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
+              className={`px-6 py-3 rounded-xl font-semibold transition-all duration-200 ${
                 filter === tab.key
-                  ? 'bg-electric-600 text-white'
-                  : 'bg-background-elevated text-gray-400 hover:text-white hover:bg-background-tertiary'
+                  ? 'bg-gradient-to-r from-electric-600 to-electric-500 text-white shadow-lg'
+                  : 'bg-background-elevated text-gray-400 hover:text-white hover:bg-background-tertiary border border-gray-600'
               }`}
             >
               {tab.label} ({tab.count})
-            </button>
+            </motion.button>
           ))}
-        </div>
+        </motion.div>
 
         {/* Reminders List */}
         <div className="space-y-4">
@@ -238,21 +261,22 @@ export default function RemindersView() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
-                className={`bg-background-elevated rounded-xl p-4 border transition-all duration-200 ${
+                whileHover={{ scale: 1.02, y: -2 }}
+                className={`bg-background-elevated rounded-2xl p-6 border transition-all duration-200 shadow-lg ${
                   reminder.completed
                     ? 'border-gray-600 opacity-60'
                     : isOverdue(reminder.dueDate)
                     ? 'border-red-500/50 bg-red-500/5'
-                    : 'border-gray-700 hover:border-gray-600'
+                    : 'border-gray-700 hover:border-electric-500/30 hover:shadow-xl'
                 }`}
               >
                 <div className="flex items-start space-x-4">
                   {/* Priority Icon */}
-                  <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
+                  <div className={`w-12 h-12 rounded-xl flex items-center justify-center shadow-lg ${
                     reminder.completed ? 'bg-gray-600' : 'bg-gradient-to-r from-electric-600 to-electric-500'
                   }`}>
                     {reminder.completed ? (
-                      <CheckCircle className="w-5 h-5 text-white" />
+                      <CheckCircle className="w-6 h-6 text-white" />
                     ) : (
                       getPriorityIcon(reminder.priority)
                     )}
@@ -272,27 +296,34 @@ export default function RemindersView() {
                           {reminder.priority}
                         </span>
                         
-                        <button
+                        <motion.button
+                          whileHover={{ scale: 1.2 }}
+                          whileTap={{ scale: 0.9 }}
                           onClick={() => handleToggleComplete(reminder.id)}
-                          className={`p-1 rounded transition-colors duration-200 ${
+                          className={`p-2 rounded-lg transition-all duration-200 ${
                             reminder.completed
-                              ? 'text-green-400 hover:text-green-300'
-                              : 'text-gray-400 hover:text-green-400'
+                              ? 'text-green-400 hover:text-green-300 bg-green-500/10 hover:bg-green-500/20'
+                              : 'text-gray-400 hover:text-green-400 bg-gray-500/10 hover:bg-green-500/20'
                           }`}
                         >
-                          <CheckCircle className="w-4 h-4" />
-                        </button>
+                          <CheckCircle className="w-5 h-5" />
+                        </motion.button>
                         
-                        <button className="p-1 text-gray-400 hover:text-blue-400 transition-colors duration-200">
-                          <Edit className="w-4 h-4" />
-                        </button>
+                        <motion.button 
+                          whileHover={{ scale: 1.2 }}
+                          whileTap={{ scale: 0.9 }}
+                          className="p-2 text-gray-400 hover:text-blue-400 transition-all duration-200 bg-gray-500/10 hover:bg-blue-500/20 rounded-lg">
+                          <Edit className="w-5 h-5" />
+                        </motion.button>
                         
-                        <button 
+                        <motion.button 
+                          whileHover={{ scale: 1.2 }}
+                          whileTap={{ scale: 0.9 }}
                           onClick={() => handleDeleteReminder(reminder.id)}
-                          className="p-1 text-gray-400 hover:text-red-400 transition-colors duration-200"
+                          className="p-2 text-gray-400 hover:text-red-400 transition-all duration-200 bg-gray-500/10 hover:bg-red-500/20 rounded-lg"
                         >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
+                          <Trash2 className="w-5 h-5" />
+                        </motion.button>
                       </div>
                     </div>
                     
