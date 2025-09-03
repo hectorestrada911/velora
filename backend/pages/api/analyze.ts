@@ -85,18 +85,14 @@ ${content}
 
 Return only valid JSON, no other text.`
 
-    // Call OpenAI API
-    const completion = await openai.chat.completions.create({
-      model: "gpt-4o-mini", // Using GPT-4o mini for cost-effectiveness (gpt-5-mini might not exist)
-      messages: [
-        { role: "system", content: systemPrompt },
-        { role: "user", content: userPrompt }
-      ],
+    // Call OpenAI API using the new responses API
+    const response = await openai.responses.create({
+      model: "gpt-5",
+      input: `${systemPrompt}\n\n${userPrompt}`,
       temperature: 0.3, // Lower temperature for more consistent analysis
-      max_tokens: 1000, // GPT-4o models use max_tokens
     })
 
-    const aiResponse = completion.choices[0]?.message?.content
+    const aiResponse = response.output_text
     
     if (!aiResponse) {
       throw new Error('No response from AI')
@@ -134,7 +130,7 @@ Return only valid JSON, no other text.`
       reminder: analysis.reminder || null,
       aiResponse: analysis.aiResponse || "I've analyzed your content and organized it for you!",
       followUpQuestions: analysis.followUpQuestions || ["Is there anything else you'd like me to help with?", "Would you like me to set any reminders?"],
-      aiModel: 'gpt-4o-mini',
+      aiModel: 'gpt-5',
       analysisTimestamp: new Date().toISOString()
     }
 
