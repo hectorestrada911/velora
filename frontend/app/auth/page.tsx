@@ -74,7 +74,7 @@ export default function AuthPage() {
                   repeat: Infinity, 
                   ease: "easeInOut" 
                 }}
-                className="text-6xl md:text-7xl font-bold text-gradient-primary glow-text mb-4 leading-tight"
+                className="text-6xl md:text-7xl font-bold bg-gradient-to-r from-electric-500 via-purple-500 via-cyan-500 to-electric-600 bg-clip-text text-transparent glow-text mb-4 leading-tight"
               >
                 Velora
               </motion.h1>
@@ -92,7 +92,7 @@ export default function AuthPage() {
             >
               <h2 className="text-4xl md:text-5xl font-extrabold text-white mb-6 leading-tight">
                 Never Forget Another<br />
-                <span className="text-gradient-primary glow-text">Thought Again</span>
+                <span className="bg-gradient-to-r from-purple-500 via-pink-500 to-orange-500 bg-clip-text text-transparent glow-text">Thought Again</span>
               </h2>
               <p className="text-gray-300 text-lg md:text-xl leading-relaxed mb-8">
                 Turn your thoughts into action. Never lose another brilliant idea again.
