@@ -93,7 +93,7 @@ Return only valid JSON, no other text.`
         { role: "user", content: userPrompt }
       ],
       temperature: 0.3, // Lower temperature for more consistent analysis
-      max_tokens: 1000,
+      max_completion_tokens: 1000, // GPT-5 models use max_completion_tokens instead of max_tokens
     })
 
     const aiResponse = completion.choices[0]?.message?.content
