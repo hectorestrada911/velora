@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextApiRequest, NextApiResponse } from 'next'
 import OpenAI from 'openai'
 
 // Initialize OpenAI client
@@ -13,24 +13,29 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'Content-Type, Authorization',
 }
 
-export async function OPTIONS() {
-  return new NextResponse(null, { status: 200, headers: corsHeaders })
-}
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  // Handle CORS preflight
+  if (req.method === 'OPTIONS') {
+    res.setHeader('Access-Control-Allow-Origin', '*')
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization')
+    return res.status(200).end()
+  }
 
-export async function POST(request: NextRequest) {
+  // Set CORS headers for all responses
+  res.setHeader('Access-Control-Allow-Origin', '*')
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization')
+
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Method not allowed' })
+  }
+
   try {
-    // Handle CORS preflight
-    if (request.method === 'OPTIONS') {
-      return new NextResponse(null, { status: 200, headers: corsHeaders })
-    }
-
-    const { content } = await request.json()
+    const { content } = req.body
 
     if (!content) {
-      return NextResponse.json(
-        { error: 'Content is required' },
-        { status: 400, headers: corsHeaders }
-      )
+      return res.status(400).json({ error: 'Content is required' })
     }
 
     // Comprehensive system prompt for AI analysis
@@ -144,7 +149,7 @@ Return only valid JSON, no other text.`
     console.log(`AI analysis completed for content length: ${content.length}`)
     console.log('Analysis result:', enhancedAnalysis)
 
-    return NextResponse.json(enhancedAnalysis, { headers: corsHeaders })
+    return res.status(200).json(enhancedAnalysis)
 
   } catch (error) {
     console.error('AI analysis error:', error)
@@ -170,6 +175,6 @@ Return only valid JSON, no other text.`
       fallback: true
     }
 
-    return NextResponse.json(fallbackAnalysis, { status: 500, headers: corsHeaders })
+    return res.status(500).json(fallbackAnalysis)
   }
 }
