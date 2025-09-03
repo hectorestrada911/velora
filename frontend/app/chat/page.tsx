@@ -189,8 +189,8 @@ export default function ChatPage() {
       <header className="bg-background-elevated/50 backdrop-blur-sm border-b border-gray-700/50 p-4">
         <div className="max-w-6xl mx-auto flex items-center justify-between">
           <div className="flex items-center space-x-4">
-            <h1 className="text-2xl font-bold text-white">Velora</h1>
-            <div className="flex items-center space-x-2 text-sm text-gray-400">
+            <h1 className="text-2xl font-bold bg-gradient-to-r from-electric-400 via-purple-400 to-electric-500 bg-clip-text text-transparent">Velora</h1>
+            <div className="flex items-center space-x-2 text-sm bg-gradient-to-r from-electric-300 via-cyan-300 to-electric-400 bg-clip-text text-transparent">
               <Brain className="w-4 h-4" />
               <span>AI Assistant</span>
             </div>
@@ -226,7 +226,7 @@ export default function ChatPage() {
             animate={{ opacity: 1, y: 0 }}
             className="mb-8"
           >
-            <h2 className="text-xl font-semibold text-white mb-4 text-center">
+            <h2 className="text-xl font-semibold bg-gradient-to-r from-electric-400 via-purple-400 to-electric-500 bg-clip-text text-transparent mb-4 text-center">
               What would you like me to help you with today?
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -239,11 +239,11 @@ export default function ChatPage() {
                   className="p-4 bg-background-elevated rounded-xl border border-gray-700 hover:border-gray-600 transition-all duration-200 text-left group"
                 >
                   <div className="flex items-center space-x-3">
-                    <div className="w-10 h-10 bg-gradient-to-r from-electric-600 to-electric-500 rounded-lg flex items-center justify-center text-white group-hover:scale-110 transition-transform duration-200">
+                    <div className="w-10 h-10 bg-gradient-to-r from-electric-600 via-purple-600 to-electric-500 rounded-lg flex items-center justify-center text-white group-hover:scale-110 transition-transform duration-200">
                       {suggestion.icon}
                     </div>
                     <div>
-                      <p className="text-white font-medium">{suggestion.text}</p>
+                      <p className="bg-gradient-to-r from-electric-300 via-cyan-300 to-electric-400 bg-clip-text text-transparent font-medium">{suggestion.text}</p>
                       <p className="text-gray-400 text-sm capitalize">{suggestion.category}</p>
                     </div>
                   </div>
@@ -273,7 +273,7 @@ export default function ChatPage() {
                 
                 {message.analysis && (
                   <div className="mt-3 pt-3 border-t border-gray-600/30">
-                    <div className="flex items-center space-x-2 text-xs text-gray-400 mb-2">
+                    <div className="flex items-center space-x-2 text-xs bg-gradient-to-r from-electric-300 via-cyan-300 to-electric-400 bg-clip-text text-transparent mb-2">
                       <Sparkles className="w-3 h-3" />
                       <span>AI Analysis</span>
                     </div>
@@ -359,7 +359,7 @@ export default function ChatPage() {
                 <button
                   onClick={handleSendMessage}
                   disabled={!inputValue.trim() || isLoading}
-                  className="p-3 bg-gradient-to-r from-electric-600 to-electric-500 hover:from-electric-700 hover:to-electric-600 text-white rounded-xl transition-all duration-200 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+                  className="p-3 bg-gradient-to-r from-electric-600 via-purple-600 to-electric-500 hover:from-electric-700 hover:via-purple-700 hover:to-electric-600 text-white rounded-xl transition-all duration-200 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
                 >
                   <Send className="w-5 h-5" />
                 </button>
