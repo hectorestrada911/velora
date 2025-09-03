@@ -87,13 +87,13 @@ Return only valid JSON, no other text.`
 
     // Call OpenAI API
     const completion = await openai.chat.completions.create({
-      model: "gpt-5-mini", // Using GPT-5 mini for cost-effectiveness
+      model: "gpt-4o-mini", // Using GPT-4o mini for cost-effectiveness (gpt-5-mini might not exist)
       messages: [
         { role: "system", content: systemPrompt },
         { role: "user", content: userPrompt }
       ],
       temperature: 0.3, // Lower temperature for more consistent analysis
-      max_completion_tokens: 1000, // GPT-5 models use max_completion_tokens instead of max_tokens
+      max_tokens: 1000, // GPT-4o models use max_tokens
     })
 
     const aiResponse = completion.choices[0]?.message?.content
@@ -134,7 +134,7 @@ Return only valid JSON, no other text.`
       reminder: analysis.reminder || null,
       aiResponse: analysis.aiResponse || "I've analyzed your content and organized it for you!",
       followUpQuestions: analysis.followUpQuestions || ["Is there anything else you'd like me to help with?", "Would you like me to set any reminders?"],
-      aiModel: 'gpt-5-mini',
+      aiModel: 'gpt-4o-mini',
       analysisTimestamp: new Date().toISOString()
     }
 
