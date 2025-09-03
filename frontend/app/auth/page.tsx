@@ -60,9 +60,24 @@ export default function AuthPage() {
               transition={{ delay: 0.2 }}
               className="mb-8"
             >
-              <h1 className="text-5xl md:text-6xl font-extrabold text-white mb-3 leading-tight">
+              <motion.h1 
+                animate={{ 
+                  scale: [1, 1.02, 1],
+                  textShadow: [
+                    "0 0 20px rgba(59, 130, 246, 0.5)",
+                    "0 0 30px rgba(59, 130, 246, 0.8)",
+                    "0 0 20px rgba(59, 130, 246, 0.5)"
+                  ]
+                }}
+                transition={{ 
+                  duration: 3, 
+                  repeat: Infinity, 
+                  ease: "easeInOut" 
+                }}
+                className="text-6xl md:text-7xl font-black text-gradient-primary glow-text mb-4 leading-tight"
+              >
                 Velora
-              </h1>
+              </motion.h1>
               <p className="text-electric-300 text-xl md:text-2xl mb-8 font-semibold">
                 Your AI Productivity Assistant
               </p>
