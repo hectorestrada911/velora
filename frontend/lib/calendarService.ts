@@ -11,6 +11,7 @@ export interface Reminder {
   dueDate: Date;
   priority: 'low' | 'medium' | 'high' | 'urgent';
   description?: string;
+  completed?: boolean;
 }
 
 export class CalendarService {
