@@ -238,6 +238,13 @@ export default function ChatPage() {
             >
               <Bell className="w-4 h-4 md:w-5 md:h-5" />
             </button>
+            <button 
+              onClick={() => window.location.href = '/demo'}
+              className="p-2 md:p-2 text-gray-400 hover:text-white transition-colors duration-200 hover:bg-gray-800 rounded-lg"
+              title="View Functionality Demo"
+            >
+              <Sparkles className="w-4 h-4 md:w-5 md:h-5" />
+            </button>
             <button className="p-2 md:p-2 text-gray-400 hover:text-white transition-colors duration-200 hover:bg-gray-800 rounded-lg">
               <Settings className="w-4 h-4 md:w-5 md:h-5" />
             </button>
