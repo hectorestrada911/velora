@@ -119,14 +119,14 @@ export class DocumentService {
     }
   }
 
-  async searchDocuments(query: string): Promise<Document[]> {
+  async searchDocuments(searchQuery: string): Promise<Document[]> {
     if (!db) {
       return []
     }
 
     try {
       const userId = this.getCurrentUserId()
-      const lowerQuery = query.toLowerCase()
+      const lowerQuery = searchQuery.toLowerCase()
       
       const q = query(
         collection(db, this.collectionName),
