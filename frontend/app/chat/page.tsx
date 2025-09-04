@@ -20,7 +20,7 @@ interface Suggestion {
   id: string
   text: string
   icon: React.ReactNode
-  category: 'productivity' | 'reminder' | 'calendar' | 'general'
+  category: 'productivity' | 'reminder' | 'calendar' | 'general' | 'voice'
 }
 
 export default function ChatPage() {
