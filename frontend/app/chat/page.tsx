@@ -9,6 +9,8 @@ import VoiceCommand from '@/components/VoiceCommand'
 import { VoiceResult } from '@/lib/voiceService'
 import { conversationService, Message, Conversation } from '@/lib/conversationService'
 import { useAuth } from '@/components/providers/AuthProvider'
+import { storageService } from '@/lib/storageService'
+import { documentService, Document } from '@/lib/documentService'
 
 
 interface Suggestion {
@@ -32,7 +34,8 @@ export default function ChatPage() {
   const [showConversationHistory, setShowConversationHistory] = useState(false)
   const [isLoadingConversations, setIsLoadingConversations] = useState(false)
   const [showFileUpload, setShowFileUpload] = useState(false)
-  const [uploadedFiles, setUploadedFiles] = useState<Array<{name: string, content: string, type: string}>>([])
+  const [documents, setDocuments] = useState<Document[]>([])
+  const [isUploading, setIsUploading] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
@@ -89,11 +92,13 @@ export default function ChatPage() {
     scrollToBottom()
   }, [messages])
 
-  // Load conversations when user is authenticated
+  // Load conversations and documents when user is authenticated
   useEffect(() => {
     if (user) {
       conversationService.setUserId(user.uid)
+      documentService.setUserId(user.uid)
       loadConversations()
+      loadDocuments()
     }
   }, [user])
 
@@ -109,6 +114,18 @@ export default function ChatPage() {
       toast.error('Failed to load conversation history')
     } finally {
       setIsLoadingConversations(false)
+    }
+  }
+
+  const loadDocuments = async () => {
+    if (!user) return
+    
+    try {
+      const loadedDocuments = await documentService.getDocuments()
+      setDocuments(loadedDocuments)
+    } catch (error) {
+      console.error('Error loading documents:', error)
+      toast.error('Failed to load documents')
     }
   }
 
@@ -175,19 +192,20 @@ export default function ChatPage() {
     if (!files || files.length === 0) return
 
     const file = files[0]
+    setIsUploading(true)
     
     try {
-      // Read file content
+      // Read file content for analysis
       const content = await readFileContent(file)
       
-      // Add to uploaded files
-      const newFile = {
-        name: file.name,
-        content: content,
-        type: file.type
-      }
+      // Upload to Firebase Storage
+      const storedFile = await storageService.uploadFile(file, content)
       
-      setUploadedFiles(prev => [...prev, newFile])
+      // Save document metadata to Firestore
+      const documentId = await documentService.saveDocument(storedFile, content)
+      
+      // Reload documents list
+      await loadDocuments()
       
       // Create a message about the uploaded file
       const fileMessage: Message = {
@@ -207,14 +225,15 @@ export default function ChatPage() {
       const aiMessage: Message = {
         id: (Date.now() + 1).toString(),
         type: 'ai',
-        content: `I've saved your file "${file.name}" and can help you analyze it. What would you like me to do with it?`,
+        content: `I've saved your file "${file.name}" permanently! I can help you analyze it, search for it later, or answer questions about its content. What would you like me to do with it?`,
         timestamp: new Date(),
         analysis: {
           type: 'file_upload',
           priority: 'medium',
           summary: `File uploaded: ${file.name}`,
           fileName: file.name,
-          fileContent: content.substring(0, 200) + '...'
+          fileContent: content.substring(0, 200) + '...',
+          documentId: documentId
         }
       }
       
@@ -224,11 +243,13 @@ export default function ChatPage() {
         return newMessages
       })
       
-      toast.success(`File "${file.name}" uploaded successfully!`)
+      toast.success(`File "${file.name}" uploaded and saved permanently!`)
       
     } catch (error) {
       console.error('Error uploading file:', error)
       toast.error('Failed to upload file')
+    } finally {
+      setIsUploading(false)
     }
   }
 
@@ -243,44 +264,46 @@ export default function ChatPage() {
     })
   }
 
-  const searchDocuments = (query: string) => {
-    const matchingFiles = uploadedFiles.filter(file => 
-      file.name.toLowerCase().includes(query.toLowerCase()) ||
-      file.content.toLowerCase().includes(query.toLowerCase())
-    )
-    
-    if (matchingFiles.length > 0) {
-      const searchMessage: Message = {
-        id: Date.now().toString(),
-        type: 'ai',
-        content: `I found ${matchingFiles.length} document(s) matching "${query}":\n\n${matchingFiles.map(f => `• ${f.name}`).join('\n')}`,
-        timestamp: new Date(),
-        analysis: {
-          type: 'document_search',
-          priority: 'medium',
-          summary: `Found ${matchingFiles.length} documents`,
-          searchResults: matchingFiles
+  const searchDocuments = async (query: string) => {
+    try {
+      const matchingDocuments = await documentService.searchDocuments(query)
+      
+      if (matchingDocuments.length > 0) {
+        const searchMessage: Message = {
+          id: Date.now().toString(),
+          type: 'ai',
+          content: `I found ${matchingDocuments.length} document(s) matching "${query}":\n\n${matchingDocuments.map(d => `• ${d.name} (${d.category || 'general'})`).join('\n')}\n\nYou can ask me to analyze any of these documents!`,
+          timestamp: new Date(),
+          analysis: {
+            type: 'document_search',
+            priority: 'medium',
+            summary: `Found ${matchingDocuments.length} documents`,
+            searchResults: matchingDocuments
+          }
         }
+        
+        setMessages(prev => {
+          const newMessages = [...prev, searchMessage]
+          saveConversation(newMessages)
+          return newMessages
+        })
+      } else {
+        const noResultsMessage: Message = {
+          id: Date.now().toString(),
+          type: 'ai',
+          content: `I couldn't find any documents matching "${query}". Try uploading some files first using the upload button!`,
+          timestamp: new Date()
+        }
+        
+        setMessages(prev => {
+          const newMessages = [...prev, noResultsMessage]
+          saveConversation(newMessages)
+          return newMessages
+        })
       }
-      
-      setMessages(prev => {
-        const newMessages = [...prev, searchMessage]
-        saveConversation(newMessages)
-        return newMessages
-      })
-    } else {
-      const noResultsMessage: Message = {
-        id: Date.now().toString(),
-        type: 'ai',
-        content: `I couldn't find any documents matching "${query}". Try uploading some files first!`,
-        timestamp: new Date()
-      }
-      
-      setMessages(prev => {
-        const newMessages = [...prev, noResultsMessage]
-        saveConversation(newMessages)
-        return newMessages
-      })
+    } catch (error) {
+      console.error('Error searching documents:', error)
+      toast.error('Failed to search documents')
     }
   }
 
@@ -791,10 +814,15 @@ export default function ChatPage() {
                 
                 <button
                   onClick={() => fileInputRef.current?.click()}
-                  className="p-2.5 md:p-3 bg-gray-800 hover:bg-gray-700 text-gray-400 hover:text-white border border-gray-600 rounded-xl transition-all duration-200"
-                  title="Upload Document"
+                  disabled={isUploading}
+                  className="p-2.5 md:p-3 bg-gray-800 hover:bg-gray-700 text-gray-400 hover:text-white border border-gray-600 rounded-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                  title={isUploading ? "Uploading..." : "Upload Document"}
                 >
-                  <Upload className="w-4 h-4 md:w-5 md:h-5" />
+                  {isUploading ? (
+                    <div className="w-4 h-4 md:w-5 md:h-5 animate-spin rounded-full border-2 border-gray-400 border-t-transparent"></div>
+                  ) : (
+                    <Upload className="w-4 h-4 md:w-5 md:h-5" />
+                  )}
                 </button>
                 
                 <button
