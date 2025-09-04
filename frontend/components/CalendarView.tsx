@@ -10,11 +10,6 @@ export default function CalendarView() {
   const [currentDate, setCurrentDate] = useState(new Date())
   const [events, setEvents] = useState<CalendarEvent[]>([])
   const [selectedDate, setSelectedDate] = useState<Date | null>(null)
-  
-  // Debug: Log when selectedDate changes
-  useEffect(() => {
-    console.log('selectedDate state changed to:', selectedDate)
-  }, [selectedDate])
   const [showAddEvent, setShowAddEvent] = useState(false)
   const [showEditEvent, setShowEditEvent] = useState(false)
   const [editingEvent, setEditingEvent] = useState<CalendarEvent | null>(null)
@@ -389,12 +384,7 @@ export default function CalendarView() {
                       e.preventDefault()
                       e.stopPropagation()
                       if (day) {
-                        console.log('Clicked on date:', day.toDateString())
-                        console.log('Setting selectedDate to:', day)
                         setSelectedDate(day)
-                        console.log('selectedDate should now be:', day)
-                      } else {
-                        console.log('No day data for this square')
                       }
                     }}
                     title={day ? `Click to view events for ${day.toLocaleDateString()}` : ''}
@@ -612,25 +602,24 @@ export default function CalendarView() {
           )}
         </AnimatePresence>
 
-        {/* Debug Info */}
-        {selectedDate && (
-          <div className="mt-4 p-4 bg-red-500/30 border-2 border-red-500 rounded text-red-200 text-lg font-bold">
-            🚨 DEBUG: Selected date is {selectedDate.toDateString()} - Day view should appear below!
-          </div>
-        )}
-        
-        {/* Test: Always show this to verify rendering */}
-        <div className="mt-4 p-2 bg-green-500/20 border border-green-500 rounded text-green-200 text-sm">
-          TEST: This should always be visible. selectedDate is: {selectedDate ? selectedDate.toDateString() : 'null'}
-        </div>
 
-        {/* Selected Date Events */}
-        {selectedDate && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="mt-8 bg-gray-900 rounded-2xl p-6 border-2 border-purple-500 shadow-xl"
-          >
+        {/* Selected Date Events Modal */}
+        <AnimatePresence>
+          {selectedDate && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50"
+              onClick={() => setSelectedDate(null)}
+            >
+              <motion.div
+                initial={{ scale: 0.9, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.9, opacity: 0 }}
+                className="bg-gray-900 rounded-2xl p-4 md:p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto border border-gray-700 shadow-2xl"
+                onClick={(e) => e.stopPropagation()}
+              >
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-xl font-semibold text-purple-400">
                 {selectedDate.toLocaleDateString('en-US', { 
@@ -719,8 +708,10 @@ export default function CalendarView() {
                 ))
               )}
             </div>
-          </motion.div>
-        )}
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {/* Add Event Modal */}
         <AnimatePresence>
