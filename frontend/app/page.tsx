@@ -7,7 +7,7 @@ export default function HomePage() {
   const router = useRouter()
 
   useEffect(() => {
-    // Redirect to auth page
+    // Redirect to auth page first
     router.push('/auth')
   }, [router])
 

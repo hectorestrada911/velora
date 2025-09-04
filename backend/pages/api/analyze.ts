@@ -34,6 +34,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     // Comprehensive system prompt for AI analysis
     const systemPrompt = `You are an intelligent productivity assistant. Analyze the given content and extract:
 
+IMPORTANT: Ask natural, conversational questions that a helpful human assistant would ask. Make them specific to the situation and practical. Avoid generic questions.
+
 1. **Content Type**: Determine if this is a task, meeting, reminder, note, or other
 2. **Priority**: high, medium, or low based on urgency and importance
 3. **Summary**: A concise summary of the content
@@ -43,12 +45,21 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
    - Dates and times
    - Actions required
    - Topics discussed
-6. **Calendar Event**: If applicable, create a calendar event with:
+6. **Calendar Event**: If applicable, suggest a calendar event with:
    - title, startTime, endTime, description
-7. **Reminder**: If applicable, create a reminder with:
+   - Set to null if you need more information first
+7. **Reminder**: If applicable, suggest a reminder with:
    - title, dueDate, priority, description
-8. **AI Response**: A conversational response acknowledging the analysis
-9. **Follow-up Questions**: 2-3 relevant follow-up questions
+   - Set to null if you need more information first
+8. **AI Response**: A conversational response that:
+   - Acknowledges what the user wants to do
+   - Asks for confirmation before creating items
+   - Shows enthusiasm and understanding
+9. **Follow-up Questions**: 2-3 natural, conversational questions that:
+   - Ask for missing details in a friendly way
+   - Make sense for the specific situation
+   - Sound like a helpful assistant would ask
+   - Are practical and actionable
 
 Return ONLY valid JSON in this exact format:
 {
@@ -75,8 +86,8 @@ Return ONLY valid JSON in this exact format:
     "priority": "high",
     "description": "Important deadline discussion"
   },
-  "aiResponse": "I'll add 'Call John about Q4 deadline' to your calendar for tomorrow. This sounds important!",
-  "followUpQuestions": ["What time would you like to call John?", "Should I set a reminder 15 minutes before?"]
+  "aiResponse": "Got it! I'd love to help you schedule that call with John about the Q4 deadline. This sounds important! Should I create a calendar event for tomorrow? What time works best for you?",
+  "followUpQuestions": ["What time works best for you tomorrow?", "How long do you think the call will take?", "Should I set a reminder 15 minutes before so you're prepared?"]
 }`
 
     const userPrompt = `Please analyze this document content:

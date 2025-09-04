@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Calendar, Clock, MapPin, User, Plus, ChevronLeft, ChevronRight, X, Edit, Trash2 } from 'lucide-react'
+import { Calendar, Clock, MapPin, User, Plus, ChevronLeft, ChevronRight, X, Edit, Trash2, Bell } from 'lucide-react'
 import { calendarService, CalendarEvent } from '@/lib/calendarService'
 import { toast } from 'react-hot-toast'
 
@@ -57,6 +57,15 @@ export default function CalendarView() {
       console.error('Failed to load events:', error)
       toast.error('Failed to load calendar events')
     }
+  }
+
+  // Count upcoming events (next 7 days)
+  const getUpcomingEventsCount = () => {
+    const now = new Date()
+    const nextWeek = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000)
+    return events.filter(event => 
+      event.startTime >= now && event.startTime <= nextWeek
+    ).length
   }
 
   const getDaysInMonth = (date: Date) => {
@@ -239,13 +248,34 @@ export default function CalendarView() {
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6 md:mb-8 space-y-4 md:space-y-0">
           <div>
-            <motion.h1 
+            <motion.div
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="text-3xl md:text-5xl lg:text-6xl font-extrabold text-electric-400 mb-3 leading-tight"
+              transition={{ delay: 0.2 }}
+              className="flex items-center space-x-4 mb-3"
             >
-              My Calendar
-            </motion.h1>
+              <h1 className="text-3xl md:text-5xl lg:text-6xl font-extrabold text-electric-400 leading-tight">
+                My Calendar
+              </h1>
+              {getUpcomingEventsCount() > 0 && (
+                <motion.div
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  transition={{ delay: 0.4, type: "spring", stiffness: 200 }}
+                  className="relative"
+                >
+                  <Bell className="w-6 h-6 md:w-8 md:h-8 text-yellow-500" />
+                  <motion.div
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    transition={{ delay: 0.6, type: "spring", stiffness: 200 }}
+                    className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center"
+                  >
+                    {getUpcomingEventsCount()}
+                  </motion.div>
+                </motion.div>
+              )}
+            </motion.div>
             <motion.p 
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}

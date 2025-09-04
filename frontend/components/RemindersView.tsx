@@ -197,19 +197,44 @@ export default function RemindersView() {
     return new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime()
   })
 
+  // Count pending reminders
+  const getPendingRemindersCount = () => {
+    return reminders.filter(reminder => !reminder.completed).length
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-background-primary via-background-secondary to-background-tertiary p-4">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div>
-            <motion.h1 
+            <motion.div
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="text-5xl md:text-6xl font-extrabold text-yellow-400 mb-3 leading-tight"
+              className="flex items-center space-x-4 mb-3"
             >
-              My Reminders
-            </motion.h1>
+              <h1 className="text-5xl md:text-6xl font-extrabold text-yellow-400 leading-tight">
+                My Reminders
+              </h1>
+              {getPendingRemindersCount() > 0 && (
+                <motion.div
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  transition={{ delay: 0.4, type: "spring", stiffness: 200 }}
+                  className="relative"
+                >
+                  <Bell className="w-6 h-6 md:w-8 md:h-8 text-yellow-500" />
+                  <motion.div
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    transition={{ delay: 0.6, type: "spring", stiffness: 200 }}
+                    className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center"
+                  >
+                    {getPendingRemindersCount()}
+                  </motion.div>
+                </motion.div>
+              )}
+            </motion.div>
             <motion.p 
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}

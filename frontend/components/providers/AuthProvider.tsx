@@ -1,7 +1,8 @@
 'use client'
 
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react'
-import { User } from 'firebase/auth'
+import { User, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut as firebaseSignOut } from 'firebase/auth'
+import { auth } from '@/lib/firebase'
 
 interface AuthContextType {
   user: User | null
@@ -30,31 +31,39 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    // TODO: Initialize Firebase Auth
-    // const unsubscribe = onAuthStateChanged(auth, (user) => {
-    //   setUser(user)
-    //   setLoading(false)
-    // })
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setUser(user)
+      setLoading(false)
+    })
     
-    // return unsubscribe
-    
-    // For now, simulate loading completion
-    setLoading(false)
+    return unsubscribe
   }, [])
 
   const signIn = async (email: string, password: string) => {
-    // TODO: Implement Firebase sign in
-    console.log('Sign in:', email, password)
+    try {
+      await signInWithEmailAndPassword(auth, email, password)
+    } catch (error) {
+      console.error('Sign in error:', error)
+      throw error
+    }
   }
 
   const signUp = async (email: string, password: string) => {
-    // TODO: Implement Firebase sign up
-    console.log('Sign up:', email, password)
+    try {
+      await createUserWithEmailAndPassword(auth, email, password)
+    } catch (error) {
+      console.error('Sign up error:', error)
+      throw error
+    }
   }
 
   const signOut = async () => {
-    // TODO: Implement Firebase sign out
-    console.log('Sign out')
+    try {
+      await firebaseSignOut(auth)
+    } catch (error) {
+      console.error('Sign out error:', error)
+      throw error
+    }
   }
 
   const value = {
