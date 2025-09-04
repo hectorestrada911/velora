@@ -76,8 +76,7 @@ export default function ChatPage() {
 
   const handleSuggestionClick = (suggestion: Suggestion) => {
     if (suggestion.category === 'voice') {
-      setShowVoiceCommands(true)
-      setShowSuggestions(false)
+      window.location.href = '/voice'
     } else {
       setInputValue(suggestion.text)
       setShowSuggestions(false)
@@ -276,10 +275,8 @@ export default function ChatPage() {
               <Bell className="w-4 h-4 md:w-5 md:h-5" />
             </button>
             <button 
-              onClick={() => setShowVoiceCommands(!showVoiceCommands)}
-              className={`p-2 md:p-2 transition-colors duration-200 hover:bg-gray-800 rounded-lg ${
-                showVoiceCommands ? 'text-electric-400 bg-electric-500/20' : 'text-gray-400 hover:text-white'
-              }`}
+              onClick={() => window.location.href = '/voice'}
+              className="p-2 md:p-2 text-gray-400 hover:text-white transition-colors duration-200 hover:bg-gray-800 rounded-lg"
               title="Voice Commands"
             >
               <Mic className="w-4 h-4 md:w-5 md:h-5" />
