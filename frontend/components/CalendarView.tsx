@@ -380,10 +380,16 @@ export default function CalendarView() {
                         ? 'ring-2 ring-purple-500 bg-purple-500/10'
                         : ''
                     }`}
-                    onClick={() => {
+                    onClick={(e) => {
+                      e.preventDefault()
+                      e.stopPropagation()
                       if (day) {
                         console.log('Clicked on date:', day.toDateString())
+                        console.log('Setting selectedDate to:', day)
                         setSelectedDate(day)
+                        console.log('selectedDate should now be:', day)
+                      } else {
+                        console.log('No day data for this square')
                       }
                     }}
                     title={day ? `Click to view events for ${day.toLocaleDateString()}` : ''}
@@ -600,6 +606,13 @@ export default function CalendarView() {
             </motion.div>
           )}
         </AnimatePresence>
+
+        {/* Debug Info */}
+        {selectedDate && (
+          <div className="mt-4 p-2 bg-yellow-500/20 border border-yellow-500 rounded text-yellow-200 text-sm">
+            DEBUG: Selected date is {selectedDate.toDateString()}
+          </div>
+        )}
 
         {/* Selected Date Events */}
         {selectedDate && (
