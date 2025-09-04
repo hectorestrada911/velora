@@ -45,6 +45,10 @@ class FirestoreService {
   // Events
   async addEvent(event: Omit<FirestoreEvent, 'id' | 'userId' | 'createdAt'>): Promise<string> {
     try {
+      if (!db) {
+        throw new Error('Firebase not initialized')
+      }
+      
       const eventData: Omit<FirestoreEvent, 'id'> = {
         ...event,
         userId: this.getUserId(),
@@ -61,6 +65,10 @@ class FirestoreService {
 
   async getEvents(): Promise<FirestoreEvent[]> {
     try {
+      if (!db) {
+        throw new Error('Firebase not initialized')
+      }
+      
       const q = query(
         collection(db, 'events'),
         where('userId', '==', this.getUserId()),
@@ -80,6 +88,10 @@ class FirestoreService {
 
   async updateEvent(eventId: string, updates: Partial<FirestoreEvent>): Promise<void> {
     try {
+      if (!db) {
+        throw new Error('Firebase not initialized')
+      }
+      
       const eventRef = doc(db, 'events', eventId)
       await updateDoc(eventRef, updates)
     } catch (error) {
@@ -90,6 +102,10 @@ class FirestoreService {
 
   async deleteEvent(eventId: string): Promise<void> {
     try {
+      if (!db) {
+        throw new Error('Firebase not initialized')
+      }
+      
       const eventRef = doc(db, 'events', eventId)
       await deleteDoc(eventRef)
     } catch (error) {
@@ -101,6 +117,10 @@ class FirestoreService {
   // Reminders
   async addReminder(reminder: Omit<FirestoreReminder, 'id' | 'userId' | 'createdAt'>): Promise<string> {
     try {
+      if (!db) {
+        throw new Error('Firebase not initialized')
+      }
+      
       const reminderData: Omit<FirestoreReminder, 'id'> = {
         ...reminder,
         userId: this.getUserId(),
@@ -117,6 +137,10 @@ class FirestoreService {
 
   async getReminders(): Promise<FirestoreReminder[]> {
     try {
+      if (!db) {
+        throw new Error('Firebase not initialized')
+      }
+      
       const q = query(
         collection(db, 'reminders'),
         where('userId', '==', this.getUserId()),
@@ -136,6 +160,10 @@ class FirestoreService {
 
   async updateReminder(reminderId: string, updates: Partial<FirestoreReminder>): Promise<void> {
     try {
+      if (!db) {
+        throw new Error('Firebase not initialized')
+      }
+      
       const reminderRef = doc(db, 'reminders', reminderId)
       await updateDoc(reminderRef, updates)
     } catch (error) {
@@ -146,6 +174,10 @@ class FirestoreService {
 
   async deleteReminder(reminderId: string): Promise<void> {
     try {
+      if (!db) {
+        throw new Error('Firebase not initialized')
+      }
+      
       const reminderRef = doc(db, 'reminders', reminderId)
       await deleteDoc(reminderRef)
     } catch (error) {
