@@ -11,6 +11,8 @@ export default function CalendarView() {
   const [events, setEvents] = useState<CalendarEvent[]>([])
   const [selectedDate, setSelectedDate] = useState<Date | null>(null)
   const [showAddEvent, setShowAddEvent] = useState(false)
+  const [showEditEvent, setShowEditEvent] = useState(false)
+  const [editingEvent, setEditingEvent] = useState<CalendarEvent | null>(null)
   const [viewMode, setViewMode] = useState<'month' | 'week' | 'day'>('month')
   const [newEvent, setNewEvent] = useState({
     title: '',
@@ -135,10 +137,86 @@ export default function CalendarView() {
     }
   }
 
+  const handleEditEvent = (event: CalendarEvent) => {
+    setEditingEvent(event)
+    setNewEvent({
+      title: event.title,
+      startTime: event.startTime.toISOString().slice(0, 16), // Format for datetime-local input
+      endTime: event.endTime.toISOString().slice(0, 16),
+      description: event.description || '',
+      location: event.location || ''
+    })
+    setShowEditEvent(true)
+  }
+
+  const handleUpdateEvent = async () => {
+    if (!editingEvent || !newEvent.title || !newEvent.startTime) {
+      toast.error('Please fill in the required fields')
+      return
+    }
+
+    try {
+      // Find the stored event to get its ID
+      const storedEvents = calendarService.getStoredEvents()
+      const storedEvent = storedEvents.find(e => 
+        e.title === editingEvent.title && 
+        new Date(e.startTime).getTime() === editingEvent.startTime.getTime()
+      )
+
+      if (storedEvent) {
+        // Delete the old event
+        await calendarService.deleteEvent(storedEvent.id)
+        
+        // Create the updated event
+        const updatedEvent: CalendarEvent = {
+          title: newEvent.title,
+          startTime: new Date(newEvent.startTime),
+          endTime: new Date(newEvent.endTime || newEvent.startTime),
+          description: newEvent.description,
+          location: newEvent.location
+        }
+        
+        const success = await calendarService.addToGoogleCalendar(updatedEvent)
+        if (success) {
+          await loadEvents() // Reload from storage
+          setShowEditEvent(false)
+          setEditingEvent(null)
+          setNewEvent({ title: '', startTime: '', endTime: '', description: '', location: '' })
+          toast.success('Event updated successfully!')
+        } else {
+          toast.error('Failed to update event')
+        }
+      } else {
+        toast.error('Event not found in storage')
+      }
+    } catch (error) {
+      console.error('Failed to update event:', error)
+      toast.error('Failed to update event')
+    }
+  }
+
   const handleDeleteEvent = async (eventToDelete: CalendarEvent) => {
     try {
-      setEvents(prev => prev.filter(event => event !== eventToDelete))
-      toast.success('Event deleted successfully!')
+      // Find the event ID from stored events
+      const storedEvents = calendarService.getStoredEvents()
+      const storedEvent = storedEvents.find(e => 
+        e.title === eventToDelete.title && 
+        new Date(e.startTime).getTime() === eventToDelete.startTime.getTime()
+      )
+      
+      if (storedEvent) {
+        const success = await calendarService.deleteEvent(storedEvent.id)
+        if (success) {
+          await loadEvents() // Reload from storage
+          toast.success('Event deleted successfully!')
+        } else {
+          toast.error('Failed to delete event')
+        }
+      } else {
+        // Fallback for events without stored ID
+        setEvents(prev => prev.filter(event => event !== eventToDelete))
+        toast.success('Event deleted successfully!')
+      }
     } catch (error) {
       console.error('Failed to delete event:', error)
       toast.error('Failed to delete event')
@@ -483,7 +561,9 @@ export default function CalendarView() {
                         </div>
                       </div>
                       <div className="flex space-x-2 ml-4">
-                        <button className="p-2 text-gray-400 hover:text-electric-400 transition-colors duration-200">
+                        <button 
+                          onClick={() => handleEditEvent(event)}
+                          className="p-2 text-gray-400 hover:text-electric-400 transition-colors duration-200">
                           <Edit className="w-4 h-4" />
                         </button>
                         <button className="p-2 text-gray-400 hover:text-red-400 transition-colors duration-200">
@@ -569,7 +649,9 @@ export default function CalendarView() {
                       </div>
                       
                       <div className="flex items-center space-x-2">
-                        <button className="p-2 text-gray-400 hover:text-blue-400 transition-colors duration-200">
+                        <button 
+                          onClick={() => handleEditEvent(event)}
+                          className="p-2 text-gray-400 hover:text-blue-400 transition-colors duration-200">
                           <Edit className="w-4 h-4" />
                         </button>
                         <button 
@@ -693,6 +775,116 @@ export default function CalendarView() {
                       className="flex-1 bg-gradient-to-r from-electric-600 via-purple-600 to-electric-500 hover:from-electric-700 hover:via-purple-700 hover:to-electric-600 text-white font-medium py-2 px-4 rounded-lg transition-all duration-200 hover:scale-105"
                     >
                       Add Event
+                    </button>
+                  </div>
+                </form>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Edit Event Modal */}
+        <AnimatePresence>
+          {showEditEvent && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50"
+            >
+              <motion.div
+                initial={{ scale: 0.9, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.9, opacity: 0 }}
+                className="bg-gray-900 rounded-2xl p-6 w-full max-w-md border border-gray-700 shadow-2xl"
+              >
+                <div className="flex items-center justify-between mb-6">
+                  <h3 className="text-xl font-bold text-electric-400">Edit Event</h3>
+                  <button
+                    onClick={() => {
+                      setShowEditEvent(false)
+                      setEditingEvent(null)
+                      setNewEvent({ title: '', startTime: '', endTime: '', description: '', location: '' })
+                    }}
+                    className="text-gray-400 hover:text-white transition-colors duration-200"
+                  >
+                    <X className="w-6 h-6" />
+                  </button>
+                </div>
+
+                <form onSubmit={(e) => { e.preventDefault(); handleUpdateEvent(); }} className="space-y-4">
+                  <div>
+                    <label className="block text-gray-300 text-sm font-medium mb-2">Event Title</label>
+                    <input
+                      type="text"
+                      value={newEvent.title}
+                      onChange={(e) => setNewEvent({ ...newEvent, title: e.target.value })}
+                      className="w-full bg-gray-800 border border-gray-600 rounded-lg px-3 py-2 text-white placeholder-gray-400 focus:outline-none focus:border-electric-500 focus:ring-1 focus:ring-electric-500 transition-all duration-200"
+                      placeholder="Enter event title"
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-gray-300 text-sm font-medium mb-2">Start Time</label>
+                    <input
+                      type="datetime-local"
+                      value={newEvent.startTime}
+                      onChange={(e) => setNewEvent({ ...newEvent, startTime: e.target.value })}
+                      className="w-full bg-gray-800 border border-gray-600 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-electric-500 focus:ring-1 focus:ring-electric-500 transition-all duration-200"
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-gray-300 text-sm font-medium mb-2">End Time</label>
+                    <input
+                      type="datetime-local"
+                      value={newEvent.endTime}
+                      onChange={(e) => setNewEvent({ ...newEvent, endTime: e.target.value })}
+                      className="w-full bg-gray-800 border border-gray-600 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-electric-500 focus:ring-1 focus:ring-electric-500 transition-all duration-200"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-gray-300 text-sm font-medium mb-2">Description</label>
+                    <textarea
+                      value={newEvent.description}
+                      onChange={(e) => setNewEvent({ ...newEvent, description: e.target.value })}
+                      className="w-full bg-gray-800 border border-gray-600 rounded-lg px-3 py-2 text-white placeholder-gray-400 focus:outline-none focus:border-electric-500 focus:ring-1 focus:ring-electric-500 transition-all duration-200 resize-none"
+                      placeholder="Enter event description"
+                      rows={3}
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-gray-300 text-sm font-medium mb-2">Location</label>
+                    <input
+                      type="text"
+                      value={newEvent.location}
+                      onChange={(e) => setNewEvent({ ...newEvent, location: e.target.value })}
+                      className="w-full bg-gray-800 border border-gray-600 rounded-lg px-3 py-2 text-white placeholder-gray-400 focus:outline-none focus:border-electric-500 focus:ring-1 focus:ring-electric-500 transition-all duration-200"
+                      placeholder="Enter event location"
+                    />
+                  </div>
+
+                  <div className="flex space-x-3 pt-4">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setShowEditEvent(false)
+                        setEditingEvent(null)
+                        setNewEvent({ title: '', startTime: '', endTime: '', description: '', location: '' })
+                      }}
+                      className="flex-1 bg-gray-700 hover:bg-gray-600 text-white font-medium py-2 px-4 rounded-lg transition-all duration-200"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="submit"
+                      className="flex-1 bg-gradient-to-r from-electric-600 via-purple-600 to-electric-500 hover:from-electric-700 hover:via-purple-700 hover:to-electric-600 text-white font-medium py-2 px-4 rounded-lg transition-all duration-200 hover:scale-105"
+                    >
+                      Update Event
                     </button>
                   </div>
                 </form>
