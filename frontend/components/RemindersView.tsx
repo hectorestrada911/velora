@@ -76,18 +76,43 @@ export default function RemindersView() {
   }
 
   const handleToggleComplete = async (reminderId: string) => {
-    setReminders(prev => prev.map(reminder => 
-      reminder.id === reminderId 
-        ? { ...reminder, completed: !reminder.completed }
-        : reminder
-    ))
+    try {
+      const reminder = reminders.find(r => r.id === reminderId)
+      if (!reminder) return
+      
+      const success = await calendarService.updateReminder(reminderId, { completed: !reminder.completed })
+      if (success) {
+        await loadReminders()
+        toast.success(reminder.completed ? 'Reminder marked as pending!' : 'Reminder completed!')
+      } else {
+        toast.error('Failed to update reminder')
+      }
+    } catch (error) {
+      console.error('Failed to toggle reminder:', error)
+      toast.error('Failed to update reminder')
+    }
+  }
+
+  const handleSnoozeReminder = async (reminderId: string, minutes: number) => {
+    try {
+      const success = await calendarService.snoozeReminder(reminderId, minutes)
+      if (success) {
+        await loadReminders()
+        toast.success(`Reminder snoozed for ${minutes} minutes`)
+      } else {
+        toast.error('Failed to snooze reminder')
+      }
+    } catch (error) {
+      console.error('Failed to snooze reminder:', error)
+      toast.error('Failed to snooze reminder')
+    }
   }
 
   const handleDeleteReminder = async (reminderId: string) => {
     try {
       const success = await calendarService.deleteReminder(reminderId)
       if (success) {
-        setReminders(prev => prev.filter(reminder => reminder.id !== reminderId))
+        await loadReminders() // Reload from storage
         toast.success('Reminder deleted successfully!')
       } else {
         toast.error('Failed to delete reminder')
@@ -308,6 +333,18 @@ export default function RemindersView() {
                         >
                           <CheckCircle className="w-5 h-5" />
                         </motion.button>
+                        
+                        {!reminder.completed && (
+                          <motion.button 
+                            whileHover={{ scale: 1.2 }}
+                            whileTap={{ scale: 0.9 }}
+                            onClick={() => handleSnoozeReminder(reminder.id, 15)}
+                            className="p-2 text-gray-400 hover:text-yellow-400 transition-all duration-200 bg-gray-500/10 hover:bg-yellow-500/20 rounded-lg"
+                            title="Snooze 15 minutes"
+                          >
+                            <Clock className="w-5 h-5" />
+                          </motion.button>
+                        )}
                         
                         <motion.button 
                           whileHover={{ scale: 1.2 }}

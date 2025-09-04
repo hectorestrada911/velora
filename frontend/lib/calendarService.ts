@@ -16,6 +16,7 @@ export interface Reminder {
 export class CalendarService {
   private static instance: CalendarService;
   private googleCalendarApiKey: string | null = null;
+  private localEvents: CalendarEvent[] = [];
 
   static getInstance(): CalendarService {
     if (!CalendarService.instance) {
@@ -51,30 +52,73 @@ export class CalendarService {
   // Add event to Google Calendar
   async addToGoogleCalendar(event: CalendarEvent): Promise<boolean> {
     try {
-      if (!window.gapi?.client?.calendar) {
-        throw new Error('Google Calendar not initialized');
+      // First try to add to Google Calendar if available
+      if (window.gapi?.client?.calendar) {
+        const response = await window.gapi.client.calendar.events.insert({
+          calendarId: 'primary',
+          resource: {
+            summary: event.title,
+            description: event.description,
+            start: {
+              dateTime: event.startTime.toISOString(),
+              timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone
+            },
+            end: {
+              dateTime: event.endTime.toISOString(),
+              timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone
+            },
+            location: event.location
+          }
+        });
+        return response.status === 200;
+      } else {
+        // Fallback to local storage
+        return this.addToLocalCalendar(event);
       }
-
-      const response = await window.gapi.client.calendar.events.insert({
-        calendarId: 'primary',
-        resource: {
-          summary: event.title,
-          description: event.description,
-          start: {
-            dateTime: event.startTime.toISOString(),
-            timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone
-          },
-          end: {
-            dateTime: event.endTime.toISOString(),
-            timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone
-          },
-          location: event.location
-        }
-      });
-
-      return response.status === 200;
     } catch (error) {
-      console.error('Failed to add to Google Calendar:', error);
+      console.error('Failed to add to Google Calendar, trying local storage:', error);
+      // Fallback to local storage
+      return this.addToLocalCalendar(event);
+    }
+  }
+
+  // Add event to local calendar
+  async addToLocalCalendar(event: CalendarEvent): Promise<boolean> {
+    try {
+      const events = this.getStoredEvents();
+      const newEvent = {
+        ...event,
+        id: Date.now().toString(),
+        createdAt: new Date().toISOString()
+      };
+      events.push(newEvent);
+      localStorage.setItem('velora-events', JSON.stringify(events));
+      return true;
+    } catch (error) {
+      console.error('Failed to add to local calendar:', error);
+      return false;
+    }
+  }
+
+  // Get stored events
+  getStoredEvents(): Array<CalendarEvent & { id: string; createdAt: string }> {
+    try {
+      const stored = localStorage.getItem('velora-events');
+      return stored ? JSON.parse(stored) : [];
+    } catch {
+      return [];
+    }
+  }
+
+  // Delete event
+  async deleteEvent(eventId: string): Promise<boolean> {
+    try {
+      const events = this.getStoredEvents();
+      const filtered = events.filter(e => e.id !== eventId);
+      localStorage.setItem('velora-events', JSON.stringify(filtered));
+      return true;
+    } catch (error) {
+      console.error('Failed to delete event:', error);
       return false;
     }
   }
@@ -130,6 +174,42 @@ export class CalendarService {
       return true;
     } catch (error) {
       console.error('Failed to delete reminder:', error);
+      return false;
+    }
+  }
+
+  // Update reminder
+  async updateReminder(reminderId: string, updates: Partial<Reminder>): Promise<boolean> {
+    try {
+      const reminders = this.getStoredReminders();
+      const index = reminders.findIndex(r => r.id === reminderId);
+      if (index === -1) return false;
+      
+      reminders[index] = { ...reminders[index], ...updates };
+      localStorage.setItem('velora-reminders', JSON.stringify(reminders));
+      return true;
+    } catch (error) {
+      console.error('Failed to update reminder:', error);
+      return false;
+    }
+  }
+
+  // Mark reminder as completed
+  async markReminderComplete(reminderId: string): Promise<boolean> {
+    return this.updateReminder(reminderId, { completed: true });
+  }
+
+  // Snooze reminder
+  async snoozeReminder(reminderId: string, minutes: number): Promise<boolean> {
+    try {
+      const reminders = this.getStoredReminders();
+      const reminder = reminders.find(r => r.id === reminderId);
+      if (!reminder) return false;
+      
+      const newDueDate = new Date(reminder.dueDate.getTime() + minutes * 60 * 1000);
+      return this.updateReminder(reminderId, { dueDate: newDueDate });
+    } catch (error) {
+      console.error('Failed to snooze reminder:', error);
       return false;
     }
   }

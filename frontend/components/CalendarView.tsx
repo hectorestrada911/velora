@@ -26,24 +26,31 @@ export default function CalendarView() {
 
   const loadEvents = async () => {
     try {
-      // For now, we'll use mock data since Google Calendar integration needs API keys
-      const mockEvents: CalendarEvent[] = [
-        {
-          title: 'Team Meeting',
-          startTime: new Date(Date.now() + 2 * 60 * 60 * 1000), // 2 hours from now
-          endTime: new Date(Date.now() + 3 * 60 * 60 * 1000), // 3 hours from now
-          description: 'Weekly team sync meeting',
-          location: 'Conference Room A'
-        },
-        {
-          title: 'Project Deadline',
-          startTime: new Date(Date.now() + 24 * 60 * 60 * 1000), // Tomorrow
-          endTime: new Date(Date.now() + 24 * 60 * 60 * 1000 + 60 * 60 * 1000), // 1 hour later
-          description: 'Q4 report submission deadline',
-          location: 'Office'
-        }
-      ]
-      setEvents(mockEvents)
+      // Load real events from calendar service
+      const storedEvents = calendarService.getStoredEvents()
+      const realEvents: CalendarEvent[] = storedEvents.map(event => ({
+        title: event.title,
+        startTime: new Date(event.startTime),
+        endTime: new Date(event.endTime),
+        description: event.description,
+        location: event.location
+      }))
+      
+      // If no real events, show some sample events
+      if (realEvents.length === 0) {
+        const sampleEvents: CalendarEvent[] = [
+          {
+            title: 'Welcome to Velora!',
+            startTime: new Date(Date.now() + 60 * 60 * 1000), // 1 hour from now
+            endTime: new Date(Date.now() + 2 * 60 * 60 * 1000), // 2 hours from now
+            description: 'Your AI assistant is ready to help you manage your schedule',
+            location: 'Velora App'
+          }
+        ]
+        setEvents(sampleEvents)
+      } else {
+        setEvents(realEvents)
+      }
     } catch (error) {
       console.error('Failed to load events:', error)
       toast.error('Failed to load calendar events')
@@ -115,7 +122,7 @@ export default function CalendarView() {
 
       const success = await calendarService.addToGoogleCalendar(event)
       if (success) {
-        setEvents(prev => [...prev, event])
+        await loadEvents() // Reload events from storage
         setShowAddEvent(false)
         setNewEvent({ title: '', startTime: '', endTime: '', description: '', location: '' })
         toast.success('Event added successfully!')
