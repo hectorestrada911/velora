@@ -113,7 +113,7 @@ export class VoiceService {
     }
 
     this.onResultCallback = onResult
-    this.onTranscriptCallback = onTranscript
+    this.onTranscriptCallback = onTranscript || null
 
     try {
       this.recognition.start()
