@@ -370,13 +370,18 @@ export default function CalendarView() {
                     whileHover={{ scale: day ? 1.02 : 1 }}
                     whileTap={{ scale: day ? 0.98 : 1 }}
                     className={`min-h-[80px] md:min-h-[140px] p-2 md:p-3 border rounded-lg md:rounded-xl transition-all duration-200 ${
-                      day ? 'bg-gray-800 hover:bg-gray-700 cursor-pointer border-gray-600 hover:border-electric-500/50' : 'bg-transparent border-transparent'
+                      day ? 'bg-gray-800 hover:bg-gray-700 cursor-pointer border-gray-600 hover:border-electric-500/50 hover:shadow-lg' : 'bg-transparent border-transparent'
                     } ${
                       day && day.toDateString() === new Date().toDateString() 
                         ? 'ring-2 ring-electric-500 shadow-glow' 
                         : ''
+                    } ${
+                      selectedDate && day && day.toDateString() === selectedDate.toDateString()
+                        ? 'ring-2 ring-purple-500 bg-purple-500/10'
+                        : ''
                     }`}
                     onClick={() => day && setSelectedDate(day)}
+                    title={day ? `Click to view events for ${day.toLocaleDateString()}` : ''}
                   >
                     {day && (
                       <>
@@ -607,12 +612,29 @@ export default function CalendarView() {
                   day: 'numeric' 
                 })}
               </h3>
-              <button
-                onClick={() => setSelectedDate(null)}
-                className="text-gray-400 hover:text-white transition-colors duration-200"
-              >
-                <X className="w-5 h-5" />
-              </button>
+              <div className="flex items-center space-x-2">
+                <button
+                  onClick={() => {
+                    setNewEvent({
+                      title: '',
+                      startTime: selectedDate.toISOString().slice(0, 16),
+                      endTime: selectedDate.toISOString().slice(0, 16),
+                      description: '',
+                      location: ''
+                    })
+                    setShowAddEvent(true)
+                  }}
+                  className="px-3 py-1 bg-electric-600 hover:bg-electric-700 text-white text-sm rounded-lg transition-colors duration-200"
+                >
+                  + Add Event
+                </button>
+                <button
+                  onClick={() => setSelectedDate(null)}
+                  className="text-gray-400 hover:text-white transition-colors duration-200"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
             </div>
             
             <div className="space-y-4">
