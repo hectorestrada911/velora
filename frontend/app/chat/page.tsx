@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Send, Mic, MicOff, Calendar, Bell, Settings, Plus, Sparkles, Brain, Clock, CheckCircle, History, Trash2 } from 'lucide-react'
+import { Send, Mic, MicOff, Calendar, Bell, Settings, Plus, Sparkles, Brain, Clock, CheckCircle, History, Trash2, Upload, FileText } from 'lucide-react'
 import { toast } from 'react-hot-toast'
 import { calendarService } from '@/lib/calendarService'
 import VoiceCommand from '@/components/VoiceCommand'
@@ -31,7 +31,10 @@ export default function ChatPage() {
   const [currentConversationId, setCurrentConversationId] = useState<string | null>(null)
   const [showConversationHistory, setShowConversationHistory] = useState(false)
   const [isLoadingConversations, setIsLoadingConversations] = useState(false)
+  const [showFileUpload, setShowFileUpload] = useState(false)
+  const [uploadedFiles, setUploadedFiles] = useState<Array<{name: string, content: string, type: string}>>([])
   const messagesEndRef = useRef<HTMLDivElement>(null)
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
   const suggestions: Suggestion[] = [
     {
@@ -63,6 +66,18 @@ export default function ChatPage() {
       text: 'Try voice commands - "Schedule a meeting tomorrow at 3pm"',
       icon: <Mic className="w-4 h-4" />,
       category: 'voice'
+    },
+    {
+      id: '6',
+      text: 'Upload my resume and help me analyze it',
+      icon: <FileText className="w-4 h-4" />,
+      category: 'general'
+    },
+    {
+      id: '7',
+      text: 'Find my resume in my uploaded documents',
+      icon: <FileText className="w-4 h-4" />,
+      category: 'general'
     }
   ]
 
@@ -155,6 +170,120 @@ export default function ChatPage() {
     }
   }
 
+  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files
+    if (!files || files.length === 0) return
+
+    const file = files[0]
+    
+    try {
+      // Read file content
+      const content = await readFileContent(file)
+      
+      // Add to uploaded files
+      const newFile = {
+        name: file.name,
+        content: content,
+        type: file.type
+      }
+      
+      setUploadedFiles(prev => [...prev, newFile])
+      
+      // Create a message about the uploaded file
+      const fileMessage: Message = {
+        id: Date.now().toString(),
+        type: 'user',
+        content: `I uploaded a file: ${file.name}`,
+        timestamp: new Date()
+      }
+      
+      setMessages(prev => {
+        const newMessages = [...prev, fileMessage]
+        saveConversation(newMessages)
+        return newMessages
+      })
+      
+      // AI response about the file
+      const aiMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        type: 'ai',
+        content: `I've saved your file "${file.name}" and can help you analyze it. What would you like me to do with it?`,
+        timestamp: new Date(),
+        analysis: {
+          type: 'file_upload',
+          priority: 'medium',
+          summary: `File uploaded: ${file.name}`,
+          fileName: file.name,
+          fileContent: content.substring(0, 200) + '...'
+        }
+      }
+      
+      setMessages(prev => {
+        const newMessages = [...prev, aiMessage]
+        saveConversation(newMessages)
+        return newMessages
+      })
+      
+      toast.success(`File "${file.name}" uploaded successfully!`)
+      
+    } catch (error) {
+      console.error('Error uploading file:', error)
+      toast.error('Failed to upload file')
+    }
+  }
+
+  const readFileContent = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader()
+      reader.onload = (e) => {
+        resolve(e.target?.result as string || '')
+      }
+      reader.onerror = reject
+      reader.readAsText(file)
+    })
+  }
+
+  const searchDocuments = (query: string) => {
+    const matchingFiles = uploadedFiles.filter(file => 
+      file.name.toLowerCase().includes(query.toLowerCase()) ||
+      file.content.toLowerCase().includes(query.toLowerCase())
+    )
+    
+    if (matchingFiles.length > 0) {
+      const searchMessage: Message = {
+        id: Date.now().toString(),
+        type: 'ai',
+        content: `I found ${matchingFiles.length} document(s) matching "${query}":\n\n${matchingFiles.map(f => `• ${f.name}`).join('\n')}`,
+        timestamp: new Date(),
+        analysis: {
+          type: 'document_search',
+          priority: 'medium',
+          summary: `Found ${matchingFiles.length} documents`,
+          searchResults: matchingFiles
+        }
+      }
+      
+      setMessages(prev => {
+        const newMessages = [...prev, searchMessage]
+        saveConversation(newMessages)
+        return newMessages
+      })
+    } else {
+      const noResultsMessage: Message = {
+        id: Date.now().toString(),
+        type: 'ai',
+        content: `I couldn't find any documents matching "${query}". Try uploading some files first!`,
+        timestamp: new Date()
+      }
+      
+      setMessages(prev => {
+        const newMessages = [...prev, noResultsMessage]
+        saveConversation(newMessages)
+        return newMessages
+      })
+    }
+  }
+
   const handleSuggestionClick = (suggestion: Suggestion) => {
     if (suggestion.category === 'voice') {
       window.location.href = '/voice'
@@ -227,6 +356,14 @@ export default function ChatPage() {
       }
 
       const analysis = await response.json()
+      
+      // Check if user is asking about documents
+      const lowerInput = inputValue.toLowerCase()
+      if (lowerInput.includes('find') && (lowerInput.includes('resume') || lowerInput.includes('document') || lowerInput.includes('file'))) {
+        const searchQuery = inputValue.replace(/find|my|the|a|an|in|documents?|files?/gi, '').trim()
+        searchDocuments(searchQuery)
+        return
+      }
       
       const aiMessage: Message = {
         id: (Date.now() + 1).toString(),
@@ -644,6 +781,22 @@ export default function ChatPage() {
               </div>
               
               <div className="flex items-center space-x-2">
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept=".pdf,.txt,.doc,.docx,.md"
+                  onChange={handleFileUpload}
+                  className="hidden"
+                />
+                
+                <button
+                  onClick={() => fileInputRef.current?.click()}
+                  className="p-2.5 md:p-3 bg-gray-800 hover:bg-gray-700 text-gray-400 hover:text-white border border-gray-600 rounded-xl transition-all duration-200"
+                  title="Upload Document"
+                >
+                  <Upload className="w-4 h-4 md:w-5 md:h-5" />
+                </button>
+                
                 <button
                   onClick={() => setIsRecording(!isRecording)}
                   className={`p-2.5 md:p-3 rounded-xl transition-all duration-200 ${
