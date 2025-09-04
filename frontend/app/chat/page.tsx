@@ -5,6 +5,8 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { Send, Mic, MicOff, Calendar, Bell, Settings, Plus, Sparkles, Brain, Clock, CheckCircle } from 'lucide-react'
 import { toast } from 'react-hot-toast'
 import { calendarService } from '@/lib/calendarService'
+import VoiceCommand from '@/components/VoiceCommand'
+import { VoiceResult } from '@/lib/voiceService'
 
 interface Message {
   id: string
@@ -27,6 +29,8 @@ export default function ChatPage() {
   const [isRecording, setIsRecording] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [showSuggestions, setShowSuggestions] = useState(true)
+  const [showVoiceCommands, setShowVoiceCommands] = useState(false)
+  const [currentTranscript, setCurrentTranscript] = useState('')
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
   const suggestions: Suggestion[] = [
@@ -53,6 +57,12 @@ export default function ChatPage() {
       text: 'Brainstorm ideas for the new marketing campaign',
       icon: <Brain className="w-4 h-4" />,
       category: 'general'
+    },
+    {
+      id: '5',
+      text: 'Try voice commands - "Schedule a meeting tomorrow at 3pm"',
+      icon: <Mic className="w-4 h-4" />,
+      category: 'voice'
     }
   ]
 
@@ -65,8 +75,13 @@ export default function ChatPage() {
   }, [messages])
 
   const handleSuggestionClick = (suggestion: Suggestion) => {
-    setInputValue(suggestion.text)
-    setShowSuggestions(false)
+    if (suggestion.category === 'voice') {
+      setShowVoiceCommands(true)
+      setShowSuggestions(false)
+    } else {
+      setInputValue(suggestion.text)
+      setShowSuggestions(false)
+    }
   }
 
   const handleFollowUpQuestion = (question: string) => {
@@ -75,6 +90,28 @@ export default function ChatPage() {
     setTimeout(() => {
       handleSendMessage()
     }, 100)
+  }
+
+  const handleVoiceResult = (result: VoiceResult) => {
+    if (result.success) {
+      // Add a system message showing the voice command result
+      const voiceMessage: Message = {
+        id: Date.now().toString(),
+        type: 'ai',
+        content: result.message,
+        timestamp: new Date(),
+        analysis: {
+          type: 'voice_command',
+          priority: 'medium',
+          summary: 'Voice command executed successfully'
+        }
+      }
+      setMessages(prev => [...prev, voiceMessage])
+    }
+  }
+
+  const handleVoiceTranscript = (transcript: string) => {
+    setCurrentTranscript(transcript)
   }
 
   const handleSendMessage = async () => {
@@ -239,6 +276,15 @@ export default function ChatPage() {
               <Bell className="w-4 h-4 md:w-5 md:h-5" />
             </button>
             <button 
+              onClick={() => setShowVoiceCommands(!showVoiceCommands)}
+              className={`p-2 md:p-2 transition-colors duration-200 hover:bg-gray-800 rounded-lg ${
+                showVoiceCommands ? 'text-electric-400 bg-electric-500/20' : 'text-gray-400 hover:text-white'
+              }`}
+              title="Voice Commands"
+            >
+              <Mic className="w-4 h-4 md:w-5 md:h-5" />
+            </button>
+            <button 
               onClick={() => window.location.href = '/demo'}
               className="p-2 md:p-2 text-gray-400 hover:text-white transition-colors duration-200 hover:bg-gray-800 rounded-lg"
               title="View Functionality Demo"
@@ -253,8 +299,23 @@ export default function ChatPage() {
       </header>
 
       <div className="max-w-6xl mx-auto p-3 md:p-4">
+        {/* Voice Commands */}
+        {showVoiceCommands && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="mb-6 md:mb-8"
+          >
+            <VoiceCommand
+              onVoiceResult={handleVoiceResult}
+              onTranscript={handleVoiceTranscript}
+            />
+          </motion.div>
+        )}
+
         {/* Suggestions */}
-        {showSuggestions && messages.length === 0 && (
+        {showSuggestions && messages.length === 0 && !showVoiceCommands && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
