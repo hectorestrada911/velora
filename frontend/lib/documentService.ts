@@ -228,7 +228,7 @@ export class DocumentService {
       if (contentLower.includes('project') || contentLower.includes('portfolio')) tags.push('project')
     }
     
-    return [...new Set(tags)] // Remove duplicates
+    return Array.from(new Set(tags)) // Remove duplicates
   }
 
   private categorizeDocument(fileName: string, content?: string): string {
