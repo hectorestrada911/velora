@@ -380,7 +380,12 @@ export default function CalendarView() {
                         ? 'ring-2 ring-purple-500 bg-purple-500/10'
                         : ''
                     }`}
-                    onClick={() => day && setSelectedDate(day)}
+                    onClick={() => {
+                      if (day) {
+                        console.log('Clicked on date:', day.toDateString())
+                        setSelectedDate(day)
+                      }
+                    }}
                     title={day ? `Click to view events for ${day.toLocaleDateString()}` : ''}
                   >
                     {day && (
@@ -601,7 +606,7 @@ export default function CalendarView() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="mt-8 bg-background-elevated rounded-2xl p-6 border border-gray-700"
+            className="mt-8 bg-gray-900 rounded-2xl p-6 border-2 border-purple-500 shadow-xl"
           >
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-xl font-semibold text-purple-400">
@@ -639,7 +644,10 @@ export default function CalendarView() {
             
             <div className="space-y-4">
               {getEventsForDate(selectedDate).length === 0 ? (
-                <p className="text-gray-400 text-center py-8">No events scheduled for this day</p>
+                <div className="text-center py-8">
+                  <p className="text-gray-400 mb-4">No events scheduled for this day</p>
+                  <p className="text-sm text-gray-500">Click the "Add Event" button above to schedule something!</p>
+                </div>
               ) : (
                 getEventsForDate(selectedDate).map((event, index) => (
                   <motion.div
