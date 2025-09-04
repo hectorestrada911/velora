@@ -638,20 +638,20 @@ Would you like me to create these now?`
                 </>
               ) : (
                 <>
-                                           {/* Text Input Interface */}
-                         <div className="text-center">
-                           <div className="w-16 h-16 bg-gradient-to-br from-accent-600 to-accent-500 rounded-full flex items-center justify-center mx-auto mb-4 shadow-glow">
-                             <Keyboard className="w-8 h-8 text-white" />
-                           </div>
-
-                           <div className="space-y-4">
-                             <textarea
-                               value={textInput}
-                               onChange={(e) => setTextInput(e.target.value)}
+                  {/* Text Input Interface */}
+                  <div className="text-center">
+                    <div className="w-16 h-16 bg-gradient-to-br from-accent-600 to-accent-500 rounded-full flex items-center justify-center mx-auto mb-4 shadow-glow">
+                      <Keyboard className="w-8 h-8 text-white" />
+                    </div>
+                    
+                    <div className="space-y-4">
+                      <textarea
+                        value={textInput}
+                        onChange={(e) => setTextInput(e.target.value)}
                                placeholder="Don't let this thought disappear. Type it here and we'll remember it forever..."
-                               className="input-field min-h-[120px] resize-none"
-                               disabled={isTranscribing}
-                             />
+                        className="input-field min-h-[120px] resize-none"
+                        disabled={isTranscribing}
+                      />
                       
                       <button
                         onClick={handleTextSubmit}
@@ -798,8 +798,8 @@ Would you like me to create these now?`
                       <p className="text-gray-200 text-sm mb-1">{analyzedContent.calendarEvent.title}</p>
                       <p className="text-gray-400 text-xs">
                         {analyzedContent.calendarEvent.startTime.toLocaleDateString()} at {analyzedContent.calendarEvent.startTime.toLocaleTimeString()}
-                      </p>
-                    </div>
+                            </p>
+                          </div>
                   )}
                   
                   {/* Reminder */}
@@ -813,14 +813,14 @@ Would you like me to create these now?`
                         <span className="px-2 py-1 bg-green-600/20 text-green-400 text-xs rounded-full">
                           ✅ Created
                         </span>
-                      </div>
+                        </div>
                       <p className="text-gray-200 text-sm mb-1">{analyzedContent.reminder.title}</p>
                       <p className="text-gray-400 text-xs">
                         Due: {analyzedContent.reminder.dueDate.toLocaleDateString()}
                       </p>
                     </div>
                   )}
-                  
+
                   {/* Extracted Data */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                     {analyzedContent.extractedData.people && analyzedContent.extractedData.people.length > 0 && (
@@ -837,9 +837,9 @@ Would you like me to create these now?`
                     )}
                     
                     {analyzedContent.suggestedTags.length > 0 && (
-                      <div>
+                    <div>
                         <h5 className="text-sm font-medium text-gray-300 mb-2">Tags</h5>
-                        <div className="flex flex-wrap gap-2">
+                      <div className="flex flex-wrap gap-2">
                           {analyzedContent.suggestedTags.map((tag, index) => (
                             <span key={index} className="px-2 py-1 bg-electric-600/20 text-electric-400 text-sm rounded-full">
                               {tag}

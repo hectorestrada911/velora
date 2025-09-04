@@ -94,7 +94,10 @@ export default function ChatPage() {
 
     try {
       // Call real AI backend
-      const response = await fetch('/api/analyze', {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://velora-production.up.railway.app/api/analyze'
+      console.log('API URL being used:', apiUrl)
+      console.log('Environment variable:', process.env.NEXT_PUBLIC_API_URL)
+      const response = await fetch(apiUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
