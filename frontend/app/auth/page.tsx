@@ -66,6 +66,10 @@ export default function AuthPage() {
     setIsLoading(true)
     
     try {
+      if (!auth) {
+        throw new Error('Firebase not initialized')
+      }
+      
       const provider = new GoogleAuthProvider()
       const result = await signInWithPopup(auth, provider)
       
