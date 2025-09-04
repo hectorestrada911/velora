@@ -10,6 +10,11 @@ export default function CalendarView() {
   const [currentDate, setCurrentDate] = useState(new Date())
   const [events, setEvents] = useState<CalendarEvent[]>([])
   const [selectedDate, setSelectedDate] = useState<Date | null>(null)
+  
+  // Debug: Log when selectedDate changes
+  useEffect(() => {
+    console.log('selectedDate state changed to:', selectedDate)
+  }, [selectedDate])
   const [showAddEvent, setShowAddEvent] = useState(false)
   const [showEditEvent, setShowEditEvent] = useState(false)
   const [editingEvent, setEditingEvent] = useState<CalendarEvent | null>(null)
@@ -609,10 +614,15 @@ export default function CalendarView() {
 
         {/* Debug Info */}
         {selectedDate && (
-          <div className="mt-4 p-2 bg-yellow-500/20 border border-yellow-500 rounded text-yellow-200 text-sm">
-            DEBUG: Selected date is {selectedDate.toDateString()}
+          <div className="mt-4 p-4 bg-red-500/30 border-2 border-red-500 rounded text-red-200 text-lg font-bold">
+            🚨 DEBUG: Selected date is {selectedDate.toDateString()} - Day view should appear below!
           </div>
         )}
+        
+        {/* Test: Always show this to verify rendering */}
+        <div className="mt-4 p-2 bg-green-500/20 border border-green-500 rounded text-green-200 text-sm">
+          TEST: This should always be visible. selectedDate is: {selectedDate ? selectedDate.toDateString() : 'null'}
+        </div>
 
         {/* Selected Date Events */}
         {selectedDate && (
