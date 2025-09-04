@@ -158,7 +158,7 @@ export class DocumentService {
         doc.name.toLowerCase().includes(lowerQuery) ||
         doc.content?.toLowerCase().includes(lowerQuery) ||
         doc.summary?.toLowerCase().includes(lowerQuery) ||
-        doc.tags.some(tag => tag.toLowerCase().includes(lowerQuery))
+        doc.tags.some((tag: string) => tag.toLowerCase().includes(lowerQuery))
       )
     } catch (error) {
       console.error('Error searching documents:', error)
