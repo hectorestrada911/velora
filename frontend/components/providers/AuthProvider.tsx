@@ -31,6 +31,11 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
+    if (!auth) {
+      setLoading(false)
+      return
+    }
+    
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setUser(user)
       setLoading(false)
@@ -40,6 +45,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
   }, [])
 
   const signIn = async (email: string, password: string) => {
+    if (!auth) {
+      throw new Error('Firebase not initialized')
+    }
     try {
       await signInWithEmailAndPassword(auth, email, password)
     } catch (error) {
@@ -49,6 +57,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
   }
 
   const signUp = async (email: string, password: string) => {
+    if (!auth) {
+      throw new Error('Firebase not initialized')
+    }
     try {
       await createUserWithEmailAndPassword(auth, email, password)
     } catch (error) {
@@ -58,6 +69,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
   }
 
   const signOut = async () => {
+    if (!auth) {
+      throw new Error('Firebase not initialized')
+    }
     try {
       await firebaseSignOut(auth)
     } catch (error) {
