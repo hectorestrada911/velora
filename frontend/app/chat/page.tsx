@@ -2,19 +2,14 @@
 
 import { useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Send, Mic, MicOff, Calendar, Bell, Settings, Plus, Sparkles, Brain, Clock, CheckCircle } from 'lucide-react'
+import { Send, Mic, MicOff, Calendar, Bell, Settings, Plus, Sparkles, Brain, Clock, CheckCircle, History, Trash2 } from 'lucide-react'
 import { toast } from 'react-hot-toast'
 import { calendarService } from '@/lib/calendarService'
 import VoiceCommand from '@/components/VoiceCommand'
 import { VoiceResult } from '@/lib/voiceService'
+import { conversationService, Message, Conversation } from '@/lib/conversationService'
+import { useAuth } from '@/components/providers/AuthProvider'
 
-interface Message {
-  id: string
-  type: 'user' | 'ai'
-  content: string
-  timestamp: Date
-  analysis?: any
-}
 
 interface Suggestion {
   id: string
@@ -24,6 +19,7 @@ interface Suggestion {
 }
 
 export default function ChatPage() {
+  const { user } = useAuth()
   const [messages, setMessages] = useState<Message[]>([])
   const [inputValue, setInputValue] = useState('')
   const [isRecording, setIsRecording] = useState(false)
@@ -31,6 +27,10 @@ export default function ChatPage() {
   const [showSuggestions, setShowSuggestions] = useState(true)
   const [showVoiceCommands, setShowVoiceCommands] = useState(false)
   const [currentTranscript, setCurrentTranscript] = useState('')
+  const [conversations, setConversations] = useState<Conversation[]>([])
+  const [currentConversationId, setCurrentConversationId] = useState<string | null>(null)
+  const [showConversationHistory, setShowConversationHistory] = useState(false)
+  const [isLoadingConversations, setIsLoadingConversations] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
   const suggestions: Suggestion[] = [
@@ -73,6 +73,87 @@ export default function ChatPage() {
   useEffect(() => {
     scrollToBottom()
   }, [messages])
+
+  // Load conversations when user is authenticated
+  useEffect(() => {
+    if (user) {
+      conversationService.setUserId(user.uid)
+      loadConversations()
+    }
+  }, [user])
+
+  const loadConversations = async () => {
+    if (!user) return
+    
+    setIsLoadingConversations(true)
+    try {
+      const loadedConversations = await conversationService.getConversations()
+      setConversations(loadedConversations)
+    } catch (error) {
+      console.error('Error loading conversations:', error)
+      toast.error('Failed to load conversation history')
+    } finally {
+      setIsLoadingConversations(false)
+    }
+  }
+
+  const saveConversation = async (messagesToSave: Message[]) => {
+    if (!user || messagesToSave.length === 0) return
+
+    try {
+      const conversationId = await conversationService.saveCurrentConversation(
+        messagesToSave, 
+        currentConversationId || undefined
+      )
+      setCurrentConversationId(conversationId)
+      
+      // Refresh conversations list
+      await loadConversations()
+    } catch (error) {
+      console.error('Error saving conversation:', error)
+      toast.error('Failed to save conversation')
+    }
+  }
+
+  const loadConversation = async (conversationId: string) => {
+    try {
+      const conversation = await conversationService.getConversation(conversationId)
+      if (conversation) {
+        setMessages(conversation.messages)
+        setCurrentConversationId(conversationId)
+        setShowSuggestions(false)
+        setShowConversationHistory(false)
+        toast.success('Conversation loaded')
+      }
+    } catch (error) {
+      console.error('Error loading conversation:', error)
+      toast.error('Failed to load conversation')
+    }
+  }
+
+  const startNewConversation = () => {
+    setMessages([])
+    setCurrentConversationId(null)
+    setShowSuggestions(true)
+    setShowConversationHistory(false)
+    toast.success('Started new conversation')
+  }
+
+  const deleteConversation = async (conversationId: string) => {
+    try {
+      await conversationService.deleteConversation(conversationId)
+      await loadConversations()
+      
+      if (currentConversationId === conversationId) {
+        startNewConversation()
+      }
+      
+      toast.success('Conversation deleted')
+    } catch (error) {
+      console.error('Error deleting conversation:', error)
+      toast.error('Failed to delete conversation')
+    }
+  }
 
   const handleSuggestionClick = (suggestion: Suggestion) => {
     if (suggestion.category === 'voice') {
@@ -155,7 +236,12 @@ export default function ChatPage() {
         analysis: analysis
       }
 
-      setMessages(prev => [...prev, aiMessage])
+      setMessages(prev => {
+        const newMessages = [...prev, aiMessage]
+        // Save conversation after each message
+        saveConversation(newMessages)
+        return newMessages
+      })
       
       // Show suggested items as interactive buttons instead of auto-creating
       if (analysis.calendarEvent || analysis.reminder) {
@@ -174,7 +260,12 @@ export default function ChatPage() {
             showSuggestions: true
           }
         }
-        setMessages(prev => [...prev, suggestionMessage])
+        setMessages(prev => {
+          const newMessages = [...prev, suggestionMessage]
+          // Save conversation after suggestion message
+          saveConversation(newMessages)
+          return newMessages
+        })
       }
       
     } catch (error) {
@@ -275,6 +366,15 @@ export default function ChatPage() {
           </div>
           
           <div className="flex items-center space-x-2 md:space-x-4">
+            {user && (
+              <button 
+                onClick={() => setShowConversationHistory(!showConversationHistory)}
+                className="p-2 md:p-2 text-gray-400 hover:text-white transition-colors duration-200 hover:bg-gray-800 rounded-lg"
+                title="Conversation History"
+              >
+                <History className="w-4 h-4 md:w-5 md:h-5" />
+              </button>
+            )}
             <button 
               onClick={() => window.location.href = '/calendar'}
               className="p-2 md:p-2 text-gray-400 hover:text-white transition-colors duration-200 hover:bg-gray-800 rounded-lg"
@@ -311,6 +411,80 @@ export default function ChatPage() {
       </header>
 
       <div className="max-w-6xl mx-auto p-3 md:p-4">
+        {/* Conversation History Sidebar */}
+        {showConversationHistory && user && (
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -20 }}
+            className="fixed left-0 top-0 h-full w-80 bg-gray-900 border-r border-gray-700 z-50 overflow-y-auto"
+          >
+            <div className="p-4 border-b border-gray-700">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-lg font-semibold text-white">Conversations</h2>
+                <button
+                  onClick={startNewConversation}
+                  className="p-2 bg-electric-600 hover:bg-electric-700 text-white rounded-lg transition-colors duration-200"
+                  title="New Conversation"
+                >
+                  <Plus className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+            
+            <div className="p-4">
+              {isLoadingConversations ? (
+                <div className="flex items-center justify-center py-8">
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-electric-500"></div>
+                </div>
+              ) : conversations.length === 0 ? (
+                <div className="text-center py-8">
+                  <History className="w-12 h-12 text-gray-500 mx-auto mb-4" />
+                  <p className="text-gray-400">No conversations yet</p>
+                  <p className="text-gray-500 text-sm">Start chatting to see your history here</p>
+                </div>
+              ) : (
+                <div className="space-y-2">
+                  {conversations.map((conversation) => (
+                    <div
+                      key={conversation.id}
+                      className={`p-3 rounded-lg border cursor-pointer transition-all duration-200 ${
+                        currentConversationId === conversation.id
+                          ? 'bg-electric-600/20 border-electric-500'
+                          : 'bg-gray-800 border-gray-700 hover:border-gray-600'
+                      }`}
+                    >
+                      <div className="flex items-start justify-between">
+                        <div 
+                          className="flex-1 min-w-0"
+                          onClick={() => loadConversation(conversation.id)}
+                        >
+                          <h3 className="text-sm font-medium text-white truncate">
+                            {conversation.title}
+                          </h3>
+                          <p className="text-xs text-gray-400 mt-1">
+                            {conversation.messages.length} messages
+                          </p>
+                          <p className="text-xs text-gray-500">
+                            {conversation.updatedAt.toLocaleDateString()}
+                          </p>
+                        </div>
+                        <button
+                          onClick={() => deleteConversation(conversation.id)}
+                          className="p-1 text-gray-500 hover:text-red-400 transition-colors duration-200"
+                          title="Delete conversation"
+                        >
+                          <Trash2 className="w-3 h-3" />
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </motion.div>
+        )}
+
         {/* Voice Commands */}
         {showVoiceCommands && (
           <motion.div
