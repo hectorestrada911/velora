@@ -157,9 +157,24 @@ export default function ChatPage() {
 
       setMessages(prev => [...prev, aiMessage])
       
-      // Auto-create calendar event and reminder if AI suggests them
+      // Show suggested items as interactive buttons instead of auto-creating
       if (analysis.calendarEvent || analysis.reminder) {
-        await autoCreateFromMessage(analysis)
+        // Add suggestion buttons to the message
+        const suggestionMessage: Message = {
+          id: (Date.now() + 2).toString(),
+          type: 'ai',
+          content: 'I can help you create these items. Would you like me to:',
+          timestamp: new Date(),
+          analysis: {
+            type: 'suggestion',
+            priority: 'medium',
+            summary: 'Suggested actions',
+            calendarEvent: analysis.calendarEvent,
+            reminder: analysis.reminder,
+            showSuggestions: true
+          }
+        }
+        setMessages(prev => [...prev, suggestionMessage])
       }
       
     } catch (error) {
