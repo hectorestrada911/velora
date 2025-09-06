@@ -961,38 +961,50 @@ export default function ChatPage() {
           <div className="max-w-6xl mx-auto">
             <div className="flex items-end gap-2 sm:gap-3 md:gap-4">
               <div className="flex-1 relative">
-                {/* Animated Glow Effect for Textbox */}
+                {/* Subtle Orbiting Line Effect for Textbox */}
                 {hasUserInteracted && inputValue.trim() && !isVoiceListening && (
                   <motion.div
-                    animate={{ 
-                      scale: [1, 1.02, 1],
-                      opacity: [0.6, 0.8, 0.6]
-                    }}
-                    transition={{ 
-                      duration: 2,
-                      repeat: Infinity,
-                      ease: "easeInOut"
-                    }}
-                    className="absolute inset-0 bg-gradient-to-r from-electric-500/20 via-purple-500/20 to-electric-500/20 rounded-xl blur-sm -z-10"
-                  />
-                )}
-                
-                {/* Rotating Glow Ring for Textbox */}
-                {hasUserInteracted && inputValue.trim() && !isVoiceListening && (
-                  <motion.div
-                    animate={{ rotate: 360 }}
-                    transition={{ 
-                      duration: 3,
-                      repeat: Infinity,
-                      ease: "linear"
-                    }}
                     className="absolute inset-0 rounded-xl -z-10"
-                    style={{
-                      background: 'conic-gradient(from 0deg, transparent, rgba(59, 130, 246, 0.3), rgba(147, 51, 234, 0.3), rgba(59, 130, 246, 0.3), transparent)',
-                      padding: '2px'
-                    }}
+                    style={{ padding: '1px' }}
                   >
-                    <div className="w-full h-full bg-gray-800 rounded-xl" />
+                    <motion.div
+                      animate={{ rotate: 360 }}
+                      transition={{ 
+                        duration: 4,
+                        repeat: Infinity,
+                        ease: "linear"
+                      }}
+                      className="w-full h-full relative"
+                    >
+                      {/* Subtle orbiting line */}
+                      <motion.div
+                        className="absolute w-1 h-6 bg-gradient-to-b from-electric-500 to-purple-500 rounded-full"
+                        style={{
+                          top: '-3px',
+                          left: '50%',
+                          transform: 'translateX(-50%)',
+                          boxShadow: '0 0 6px rgba(59, 130, 246, 0.6)'
+                        }}
+                      />
+                      {/* Subtle trail */}
+                      <motion.div
+                        className="absolute w-0.5 h-4 bg-gradient-to-b from-electric-400/40 to-purple-400/40 rounded-full"
+                        style={{
+                          top: '-2px',
+                          left: '48%',
+                          transform: 'translateX(-50%)',
+                          filter: 'blur(0.5px)'
+                        }}
+                        animate={{ 
+                          opacity: [0.2, 0.6, 0.2]
+                        }}
+                        transition={{ 
+                          duration: 2,
+                          repeat: Infinity,
+                          ease: "easeInOut"
+                        }}
+                      />
+                    </motion.div>
                   </motion.div>
                 )}
                 
@@ -1060,38 +1072,50 @@ export default function ChatPage() {
                 </button>
                 
                 <div className="relative">
-                  {/* Animated Glow Effect for Send Button */}
+                  {/* Subtle Orbiting Line Effect for Send Button */}
                   {hasUserInteracted && inputValue.trim() && !isLoading && (
                     <motion.div
-                      animate={{ 
-                        scale: [1, 1.1, 1],
-                        opacity: [0.4, 0.7, 0.4]
-                      }}
-                      transition={{ 
-                        duration: 1.5,
-                        repeat: Infinity,
-                        ease: "easeInOut"
-                      }}
-                      className="absolute inset-0 bg-gradient-to-r from-electric-500/30 via-purple-500/30 to-electric-500/30 rounded-xl blur-md -z-10"
-                    />
-                  )}
-                  
-                  {/* Rotating Glow Ring for Send Button */}
-                  {hasUserInteracted && inputValue.trim() && !isLoading && (
-                    <motion.div
-                      animate={{ rotate: 360 }}
-                      transition={{ 
-                        duration: 2,
-                        repeat: Infinity,
-                        ease: "linear"
-                      }}
                       className="absolute inset-0 rounded-xl -z-10"
-                      style={{
-                        background: 'conic-gradient(from 0deg, transparent, rgba(59, 130, 246, 0.4), rgba(147, 51, 234, 0.4), rgba(59, 130, 246, 0.4), transparent)',
-                        padding: '2px'
-                      }}
+                      style={{ padding: '1px' }}
                     >
-                      <div className="w-full h-full bg-gradient-to-r from-electric-600 via-purple-600 to-electric-500 rounded-xl" />
+                      <motion.div
+                        animate={{ rotate: 360 }}
+                        transition={{ 
+                          duration: 3,
+                          repeat: Infinity,
+                          ease: "linear"
+                        }}
+                        className="w-full h-full relative"
+                      >
+                        {/* Subtle orbiting line */}
+                        <motion.div
+                          className="absolute w-0.5 h-4 bg-gradient-to-b from-electric-500 to-purple-500 rounded-full"
+                          style={{
+                            top: '-2px',
+                            left: '50%',
+                            transform: 'translateX(-50%)',
+                            boxShadow: '0 0 4px rgba(59, 130, 246, 0.6)'
+                          }}
+                        />
+                        {/* Subtle trail */}
+                        <motion.div
+                          className="absolute w-0.5 h-3 bg-gradient-to-b from-electric-400/30 to-purple-400/30 rounded-full"
+                          style={{
+                            top: '-1.5px',
+                            left: '48%',
+                            transform: 'translateX(-50%)',
+                            filter: 'blur(0.5px)'
+                          }}
+                          animate={{ 
+                            opacity: [0.1, 0.4, 0.1]
+                          }}
+                          transition={{ 
+                            duration: 1.5,
+                            repeat: Infinity,
+                            ease: "easeInOut"
+                          }}
+                        />
+                      </motion.div>
                     </motion.div>
                   )}
                   
