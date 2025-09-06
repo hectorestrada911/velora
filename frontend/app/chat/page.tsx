@@ -352,72 +352,89 @@ export default function ChatPage() {
   }
 
   const handleVoiceInput = async () => {
+    // Check if we're on the client side
+    if (typeof window === 'undefined') return
+    
     if (isVoiceListening) {
       // Stop listening
-      voiceService.stopListening()
+      try {
+        voiceService.stopListening()
+      } catch (error) {
+        console.error('Error stopping voice service:', error)
+      }
       setIsVoiceListening(false)
       setIsVoiceProcessing(false)
       setCurrentVoiceTranscript('')
     } else {
       // Start listening directly
-      if (!voiceService.isSupported()) {
-        toast.error('Voice recognition not supported in this browser')
-        return
-      }
-
-      setIsVoiceListening(true)
-      setCurrentVoiceTranscript('')
-
-      const success = await voiceService.startListening(
-        (result: VoiceResult) => {
-          setIsVoiceListening(false)
-          setIsVoiceProcessing(false)
-          
-          if (result.success) {
-            // Use the current transcript for the message
-            const transcriptText = currentVoiceTranscript || 'Voice command executed'
-            
-            // Add the voice input as a user message
-            const userMessage: Message = {
-              id: Date.now().toString(),
-              type: 'user',
-              content: transcriptText,
-              timestamp: new Date()
-            }
-
-            setMessages(prev => {
-              const newMessages = [...prev, userMessage]
-              saveConversation(newMessages)
-              return newMessages
-            })
-
-            // Process the voice command
-            handleSendMessage()
-            toast.success('Voice input processed!')
-          } else {
-            toast.error(result.message)
-          }
-        },
-        (transcript: string) => {
-          setCurrentVoiceTranscript(transcript)
+      try {
+        if (!voiceService || !voiceService.isSupported()) {
+          toast.error('Voice recognition not supported in this browser')
+          return
         }
-      )
 
-      if (!success) {
+        setIsVoiceListening(true)
+        setCurrentVoiceTranscript('')
+
+        const success = await voiceService.startListening(
+          (result: VoiceResult) => {
+            setIsVoiceListening(false)
+            setIsVoiceProcessing(false)
+            
+            if (result.success) {
+              // Use the current transcript for the message
+              const transcriptText = currentVoiceTranscript || 'Voice command executed'
+              
+              // Add the voice input as a user message
+              const userMessage: Message = {
+                id: Date.now().toString(),
+                type: 'user',
+                content: transcriptText,
+                timestamp: new Date()
+              }
+
+              setMessages(prev => {
+                const newMessages = [...prev, userMessage]
+                saveConversation(newMessages)
+                return newMessages
+              })
+
+              // Process the voice command
+              handleSendMessage()
+              toast.success('Voice input processed!')
+            } else {
+              toast.error(result.message)
+            }
+          },
+          (transcript: string) => {
+            setCurrentVoiceTranscript(transcript)
+          }
+        )
+
+        if (!success) {
+          setIsVoiceListening(false)
+          toast.error('Failed to start voice recognition')
+        }
+      } catch (error) {
+        console.error('Error with voice service:', error)
         setIsVoiceListening(false)
-        toast.error('Failed to start voice recognition')
+        toast.error('Voice service error occurred')
       }
     }
   }
 
   const startVoiceRecording = async () => {
+    // Check if we're on the client side
+    if (typeof window === 'undefined') return
+    
     setShowVoiceInstructions(false)
     
     // Start listening
-    if (!voiceService.isSupported()) {
-      toast.error('Voice recognition not supported in this browser')
-      return
-    }
+    try {
+      if (!voiceService || !voiceService.isSupported()) {
+        toast.error('Voice recognition not supported in this browser')
+        return
+      }
 
     setIsVoiceListening(true)
     setCurrentVoiceTranscript('')
@@ -465,12 +482,17 @@ export default function ChatPage() {
       }
     )
 
-    if (success) {
-      setIsVoiceProcessing(true)
-      toast.success('Listening... Speak now!')
-    } else {
+      if (success) {
+        setIsVoiceProcessing(true)
+        toast.success('Listening... Speak now!')
+      } else {
+        setIsVoiceListening(false)
+        toast.error('Failed to start voice recognition')
+      }
+    } catch (error) {
+      console.error('Error with voice service:', error)
       setIsVoiceListening(false)
-      toast.error('Failed to start voice recognition')
+      toast.error('Voice service error occurred')
     }
   }
 
