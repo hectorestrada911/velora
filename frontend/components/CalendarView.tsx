@@ -24,6 +24,23 @@ export default function CalendarView() {
 
   useEffect(() => {
     loadEvents()
+    
+    // Set default view based on screen size
+    const setDefaultView = () => {
+      if (window.innerWidth < 768) { // Mobile
+        setViewMode('week')
+      } else { // Desktop
+        setViewMode('month')
+      }
+    }
+    
+    // Set initial view
+    setDefaultView()
+    
+    // Listen for resize events
+    window.addEventListener('resize', setDefaultView)
+    
+    return () => window.removeEventListener('resize', setDefaultView)
   }, [])
 
   const loadEvents = async () => {
@@ -399,7 +416,7 @@ export default function CalendarView() {
                     key={index}
                     whileHover={{ scale: day ? 1.02 : 1 }}
                     whileTap={{ scale: day ? 0.98 : 1 }}
-                    className={`min-h-[80px] md:min-h-[140px] p-2 md:p-3 border rounded-lg md:rounded-xl transition-all duration-200 ${
+                    className={`min-h-[100px] md:min-h-[140px] p-2 md:p-3 border rounded-lg md:rounded-xl transition-all duration-200 ${
                       day ? 'bg-gray-800 hover:bg-gray-700 cursor-pointer border-gray-600 hover:border-electric-500/50 hover:shadow-lg' : 'bg-transparent border-transparent'
                     } ${
                       day && day.toDateString() === new Date().toDateString() 
@@ -421,8 +438,8 @@ export default function CalendarView() {
                   >
                     {day && (
                       <>
-                        <div className="text-right mb-1 md:mb-2">
-                          <span className={`text-xs md:text-sm font-medium ${
+                        <div className="text-right mb-2">
+                          <span className={`text-sm md:text-sm font-medium ${
                             day.toDateString() === new Date().toDateString() 
                               ? 'text-electric-400' 
                               : 'text-gray-300'
@@ -431,25 +448,49 @@ export default function CalendarView() {
                           </span>
                         </div>
                         
-                        {/* Events for this day */}
-                        <div className="space-y-1 md:space-y-2">
-                          {getEventsForDate(day).slice(0, 2).map((event, eventIndex) => (
-                            <motion.div
-                              key={eventIndex}
-                              initial={{ opacity: 0, scale: 0.8 }}
-                              animate={{ opacity: 1, scale: 1 }}
-                              transition={{ delay: eventIndex * 0.1 }}
-                              className="text-xs p-1 md:p-2 bg-gradient-to-r from-electric-600/30 to-purple-600/30 text-white rounded-md md:rounded-lg truncate border border-electric-500/20 shadow-sm"
-                              title={event.title}
-                            >
-                              {event.title}
-                            </motion.div>
-                          ))}
-                          {getEventsForDate(day).length > 2 && (
-                            <div className="text-xs text-gray-400 text-center bg-gray-700/50 rounded-md md:rounded-lg p-1">
-                              +{getEventsForDate(day).length - 2} more
-                            </div>
-                          )}
+                        {/* Events for this day - Mobile optimized */}
+                        <div className="space-y-1">
+                          {/* Mobile: Show event dots instead of titles */}
+                          <div className="md:hidden">
+                            {getEventsForDate(day).length > 0 && (
+                              <div className="flex flex-wrap gap-1 justify-center">
+                                {getEventsForDate(day).slice(0, 3).map((event, eventIndex) => (
+                                  <motion.div
+                                    key={eventIndex}
+                                    initial={{ opacity: 0, scale: 0.8 }}
+                                    animate={{ opacity: 1, scale: 1 }}
+                                    transition={{ delay: eventIndex * 0.1 }}
+                                    className="w-2 h-2 bg-gradient-to-r from-electric-500 to-purple-500 rounded-full"
+                                    title={event.title}
+                                  />
+                                ))}
+                                {getEventsForDate(day).length > 3 && (
+                                  <div className="w-2 h-2 bg-gray-500 rounded-full" title={`+${getEventsForDate(day).length - 3} more events`} />
+                                )}
+                              </div>
+                            )}
+                          </div>
+                          
+                          {/* Desktop: Show event titles */}
+                          <div className="hidden md:block space-y-1">
+                            {getEventsForDate(day).slice(0, 2).map((event, eventIndex) => (
+                              <motion.div
+                                key={eventIndex}
+                                initial={{ opacity: 0, scale: 0.8 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                transition={{ delay: eventIndex * 0.1 }}
+                                className="text-xs p-1 bg-gradient-to-r from-electric-600/30 to-purple-600/30 text-white rounded-md truncate border border-electric-500/20 shadow-sm"
+                                title={event.title}
+                              >
+                                {event.title}
+                              </motion.div>
+                            ))}
+                            {getEventsForDate(day).length > 2 && (
+                              <div className="text-xs text-gray-400 text-center bg-gray-700/50 rounded-md p-1">
+                                +{getEventsForDate(day).length - 2} more
+                              </div>
+                            )}
+                          </div>
                         </div>
                       </>
                     )}
