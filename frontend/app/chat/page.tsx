@@ -961,6 +961,41 @@ export default function ChatPage() {
           <div className="max-w-6xl mx-auto">
             <div className="flex items-end gap-2 sm:gap-3 md:gap-4">
               <div className="flex-1 relative">
+                {/* Animated Glow Effect for Textbox */}
+                {hasUserInteracted && inputValue.trim() && !isVoiceListening && (
+                  <motion.div
+                    animate={{ 
+                      scale: [1, 1.02, 1],
+                      opacity: [0.6, 0.8, 0.6]
+                    }}
+                    transition={{ 
+                      duration: 2,
+                      repeat: Infinity,
+                      ease: "easeInOut"
+                    }}
+                    className="absolute inset-0 bg-gradient-to-r from-electric-500/20 via-purple-500/20 to-electric-500/20 rounded-xl blur-sm -z-10"
+                  />
+                )}
+                
+                {/* Rotating Glow Ring for Textbox */}
+                {hasUserInteracted && inputValue.trim() && !isVoiceListening && (
+                  <motion.div
+                    animate={{ rotate: 360 }}
+                    transition={{ 
+                      duration: 3,
+                      repeat: Infinity,
+                      ease: "linear"
+                    }}
+                    className="absolute inset-0 rounded-xl -z-10"
+                    style={{
+                      background: 'conic-gradient(from 0deg, transparent, rgba(59, 130, 246, 0.3), rgba(147, 51, 234, 0.3), rgba(59, 130, 246, 0.3), transparent)',
+                      padding: '2px'
+                    }}
+                  >
+                    <div className="w-full h-full bg-gray-800 rounded-xl" />
+                  </motion.div>
+                )}
+                
                 <textarea
                   value={inputValue}
                   onChange={(e) => {
@@ -969,11 +1004,11 @@ export default function ChatPage() {
                   }}
                   onKeyPress={handleKeyPress}
                   placeholder={isVoiceListening ? "🎤 Voice recording active..." : "Tell me what you need to remember, schedule, or organize..."}
-                  className={`w-full bg-gray-800 border rounded-xl px-3 sm:px-4 py-2.5 sm:py-3 text-white placeholder-gray-400 focus:outline-none focus:border-electric-500 focus:ring-1 focus:ring-electric-500 transition-all duration-200 resize-none text-sm sm:text-base ${
+                  className={`w-full bg-gray-800 border rounded-xl px-3 sm:px-4 py-2.5 sm:py-3 text-white placeholder-gray-400 focus:outline-none focus:border-electric-500 focus:ring-1 focus:ring-electric-500 transition-all duration-200 resize-none text-sm sm:text-base relative z-10 ${
                     isVoiceListening 
                       ? 'border-electric-500 ring-2 ring-electric-500/30 bg-electric-500/5' 
                       : hasUserInteracted && inputValue.trim()
-                      ? 'border-electric-500 ring-2 ring-electric-500/30 bg-electric-500/5 shadow-lg shadow-electric-500/20'
+                      ? 'border-electric-500/50'
                       : 'border-gray-600'
                   }`}
                   rows={1}
@@ -1024,17 +1059,50 @@ export default function ChatPage() {
                   )}
                 </button>
                 
-                <button
-                  onClick={handleSendMessage}
-                  disabled={!inputValue.trim() || isLoading}
-                  className={`p-2.5 sm:p-3 bg-gradient-to-r from-electric-600 via-purple-600 to-electric-500 hover:from-electric-700 hover:via-purple-700 hover:to-electric-600 text-white rounded-xl transition-all duration-200 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 min-w-[44px] min-h-[44px] flex items-center justify-center ${
-                    hasUserInteracted && inputValue.trim() && !isLoading
-                      ? 'ring-2 ring-electric-500/50 shadow-lg shadow-electric-500/30'
-                      : ''
-                  }`}
-                >
-                  <Send className="w-4 h-4 sm:w-5 sm:h-5" />
-                </button>
+                <div className="relative">
+                  {/* Animated Glow Effect for Send Button */}
+                  {hasUserInteracted && inputValue.trim() && !isLoading && (
+                    <motion.div
+                      animate={{ 
+                        scale: [1, 1.1, 1],
+                        opacity: [0.4, 0.7, 0.4]
+                      }}
+                      transition={{ 
+                        duration: 1.5,
+                        repeat: Infinity,
+                        ease: "easeInOut"
+                      }}
+                      className="absolute inset-0 bg-gradient-to-r from-electric-500/30 via-purple-500/30 to-electric-500/30 rounded-xl blur-md -z-10"
+                    />
+                  )}
+                  
+                  {/* Rotating Glow Ring for Send Button */}
+                  {hasUserInteracted && inputValue.trim() && !isLoading && (
+                    <motion.div
+                      animate={{ rotate: 360 }}
+                      transition={{ 
+                        duration: 2,
+                        repeat: Infinity,
+                        ease: "linear"
+                      }}
+                      className="absolute inset-0 rounded-xl -z-10"
+                      style={{
+                        background: 'conic-gradient(from 0deg, transparent, rgba(59, 130, 246, 0.4), rgba(147, 51, 234, 0.4), rgba(59, 130, 246, 0.4), transparent)',
+                        padding: '2px'
+                      }}
+                    >
+                      <div className="w-full h-full bg-gradient-to-r from-electric-600 via-purple-600 to-electric-500 rounded-xl" />
+                    </motion.div>
+                  )}
+                  
+                  <button
+                    onClick={handleSendMessage}
+                    disabled={!inputValue.trim() || isLoading}
+                    className="p-2.5 sm:p-3 bg-gradient-to-r from-electric-600 via-purple-600 to-electric-500 hover:from-electric-700 hover:via-purple-700 hover:to-electric-600 text-white rounded-xl transition-all duration-200 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 min-w-[44px] min-h-[44px] flex items-center justify-center relative z-10"
+                  >
+                    <Send className="w-4 h-4 sm:w-5 sm:h-5" />
+                  </button>
+                </div>
               </div>
             </div>
           </div>
