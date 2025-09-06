@@ -592,9 +592,13 @@ export default function ChatPage() {
     generateSmartSuggestions(inputValue, userMessage.id)
     
     setInputValue('')
-    setIsLoading(true)
     setShowSuggestions(false)
     setHasUserInteracted(false)
+    
+    // Ensure loading state is set after other state updates
+    setTimeout(() => {
+      setIsLoading(true)
+    }, 0)
 
     try {
       // Call real AI backend
@@ -620,6 +624,10 @@ export default function ChatPage() {
       if (lowerInput.includes('find') && (lowerInput.includes('resume') || lowerInput.includes('document') || lowerInput.includes('file'))) {
         const searchQuery = inputValue.replace(/find|my|the|a|an|in|documents?|files?/gi, '').trim()
         searchDocuments(searchQuery)
+        // Add a small delay to ensure typing animation is visible
+        setTimeout(() => {
+          setIsLoading(false)
+        }, 500)
         return
       }
       
@@ -695,7 +703,10 @@ export default function ChatPage() {
       setMessages(prev => [...prev, fallbackMessage])
       toast.error('AI processing failed, please try again')
     } finally {
-      setIsLoading(false)
+      // Add a small delay to ensure typing animation is visible
+      setTimeout(() => {
+        setIsLoading(false)
+      }, 500)
     }
   }
 
