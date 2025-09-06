@@ -936,12 +936,12 @@ export default function ChatPage() {
             <div className="flex items-end space-x-3 md:space-x-4">
               <div className="flex-1 relative">
                 <textarea
-                  value={currentVoiceTranscript || inputValue}
+                  value={inputValue}
                   onChange={(e) => setInputValue(e.target.value)}
                   onKeyPress={handleKeyPress}
-                  placeholder={isVoiceListening ? "🎤 Listening... Speak naturally" : "Tell me what you need to remember, schedule, or organize..."}
+                  placeholder={isVoiceListening ? "🎤 Voice recording active..." : "Tell me what you need to remember, schedule, or organize..."}
                   className={`w-full bg-gray-800 border rounded-xl px-3 md:px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:border-electric-500 focus:ring-1 focus:ring-electric-500 transition-all duration-200 resize-none text-sm md:text-base ${
-                    isVoiceListening ? 'border-red-500 ring-2 ring-red-500/30 bg-red-900/20 animate-pulse' : 'border-gray-600'
+                    isVoiceListening ? 'border-electric-500 ring-2 ring-electric-500/30 bg-electric-500/5' : 'border-gray-600'
                   }`}
                   rows={1}
                   style={{ minHeight: '48px', maxHeight: '120px' }}
@@ -1081,6 +1081,20 @@ export default function ChatPage() {
                 <p className="text-white text-xl font-bold mb-3">Velora is listening...</p>
                 <p className="text-gray-300 text-base leading-relaxed">Speak naturally, I'm capturing your words</p>
               </motion.div>
+
+              {/* Live transcript display */}
+              {currentVoiceTranscript && (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  className="absolute -bottom-32 left-1/2 transform -translate-x-1/2 w-96"
+                >
+                  <div className="bg-gray-800/90 backdrop-blur-sm border border-gray-600 rounded-xl p-4 shadow-lg">
+                    <p className="text-gray-400 text-sm font-medium mb-2">Live transcript:</p>
+                    <p className="text-white text-lg leading-relaxed">{currentVoiceTranscript}</p>
+                  </div>
+                </motion.div>
+              )}
             </motion.div>
           </motion.div>
         )}
