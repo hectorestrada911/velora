@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Send, Mic, MicOff, Calendar, Bell, Settings, Plus, Sparkles, Brain, Clock, CheckCircle, History, Trash2, Upload, FileText } from 'lucide-react'
+import { Send, Mic, MicOff, Calendar, Bell, Settings, Plus, Sparkles, Brain, Clock, CheckCircle, History, Trash2, Upload, FileText, X } from 'lucide-react'
 import { toast } from 'react-hot-toast'
 import { calendarService } from '@/lib/calendarService'
 import VoiceCommand from '@/components/VoiceCommand'
@@ -40,6 +40,7 @@ export default function ChatPage() {
   const [isVoiceListening, setIsVoiceListening] = useState(false)
   const [isVoiceProcessing, setIsVoiceProcessing] = useState(false)
   const [currentVoiceTranscript, setCurrentVoiceTranscript] = useState('')
+  const [showVoiceInstructions, setShowVoiceInstructions] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
@@ -358,65 +359,72 @@ export default function ChatPage() {
       setIsVoiceProcessing(false)
       setCurrentVoiceTranscript('')
     } else {
-      // Start listening
-      if (!voiceService.isSupported()) {
-        toast.error('Voice recognition not supported in this browser')
-        return
-      }
+      // Show voice instructions modal first
+      setShowVoiceInstructions(true)
+    }
+  }
 
-      setIsVoiceListening(true)
-      setCurrentVoiceTranscript('')
+  const startVoiceRecording = async () => {
+    setShowVoiceInstructions(false)
+    
+    // Start listening
+    if (!voiceService.isSupported()) {
+      toast.error('Voice recognition not supported in this browser')
+      return
+    }
 
-      const success = await voiceService.startListening(
-        (result: VoiceResult) => {
-          setIsVoiceListening(false)
-          setIsVoiceProcessing(false)
-          
-          if (result.success) {
-            // Use the current transcript for the message
-            const transcriptText = currentVoiceTranscript || 'Voice command executed'
-            
-            // Add the voice input as a user message
-            const userMessage: Message = {
-              id: Date.now().toString(),
-              type: 'user',
-              content: transcriptText,
-              timestamp: new Date()
-            }
+    setIsVoiceListening(true)
+    setCurrentVoiceTranscript('')
 
-            setMessages(prev => {
-              const newMessages = [...prev, userMessage]
-              saveConversation(newMessages)
-              return newMessages
-            })
-
-            // Set the input value and process the message
-            setInputValue(transcriptText)
-            setTimeout(() => {
-              handleSendMessage()
-            }, 100)
-            
-            setCurrentVoiceTranscript('')
-            toast.success('Voice input processed!')
-          } else {
-            setCurrentVoiceTranscript('')
-            toast.error(result.message)
-          }
-        },
-        (transcript: string) => {
-          setCurrentVoiceTranscript(transcript)
-          // Update the input field with the transcript
-          setInputValue(transcript)
-        }
-      )
-
-      if (success) {
-        setIsVoiceProcessing(true)
-        toast.success('Listening... Speak now!')
-      } else {
+    const success = await voiceService.startListening(
+      (result: VoiceResult) => {
         setIsVoiceListening(false)
-        toast.error('Failed to start voice recognition')
+        setIsVoiceProcessing(false)
+        
+        if (result.success) {
+          // Use the current transcript for the message
+          const transcriptText = currentVoiceTranscript || 'Voice command executed'
+          
+          // Add the voice input as a user message
+          const userMessage: Message = {
+            id: Date.now().toString(),
+            type: 'user',
+            content: transcriptText,
+            timestamp: new Date()
+          }
+
+          setMessages(prev => {
+            const newMessages = [...prev, userMessage]
+            saveConversation(newMessages)
+            return newMessages
+          })
+
+          // Set the input value and process the message
+          setInputValue(transcriptText)
+          setTimeout(() => {
+            handleSendMessage()
+          }, 100)
+          
+          setCurrentVoiceTranscript('')
+          toast.success('Voice input processed!')
+        } else {
+          setCurrentVoiceTranscript('')
+          toast.error(result.message)
+        }
+      },
+      (transcript: string) => {
+        setCurrentVoiceTranscript(transcript)
+        // Update the input field with the transcript
+        setInputValue(transcript)
       }
+    )
+
+    if (success) {
+      setIsVoiceProcessing(true)
+      toast.success('Listening... Speak now!')
+    } else {
+      setIsVoiceListening(false)
+      toast.error('Failed to start voice recognition')
     }
   }
 
@@ -927,6 +935,119 @@ export default function ChatPage() {
           </div>
         </div>
       </div>
+
+      {/* Voice Instructions Modal */}
+      <AnimatePresence>
+        {showVoiceInstructions && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50"
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="bg-background-elevated rounded-2xl p-6 w-full max-w-2xl border border-gray-700 max-h-[90vh] overflow-y-auto"
+            >
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-2xl font-semibold bg-gradient-to-r from-electric-400 via-purple-400 to-electric-500 bg-clip-text text-transparent">
+                  Voice Commands
+                </h3>
+                <button
+                  onClick={() => setShowVoiceInstructions(false)}
+                  className="text-gray-400 hover:text-white transition-colors duration-200"
+                >
+                  <X className="w-6 h-6" />
+                </button>
+              </div>
+              
+              <div className="space-y-6">
+                {/* How it works */}
+                <div className="p-4 bg-gradient-to-r from-electric-500/10 to-purple-500/10 border border-electric-500/20 rounded-xl">
+                  <h4 className="text-lg font-semibold text-electric-400 mb-3 flex items-center">
+                    <Mic className="w-5 h-5 mr-2" />
+                    How Voice Commands Work
+                  </h4>
+                  <p className="text-gray-300 leading-relaxed">
+                    Simply speak naturally to me! I'll understand your requests and help you create reminders, 
+                    schedule events, organize tasks, and more. Just click "Start Recording" below and speak clearly.
+                  </p>
+                </div>
+
+                {/* Example commands */}
+                <div>
+                  <h4 className="text-lg font-semibold text-purple-400 mb-4 flex items-center">
+                    <Sparkles className="w-5 h-5 mr-2" />
+                    Try These Voice Commands
+                  </h4>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    {[
+                      "Schedule a meeting tomorrow at 3pm",
+                      "Remind me to call John about the project",
+                      "I need to finish the Q4 report by Friday",
+                      "Set a reminder for my dentist appointment",
+                      "Create a task to review the budget",
+                      "Plan a team meeting next week"
+                    ].map((command, index) => (
+                      <div
+                        key={index}
+                        className="p-3 bg-gray-800/50 border border-gray-600 rounded-lg hover:border-electric-500/30 transition-colors duration-200"
+                      >
+                        <p className="text-gray-200 text-sm">"{command}"</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Tips */}
+                <div className="p-4 bg-yellow-500/10 border border-yellow-500/20 rounded-xl">
+                  <h4 className="text-lg font-semibold text-yellow-400 mb-3 flex items-center">
+                    <CheckCircle className="w-5 h-5 mr-2" />
+                    Tips for Best Results
+                  </h4>
+                  <ul className="space-y-2 text-gray-300">
+                    <li className="flex items-start">
+                      <span className="text-yellow-400 mr-2">•</span>
+                      Speak clearly and at a normal pace
+                    </li>
+                    <li className="flex items-start">
+                      <span className="text-yellow-400 mr-2">•</span>
+                      Include specific dates and times when possible
+                    </li>
+                    <li className="flex items-start">
+                      <span className="text-yellow-400 mr-2">•</span>
+                      Mention people's names for better context
+                    </li>
+                    <li className="flex items-start">
+                      <span className="text-yellow-400 mr-2">•</span>
+                      Use natural language - no special commands needed
+                    </li>
+                  </ul>
+                </div>
+
+                {/* Action buttons */}
+                <div className="flex space-x-4 pt-4">
+                  <button
+                    onClick={() => setShowVoiceInstructions(false)}
+                    className="flex-1 bg-gray-700 hover:bg-gray-600 text-white font-medium py-3 px-6 rounded-xl transition-colors duration-200"
+                  >
+                    Maybe Later
+                  </button>
+                  <button
+                    onClick={startVoiceRecording}
+                    className="flex-1 bg-gradient-to-r from-electric-600 via-purple-600 to-electric-500 hover:from-electric-700 hover:via-purple-700 hover:to-electric-600 text-white font-medium py-3 px-6 rounded-xl transition-all duration-200 hover:scale-105 flex items-center justify-center space-x-2"
+                  >
+                    <Mic className="w-5 h-5" />
+                    <span>Start Recording</span>
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   )
 }
