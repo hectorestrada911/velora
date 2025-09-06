@@ -41,8 +41,18 @@ export default function ChatPage() {
   const [isVoiceProcessing, setIsVoiceProcessing] = useState(false)
   const [currentVoiceTranscript, setCurrentVoiceTranscript] = useState('')
   const [showVoiceInstructions, setShowVoiceInstructions] = useState(false)
+  const [currentExampleIndex, setCurrentExampleIndex] = useState(0)
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
+
+  const voiceExamples = [
+    "Schedule a meeting tomorrow at 3pm",
+    "Remind me to call John about the project",
+    "Help me organize my tasks for this week",
+    "Set up a reminder for my dentist appointment",
+    "What's on my calendar for Friday?",
+    "Create a to-do list for the weekend"
+  ]
 
   const suggestions: Suggestion[] = [
     {
@@ -106,6 +116,19 @@ export default function ChatPage() {
       loadDocuments()
     }
   }, [user])
+
+  // Rotate voice examples when voice is listening
+  useEffect(() => {
+    let interval: NodeJS.Timeout
+    if (isVoiceListening) {
+      interval = setInterval(() => {
+        setCurrentExampleIndex((prev) => (prev + 1) % voiceExamples.length)
+      }, 3000) // Change every 3 seconds
+    }
+    return () => {
+      if (interval) clearInterval(interval)
+    }
+  }, [isVoiceListening, voiceExamples.length])
 
   const loadConversations = async () => {
     if (!user) return
@@ -1079,7 +1102,17 @@ export default function ChatPage() {
                 className="absolute -bottom-20 left-1/2 transform -translate-x-1/2 text-center w-80"
               >
                 <p className="text-white text-xl font-bold mb-3">Velora is listening...</p>
-                <p className="text-gray-300 text-base leading-relaxed">Speak naturally, I'm capturing your words</p>
+                <p className="text-gray-300 text-base leading-relaxed mb-2">Speak naturally, I'm capturing your words</p>
+                <motion.p
+                  key={currentExampleIndex}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.5 }}
+                  className="text-electric-300 text-sm font-medium italic"
+                >
+                  Try: "{voiceExamples[currentExampleIndex]}"
+                </motion.p>
               </motion.div>
 
               {/* Live transcript display */}
