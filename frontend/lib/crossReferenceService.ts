@@ -130,7 +130,7 @@ class CrossReferenceService {
       entities,
       timestamp,
       relevanceScore: 1.0,
-      conversationId: convId,
+      conversationId: convId || undefined,
       messageId,
       context
     }
