@@ -10,18 +10,22 @@ interface ReminderWithId extends Reminder {
   id: string
   createdAt: string
   completed?: boolean
+  deleted?: boolean
+  completedAt?: string
+  deletedAt?: string
 }
 
 export default function RemindersView() {
   const [reminders, setReminders] = useState<ReminderWithId[]>([])
   const [showAddReminder, setShowAddReminder] = useState(false)
-  const [filter, setFilter] = useState<'all' | 'pending' | 'completed'>('all')
+  const [filter, setFilter] = useState<'all' | 'pending' | 'completed' | 'deleted'>('all')
   const [newReminder, setNewReminder] = useState({
     title: '',
     dueDate: '',
     priority: 'medium' as const,
     description: ''
   })
+  const [editingReminderId, setEditingReminderId] = useState<string | null>(null)
 
   useEffect(() => {
     loadReminders()
@@ -117,16 +121,92 @@ export default function RemindersView() {
 
   const handleDeleteReminder = async (reminderId: string) => {
     try {
-      const success = await calendarService.deleteReminder(reminderId)
-      if (success) {
-        await loadReminders() // Reload from storage
-        toast.success('Reminder deleted successfully!')
-      } else {
-        toast.error('Failed to delete reminder')
+      const reminder = reminders.find(r => r.id === reminderId)
+      if (reminder) {
+        const updatedReminder = {
+          ...reminder,
+          deleted: true,
+          deletedAt: new Date().toISOString()
+        }
+        
+        // Update in storage instead of actually deleting
+        const storedReminders = calendarService.getStoredReminders()
+        const updatedStored = storedReminders.map(r => 
+          r.id === reminderId ? { ...r, deleted: true, deletedAt: updatedReminder.deletedAt } : r
+        )
+        localStorage.setItem('velora_reminders', JSON.stringify(updatedStored))
+        
+        await loadReminders()
+        toast.success('Reminder moved to trash!')
       }
     } catch (error) {
       console.error('Failed to delete reminder:', error)
       toast.error('Failed to delete reminder')
+    }
+  }
+
+  const handleEditReminder = (reminder: ReminderWithId) => {
+    setNewReminder({
+      title: reminder.title,
+      dueDate: reminder.dueDate.toISOString().slice(0, 16),
+      priority: reminder.priority,
+      description: reminder.description || ''
+    })
+    setShowAddReminder(true)
+    setEditingReminderId(reminder.id)
+  }
+
+  const handleCompleteReminder = async (id: string) => {
+    try {
+      const reminder = reminders.find(r => r.id === id)
+      if (reminder) {
+        const updatedReminder = {
+          ...reminder,
+          completed: true,
+          completedAt: new Date().toISOString()
+        }
+        
+        // Update in storage
+        const storedReminders = calendarService.getStoredReminders()
+        const updatedStored = storedReminders.map(r => 
+          r.id === id ? { ...r, completed: true, completedAt: updatedReminder.completedAt } : r
+        )
+        localStorage.setItem('velora_reminders', JSON.stringify(updatedStored))
+        
+        await loadReminders()
+        toast.success('Reminder completed!')
+      }
+    } catch (error) {
+      console.error('Failed to complete reminder:', error)
+      toast.error('Failed to complete reminder')
+    }
+  }
+
+  const handleRestoreReminder = async (id: string) => {
+    try {
+      const reminder = reminders.find(r => r.id === id)
+      if (reminder) {
+        const updatedReminder = {
+          ...reminder,
+          completed: false,
+          deleted: false,
+          completedAt: undefined,
+          deletedAt: undefined
+        }
+        
+        // Update in storage
+        const storedReminders = calendarService.getStoredReminders()
+        const updatedStored = storedReminders.map(r => 
+          r.id === id ? { ...r, completed: false, deleted: false, completedAt: undefined, deletedAt: undefined } : r
+        )
+        localStorage.setItem('velora_reminders', JSON.stringify(updatedStored))
+        
+        await loadReminders()
+        toast.success('Reminder restored!')
+      }
+    } catch (error) {
+      console.error('Failed to restore reminder:', error)
+      toast.error('Failed to restore reminder')
     }
   }
 
@@ -193,9 +273,10 @@ export default function RemindersView() {
   }
 
   const filteredReminders = reminders.filter(reminder => {
-    if (filter === 'pending') return !reminder.completed
-    if (filter === 'completed') return reminder.completed
-    return true
+    if (filter === 'pending') return !reminder.completed && !reminder.deleted
+    if (filter === 'completed') return reminder.completed && !reminder.deleted
+    if (filter === 'deleted') return reminder.deleted
+    return !reminder.deleted // 'all' shows non-deleted items
   })
 
   const sortedReminders = filteredReminders.sort((a, b) => {
@@ -282,9 +363,10 @@ export default function RemindersView() {
           className="flex space-x-3 mb-8"
         >
           {[
-            { key: 'all', label: 'All', count: reminders.length },
-            { key: 'pending', label: 'Pending', count: reminders.filter(r => !r.completed).length },
-            { key: 'completed', label: 'Completed', count: reminders.filter(r => r.completed).length }
+            { key: 'all', label: 'All', count: reminders.filter(r => !r.deleted).length },
+            { key: 'pending', label: 'Pending', count: reminders.filter(r => !r.completed && !r.deleted).length },
+            { key: 'completed', label: 'Completed', count: reminders.filter(r => r.completed && !r.deleted).length },
+            { key: 'deleted', label: 'Trash', count: reminders.filter(r => r.deleted).length }
           ].map((tab) => (
             <motion.button
               key={tab.key}
@@ -363,46 +445,63 @@ export default function RemindersView() {
                           {reminder.priority}
                         </span>
                         
-                        <motion.button
-                          whileHover={{ scale: 1.2 }}
-                          whileTap={{ scale: 0.9 }}
-                          onClick={() => handleToggleComplete(reminder.id)}
-                          className={`p-2 rounded-lg transition-all duration-200 ${
-                            reminder.completed
-                              ? 'text-green-400 hover:text-green-300 bg-green-500/10 hover:bg-green-500/20'
-                              : 'text-gray-400 hover:text-green-400 bg-gray-500/10 hover:bg-green-500/20'
-                          }`}
-                        >
-                          <CheckCircle className="w-5 h-5" />
-                        </motion.button>
-                        
-                        {!reminder.completed && (
+                        {filter === 'deleted' ? (
+                          // Trash view - show restore button
                           <motion.button 
                             whileHover={{ scale: 1.2 }}
                             whileTap={{ scale: 0.9 }}
-                            onClick={() => handleSnoozeReminder(reminder.id, 15)}
-                            className="p-2 text-gray-400 hover:text-yellow-400 transition-all duration-200 bg-gray-500/10 hover:bg-yellow-500/20 rounded-lg"
-                            title="Snooze 15 minutes"
+                            onClick={() => handleRestoreReminder(reminder.id)}
+                            className="p-2 text-gray-400 hover:text-green-400 transition-all duration-200 bg-gray-500/10 hover:bg-green-500/20 rounded-lg"
+                            title="Restore reminder"
                           >
-                            <Clock className="w-5 h-5" />
+                            <CheckCircle className="w-5 h-5" />
                           </motion.button>
+                        ) : (
+                          // Normal view - show complete/snooze/edit/delete buttons
+                          <>
+                            <motion.button
+                              whileHover={{ scale: 1.2 }}
+                              whileTap={{ scale: 0.9 }}
+                              onClick={() => handleToggleComplete(reminder.id)}
+                              className={`p-2 rounded-lg transition-all duration-200 ${
+                                reminder.completed
+                                  ? 'text-green-400 hover:text-green-300 bg-green-500/10 hover:bg-green-500/20'
+                                  : 'text-gray-400 hover:text-green-400 bg-gray-500/10 hover:bg-green-500/20'
+                              }`}
+                            >
+                              <CheckCircle className="w-5 h-5" />
+                            </motion.button>
+                            
+                            {!reminder.completed && (
+                              <motion.button 
+                                whileHover={{ scale: 1.2 }}
+                                whileTap={{ scale: 0.9 }}
+                                onClick={() => handleSnoozeReminder(reminder.id, 15)}
+                                className="p-2 text-gray-400 hover:text-yellow-400 transition-all duration-200 bg-gray-500/10 hover:bg-yellow-500/20 rounded-lg"
+                                title="Snooze 15 minutes"
+                              >
+                                <Clock className="w-5 h-5" />
+                              </motion.button>
+                            )}
+                            
+                            <motion.button 
+                              whileHover={{ scale: 1.2 }}
+                              whileTap={{ scale: 0.9 }}
+                              onClick={() => handleEditReminder(reminder)}
+                              className="p-2 text-gray-400 hover:text-blue-400 transition-all duration-200 bg-gray-500/10 hover:bg-blue-500/20 rounded-lg">
+                              <Edit className="w-5 h-5" />
+                            </motion.button>
+                            
+                            <motion.button 
+                              whileHover={{ scale: 1.2 }}
+                              whileTap={{ scale: 0.9 }}
+                              onClick={() => handleDeleteReminder(reminder.id)}
+                              className="p-2 text-gray-400 hover:text-red-400 transition-all duration-200 bg-gray-500/10 hover:bg-red-500/20 rounded-lg"
+                            >
+                              <Trash2 className="w-5 h-5" />
+                            </motion.button>
+                          </>
                         )}
-                        
-                        <motion.button 
-                          whileHover={{ scale: 1.2 }}
-                          whileTap={{ scale: 0.9 }}
-                          className="p-2 text-gray-400 hover:text-blue-400 transition-all duration-200 bg-gray-500/10 hover:bg-blue-500/20 rounded-lg">
-                          <Edit className="w-5 h-5" />
-                        </motion.button>
-                        
-                        <motion.button 
-                          whileHover={{ scale: 1.2 }}
-                          whileTap={{ scale: 0.9 }}
-                          onClick={() => handleDeleteReminder(reminder.id)}
-                          className="p-2 text-gray-400 hover:text-red-400 transition-all duration-200 bg-gray-500/10 hover:bg-red-500/20 rounded-lg"
-                        >
-                          <Trash2 className="w-5 h-5" />
-                        </motion.button>
                       </div>
                     </div>
                     

@@ -13,6 +13,7 @@ import { storageService } from '@/lib/storageService'
 import { documentService, Document } from '@/lib/documentService'
 import { voiceService } from '@/lib/voiceService'
 import { crossReferenceService, SmartSuggestion, CrossReference } from '@/lib/crossReferenceService'
+import { memoryService } from '@/lib/memoryService'
 import SmartSuggestions from '@/components/SmartSuggestions'
 
 
@@ -588,6 +589,24 @@ export default function ChatPage() {
 
     setMessages(prev => [...prev, userMessage])
     
+    // Check for "remember" commands and process memories
+    const rememberCommand = memoryService.parseRememberCommand(inputValue)
+    if (rememberCommand) {
+      const memory = memoryService.addMemory(
+        rememberCommand.content,
+        rememberCommand.category,
+        rememberCommand.importance
+      )
+      toast.success(`Memory saved: "${memory.content}"`)
+    }
+
+    // Get relevant memories for context and recall information
+    const relevantMemories = memoryService.getContextualMemories(inputValue)
+    const recallInfo = memoryService.recallInformation(inputValue)
+    
+    // Combine general context with specific recall information
+    const allRelevantMemories = [...relevantMemories, ...recallInfo.memories]
+    
     // Generate smart suggestions based on user input with message context
     generateSmartSuggestions(inputValue, userMessage.id)
     
@@ -615,7 +634,9 @@ export default function ChatPage() {
         },
         body: JSON.stringify({ 
           content: inputValue,
-          conversationHistory: conversationHistory
+          conversationHistory: conversationHistory,
+          relevantMemories: allRelevantMemories,
+          recallSuggestions: recallInfo.suggestions
         }),
       })
 
@@ -811,6 +832,13 @@ export default function ChatPage() {
               title="View Reminders"
             >
               <Bell className="w-4 h-4 sm:w-5 sm:h-5" />
+            </button>
+            <button 
+              onClick={() => window.location.href = '/memory'}
+              className="p-1.5 sm:p-2 text-gray-400 hover:text-white transition-colors duration-200 hover:bg-gray-800 rounded-lg min-w-[36px] min-h-[36px] flex items-center justify-center"
+              title="View Memory Bank"
+            >
+              <Brain className="w-4 h-4 sm:w-5 sm:h-5" />
             </button>
             <button 
               onClick={() => window.location.href = '/demo'}

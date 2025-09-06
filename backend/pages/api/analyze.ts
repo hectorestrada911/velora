@@ -25,7 +25,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   try {
-    const { content, conversationHistory } = req.body
+    const { content, conversationHistory, relevantMemories, recallSuggestions } = req.body
 
     if (!content) {
       return res.status(400).json({ error: 'Content is required' })
@@ -35,15 +35,37 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     let conversationContext = ''
     if (conversationHistory && conversationHistory.length > 0) {
       conversationContext = `\n\nCONVERSATION HISTORY (for context):
-${conversationHistory.map((msg: any) => `${msg.type === 'user' ? 'User' : 'Assistant'}: ${msg.content}`).join('\n')}
-
-CURRENT MESSAGE:`
+${conversationHistory.map((msg: any) => `${msg.type === 'user' ? 'User' : 'Assistant'}: ${msg.content}`).join('\n')}`
     }
+
+    // Build memory context
+    let memoryContext = ''
+    if (relevantMemories && relevantMemories.length > 0) {
+      memoryContext = `\n\nRELEVANT MEMORIES (use these for context):
+${relevantMemories.map((memory: string) => `- ${memory}`).join('\n')}`
+    }
+
+    // Build recall suggestions context
+    let recallContext = ''
+    if (recallSuggestions && recallSuggestions.length > 0) {
+      recallContext = `\n\nRECALL SUGGESTIONS (helpful hints for answering):
+${recallSuggestions.map((suggestion: string) => `- ${suggestion}`).join('\n')}`
+    }
+
+    const fullContext = conversationContext + memoryContext + recallContext + (conversationContext || memoryContext || recallContext ? '\n\nCURRENT MESSAGE:' : '')
 
     // Comprehensive system prompt for AI analysis
     const systemPrompt = `You are an intelligent productivity assistant. Analyze the given content and extract:
 
-IMPORTANT: You have access to the conversation history above. Use it to understand context and references like "that", "it", "this", etc. Maintain continuity with previous messages.
+IMPORTANT: You have access to the conversation history and relevant memories above. Use them to understand context and references like "that", "it", "this", etc. Maintain continuity with previous messages.
+
+RECALL CAPABILITY: You can actively recall and reference information from:
+- Conversation history (what was discussed previously)
+- User's memories (personal facts, preferences, locations, etc.)
+- Calendar events and reminders
+- Previous decisions and plans
+
+When users ask questions like "What do I have to do tomorrow?", "Where did I park?", or "What did we discuss about X?", actively search through the available context to provide helpful answers.
 
 IMPORTANT: Ask natural, conversational questions that a helpful human assistant would ask. Make them specific to the situation and practical. Avoid generic questions.
 
@@ -62,15 +84,14 @@ IMPORTANT: Ask natural, conversational questions that a helpful human assistant 
 7. **Reminder**: If applicable, suggest a reminder with:
    - title, dueDate, priority, description
    - Set to null if you need more information first
-8. **AI Response**: A conversational response that:
-   - Acknowledges what the user wants to do
-   - Asks for confirmation before creating items
-   - Shows enthusiasm and understanding
-9. **Follow-up Questions**: 2-3 natural, conversational questions that:
-   - Ask for missing details in a friendly way
-   - Make sense for the specific situation
-   - Sound like a helpful assistant would ask
-   - Are practical and actionable
+8. **AI Response**: A concise response that:
+   - Briefly acknowledges the request
+   - Focuses on the main action (reminder/calendar/note)
+   - Keeps it short and to the point
+9. **Follow-up Questions**: 1-2 short, practical questions that:
+   - Ask only for essential missing details
+   - Focus on the main action needed
+   - Keep responses brief and actionable
 
 Return ONLY valid JSON in this exact format:
 {
@@ -97,11 +118,11 @@ Return ONLY valid JSON in this exact format:
     "priority": "high",
     "description": "Important deadline discussion"
   },
-  "aiResponse": "Got it! I'd love to help you schedule that call with John about the Q4 deadline. This sounds important! Should I create a calendar event for tomorrow? What time works best for you?",
-  "followUpQuestions": ["What time works best for you tomorrow?", "How long do you think the call will take?", "Should I set a reminder 15 minutes before so you're prepared?"]
+  "aiResponse": "Got it! I'll add that call with John to your calendar. What time tomorrow?",
+  "followUpQuestions": ["What time tomorrow?", "How long should I block out?"]
 }`
 
-    const userPrompt = `Please analyze this content:${conversationContext}
+    const userPrompt = `Please analyze this content:${fullContext}
 
 ${content}
 
