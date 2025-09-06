@@ -14,6 +14,9 @@ export interface CrossReference {
   entities: Entity[]
   timestamp: Date
   relevanceScore: number
+  conversationId?: string
+  messageId?: string
+  context?: string
 }
 
 export interface SmartSuggestion {
@@ -28,6 +31,8 @@ export interface SmartSuggestion {
 class CrossReferenceService {
   private entities: Map<string, Entity[]> = new Map()
   private crossReferences: CrossReference[] = []
+  private currentConversationId: string | null = null
+  private conversationHistory: Map<string, CrossReference[]> = new Map()
 
   // Extract entities from text using simple pattern matching
   // In production, this would use a more sophisticated NLP service
@@ -81,15 +86,41 @@ class CrossReferenceService {
     return entities
   }
 
+  // Start a new conversation
+  startConversation(conversationId: string): void {
+    this.currentConversationId = conversationId
+    if (!this.conversationHistory.has(conversationId)) {
+      this.conversationHistory.set(conversationId, [])
+    }
+  }
+
+  // Get conversation context
+  getConversationContext(conversationId?: string): CrossReference[] {
+    const id = conversationId || this.currentConversationId
+    if (!id) return []
+    return this.conversationHistory.get(id) || []
+  }
+
+  // Get recent conversation context (last 5 messages)
+  getRecentContext(conversationId?: string): string {
+    const context = this.getConversationContext(conversationId)
+    const recentMessages = context.slice(-5) // Last 5 messages
+    return recentMessages.map(msg => `${msg.title}: ${msg.content}`).join('\n')
+  }
+
   // Add a new item to the cross-reference system
   addCrossReference(
     type: 'calendar' | 'reminder' | 'document' | 'conversation',
     title: string,
     content: string,
-    timestamp: Date = new Date()
+    timestamp: Date = new Date(),
+    conversationId?: string,
+    messageId?: string,
+    context?: string
   ): string {
     const entities = this.extractEntities(content)
     const id = `${type}_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
+    const convId = conversationId || this.currentConversationId
     
     const crossReference: CrossReference = {
       id,
@@ -98,10 +129,21 @@ class CrossReferenceService {
       content,
       entities,
       timestamp,
-      relevanceScore: 1.0
+      relevanceScore: 1.0,
+      conversationId: convId,
+      messageId,
+      context
     }
 
     this.crossReferences.push(crossReference)
+    
+    // Add to conversation history
+    if (convId) {
+      if (!this.conversationHistory.has(convId)) {
+        this.conversationHistory.set(convId, [])
+      }
+      this.conversationHistory.get(convId)!.push(crossReference)
+    }
     
     // Store entities for quick lookup
     entities.forEach(entity => {
@@ -150,15 +192,43 @@ class CrossReferenceService {
   }
 
   // Generate smart suggestions based on current context
-  generateSmartSuggestions(content: string): SmartSuggestion[] {
+  generateSmartSuggestions(content: string, conversationId?: string): SmartSuggestion[] {
     const suggestions: SmartSuggestion[] = []
     const relatedItems = this.findRelatedContent(content, 3)
+    const conversationContext = this.getConversationContext(conversationId)
+    const recentContext = this.getRecentContext(conversationId)
+
+    // Check for conversation continuity
+    if (conversationContext.length > 0) {
+      const lastMessage = conversationContext[conversationContext.length - 1]
+      const currentEntities = this.extractEntities(content)
+      const lastEntities = lastMessage.entities
+
+      // Check for entity continuity
+      const entityOverlap = currentEntities.filter(current => 
+        lastEntities.some(last => 
+          current.value.toLowerCase() === last.value.toLowerCase()
+        )
+      )
+
+      if (entityOverlap.length > 0) {
+        suggestions.push({
+          id: `continuity_${Date.now()}`,
+          type: 'follow_up',
+          title: 'Conversation Continuity',
+          description: `Continuing discussion about: ${entityOverlap.map(e => e.value).join(', ')}`,
+          relatedItems: [lastMessage],
+          action: 'Building on previous context'
+        })
+      }
+    }
 
     if (relatedItems.length > 0) {
       // Group related items by type
       const calendarItems = relatedItems.filter(item => item.type === 'calendar')
       const reminderItems = relatedItems.filter(item => item.type === 'reminder')
       const documentItems = relatedItems.filter(item => item.type === 'document')
+      const conversationItems = relatedItems.filter(item => item.type === 'conversation')
 
       // Suggest related content
       if (relatedItems.length > 1) {
@@ -192,6 +262,17 @@ class CrossReferenceService {
           title: 'Document Connection',
           description: `This relates to ${documentItems.length} document(s)`,
           relatedItems: documentItems.slice(0, 2)
+        })
+      }
+
+      // Suggest conversation history
+      if (conversationItems.length > 0) {
+        suggestions.push({
+          id: `history_${Date.now()}`,
+          type: 'related_content',
+          title: 'Previous Discussions',
+          description: `You've discussed this topic before`,
+          relatedItems: conversationItems.slice(0, 2)
         })
       }
     }

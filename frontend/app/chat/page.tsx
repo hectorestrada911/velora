@@ -552,12 +552,27 @@ export default function ChatPage() {
     }
   }
 
-  const generateSmartSuggestions = (content: string) => {
-    // Add the user message to cross-reference system
-    crossReferenceService.addCrossReference('conversation', 'User Message', content)
+  const generateSmartSuggestions = (content: string, messageId?: string) => {
+    // Start conversation if not already started
+    if (!currentConversationId) {
+      const newConversationId = `conv_${Date.now()}`
+      setCurrentConversationId(newConversationId)
+      crossReferenceService.startConversation(newConversationId)
+    }
     
-    // Generate smart suggestions
-    const suggestions = crossReferenceService.generateSmartSuggestions(content)
+    // Add the user message to cross-reference system with conversation context
+    crossReferenceService.addCrossReference(
+      'conversation', 
+      'User Message', 
+      content,
+      new Date(),
+      currentConversationId || undefined,
+      messageId,
+      crossReferenceService.getRecentContext(currentConversationId || undefined)
+    )
+    
+    // Generate smart suggestions with conversation context
+    const suggestions = crossReferenceService.generateSmartSuggestions(content, currentConversationId || undefined)
     setSmartSuggestions(suggestions)
   }
 
@@ -573,8 +588,8 @@ export default function ChatPage() {
 
     setMessages(prev => [...prev, userMessage])
     
-    // Generate smart suggestions based on user input
-    generateSmartSuggestions(inputValue)
+    // Generate smart suggestions based on user input with message context
+    generateSmartSuggestions(inputValue, userMessage.id)
     
     setInputValue('')
     setIsLoading(true)
@@ -622,6 +637,17 @@ export default function ChatPage() {
         saveConversation(newMessages)
         return newMessages
       })
+
+      // Add AI response to cross-reference system
+      crossReferenceService.addCrossReference(
+        'conversation',
+        'AI Response',
+        aiMessage.content,
+        new Date(),
+        currentConversationId || undefined,
+        aiMessage.id,
+        crossReferenceService.getRecentContext(currentConversationId || undefined)
+      )
       
       // Show suggested items as interactive buttons instead of auto-creating
       if (analysis.calendarEvent || analysis.reminder) {
