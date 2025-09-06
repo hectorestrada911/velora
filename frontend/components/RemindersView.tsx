@@ -22,7 +22,7 @@ export default function RemindersView() {
   const [newReminder, setNewReminder] = useState({
     title: '',
     dueDate: '',
-    priority: 'medium' as const,
+    priority: 'medium' as 'low' | 'medium' | 'high' | 'urgent',
     description: ''
   })
   const [editingReminderId, setEditingReminderId] = useState<string | null>(null)
