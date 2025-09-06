@@ -68,7 +68,7 @@ export default function AuthPage() {
     
     try {
       if (!auth) {
-        throw new Error('Firebase not initialized')
+        throw new Error('Firebase not initialized. Please check your environment variables.')
       }
       
       const provider = new GoogleAuthProvider()

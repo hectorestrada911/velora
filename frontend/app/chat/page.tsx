@@ -12,6 +12,8 @@ import { useAuth } from '@/components/providers/AuthProvider'
 import { storageService } from '@/lib/storageService'
 import { documentService, Document } from '@/lib/documentService'
 import { voiceService } from '@/lib/voiceService'
+import { crossReferenceService, SmartSuggestion, CrossReference } from '@/lib/crossReferenceService'
+import SmartSuggestions from '@/components/SmartSuggestions'
 
 
 interface Suggestion {
@@ -43,6 +45,7 @@ export default function ChatPage() {
   const [showVoiceInstructions, setShowVoiceInstructions] = useState(false)
   const [currentExampleIndex, setCurrentExampleIndex] = useState(0)
   const [hasUserInteracted, setHasUserInteracted] = useState(false)
+  const [smartSuggestions, setSmartSuggestions] = useState<SmartSuggestion[]>([])
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
@@ -107,6 +110,34 @@ export default function ChatPage() {
   useEffect(() => {
     scrollToBottom()
   }, [messages])
+
+  // Initialize cross-reference service with sample data
+  useEffect(() => {
+    // Add some sample data to demonstrate cross-references
+    crossReferenceService.addCrossReference(
+      'calendar',
+      'Meeting with John about Q4 Budget',
+      'Discussing the Q4 budget planning with John Smith tomorrow at 3pm'
+    )
+    
+    crossReferenceService.addCrossReference(
+      'reminder',
+      'Follow up with Sarah',
+      'Call Sarah about the marketing campaign project'
+    )
+    
+    crossReferenceService.addCrossReference(
+      'document',
+      'Q4 Budget Report',
+      'Comprehensive budget analysis for Q4 including marketing expenses and project costs'
+    )
+    
+    crossReferenceService.addCrossReference(
+      'conversation',
+      'Previous discussion about marketing',
+      'We talked about the new marketing campaign and budget allocation last week'
+    )
+  }, [])
 
   // Load conversations and documents when user is authenticated
   useEffect(() => {
@@ -521,6 +552,15 @@ export default function ChatPage() {
     }
   }
 
+  const generateSmartSuggestions = (content: string) => {
+    // Add the user message to cross-reference system
+    crossReferenceService.addCrossReference('conversation', 'User Message', content)
+    
+    // Generate smart suggestions
+    const suggestions = crossReferenceService.generateSmartSuggestions(content)
+    setSmartSuggestions(suggestions)
+  }
+
   const handleSendMessage = async () => {
     if (!inputValue.trim()) return
 
@@ -532,6 +572,10 @@ export default function ChatPage() {
     }
 
     setMessages(prev => [...prev, userMessage])
+    
+    // Generate smart suggestions based on user input
+    generateSmartSuggestions(inputValue)
+    
     setInputValue('')
     setIsLoading(true)
     setShowSuggestions(false)
@@ -952,6 +996,19 @@ export default function ChatPage() {
               </div>
             </motion.div>
           )}
+          
+          {/* Smart Suggestions */}
+          <SmartSuggestions
+            suggestions={smartSuggestions}
+            onSuggestionClick={(suggestion) => {
+              console.log('Suggestion clicked:', suggestion)
+              // Handle suggestion click - could open related content, create reminders, etc.
+            }}
+            onRelatedItemClick={(item) => {
+              console.log('Related item clicked:', item)
+              // Handle related item click - could navigate to calendar, reminders, etc.
+            }}
+          />
           
           <div ref={messagesEndRef} />
         </div>

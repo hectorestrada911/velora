@@ -55,7 +55,7 @@ class FirestoreService {
         createdAt: Timestamp.now()
       }
       
-      const docRef = await addDoc(collection(db, 'events'), eventData)
+      const docRef = await addDoc(collection(db!, 'events'), eventData)
       return docRef.id
     } catch (error) {
       console.error('Error adding event:', error)
@@ -70,7 +70,7 @@ class FirestoreService {
       }
       
       const q = query(
-        collection(db, 'events'),
+        collection(db!, 'events'),
         where('userId', '==', this.getUserId()),
         orderBy('startTime', 'asc')
       )
@@ -92,7 +92,7 @@ class FirestoreService {
         throw new Error('Firebase not initialized')
       }
       
-      const eventRef = doc(db, 'events', eventId)
+      const eventRef = doc(db!, 'events', eventId)
       await updateDoc(eventRef, updates)
     } catch (error) {
       console.error('Error updating event:', error)
@@ -106,7 +106,7 @@ class FirestoreService {
         throw new Error('Firebase not initialized')
       }
       
-      const eventRef = doc(db, 'events', eventId)
+      const eventRef = doc(db!, 'events', eventId)
       await deleteDoc(eventRef)
     } catch (error) {
       console.error('Error deleting event:', error)
@@ -127,7 +127,7 @@ class FirestoreService {
         createdAt: Timestamp.now()
       }
       
-      const docRef = await addDoc(collection(db, 'reminders'), reminderData)
+      const docRef = await addDoc(collection(db!, 'reminders'), reminderData)
       return docRef.id
     } catch (error) {
       console.error('Error adding reminder:', error)
@@ -142,7 +142,7 @@ class FirestoreService {
       }
       
       const q = query(
-        collection(db, 'reminders'),
+        collection(db!, 'reminders'),
         where('userId', '==', this.getUserId()),
         orderBy('dueDate', 'asc')
       )
@@ -164,7 +164,7 @@ class FirestoreService {
         throw new Error('Firebase not initialized')
       }
       
-      const reminderRef = doc(db, 'reminders', reminderId)
+      const reminderRef = doc(db!, 'reminders', reminderId)
       await updateDoc(reminderRef, updates)
     } catch (error) {
       console.error('Error updating reminder:', error)
@@ -178,7 +178,7 @@ class FirestoreService {
         throw new Error('Firebase not initialized')
       }
       
-      const reminderRef = doc(db, 'reminders', reminderId)
+      const reminderRef = doc(db!, 'reminders', reminderId)
       await deleteDoc(reminderRef)
     } catch (error) {
       console.error('Error deleting reminder:', error)
