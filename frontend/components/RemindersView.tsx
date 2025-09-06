@@ -230,7 +230,7 @@ export default function RemindersView() {
               animate={{ opacity: 1, y: 0 }}
               className="flex items-center space-x-4 mb-3"
             >
-              <h1 className="text-5xl md:text-6xl font-extrabold text-yellow-400 leading-tight">
+              <h1 className="text-5xl md:text-6xl font-extrabold bg-gradient-to-r from-electric-400 via-purple-400 to-electric-500 bg-clip-text text-transparent leading-tight">
                 My Reminders
               </h1>
               {getPendingRemindersCount() > 0 && (
@@ -240,7 +240,7 @@ export default function RemindersView() {
                   transition={{ delay: 0.4, type: "spring", stiffness: 200 }}
                   className="relative"
                 >
-                  <Bell className="w-6 h-6 md:w-8 md:h-8 text-yellow-500" />
+                  <Bell className="w-6 h-6 md:w-8 md:h-8 text-electric-400" />
                   <motion.div
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
@@ -256,7 +256,7 @@ export default function RemindersView() {
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
-              className="text-yellow-300 text-xl md:text-2xl font-semibold"
+              className="text-electric-300 text-xl md:text-2xl font-semibold"
             >
               Never miss an important task or deadline
             </motion.p>
@@ -267,7 +267,7 @@ export default function RemindersView() {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.2 }}
             onClick={() => setShowAddReminder(true)}
-            className="bg-gradient-to-r from-yellow-600 via-orange-600 to-yellow-500 hover:from-yellow-700 hover:via-orange-700 hover:to-yellow-600 text-white px-8 py-4 rounded-xl font-bold transition-all duration-200 hover:scale-105 hover:shadow-glow flex items-center space-x-3 shadow-lg"
+            className="bg-gradient-to-r from-electric-600 via-purple-600 to-electric-500 hover:from-electric-700 hover:via-purple-700 hover:to-electric-600 text-white px-8 py-4 rounded-xl font-bold transition-all duration-200 hover:scale-105 hover:shadow-glow flex items-center space-x-3 shadow-lg"
           >
             <Plus className="w-6 h-6" />
             <span>Add Reminder</span>
@@ -340,7 +340,7 @@ export default function RemindersView() {
                 <div className="flex items-start space-x-4">
                   {/* Priority Icon */}
                   <div className={`w-12 h-12 rounded-xl flex items-center justify-center shadow-lg ${
-                    reminder.completed ? 'bg-gray-600' : 'bg-gradient-to-r from-electric-600 to-electric-500'
+                    reminder.completed ? 'bg-gray-600' : 'bg-gradient-to-r from-electric-600 via-purple-600 to-electric-500'
                   }`}>
                     {reminder.completed ? (
                       <CheckCircle className="w-6 h-6 text-white" />
@@ -451,7 +451,7 @@ export default function RemindersView() {
                 className="bg-background-elevated rounded-2xl p-6 w-full max-w-md border border-gray-700"
               >
                 <div className="flex items-center justify-between mb-6">
-                  <h3 className="text-xl font-semibold text-yellow-400">Add New Reminder</h3>
+                  <h3 className="text-xl font-semibold text-electric-400">Add New Reminder</h3>
                   <button
                     onClick={() => setShowAddReminder(false)}
                     className="text-gray-400 hover:text-white transition-colors duration-200"
@@ -527,7 +527,7 @@ export default function RemindersView() {
                     </button>
                     <button
                       type="submit"
-                      className="flex-1 bg-gradient-to-r from-yellow-600 via-orange-600 to-yellow-500 hover:from-yellow-700 hover:via-orange-700 hover:to-yellow-600 text-white font-medium py-2 px-4 rounded-lg transition-all duration-200 hover:scale-105"
+                      className="flex-1 bg-gradient-to-r from-electric-600 via-purple-600 to-electric-500 hover:from-electric-700 hover:via-purple-700 hover:to-electric-600 text-white font-medium py-2 px-4 rounded-lg transition-all duration-200 hover:scale-105"
                     >
                       Add Reminder
                     </button>
