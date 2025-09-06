@@ -687,50 +687,50 @@ export default function ChatPage() {
 
   return (
     <div className="min-h-screen bg-black">
-      {/* Header */}
-      <header className="bg-gray-900/80 backdrop-blur-sm border-b border-gray-700/50 p-3 md:p-4">
+      {/* Header - Mobile Optimized */}
+      <header className="bg-gray-900/80 backdrop-blur-sm border-b border-gray-700/50 p-2 sm:p-3 md:p-4">
         <div className="max-w-6xl mx-auto flex items-center justify-between">
-          <div className="flex items-center space-x-2 md:space-x-4">
-            <h1 className="text-xl md:text-2xl font-bold bg-gradient-to-r from-electric-400 via-purple-400 to-electric-500 bg-clip-text text-transparent">Velora</h1>
-            <div className="hidden md:flex items-center space-x-2 text-sm bg-gradient-to-r from-electric-300 via-cyan-300 to-electric-400 bg-clip-text text-transparent">
-              <Brain className="w-4 h-4" />
+          <div className="flex items-center gap-2 sm:gap-3 md:gap-4">
+            <h1 className="text-lg sm:text-xl md:text-2xl font-bold bg-gradient-to-r from-electric-400 via-purple-400 to-electric-500 bg-clip-text text-transparent">Velora</h1>
+            <div className="hidden sm:flex items-center gap-1 sm:gap-2 text-xs sm:text-sm bg-gradient-to-r from-electric-300 via-cyan-300 to-electric-400 bg-clip-text text-transparent">
+              <Brain className="w-3 h-3 sm:w-4 sm:h-4" />
               <span>AI Assistant</span>
             </div>
           </div>
           
-          <div className="flex items-center space-x-2 md:space-x-4">
+          <div className="flex items-center gap-1.5 sm:gap-2 md:gap-4">
             {user && (
               <button 
                 onClick={() => setShowConversationHistory(!showConversationHistory)}
-                className="p-2 md:p-2 text-gray-400 hover:text-white transition-colors duration-200 hover:bg-gray-800 rounded-lg"
+                className="p-1.5 sm:p-2 text-gray-400 hover:text-white transition-colors duration-200 hover:bg-gray-800 rounded-lg min-w-[36px] min-h-[36px] flex items-center justify-center"
                 title="Conversation History"
               >
-                <History className="w-4 h-4 md:w-5 md:h-5" />
+                <History className="w-4 h-4 sm:w-5 sm:h-5" />
               </button>
             )}
             <button 
               onClick={() => window.location.href = '/calendar'}
-              className="p-2 md:p-2 text-gray-400 hover:text-white transition-colors duration-200 hover:bg-gray-800 rounded-lg"
+              className="p-1.5 sm:p-2 text-gray-400 hover:text-white transition-colors duration-200 hover:bg-gray-800 rounded-lg min-w-[36px] min-h-[36px] flex items-center justify-center"
               title="View Calendar"
             >
-              <Calendar className="w-4 h-4 md:w-5 md:h-5" />
+              <Calendar className="w-4 h-4 sm:w-5 sm:h-5" />
             </button>
             <button 
               onClick={() => window.location.href = '/reminders'}
-              className="p-2 md:p-2 text-gray-400 hover:text-white transition-colors duration-200 hover:bg-gray-800 rounded-lg"
+              className="p-1.5 sm:p-2 text-gray-400 hover:text-white transition-colors duration-200 hover:bg-gray-800 rounded-lg min-w-[36px] min-h-[36px] flex items-center justify-center"
               title="View Reminders"
             >
-              <Bell className="w-4 h-4 md:w-5 md:h-5" />
+              <Bell className="w-4 h-4 sm:w-5 sm:h-5" />
             </button>
             <button 
               onClick={() => window.location.href = '/demo'}
-              className="p-2 md:p-2 text-gray-400 hover:text-white transition-colors duration-200 hover:bg-gray-800 rounded-lg"
+              className="p-1.5 sm:p-2 text-gray-400 hover:text-white transition-colors duration-200 hover:bg-gray-800 rounded-lg min-w-[36px] min-h-[36px] flex items-center justify-center"
               title="View Functionality Demo"
             >
-              <Sparkles className="w-4 h-4 md:w-5 md:h-5" />
+              <Sparkles className="w-4 h-4 sm:w-5 sm:h-5" />
             </button>
-            <button className="p-2 md:p-2 text-gray-400 hover:text-white transition-colors duration-200 hover:bg-gray-800 rounded-lg">
-              <Settings className="w-4 h-4 md:w-5 md:h-5" />
+            <button className="p-1.5 sm:p-2 text-gray-400 hover:text-white transition-colors duration-200 hover:bg-gray-800 rounded-lg min-w-[36px] min-h-[36px] flex items-center justify-center">
+              <Settings className="w-4 h-4 sm:w-5 sm:h-5" />
             </button>
           </div>
         </div>
@@ -953,26 +953,26 @@ export default function ChatPage() {
           <div ref={messagesEndRef} />
         </div>
 
-        {/* Input Area */}
-        <div className="fixed bottom-0 left-0 right-0 bg-gray-900/95 border-t border-gray-700/50 p-3 md:p-4">
+        {/* Input Area - Mobile Optimized */}
+        <div className="fixed bottom-0 left-0 right-0 bg-gray-900/95 border-t border-gray-700/50 p-2 sm:p-3 md:p-4">
           <div className="max-w-6xl mx-auto">
-            <div className="flex items-end space-x-3 md:space-x-4">
+            <div className="flex items-end gap-2 sm:gap-3 md:gap-4">
               <div className="flex-1 relative">
                 <textarea
                   value={inputValue}
                   onChange={(e) => setInputValue(e.target.value)}
                   onKeyPress={handleKeyPress}
                   placeholder={isVoiceListening ? "🎤 Voice recording active..." : "Tell me what you need to remember, schedule, or organize..."}
-                  className={`w-full bg-gray-800 border rounded-xl px-3 md:px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:border-electric-500 focus:ring-1 focus:ring-electric-500 transition-all duration-200 resize-none text-sm md:text-base ${
+                  className={`w-full bg-gray-800 border rounded-xl px-3 sm:px-4 py-2.5 sm:py-3 text-white placeholder-gray-400 focus:outline-none focus:border-electric-500 focus:ring-1 focus:ring-electric-500 transition-all duration-200 resize-none text-sm sm:text-base ${
                     isVoiceListening ? 'border-electric-500 ring-2 ring-electric-500/30 bg-electric-500/5' : 'border-gray-600'
                   }`}
                   rows={1}
-                  style={{ minHeight: '48px', maxHeight: '120px' }}
+                  style={{ minHeight: '44px', maxHeight: '120px' }}
                   disabled={isVoiceListening}
                 />
               </div>
               
-              <div className="flex items-center space-x-2">
+              <div className="flex items-center gap-1.5 sm:gap-2">
                 <input
                   ref={fileInputRef}
                   type="file"
@@ -984,19 +984,19 @@ export default function ChatPage() {
                 <button
                   onClick={() => fileInputRef.current?.click()}
                   disabled={isUploading}
-                  className="p-2.5 md:p-3 bg-gray-800 hover:bg-gray-700 text-gray-400 hover:text-white border border-gray-600 rounded-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="p-2.5 sm:p-3 bg-gray-800 hover:bg-gray-700 text-gray-400 hover:text-white border border-gray-600 rounded-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed min-w-[44px] min-h-[44px] flex items-center justify-center"
                   title={isUploading ? "Uploading..." : "Upload Document"}
                 >
                   {isUploading ? (
-                    <div className="w-4 h-4 md:w-5 md:h-5 animate-spin rounded-full border-2 border-gray-400 border-t-transparent"></div>
+                    <div className="w-4 h-4 sm:w-5 sm:h-5 animate-spin rounded-full border-2 border-gray-400 border-t-transparent"></div>
                   ) : (
-                    <Upload className="w-4 h-4 md:w-5 md:h-5" />
+                    <Upload className="w-4 h-4 sm:w-5 sm:h-5" />
                   )}
                 </button>
                 
                 <button
                   onClick={handleVoiceInput}
-                  className={`p-2.5 md:p-3 rounded-xl transition-all duration-200 ${
+                  className={`p-2.5 sm:p-3 rounded-xl transition-all duration-200 min-w-[44px] min-h-[44px] flex items-center justify-center ${
                     isVoiceListening
                       ? 'bg-red-600 hover:bg-red-700 text-white'
                       : isVoiceProcessing
@@ -1006,20 +1006,20 @@ export default function ChatPage() {
                   title={isVoiceListening ? "Stop listening" : isVoiceProcessing ? "Processing..." : "Start voice input"}
                 >
                   {isVoiceListening ? (
-                    <MicOff className="w-4 h-4 md:w-5 md:h-5" />
+                    <MicOff className="w-4 h-4 sm:w-5 sm:h-5" />
                   ) : isVoiceProcessing ? (
-                    <div className="w-4 h-4 md:w-5 md:h-5 animate-spin rounded-full border-2 border-white border-t-transparent"></div>
+                    <div className="w-4 h-4 sm:w-5 sm:h-5 animate-spin rounded-full border-2 border-white border-t-transparent"></div>
                   ) : (
-                    <Mic className="w-4 h-4 md:w-5 md:h-5" />
+                    <Mic className="w-4 h-4 sm:w-5 sm:h-5" />
                   )}
                 </button>
                 
                 <button
                   onClick={handleSendMessage}
                   disabled={!inputValue.trim() || isLoading}
-                  className="p-2.5 md:p-3 bg-gradient-to-r from-electric-600 via-purple-600 to-electric-500 hover:from-electric-700 hover:via-purple-700 hover:to-electric-600 text-white rounded-xl transition-all duration-200 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+                  className="p-2.5 sm:p-3 bg-gradient-to-r from-electric-600 via-purple-600 to-electric-500 hover:from-electric-700 hover:via-purple-700 hover:to-electric-600 text-white rounded-xl transition-all duration-200 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 min-w-[44px] min-h-[44px] flex items-center justify-center"
                 >
-                  <Send className="w-4 h-4 md:w-5 md:h-5" />
+                  <Send className="w-4 h-4 sm:w-5 sm:h-5" />
                 </button>
               </div>
             </div>
@@ -1047,7 +1047,7 @@ export default function ChatPage() {
               }}
               className="relative"
             >
-              {/* Outer pulsing ring */}
+              {/* Outer pulsing ring - responsive sizing */}
               <motion.div
                 animate={{ 
                   scale: [1, 1.6, 1],
@@ -1058,10 +1058,10 @@ export default function ChatPage() {
                   repeat: Infinity,
                   ease: "easeInOut"
                 }}
-                className="absolute inset-0 w-40 h-40 bg-gradient-to-r from-electric-500 to-purple-500 rounded-full blur-lg"
+                className="absolute inset-0 w-32 h-32 sm:w-40 sm:h-40 bg-gradient-to-r from-electric-500 to-purple-500 rounded-full blur-lg"
               />
               
-              {/* Middle ring */}
+              {/* Middle ring - responsive sizing */}
               <motion.div
                 animate={{ 
                   scale: [1, 1.3, 1],
@@ -1072,11 +1072,11 @@ export default function ChatPage() {
                   repeat: Infinity,
                   ease: "easeInOut"
                 }}
-                className="absolute inset-0 w-36 h-36 bg-gradient-to-r from-purple-500 to-electric-500 rounded-full blur-md"
+                className="absolute inset-0 w-28 h-28 sm:w-36 sm:h-36 bg-gradient-to-r from-purple-500 to-electric-500 rounded-full blur-md"
               />
               
-              {/* Main recording circle */}
-              <div className="relative w-36 h-36 bg-gradient-to-r from-electric-500 via-purple-500 to-electric-600 rounded-full flex items-center justify-center shadow-2xl border-4 border-white/30">
+              {/* Main recording circle - responsive sizing */}
+              <div className="relative w-28 h-28 sm:w-36 sm:h-36 bg-gradient-to-r from-electric-500 via-purple-500 to-electric-600 rounded-full flex items-center justify-center shadow-2xl border-4 border-white/30">
                 <motion.div
                   animate={{ 
                     scale: [1, 1.1, 1],
@@ -1087,44 +1087,44 @@ export default function ChatPage() {
                     repeat: Infinity,
                     ease: "easeInOut"
                   }}
-                  className="w-20 h-20 bg-white rounded-full flex items-center justify-center shadow-lg"
+                  className="w-16 h-16 sm:w-20 sm:h-20 bg-white rounded-full flex items-center justify-center shadow-lg"
                 >
-                  <span className="text-4xl font-black bg-gradient-to-r from-electric-600 via-purple-600 to-electric-500 bg-clip-text text-transparent">
+                  <span className="text-2xl sm:text-4xl font-black bg-gradient-to-r from-electric-600 via-purple-600 to-electric-500 bg-clip-text text-transparent">
                     V
                   </span>
                 </motion.div>
               </div>
               
-              {/* Recording text */}
+              {/* Recording text - mobile optimized */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="absolute -bottom-20 left-1/2 transform -translate-x-1/2 text-center w-80"
+                className="absolute -bottom-16 sm:-bottom-20 left-1/2 transform -translate-x-1/2 text-center w-72 sm:w-80 px-4"
               >
-                <p className="text-white text-xl font-bold mb-3">Velora is listening...</p>
-                <p className="text-gray-300 text-base leading-relaxed mb-2">Speak naturally, I'm capturing your words</p>
+                <p className="text-white text-lg sm:text-xl font-bold mb-2 sm:mb-3">Velora is listening...</p>
+                <p className="text-gray-300 text-sm sm:text-base leading-relaxed mb-2">Speak naturally, I'm capturing your words</p>
                 <motion.p
                   key={currentExampleIndex}
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
                   transition={{ duration: 0.5 }}
-                  className="text-electric-300 text-sm font-medium italic"
+                  className="text-electric-300 text-xs sm:text-sm font-medium italic leading-relaxed"
                 >
                   Try: "{voiceExamples[currentExampleIndex]}"
                 </motion.p>
               </motion.div>
 
-              {/* Live transcript display */}
+              {/* Live transcript display - mobile optimized */}
               {currentVoiceTranscript && (
                 <motion.div
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  className="absolute -bottom-32 left-1/2 transform -translate-x-1/2 w-96"
+                  className="absolute -bottom-28 sm:-bottom-32 left-1/2 transform -translate-x-1/2 w-80 sm:w-96 mx-4"
                 >
-                  <div className="bg-gray-800/90 backdrop-blur-sm border border-gray-600 rounded-xl p-4 shadow-lg">
-                    <p className="text-gray-400 text-sm font-medium mb-2">Live transcript:</p>
-                    <p className="text-white text-lg leading-relaxed">{currentVoiceTranscript}</p>
+                  <div className="bg-gray-800/90 backdrop-blur-sm border border-gray-600 rounded-xl p-3 sm:p-4 shadow-lg">
+                    <p className="text-gray-400 text-xs sm:text-sm font-medium mb-2">Live transcript:</p>
+                    <p className="text-white text-sm sm:text-lg leading-relaxed break-words">{currentVoiceTranscript}</p>
                   </div>
                 </motion.div>
               )}
