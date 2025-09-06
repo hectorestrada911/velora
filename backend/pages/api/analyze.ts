@@ -25,14 +25,25 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   try {
-    const { content } = req.body
+    const { content, conversationHistory } = req.body
 
     if (!content) {
       return res.status(400).json({ error: 'Content is required' })
     }
 
+    // Build conversation context
+    let conversationContext = ''
+    if (conversationHistory && conversationHistory.length > 0) {
+      conversationContext = `\n\nCONVERSATION HISTORY (for context):
+${conversationHistory.map((msg: any) => `${msg.type === 'user' ? 'User' : 'Assistant'}: ${msg.content}`).join('\n')}
+
+CURRENT MESSAGE:`
+    }
+
     // Comprehensive system prompt for AI analysis
     const systemPrompt = `You are an intelligent productivity assistant. Analyze the given content and extract:
+
+IMPORTANT: You have access to the conversation history above. Use it to understand context and references like "that", "it", "this", etc. Maintain continuity with previous messages.
 
 IMPORTANT: Ask natural, conversational questions that a helpful human assistant would ask. Make them specific to the situation and practical. Avoid generic questions.
 
@@ -90,7 +101,7 @@ Return ONLY valid JSON in this exact format:
   "followUpQuestions": ["What time works best for you tomorrow?", "How long do you think the call will take?", "Should I set a reminder 15 minutes before so you're prepared?"]
 }`
 
-    const userPrompt = `Please analyze this document content:
+    const userPrompt = `Please analyze this content:${conversationContext}
 
 ${content}
 

@@ -605,12 +605,18 @@ export default function ChatPage() {
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://velora-production.up.railway.app/api/analyze'
       console.log('API URL being used:', apiUrl)
       console.log('Environment variable:', process.env.NEXT_PUBLIC_API_URL)
+      // Prepare conversation history for context
+      const conversationHistory = messages.slice(-10) // Send last 10 messages for context
+      
       const response = await fetch(apiUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ content: inputValue }),
+        body: JSON.stringify({ 
+          content: inputValue,
+          conversationHistory: conversationHistory
+        }),
       })
 
       if (!response.ok) {
