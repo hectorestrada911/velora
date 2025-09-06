@@ -1011,7 +1011,7 @@ export default function ChatPage() {
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.8 }}
-            className="fixed inset-0 bg-black/20 flex items-center justify-center z-50 pointer-events-none"
+            className="fixed inset-0 bg-gradient-to-br from-black/30 via-purple-900/10 to-black/30 flex items-center justify-center z-50 pointer-events-none"
           >
             <motion.div
               animate={{ 
@@ -1027,32 +1027,46 @@ export default function ChatPage() {
               {/* Outer pulsing ring */}
               <motion.div
                 animate={{ 
-                  scale: [1, 1.5, 1],
-                  opacity: [0.7, 0.3, 0.7]
+                  scale: [1, 1.6, 1],
+                  opacity: [0.6, 0.2, 0.6]
                 }}
                 transition={{ 
-                  duration: 1.5,
+                  duration: 2,
                   repeat: Infinity,
                   ease: "easeInOut"
                 }}
-                className="absolute inset-0 w-32 h-32 bg-gradient-to-r from-electric-500 to-purple-500 rounded-full blur-sm"
+                className="absolute inset-0 w-40 h-40 bg-gradient-to-r from-electric-500 to-purple-500 rounded-full blur-lg"
+              />
+              
+              {/* Middle ring */}
+              <motion.div
+                animate={{ 
+                  scale: [1, 1.3, 1],
+                  opacity: [0.4, 0.1, 0.4]
+                }}
+                transition={{ 
+                  duration: 1.8,
+                  repeat: Infinity,
+                  ease: "easeInOut"
+                }}
+                className="absolute inset-0 w-36 h-36 bg-gradient-to-r from-purple-500 to-electric-500 rounded-full blur-md"
               />
               
               {/* Main recording circle */}
-              <div className="relative w-32 h-32 bg-gradient-to-r from-electric-500 via-purple-500 to-electric-600 rounded-full flex items-center justify-center shadow-2xl border-4 border-white/20">
+              <div className="relative w-36 h-36 bg-gradient-to-r from-electric-500 via-purple-500 to-electric-600 rounded-full flex items-center justify-center shadow-2xl border-4 border-white/30">
                 <motion.div
                   animate={{ 
-                    scale: [1, 1.2, 1],
-                    opacity: [1, 0.7, 1]
+                    scale: [1, 1.1, 1],
+                    opacity: [1, 0.8, 1]
                   }}
                   transition={{ 
-                    duration: 0.8,
+                    duration: 1.2,
                     repeat: Infinity,
                     ease: "easeInOut"
                   }}
-                  className="w-16 h-16 bg-white rounded-full flex items-center justify-center"
+                  className="w-20 h-20 bg-white rounded-full flex items-center justify-center shadow-lg"
                 >
-                  <span className="text-3xl font-black bg-gradient-to-r from-electric-600 via-purple-600 to-electric-500 bg-clip-text text-transparent">
+                  <span className="text-4xl font-black bg-gradient-to-r from-electric-600 via-purple-600 to-electric-500 bg-clip-text text-transparent">
                     V
                   </span>
                 </motion.div>
@@ -1062,10 +1076,10 @@ export default function ChatPage() {
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="absolute -bottom-16 left-1/2 transform -translate-x-1/2 text-center"
+                className="absolute -bottom-20 left-1/2 transform -translate-x-1/2 text-center w-80"
               >
-                <p className="text-white text-lg font-semibold mb-2">Velora is listening...</p>
-                <p className="text-gray-300 text-sm">Speak naturally, I'm capturing your words</p>
+                <p className="text-white text-xl font-bold mb-3">Velora is listening...</p>
+                <p className="text-gray-300 text-base leading-relaxed">Speak naturally, I'm capturing your words</p>
               </motion.div>
             </motion.div>
           </motion.div>
