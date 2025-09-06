@@ -931,7 +931,7 @@ export default function ChatPage() {
         </div>
 
         {/* Input Area */}
-        <div className="fixed bottom-0 left-0 right-0 bg-gray-900/95 backdrop-blur-sm border-t border-gray-700/50 p-3 md:p-4">
+        <div className="fixed bottom-0 left-0 right-0 bg-gray-900/95 border-t border-gray-700/50 p-3 md:p-4">
           <div className="max-w-6xl mx-auto">
             <div className="flex items-end space-x-3 md:space-x-4">
               <div className="flex-1 relative">
@@ -1011,12 +1011,11 @@ export default function ChatPage() {
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.8 }}
-            className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50 pointer-events-none"
+            className="fixed inset-0 bg-black/20 flex items-center justify-center z-50 pointer-events-none"
           >
             <motion.div
               animate={{ 
-                scale: [1, 1.1, 1],
-                rotate: [0, 360]
+                scale: [1, 1.05, 1]
               }}
               transition={{ 
                 duration: 2,
