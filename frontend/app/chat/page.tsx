@@ -66,7 +66,7 @@ export default function ChatPage() {
     },
     {
       id: '5',
-      text: 'Try voice commands - "Schedule a meeting tomorrow at 3pm"',
+      text: 'Click the microphone button below to use voice input',
       icon: <Mic className="w-4 h-4" />,
       category: 'voice'
     },
@@ -550,13 +550,6 @@ export default function ChatPage() {
               <Bell className="w-4 h-4 md:w-5 md:h-5" />
             </button>
             <button 
-              onClick={() => window.location.href = '/voice'}
-              className="p-2 md:p-2 text-gray-400 hover:text-white transition-colors duration-200 hover:bg-gray-800 rounded-lg"
-              title="Voice Commands"
-            >
-              <Mic className="w-4 h-4 md:w-5 md:h-5" />
-            </button>
-            <button 
               onClick={() => window.location.href = '/demo'}
               className="p-2 md:p-2 text-gray-400 hover:text-white transition-colors duration-200 hover:bg-gray-800 rounded-lg"
               title="View Functionality Demo"
@@ -830,8 +823,9 @@ export default function ChatPage() {
                   className={`p-2.5 md:p-3 rounded-xl transition-all duration-200 ${
                     isRecording
                       ? 'bg-red-600 hover:bg-red-700 text-white'
-                      : 'bg-gray-800 hover:bg-gray-700 text-gray-400 hover:text-white border border-gray-600'
+                      : 'bg-gradient-to-r from-electric-600 via-purple-600 to-electric-500 hover:from-electric-700 hover:via-purple-700 hover:to-electric-600 text-white border border-electric-500/30'
                   }`}
+                  title={isRecording ? "Stop recording" : "Start voice input"}
                 >
                   {isRecording ? <MicOff className="w-4 h-4 md:w-5 md:h-5" /> : <Mic className="w-4 h-4 md:w-5 md:h-5" />}
                 </button>
