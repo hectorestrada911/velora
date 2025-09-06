@@ -1,4 +1,4 @@
-import { CalendarEvent, Reminder, Document } from '@/types'
+import { Reminder } from '@/types'
 
 export interface Entity {
   type: 'person' | 'project' | 'date' | 'topic' | 'location' | 'company'
