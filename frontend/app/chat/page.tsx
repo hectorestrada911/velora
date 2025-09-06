@@ -1042,92 +1042,111 @@ export default function ChatPage() {
         </div>
       </div>
 
-      {/* Floating Voice Recording Circle */}
+      {/* Floating Voice Recording Circle with Blurred Background */}
       <AnimatePresence>
         {isVoiceListening && (
           <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.8 }}
-            className="fixed inset-0 bg-gradient-to-br from-black/30 via-purple-900/10 to-black/30 flex items-center justify-center z-50 pointer-events-none"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 pointer-events-none"
           >
+            {/* Blurred Background Overlay */}
             <motion.div
-              animate={{ 
-                scale: [1, 1.05, 1]
-              }}
-              transition={{ 
-                duration: 2,
-                repeat: Infinity,
-                ease: "easeInOut"
-              }}
-              className="relative"
-            >
-              {/* Outer pulsing ring - responsive sizing */}
+              initial={{ backdropFilter: 'blur(0px)' }}
+              animate={{ backdropFilter: 'blur(8px)' }}
+              exit={{ backdropFilter: 'blur(0px)' }}
+              transition={{ duration: 0.3 }}
+              className="absolute inset-0 bg-black/20"
+            />
+            
+            {/* Main Content Container */}
+            <div className="relative w-full h-full flex flex-col items-center justify-center px-4">
               <motion.div
-                animate={{ 
-                  scale: [1, 1.6, 1],
-                  opacity: [0.6, 0.2, 0.6]
-                }}
-                transition={{ 
-                  duration: 2,
-                  repeat: Infinity,
-                  ease: "easeInOut"
-                }}
-                className="absolute inset-0 w-32 h-32 sm:w-40 sm:h-40 bg-gradient-to-r from-electric-500 to-purple-500 rounded-full blur-lg"
-              />
-              
-              {/* Middle ring - responsive sizing */}
-              <motion.div
-                animate={{ 
-                  scale: [1, 1.3, 1],
-                  opacity: [0.4, 0.1, 0.4]
-                }}
-                transition={{ 
-                  duration: 1.8,
-                  repeat: Infinity,
-                  ease: "easeInOut"
-                }}
-                className="absolute inset-0 w-28 h-28 sm:w-36 sm:h-36 bg-gradient-to-r from-purple-500 to-electric-500 rounded-full blur-md"
-              />
-              
-              {/* Main recording circle - responsive sizing */}
-              <div className="relative w-28 h-28 sm:w-36 sm:h-36 bg-gradient-to-r from-electric-500 via-purple-500 to-electric-600 rounded-full flex items-center justify-center shadow-2xl border-4 border-white/30">
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.8 }}
+                className="relative"
+              >
+                {/* Outer pulsing ring - responsive sizing */}
                 <motion.div
                   animate={{ 
-                    scale: [1, 1.1, 1],
-                    opacity: [1, 0.8, 1]
+                    scale: [1, 1.6, 1],
+                    opacity: [0.6, 0.2, 0.6]
                   }}
                   transition={{ 
-                    duration: 1.2,
+                    duration: 2,
                     repeat: Infinity,
                     ease: "easeInOut"
                   }}
-                  className="w-16 h-16 sm:w-20 sm:h-20 bg-white rounded-full flex items-center justify-center shadow-lg"
+                  className="absolute inset-0 w-32 h-32 sm:w-40 sm:h-40 bg-gradient-to-r from-electric-500 to-purple-500 rounded-full blur-lg"
+                />
+                
+                {/* Middle ring - responsive sizing */}
+                <motion.div
+                  animate={{ 
+                    scale: [1, 1.3, 1],
+                    opacity: [0.4, 0.1, 0.4]
+                  }}
+                  transition={{ 
+                    duration: 1.8,
+                    repeat: Infinity,
+                    ease: "easeInOut"
+                  }}
+                  className="absolute inset-0 w-28 h-28 sm:w-36 sm:h-36 bg-gradient-to-r from-purple-500 to-electric-500 rounded-full blur-md"
+                />
+                
+                {/* Main recording circle - responsive sizing */}
+                <motion.div
+                  animate={{ 
+                    scale: [1, 1.05, 1]
+                  }}
+                  transition={{ 
+                    duration: 2,
+                    repeat: Infinity,
+                    ease: "easeInOut"
+                  }}
+                  className="relative w-28 h-28 sm:w-36 sm:h-36 bg-gradient-to-r from-electric-500 via-purple-500 to-electric-600 rounded-full flex items-center justify-center shadow-2xl border-4 border-white/30"
                 >
-                  <span className="text-2xl sm:text-4xl font-black bg-gradient-to-r from-electric-600 via-purple-600 to-electric-500 bg-clip-text text-transparent">
-                    V
-                  </span>
+                  <motion.div
+                    animate={{ 
+                      scale: [1, 1.1, 1],
+                      opacity: [1, 0.8, 1]
+                    }}
+                    transition={{ 
+                      duration: 1.2,
+                      repeat: Infinity,
+                      ease: "easeInOut"
+                    }}
+                    className="w-16 h-16 sm:w-20 sm:h-20 bg-white rounded-full flex items-center justify-center shadow-lg"
+                  >
+                    <span className="text-2xl sm:text-4xl font-black bg-gradient-to-r from-electric-600 via-purple-600 to-electric-500 bg-clip-text text-transparent">
+                      V
+                    </span>
+                  </motion.div>
                 </motion.div>
-              </div>
+              </motion.div>
               
-              {/* Recording text - mobile optimized */}
+              {/* Instructions Container with Background */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="absolute -bottom-16 sm:-bottom-20 left-1/2 transform -translate-x-1/2 text-center w-72 sm:w-80 px-4"
+                className="mt-8 w-full max-w-sm sm:max-w-md"
               >
-                <p className="text-white text-lg sm:text-xl font-bold mb-2 sm:mb-3">Velora is listening...</p>
-                <p className="text-gray-300 text-sm sm:text-base leading-relaxed mb-2">Speak naturally, I'm capturing your words</p>
-                <motion.p
-                  key={currentExampleIndex}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  transition={{ duration: 0.5 }}
-                  className="text-electric-300 text-xs sm:text-sm font-medium italic leading-relaxed"
-                >
-                  Try: "{voiceExamples[currentExampleIndex]}"
-                </motion.p>
+                <div className="bg-gray-900/90 backdrop-blur-sm border border-gray-700/50 rounded-xl p-4 sm:p-6 shadow-xl">
+                  <p className="text-white text-lg sm:text-xl font-bold mb-3 text-center">Velora is listening...</p>
+                  <p className="text-gray-300 text-sm sm:text-base leading-relaxed mb-3 text-center">Speak naturally, I'm capturing your words</p>
+                  <motion.p
+                    key={currentExampleIndex}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.5 }}
+                    className="text-electric-300 text-xs sm:text-sm font-medium italic leading-relaxed text-center"
+                  >
+                    Try: "{voiceExamples[currentExampleIndex]}"
+                  </motion.p>
+                </div>
               </motion.div>
 
               {/* Live transcript display - mobile optimized */}
@@ -1135,7 +1154,7 @@ export default function ChatPage() {
                 <motion.div
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  className="absolute -bottom-28 sm:-bottom-32 left-1/2 transform -translate-x-1/2 w-80 sm:w-96 mx-4"
+                  className="mt-4 w-full max-w-sm sm:max-w-md"
                 >
                   <div className="bg-gray-800/90 backdrop-blur-sm border border-gray-600 rounded-xl p-3 sm:p-4 shadow-lg">
                     <p className="text-gray-400 text-xs sm:text-sm font-medium mb-2">Live transcript:</p>
@@ -1143,7 +1162,7 @@ export default function ChatPage() {
                   </div>
                 </motion.div>
               )}
-            </motion.div>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
