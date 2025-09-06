@@ -359,8 +359,54 @@ export default function ChatPage() {
       setIsVoiceProcessing(false)
       setCurrentVoiceTranscript('')
     } else {
-      // Show voice instructions modal first
-      setShowVoiceInstructions(true)
+      // Start listening directly
+      if (!voiceService.isSupported()) {
+        toast.error('Voice recognition not supported in this browser')
+        return
+      }
+
+      setIsVoiceListening(true)
+      setCurrentVoiceTranscript('')
+
+      const success = await voiceService.startListening(
+        (result: VoiceResult) => {
+          setIsVoiceListening(false)
+          setIsVoiceProcessing(false)
+          
+          if (result.success) {
+            // Use the current transcript for the message
+            const transcriptText = currentVoiceTranscript || 'Voice command executed'
+            
+            // Add the voice input as a user message
+            const userMessage: Message = {
+              id: Date.now().toString(),
+              type: 'user',
+              content: transcriptText,
+              timestamp: new Date()
+            }
+
+            setMessages(prev => {
+              const newMessages = [...prev, userMessage]
+              saveConversation(newMessages)
+              return newMessages
+            })
+
+            // Process the voice command
+            handleSendMessage()
+            toast.success('Voice input processed!')
+          } else {
+            toast.error(result.message)
+          }
+        },
+        (transcript: string) => {
+          setCurrentVoiceTranscript(transcript)
+        }
+      )
+
+      if (!success) {
+        setIsVoiceListening(false)
+        toast.error('Failed to start voice recognition')
+      }
     }
   }
 
@@ -871,9 +917,9 @@ export default function ChatPage() {
                   value={currentVoiceTranscript || inputValue}
                   onChange={(e) => setInputValue(e.target.value)}
                   onKeyPress={handleKeyPress}
-                  placeholder={isVoiceListening ? "Listening... Speak now!" : "Tell me what you need to remember, schedule, or organize..."}
-                  className={`w-full bg-gray-800 border border-gray-600 rounded-xl px-3 md:px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:border-electric-500 focus:ring-1 focus:ring-electric-500 transition-all duration-200 resize-none text-sm md:text-base ${
-                    isVoiceListening ? 'border-electric-500 bg-electric-500/5' : ''
+                  placeholder={isVoiceListening ? "🎤 Listening... Speak naturally" : "Tell me what you need to remember, schedule, or organize..."}
+                  className={`w-full bg-gray-800 border rounded-xl px-3 md:px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:border-electric-500 focus:ring-1 focus:ring-electric-500 transition-all duration-200 resize-none text-sm md:text-base ${
+                    isVoiceListening ? 'border-red-500 ring-2 ring-red-500/30 bg-red-900/20 animate-pulse' : 'border-gray-600'
                   }`}
                   rows={1}
                   style={{ minHeight: '48px', maxHeight: '120px' }}
@@ -935,6 +981,73 @@ export default function ChatPage() {
           </div>
         </div>
       </div>
+
+      {/* Floating Voice Recording Circle */}
+      <AnimatePresence>
+        {isVoiceListening && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.8 }}
+            className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50 pointer-events-none"
+          >
+            <motion.div
+              animate={{ 
+                scale: [1, 1.1, 1],
+                rotate: [0, 360]
+              }}
+              transition={{ 
+                duration: 2,
+                repeat: Infinity,
+                ease: "easeInOut"
+              }}
+              className="relative"
+            >
+              {/* Outer pulsing ring */}
+              <motion.div
+                animate={{ 
+                  scale: [1, 1.5, 1],
+                  opacity: [0.7, 0.3, 0.7]
+                }}
+                transition={{ 
+                  duration: 1.5,
+                  repeat: Infinity,
+                  ease: "easeInOut"
+                }}
+                className="absolute inset-0 w-32 h-32 bg-gradient-to-r from-electric-500 to-purple-500 rounded-full blur-sm"
+              />
+              
+              {/* Main recording circle */}
+              <div className="relative w-32 h-32 bg-gradient-to-r from-red-500 to-red-600 rounded-full flex items-center justify-center shadow-2xl border-4 border-white/20">
+                <motion.div
+                  animate={{ 
+                    scale: [1, 1.2, 1],
+                    opacity: [1, 0.7, 1]
+                  }}
+                  transition={{ 
+                    duration: 0.8,
+                    repeat: Infinity,
+                    ease: "easeInOut"
+                  }}
+                  className="w-16 h-16 bg-white rounded-full flex items-center justify-center"
+                >
+                  <Mic className="w-8 h-8 text-red-600" />
+                </motion.div>
+              </div>
+              
+              {/* Recording text */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="absolute -bottom-16 left-1/2 transform -translate-x-1/2 text-center"
+              >
+                <p className="text-white text-lg font-semibold mb-2">Listening...</p>
+                <p className="text-gray-300 text-sm">Speak naturally, I'm capturing your words</p>
+              </motion.div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Voice Instructions Modal */}
       <AnimatePresence>
