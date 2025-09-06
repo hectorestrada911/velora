@@ -11,6 +11,7 @@ import { conversationService, Message, Conversation } from '@/lib/conversationSe
 import { useAuth } from '@/components/providers/AuthProvider'
 import { storageService } from '@/lib/storageService'
 import { documentService, Document } from '@/lib/documentService'
+import { voiceService } from '@/lib/voiceService'
 
 
 interface Suggestion {
@@ -36,6 +37,9 @@ export default function ChatPage() {
   const [showFileUpload, setShowFileUpload] = useState(false)
   const [documents, setDocuments] = useState<Document[]>([])
   const [isUploading, setIsUploading] = useState(false)
+  const [isVoiceListening, setIsVoiceListening] = useState(false)
+  const [isVoiceProcessing, setIsVoiceProcessing] = useState(false)
+  const [currentVoiceTranscript, setCurrentVoiceTranscript] = useState('')
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
@@ -344,6 +348,76 @@ export default function ChatPage() {
 
   const handleVoiceTranscript = (transcript: string) => {
     setCurrentTranscript(transcript)
+  }
+
+  const handleVoiceInput = async () => {
+    if (isVoiceListening) {
+      // Stop listening
+      voiceService.stopListening()
+      setIsVoiceListening(false)
+      setIsVoiceProcessing(false)
+      setCurrentVoiceTranscript('')
+    } else {
+      // Start listening
+      if (!voiceService.isSupported()) {
+        toast.error('Voice recognition not supported in this browser')
+        return
+      }
+
+      setIsVoiceListening(true)
+      setCurrentVoiceTranscript('')
+
+      const success = await voiceService.startListening(
+        (result: VoiceResult) => {
+          setIsVoiceListening(false)
+          setIsVoiceProcessing(false)
+          
+          if (result.success) {
+            // Use the current transcript for the message
+            const transcriptText = currentVoiceTranscript || 'Voice command executed'
+            
+            // Add the voice input as a user message
+            const userMessage: Message = {
+              id: Date.now().toString(),
+              type: 'user',
+              content: transcriptText,
+              timestamp: new Date()
+            }
+
+            setMessages(prev => {
+              const newMessages = [...prev, userMessage]
+              saveConversation(newMessages)
+              return newMessages
+            })
+
+            // Set the input value and process the message
+            setInputValue(transcriptText)
+            setTimeout(() => {
+              handleSendMessage()
+            }, 100)
+            
+            setCurrentVoiceTranscript('')
+            toast.success('Voice input processed!')
+          } else {
+            setCurrentVoiceTranscript('')
+            toast.error(result.message)
+          }
+        },
+        (transcript: string) => {
+          setCurrentVoiceTranscript(transcript)
+          // Update the input field with the transcript
+          setInputValue(transcript)
+        }
+      )
+
+      if (success) {
+        setIsVoiceProcessing(true)
+        toast.success('Listening... Speak now!')
+      } else {
+        setIsVoiceListening(false)
+        toast.error('Failed to start voice recognition')
+      }
+    }
   }
 
   const handleSendMessage = async () => {
@@ -786,13 +860,16 @@ export default function ChatPage() {
             <div className="flex items-end space-x-3 md:space-x-4">
               <div className="flex-1 relative">
                 <textarea
-                  value={inputValue}
+                  value={currentVoiceTranscript || inputValue}
                   onChange={(e) => setInputValue(e.target.value)}
                   onKeyPress={handleKeyPress}
-                  placeholder="Tell me what you need to remember, schedule, or organize..."
-                  className="w-full bg-gray-800 border border-gray-600 rounded-xl px-3 md:px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:border-electric-500 focus:ring-1 focus:ring-electric-500 transition-all duration-200 resize-none text-sm md:text-base"
+                  placeholder={isVoiceListening ? "Listening... Speak now!" : "Tell me what you need to remember, schedule, or organize..."}
+                  className={`w-full bg-gray-800 border border-gray-600 rounded-xl px-3 md:px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:border-electric-500 focus:ring-1 focus:ring-electric-500 transition-all duration-200 resize-none text-sm md:text-base ${
+                    isVoiceListening ? 'border-electric-500 bg-electric-500/5' : ''
+                  }`}
                   rows={1}
                   style={{ minHeight: '48px', maxHeight: '120px' }}
+                  disabled={isVoiceListening}
                 />
               </div>
               
@@ -819,15 +896,23 @@ export default function ChatPage() {
                 </button>
                 
                 <button
-                  onClick={() => setIsRecording(!isRecording)}
+                  onClick={handleVoiceInput}
                   className={`p-2.5 md:p-3 rounded-xl transition-all duration-200 ${
-                    isRecording
+                    isVoiceListening
                       ? 'bg-red-600 hover:bg-red-700 text-white'
+                      : isVoiceProcessing
+                      ? 'bg-yellow-600 hover:bg-yellow-700 text-white'
                       : 'bg-gradient-to-r from-electric-600 via-purple-600 to-electric-500 hover:from-electric-700 hover:via-purple-700 hover:to-electric-600 text-white border border-electric-500/30'
                   }`}
-                  title={isRecording ? "Stop recording" : "Start voice input"}
+                  title={isVoiceListening ? "Stop listening" : isVoiceProcessing ? "Processing..." : "Start voice input"}
                 >
-                  {isRecording ? <MicOff className="w-4 h-4 md:w-5 md:h-5" /> : <Mic className="w-4 h-4 md:w-5 md:h-5" />}
+                  {isVoiceListening ? (
+                    <MicOff className="w-4 h-4 md:w-5 md:h-5" />
+                  ) : isVoiceProcessing ? (
+                    <div className="w-4 h-4 md:w-5 md:h-5 animate-spin rounded-full border-2 border-white border-t-transparent"></div>
+                  ) : (
+                    <Mic className="w-4 h-4 md:w-5 md:h-5" />
+                  )}
                 </button>
                 
                 <button
