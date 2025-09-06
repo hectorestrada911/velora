@@ -42,6 +42,7 @@ export default function ChatPage() {
   const [currentVoiceTranscript, setCurrentVoiceTranscript] = useState('')
   const [showVoiceInstructions, setShowVoiceInstructions] = useState(false)
   const [currentExampleIndex, setCurrentExampleIndex] = useState(0)
+  const [hasUserInteracted, setHasUserInteracted] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
@@ -341,6 +342,7 @@ export default function ChatPage() {
     } else {
       setInputValue(suggestion.text)
       setShowSuggestions(false)
+      setHasUserInteracted(true)
     }
   }
 
@@ -533,6 +535,7 @@ export default function ChatPage() {
     setInputValue('')
     setIsLoading(true)
     setShowSuggestions(false)
+    setHasUserInteracted(false)
 
     try {
       // Call real AI backend
@@ -960,11 +963,18 @@ export default function ChatPage() {
               <div className="flex-1 relative">
                 <textarea
                   value={inputValue}
-                  onChange={(e) => setInputValue(e.target.value)}
+                  onChange={(e) => {
+                    setInputValue(e.target.value)
+                    setHasUserInteracted(true)
+                  }}
                   onKeyPress={handleKeyPress}
                   placeholder={isVoiceListening ? "🎤 Voice recording active..." : "Tell me what you need to remember, schedule, or organize..."}
                   className={`w-full bg-gray-800 border rounded-xl px-3 sm:px-4 py-2.5 sm:py-3 text-white placeholder-gray-400 focus:outline-none focus:border-electric-500 focus:ring-1 focus:ring-electric-500 transition-all duration-200 resize-none text-sm sm:text-base ${
-                    isVoiceListening ? 'border-electric-500 ring-2 ring-electric-500/30 bg-electric-500/5' : 'border-gray-600'
+                    isVoiceListening 
+                      ? 'border-electric-500 ring-2 ring-electric-500/30 bg-electric-500/5' 
+                      : hasUserInteracted && inputValue.trim()
+                      ? 'border-electric-500 ring-2 ring-electric-500/30 bg-electric-500/5 shadow-lg shadow-electric-500/20'
+                      : 'border-gray-600'
                   }`}
                   rows={1}
                   style={{ minHeight: '44px', maxHeight: '120px' }}
@@ -1017,7 +1027,11 @@ export default function ChatPage() {
                 <button
                   onClick={handleSendMessage}
                   disabled={!inputValue.trim() || isLoading}
-                  className="p-2.5 sm:p-3 bg-gradient-to-r from-electric-600 via-purple-600 to-electric-500 hover:from-electric-700 hover:via-purple-700 hover:to-electric-600 text-white rounded-xl transition-all duration-200 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 min-w-[44px] min-h-[44px] flex items-center justify-center"
+                  className={`p-2.5 sm:p-3 bg-gradient-to-r from-electric-600 via-purple-600 to-electric-500 hover:from-electric-700 hover:via-purple-700 hover:to-electric-600 text-white rounded-xl transition-all duration-200 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 min-w-[44px] min-h-[44px] flex items-center justify-center ${
+                    hasUserInteracted && inputValue.trim() && !isLoading
+                      ? 'ring-2 ring-electric-500/50 shadow-lg shadow-electric-500/30'
+                      : ''
+                  }`}
                 >
                   <Send className="w-4 h-4 sm:w-5 sm:h-5" />
                 </button>
