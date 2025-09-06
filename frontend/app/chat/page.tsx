@@ -1040,7 +1040,7 @@ export default function ChatPage() {
               />
               
               {/* Main recording circle */}
-              <div className="relative w-32 h-32 bg-gradient-to-r from-red-500 to-red-600 rounded-full flex items-center justify-center shadow-2xl border-4 border-white/20">
+              <div className="relative w-32 h-32 bg-gradient-to-r from-electric-500 via-purple-500 to-electric-600 rounded-full flex items-center justify-center shadow-2xl border-4 border-white/20">
                 <motion.div
                   animate={{ 
                     scale: [1, 1.2, 1],
@@ -1053,7 +1053,9 @@ export default function ChatPage() {
                   }}
                   className="w-16 h-16 bg-white rounded-full flex items-center justify-center"
                 >
-                  <Mic className="w-8 h-8 text-red-600" />
+                  <span className="text-3xl font-black bg-gradient-to-r from-electric-600 via-purple-600 to-electric-500 bg-clip-text text-transparent">
+                    V
+                  </span>
                 </motion.div>
               </div>
               
@@ -1063,7 +1065,7 @@ export default function ChatPage() {
                 animate={{ opacity: 1, y: 0 }}
                 className="absolute -bottom-16 left-1/2 transform -translate-x-1/2 text-center"
               >
-                <p className="text-white text-lg font-semibold mb-2">Listening...</p>
+                <p className="text-white text-lg font-semibold mb-2">Velora is listening...</p>
                 <p className="text-gray-300 text-sm">Speak naturally, I'm capturing your words</p>
               </motion.div>
             </motion.div>
