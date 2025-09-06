@@ -169,30 +169,67 @@ export default function AuthPage() {
           </p>
         </motion.div>
 
-        {/* Feature Icons - Mobile Optimized */}
+        {/* Feature Icons - Enhanced */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6 }}
-          className="grid grid-cols-3 gap-4 mb-8 w-full max-w-sm"
+          className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8 w-full max-w-2xl"
         >
           <div className="text-center">
             <div className="w-12 h-12 md:w-16 md:h-16 bg-electric-600/20 rounded-full flex items-center justify-center mx-auto mb-2 border border-electric-500/30">
               <Brain className="w-6 h-6 md:w-8 md:h-8 text-electric-400" />
             </div>
-            <p className="text-electric-300 text-sm md:text-base font-medium">AI Assistant</p>
+            <p className="text-electric-300 text-sm md:text-base font-medium">AI Memory</p>
+            <p className="text-gray-400 text-xs">Never forget again</p>
           </div>
           <div className="text-center">
             <div className="w-12 h-12 md:w-16 md:h-16 bg-purple-600/20 rounded-full flex items-center justify-center mx-auto mb-2 border border-purple-500/30">
               <Calendar className="w-6 h-6 md:w-8 md:h-8 text-purple-400" />
             </div>
             <p className="text-purple-300 text-sm md:text-base font-medium">Smart Calendar</p>
+            <p className="text-gray-400 text-xs">Auto-scheduling</p>
           </div>
           <div className="text-center">
             <div className="w-12 h-12 md:w-16 md:h-16 bg-yellow-600/20 rounded-full flex items-center justify-center mx-auto mb-2 border border-yellow-500/30">
               <Bell className="w-6 h-6 md:w-8 md:h-8 text-yellow-400" />
             </div>
             <p className="text-yellow-300 text-sm md:text-base font-medium">Smart Reminders</p>
+            <p className="text-gray-400 text-xs">Context-aware</p>
+          </div>
+          <div className="text-center">
+            <div className="w-12 h-12 md:w-16 md:h-16 bg-green-600/20 rounded-full flex items-center justify-center mx-auto mb-2 border border-green-500/30">
+              <Sparkles className="w-6 h-6 md:w-8 md:h-8 text-green-400" />
+            </div>
+            <p className="text-green-300 text-sm md:text-base font-medium">Voice Commands</p>
+            <p className="text-gray-400 text-xs">Hands-free</p>
+          </div>
+        </motion.div>
+
+        {/* Key Benefits */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.7 }}
+          className="w-full max-w-lg mb-8"
+        >
+          <div className="space-y-3">
+            <div className="flex items-center space-x-3 text-gray-300">
+              <CheckCircle className="w-5 h-5 text-green-400 flex-shrink-0" />
+              <span className="text-sm md:text-base">Remember where you parked, preferences, and important dates</span>
+            </div>
+            <div className="flex items-center space-x-3 text-gray-300">
+              <CheckCircle className="w-5 h-5 text-green-400 flex-shrink-0" />
+              <span className="text-sm md:text-base">Voice commands for hands-free productivity</span>
+            </div>
+            <div className="flex items-center space-x-3 text-gray-300">
+              <CheckCircle className="w-5 h-5 text-green-400 flex-shrink-0" />
+              <span className="text-sm md:text-base">Smart calendar and reminder management</span>
+            </div>
+            <div className="flex items-center space-x-3 text-gray-300">
+              <CheckCircle className="w-5 h-5 text-green-400 flex-shrink-0" />
+              <span className="text-sm md:text-base">Cross-reference conversations and memories</span>
+            </div>
           </div>
         </motion.div>
 
@@ -222,7 +259,7 @@ export default function AuthPage() {
             onClick={handleSkip}
             className="w-full text-gray-400 hover:text-white font-medium py-2 md:py-3 px-6 transition-colors duration-200"
           >
-            Skip to Chat
+            Try Demo First
           </button>
         </motion.div>
       </div>

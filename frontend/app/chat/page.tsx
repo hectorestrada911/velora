@@ -813,7 +813,7 @@ export default function ChatPage() {
             {user && (
               <button 
                 onClick={() => setShowConversationHistory(!showConversationHistory)}
-                className="p-1.5 sm:p-2 text-gray-400 hover:text-white transition-colors duration-200 hover:bg-gray-800 rounded-lg min-w-[36px] min-h-[36px] flex items-center justify-center"
+                className="p-2 sm:p-2.5 text-gray-400 hover:text-white transition-colors duration-200 hover:bg-gray-800 rounded-lg min-w-[40px] min-h-[40px] flex items-center justify-center"
                 title="Conversation History"
               >
                 <History className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -821,28 +821,28 @@ export default function ChatPage() {
             )}
             <button 
               onClick={() => window.location.href = '/calendar'}
-              className="p-1.5 sm:p-2 text-gray-400 hover:text-white transition-colors duration-200 hover:bg-gray-800 rounded-lg min-w-[36px] min-h-[36px] flex items-center justify-center"
+              className="p-2 sm:p-2.5 text-gray-400 hover:text-white transition-colors duration-200 hover:bg-gray-800 rounded-lg min-w-[40px] min-h-[40px] flex items-center justify-center"
               title="View Calendar"
             >
               <Calendar className="w-4 h-4 sm:w-5 sm:h-5" />
             </button>
             <button 
               onClick={() => window.location.href = '/reminders'}
-              className="p-1.5 sm:p-2 text-gray-400 hover:text-white transition-colors duration-200 hover:bg-gray-800 rounded-lg min-w-[36px] min-h-[36px] flex items-center justify-center"
+              className="p-2 sm:p-2.5 text-gray-400 hover:text-white transition-colors duration-200 hover:bg-gray-800 rounded-lg min-w-[40px] min-h-[40px] flex items-center justify-center"
               title="View Reminders"
             >
               <Bell className="w-4 h-4 sm:w-5 sm:h-5" />
             </button>
             <button 
               onClick={() => window.location.href = '/memory'}
-              className="p-1.5 sm:p-2 text-gray-400 hover:text-white transition-colors duration-200 hover:bg-gray-800 rounded-lg min-w-[36px] min-h-[36px] flex items-center justify-center"
+              className="p-2 sm:p-2.5 text-gray-400 hover:text-white transition-colors duration-200 hover:bg-gray-800 rounded-lg min-w-[40px] min-h-[40px] flex items-center justify-center"
               title="View Memory Bank"
             >
               <Brain className="w-4 h-4 sm:w-5 sm:h-5" />
             </button>
             <button 
               onClick={() => window.location.href = '/demo'}
-              className="p-1.5 sm:p-2 text-gray-400 hover:text-white transition-colors duration-200 hover:bg-gray-800 rounded-lg min-w-[36px] min-h-[36px] flex items-center justify-center"
+              className="p-2 sm:p-2.5 text-gray-400 hover:text-white transition-colors duration-200 hover:bg-gray-800 rounded-lg min-w-[40px] min-h-[40px] flex items-center justify-center"
               title="View Functionality Demo"
             >
               <Sparkles className="w-4 h-4 sm:w-5 sm:h-5" />
