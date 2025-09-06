@@ -31,7 +31,14 @@ export default function RemindersView() {
   const loadReminders = async () => {
     try {
       const storedReminders = calendarService.getStoredReminders()
-      setReminders(storedReminders)
+      // Ensure all dates are valid Date objects
+      const validReminders = storedReminders.map(reminder => ({
+        ...reminder,
+        dueDate: new Date(reminder.dueDate),
+        createdAt: reminder.createdAt
+      })).filter(reminder => !isNaN(reminder.dueDate.getTime()))
+      
+      setReminders(validReminders)
     } catch (error) {
       console.error('Failed to load reminders:', error)
       toast.error('Failed to load reminders')
@@ -154,24 +161,34 @@ export default function RemindersView() {
   }
 
   const isOverdue = (dueDate: Date) => {
-    return new Date() > dueDate
+    try {
+      return new Date() > dueDate
+    } catch (error) {
+      console.error('Error checking if overdue:', error)
+      return false
+    }
   }
 
   const formatDueDate = (dueDate: Date) => {
-    const now = new Date()
-    const diffTime = dueDate.getTime() - now.getTime()
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
-    
-    if (diffDays < 0) {
-      return `${Math.abs(diffDays)} day${Math.abs(diffDays) === 1 ? '' : 's'} overdue`
-    } else if (diffDays === 0) {
-      return 'Due today'
-    } else if (diffDays === 1) {
-      return 'Due tomorrow'
-    } else if (diffDays <= 7) {
-      return `Due in ${diffDays} days`
-    } else {
-      return dueDate.toLocaleDateString()
+    try {
+      const now = new Date()
+      const diffTime = dueDate.getTime() - now.getTime()
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+      
+      if (diffDays < 0) {
+        return `${Math.abs(diffDays)} day${Math.abs(diffDays) === 1 ? '' : 's'} overdue`
+      } else if (diffDays === 0) {
+        return 'Due today'
+      } else if (diffDays === 1) {
+        return 'Due tomorrow'
+      } else if (diffDays <= 7) {
+        return `Due in ${diffDays} days`
+      } else {
+        return dueDate.toLocaleDateString()
+      }
+    } catch (error) {
+      console.error('Error formatting due date:', error)
+      return 'Invalid date'
     }
   }
 
@@ -203,7 +220,7 @@ export default function RemindersView() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background-primary via-background-secondary to-background-tertiary p-4">
+    <div className="min-h-screen bg-gradient-to-br from-background via-background-secondary to-background-tertiary p-4">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
