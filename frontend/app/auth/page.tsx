@@ -4,7 +4,7 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { motion as motion2 } from 'framer-motion'
-import { User, Lock, Mail, ArrowRight, Sparkles, Brain, Calendar, Bell, CheckCircle, Clock, Mic } from 'lucide-react'
+import { User, Lock, Mail, ArrowRight, Sparkles, Brain, Calendar, Bell, CheckCircle, Clock, Mic, Zap, Target, Lightbulb, MessageSquare, Database, Shield, Rocket, Star, TrendingUp, Users, Globe, Smartphone, Laptop } from 'lucide-react'
 import Link from 'next/link'
 import { toast } from 'react-hot-toast'
 import { useAuth } from '@/components/providers/AuthProvider'
@@ -240,12 +240,31 @@ export default function AuthPage() {
           <div className="hidden lg:flex items-center justify-between max-w-7xl mx-auto px-4 mb-12">
             {/* Left Side - Text Content */}
             <div className="flex-1 max-w-2xl">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 }}
+                className="mb-4"
+              >
+                <motion.span
+                  animate={{ 
+                    opacity: [0.7, 1, 0.7],
+                    scale: [1, 1.02, 1]
+                  }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                  className="inline-flex items-center space-x-2 text-electric-400 text-sm font-medium"
+                >
+                  <Zap className="w-4 h-4" />
+                  <span>AI-Powered Memory</span>
+                </motion.span>
+              </motion.div>
+              
               <h2 className="text-5xl xl:text-6xl font-bold text-white mb-6 leading-tight">
-                Never Forget Another<br />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-electric-500 to-purple-500">Thought Again</span>
+                Your Brain,<br />
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-electric-500 to-purple-500">But Better</span>
               </h2>
               <p className="text-xl text-gray-300 mb-8 leading-relaxed">
-                Turn your thoughts into action. Never lose another brilliant idea again.
+                Never lose a thought again. Turn ideas into action with AI that remembers everything.
               </p>
               
               {/* Call-to-Action Buttons - Desktop */}
@@ -274,34 +293,134 @@ export default function AuthPage() {
               </div>
             </div>
             
-            {/* Right Side - Spinning Icon */}
+            {/* Right Side - Dynamic Visual Experience */}
             <div className="flex-1 flex justify-center">
-              <motion.div
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.2 }}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.2 }}
                 className="relative"
               >
-                {/* Main Rotating Icon - Desktop Size */}
+                {/* Orbiting Elements */}
                 <motion.div
                   animate={{ rotate: 360 }}
-                  transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-                  className="w-80 h-80 xl:w-96 xl:h-96 bg-gradient-to-br from-electric-500/20 to-purple-500/20 rounded-full flex items-center justify-center border border-electric-500/30"
+                  transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
+                  className="absolute inset-0"
                 >
                   <motion.div
-                    animate={{ rotate: -360 }}
-                    transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
+                    animate={{ 
+                      scale: [1, 1.1, 1],
+                      opacity: [0.6, 1, 0.6]
+                    }}
+                    transition={{ duration: 3, repeat: Infinity }}
+                    className="absolute -top-4 -left-4 w-8 h-8 bg-gradient-to-r from-electric-400 to-blue-400 rounded-full flex items-center justify-center"
+                  >
+                    <MessageSquare className="w-4 h-4 text-white" />
+                  </motion.div>
+                  <motion.div
+                    animate={{ 
+                      scale: [1, 1.1, 1],
+                      opacity: [0.6, 1, 0.6]
+                    }}
+                    transition={{ duration: 3, repeat: Infinity, delay: 0.5 }}
+                    className="absolute -top-4 -right-4 w-8 h-8 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full flex items-center justify-center"
+                  >
+                    <Calendar className="w-4 h-4 text-white" />
+                  </motion.div>
+                  <motion.div
+                    animate={{ 
+                      scale: [1, 1.1, 1],
+                      opacity: [0.6, 1, 0.6]
+                    }}
+                    transition={{ duration: 3, repeat: Infinity, delay: 1 }}
+                    className="absolute -bottom-4 -left-4 w-8 h-8 bg-gradient-to-r from-green-400 to-emerald-400 rounded-full flex items-center justify-center"
+                  >
+                    <Bell className="w-4 h-4 text-white" />
+                  </motion.div>
+                  <motion.div
+                    animate={{ 
+                      scale: [1, 1.1, 1],
+                      opacity: [0.6, 1, 0.6]
+                    }}
+                    transition={{ duration: 3, repeat: Infinity, delay: 1.5 }}
+                    className="absolute -bottom-4 -right-4 w-8 h-8 bg-gradient-to-r from-yellow-400 to-orange-400 rounded-full flex items-center justify-center"
+                  >
+                    <Lightbulb className="w-4 h-4 text-white" />
+                  </motion.div>
+                </motion.div>
+
+                {/* Main Rotating Icon - Enhanced */}
+                <motion.div
+                  animate={{ 
+                    rotate: 360,
+                    boxShadow: [
+                      "0 0 30px rgba(59, 130, 246, 0.3)",
+                      "0 0 60px rgba(59, 130, 246, 0.6)",
+                      "0 0 30px rgba(59, 130, 246, 0.3)"
+                    ]
+                  }}
+                  transition={{ 
+                    rotate: { duration: 20, repeat: Infinity, ease: "linear" },
+                    boxShadow: { duration: 2, repeat: Infinity }
+                  }}
+                  className="w-80 h-80 xl:w-96 xl:h-96 bg-gradient-to-br from-electric-500/20 to-purple-500/20 rounded-full flex items-center justify-center border border-electric-500/30 backdrop-blur-sm"
+                >
+                  <motion.div
+                    animate={{ 
+                      rotate: -360,
+                      scale: [1, 1.02, 1]
+                    }}
+                    transition={{ 
+                      rotate: { duration: 15, repeat: Infinity, ease: "linear" },
+                      scale: { duration: 4, repeat: Infinity }
+                    }}
                     className="w-60 h-60 xl:w-72 xl:h-72 bg-gradient-to-br from-blue-500/20 to-purple-500/20 rounded-full flex items-center justify-center border border-blue-500/30"
                   >
                     <motion.div
-                      animate={{ rotate: 360 }}
-                      transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
+                      animate={{ 
+                        rotate: 360,
+                        scale: [1, 1.05, 1]
+                      }}
+                      transition={{ 
+                        rotate: { duration: 10, repeat: Infinity, ease: "linear" },
+                        scale: { duration: 2, repeat: Infinity }
+                      }}
                       className="w-40 h-40 xl:w-48 xl:h-48 bg-gradient-to-br from-purple-500/20 to-yellow-500/20 rounded-full flex items-center justify-center border border-purple-500/30"
                     >
-                      <Brain className="w-20 h-20 xl:w-24 xl:h-24 text-electric-400" />
+                      <motion.div
+                        animate={{ 
+                          scale: [1, 1.1, 1],
+                          rotate: [0, 5, -5, 0]
+                        }}
+                        transition={{ duration: 3, repeat: Infinity }}
+                      >
+                        <Brain className="w-20 h-20 xl:w-24 xl:h-24 text-electric-400" />
+                      </motion.div>
                     </motion.div>
                   </motion.div>
                 </motion.div>
+
+                {/* Floating Particles */}
+                {[...Array(6)].map((_, i) => (
+                  <motion.div
+                    key={i}
+                    animate={{
+                      y: [0, -20, 0],
+                      opacity: [0.3, 0.8, 0.3],
+                      scale: [0.8, 1.2, 0.8]
+                    }}
+                    transition={{
+                      duration: 3 + i * 0.5,
+                      repeat: Infinity,
+                      delay: i * 0.3
+                    }}
+                    className="absolute w-2 h-2 bg-electric-400 rounded-full"
+                    style={{
+                      left: `${20 + i * 15}%`,
+                      top: `${30 + (i % 2) * 40}%`
+                    }}
+                  />
+                ))}
               </motion.div>
             </div>
           </div>
@@ -337,8 +456,8 @@ export default function AuthPage() {
               transition={{ delay: 0.4 }}
               className="text-3xl md:text-4xl font-bold text-white mb-4 leading-tight"
             >
-              Never Forget Another<br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-electric-500 to-purple-500">Thought Again</span>
+              Your Brain,<br />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-electric-500 to-purple-500">But Better</span>
             </motion.h2>
 
             {/* Subtitle */}
@@ -348,7 +467,7 @@ export default function AuthPage() {
               transition={{ delay: 0.6 }}
               className="text-gray-300 text-base md:text-lg leading-relaxed mb-8"
             >
-              Turn your thoughts into action. Never lose another brilliant idea again.
+              Never lose a thought again. Turn ideas into action with AI that remembers everything.
             </motion.p>
 
             {/* CTA Buttons */}
@@ -386,7 +505,7 @@ export default function AuthPage() {
 
         {/* Feature Showcase Sections - Only visible on scroll */}
 
-        {/* Smart Memory Section */}
+        {/* Memory Palace Section - Redesigned */}
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -395,221 +514,407 @@ export default function AuthPage() {
           className="mb-20 w-full"
         >
           <div className="max-w-6xl mx-auto px-4">
-            <div className="text-center mb-12">
+            <div className="text-center mb-16">
               <motion.div
                 animate={{ 
-                  scale: [1, 1.05, 1],
+                  scale: [1, 1.1, 1],
+                  rotate: [0, 5, -5, 0],
                   boxShadow: [
-                    "0 0 20px rgba(59, 130, 246, 0.3)",
-                    "0 0 40px rgba(59, 130, 246, 0.6)",
-                    "0 0 20px rgba(59, 130, 246, 0.3)"
+                    "0 0 30px rgba(59, 130, 246, 0.4)",
+                    "0 0 60px rgba(59, 130, 246, 0.8)",
+                    "0 0 30px rgba(59, 130, 246, 0.4)"
                   ]
                 }}
-                transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-                className="w-20 h-20 bg-gradient-to-br from-electric-500/30 to-blue-500/30 rounded-2xl flex items-center justify-center border border-electric-500/50 backdrop-blur-sm mx-auto mb-6"
+                transition={{ 
+                  scale: { duration: 3, repeat: Infinity },
+                  rotate: { duration: 4, repeat: Infinity },
+                  boxShadow: { duration: 2, repeat: Infinity }
+                }}
+                className="w-24 h-24 bg-gradient-to-br from-electric-500/40 to-blue-500/40 rounded-3xl flex items-center justify-center border border-electric-500/60 backdrop-blur-sm mx-auto mb-8"
               >
-                <Brain className="w-10 h-10 text-electric-400" />
+                <Database className="w-12 h-12 text-electric-400" />
               </motion.div>
-              <h3 className="text-4xl font-bold text-white mb-4">AI Memory Palace</h3>
-              <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-                Velora remembers everything you tell it. From parking spots to meeting notes, 
-                your personal AI assistant never forgets and connects related information intelligently.
+              <h3 className="text-5xl font-bold text-white mb-6">Never Forget Again</h3>
+              <p className="text-2xl text-gray-300 max-w-4xl mx-auto leading-relaxed">
+                Your AI remembers everything. <span className="text-electric-400">Parking spots, meeting notes, random thoughts</span> — 
+                it all connects intelligently.
               </p>
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               <motion.div
-                whileHover={{ scale: 1.05 }}
-                className="bg-gray-900/50 rounded-xl p-6 border border-gray-700 hover:border-electric-500/30 transition-all duration-300"
+                whileHover={{ scale: 1.05, y: -5 }}
+                className="bg-gradient-to-br from-gray-900/60 to-gray-800/40 rounded-2xl p-8 border border-electric-500/20 hover:border-electric-500/50 transition-all duration-300 backdrop-blur-sm"
               >
-                <div className="flex items-center space-x-3 mb-4">
-                  <div className="w-3 h-3 bg-electric-400 rounded-full animate-pulse"></div>
-                  <span className="text-electric-400 font-semibold">Cross-Reference</span>
-                </div>
-                <p className="text-gray-300 text-sm">Connects conversations with calendar events and reminders</p>
-                <p className="text-gray-400 text-xs mt-2">Intelligent relationship mapping between all your data</p>
-              </motion.div>
-              
-              <motion.div
-                whileHover={{ scale: 1.05 }}
-                className="bg-gray-900/50 rounded-xl p-6 border border-gray-700 hover:border-electric-500/30 transition-all duration-300"
-              >
-                <div className="flex items-center space-x-3 mb-4">
-                  <div className="w-3 h-3 bg-electric-400 rounded-full animate-pulse"></div>
-                  <span className="text-electric-400 font-semibold">Personal Facts</span>
-                </div>
-                <p className="text-gray-300 text-sm">Remembers preferences, locations, and important details</p>
-                <p className="text-gray-400 text-xs mt-2">Never lose track of where you parked or what you prefer</p>
-              </motion.div>
-              
-              <motion.div
-                whileHover={{ scale: 1.05 }}
-                className="bg-gray-900/50 rounded-xl p-6 border border-gray-700 hover:border-electric-500/30 transition-all duration-300"
-              >
-                <div className="flex items-center space-x-3 mb-4">
-                  <div className="w-3 h-3 bg-electric-400 rounded-full animate-pulse"></div>
-                  <span className="text-electric-400 font-semibold">Smart Suggestions</span>
-                </div>
-                <p className="text-gray-300 text-sm">Context-aware recommendations based on your history</p>
-                <p className="text-gray-400 text-xs mt-2">Proactive assistance that learns from your patterns</p>
-              </motion.div>
-            </div>
-          </div>
-        </motion.div>
-
-        {/* Voice Commands Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          viewport={{ once: true }}
-          className="mb-20 w-full"
-        >
-          <div className="max-w-6xl mx-auto px-4">
-            <div className="text-center mb-12">
-              <motion.div
-                animate={{ 
-                  scale: [1, 1.05, 1],
-                  boxShadow: [
-                    "0 0 20px rgba(34, 197, 94, 0.3)",
-                    "0 0 40px rgba(34, 197, 94, 0.6)",
-                    "0 0 20px rgba(34, 197, 94, 0.3)"
-                  ]
-                }}
-                transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-                className="w-20 h-20 bg-gradient-to-br from-green-500/30 to-emerald-500/30 rounded-2xl flex items-center justify-center border border-green-500/50 backdrop-blur-sm mx-auto mb-6"
-              >
-                <Mic className="w-10 h-10 text-green-400" />
-              </motion.div>
-              <h3 className="text-4xl font-bold text-white mb-4">Voice Commands</h3>
-              <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-                Speak naturally to create reminders, schedule events, and ask questions. 
-                Velora understands context and remembers your preferences for a truly intelligent experience.
-              </p>
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              <motion.div
-                whileHover={{ scale: 1.05 }}
-                className="bg-gray-900/50 rounded-xl p-6 border border-gray-700 hover:border-green-500/30 transition-all duration-300"
-              >
-                <div className="flex items-center space-x-3 mb-4">
-                  <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
-                  <span className="text-green-400 font-semibold">Smart Reminders</span>
-                </div>
-                <p className="text-gray-300 text-sm italic">"Remind me to call mom tomorrow at 3pm"</p>
-                <p className="text-gray-400 text-xs mt-2">Creates intelligent reminders with context awareness</p>
-              </motion.div>
-              
-              <motion.div
-                whileHover={{ scale: 1.05 }}
-                className="bg-gray-900/50 rounded-xl p-6 border border-gray-700 hover:border-green-500/30 transition-all duration-300"
-              >
-                <div className="flex items-center space-x-3 mb-4">
-                  <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
-                  <span className="text-green-400 font-semibold">Calendar Queries</span>
-                </div>
-                <p className="text-gray-300 text-sm italic">"What do I have scheduled for Friday?"</p>
-                <p className="text-gray-400 text-xs mt-2">Natural language calendar interactions</p>
-              </motion.div>
-              
-              <motion.div
-                whileHover={{ scale: 1.05 }}
-                className="bg-gray-900/50 rounded-xl p-6 border border-gray-700 hover:border-green-500/30 transition-all duration-300"
-              >
-                <div className="flex items-center space-x-3 mb-4">
-                  <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
-                  <span className="text-green-400 font-semibold">Memory Storage</span>
-                </div>
-                <p className="text-gray-300 text-sm italic">"Remember I parked in section B"</p>
-                <p className="text-gray-400 text-xs mt-2">Personal facts and locations stored intelligently</p>
-              </motion.div>
-            </div>
-          </div>
-        </motion.div>
-
-        {/* Calendar & Reminders Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          viewport={{ once: true }}
-          className="mb-20 w-full"
-        >
-          <div className="max-w-6xl mx-auto px-4">
-            <div className="text-center mb-12">
-              <div className="flex justify-center space-x-4 mb-6">
                 <motion.div
                   animate={{ 
-                    scale: [1, 1.05, 1],
+                    scale: [1, 1.2, 1],
+                    rotate: [0, 10, -10, 0]
+                  }}
+                  transition={{ duration: 3, repeat: Infinity }}
+                  className="w-16 h-16 bg-gradient-to-br from-electric-500/30 to-blue-500/30 rounded-2xl flex items-center justify-center mb-6"
+                >
+                  <Target className="w-8 h-8 text-electric-400" />
+                </motion.div>
+                <h4 className="text-xl font-bold text-white mb-4">Smart Connections</h4>
+                <p className="text-gray-300 text-base leading-relaxed">
+                  "Remember I parked in section B" connects to "Meeting with Sarah at 3pm" 
+                  because you mentioned parking for the meeting.
+                </p>
+              </motion.div>
+              
+              <motion.div
+                whileHover={{ scale: 1.05, y: -5 }}
+                className="bg-gradient-to-br from-gray-900/60 to-gray-800/40 rounded-2xl p-8 border border-purple-500/20 hover:border-purple-500/50 transition-all duration-300 backdrop-blur-sm"
+              >
+                <motion.div
+                  animate={{ 
+                    scale: [1, 1.2, 1],
+                    rotate: [0, -10, 10, 0]
+                  }}
+                  transition={{ duration: 3, repeat: Infinity, delay: 0.5 }}
+                  className="w-16 h-16 bg-gradient-to-br from-purple-500/30 to-pink-500/30 rounded-2xl flex items-center justify-center mb-6"
+                >
+                  <Shield className="w-8 h-8 text-purple-400" />
+                </motion.div>
+                <h4 className="text-xl font-bold text-white mb-4">Personal Facts</h4>
+                <p className="text-gray-300 text-base leading-relaxed">
+                  Your preferences, locations, and important details are stored securely. 
+                  Never lose track of what matters to you.
+                </p>
+              </motion.div>
+              
+              <motion.div
+                whileHover={{ scale: 1.05, y: -5 }}
+                className="bg-gradient-to-br from-gray-900/60 to-gray-800/40 rounded-2xl p-8 border border-green-500/20 hover:border-green-500/50 transition-all duration-300 backdrop-blur-sm"
+              >
+                <motion.div
+                  animate={{ 
+                    scale: [1, 1.2, 1],
+                    rotate: [0, 15, -15, 0]
+                  }}
+                  transition={{ duration: 3, repeat: Infinity, delay: 1 }}
+                  className="w-16 h-16 bg-gradient-to-br from-green-500/30 to-emerald-500/30 rounded-2xl flex items-center justify-center mb-6"
+                >
+                  <TrendingUp className="w-8 h-8 text-green-400" />
+                </motion.div>
+                <h4 className="text-xl font-bold text-white mb-4">Proactive Intelligence</h4>
+                <p className="text-gray-300 text-base leading-relaxed">
+                  Learns your patterns and suggests actions before you even think of them. 
+                  Your AI gets smarter every day.
+                </p>
+              </motion.div>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Voice Commands Section - Redesigned */}
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          viewport={{ once: true }}
+          className="mb-20 w-full"
+        >
+          <div className="max-w-6xl mx-auto px-4">
+            <div className="text-center mb-16">
+              <motion.div
+                animate={{ 
+                  scale: [1, 1.2, 1],
+                  rotate: [0, 360],
+                  boxShadow: [
+                    "0 0 30px rgba(34, 197, 94, 0.4)",
+                    "0 0 60px rgba(34, 197, 94, 0.8)",
+                    "0 0 30px rgba(34, 197, 94, 0.4)"
+                  ]
+                }}
+                transition={{ 
+                  scale: { duration: 2, repeat: Infinity },
+                  rotate: { duration: 8, repeat: Infinity, ease: "linear" },
+                  boxShadow: { duration: 2, repeat: Infinity }
+                }}
+                className="w-24 h-24 bg-gradient-to-br from-green-500/40 to-emerald-500/40 rounded-3xl flex items-center justify-center border border-green-500/60 backdrop-blur-sm mx-auto mb-8"
+              >
+                <motion.div
+                  animate={{ 
+                    scale: [1, 1.1, 1],
+                    rotate: [0, -360]
+                  }}
+                  transition={{ 
+                    scale: { duration: 1.5, repeat: Infinity },
+                    rotate: { duration: 4, repeat: Infinity, ease: "linear" }
+                  }}
+                >
+                  <Mic className="w-12 h-12 text-green-400" />
+                </motion.div>
+              </motion.div>
+              <h3 className="text-5xl font-bold text-white mb-6">Just Talk. It Understands.</h3>
+              <p className="text-2xl text-gray-300 max-w-4xl mx-auto leading-relaxed">
+                Speak naturally. <span className="text-green-400">"Remind me to call mom"</span> becomes a smart reminder. 
+                <span className="text-green-400">"What's my schedule?"</span> shows your day. It just works.
+              </p>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              <motion.div
+                whileHover={{ scale: 1.05, y: -5 }}
+                className="bg-gradient-to-br from-gray-900/60 to-gray-800/40 rounded-2xl p-8 border border-green-500/20 hover:border-green-500/50 transition-all duration-300 backdrop-blur-sm"
+              >
+                <motion.div
+                  animate={{ 
+                    scale: [1, 1.3, 1],
+                    rotate: [0, 15, -15, 0]
+                  }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                  className="w-16 h-16 bg-gradient-to-br from-green-500/30 to-emerald-500/30 rounded-2xl flex items-center justify-center mb-6"
+                >
+                  <Bell className="w-8 h-8 text-green-400" />
+                </motion.div>
+                <h4 className="text-xl font-bold text-white mb-4">Smart Reminders</h4>
+                <p className="text-gray-300 text-base leading-relaxed italic mb-4">
+                  "Remind me to call mom tomorrow at 3pm"
+                </p>
+                <p className="text-gray-400 text-sm">
+                  Creates intelligent reminders with perfect timing and context awareness.
+                </p>
+              </motion.div>
+              
+              <motion.div
+                whileHover={{ scale: 1.05, y: -5 }}
+                className="bg-gradient-to-br from-gray-900/60 to-gray-800/40 rounded-2xl p-8 border border-blue-500/20 hover:border-blue-500/50 transition-all duration-300 backdrop-blur-sm"
+              >
+                <motion.div
+                  animate={{ 
+                    scale: [1, 1.3, 1],
+                    rotate: [0, -15, 15, 0]
+                  }}
+                  transition={{ duration: 2, repeat: Infinity, delay: 0.3 }}
+                  className="w-16 h-16 bg-gradient-to-br from-blue-500/30 to-cyan-500/30 rounded-2xl flex items-center justify-center mb-6"
+                >
+                  <Calendar className="w-8 h-8 text-blue-400" />
+                </motion.div>
+                <h4 className="text-xl font-bold text-white mb-4">Calendar Magic</h4>
+                <p className="text-gray-300 text-base leading-relaxed italic mb-4">
+                  "What do I have scheduled for Friday?"
+                </p>
+                <p className="text-gray-400 text-sm">
+                  Natural language calendar interactions that feel like talking to a friend.
+                </p>
+              </motion.div>
+              
+              <motion.div
+                whileHover={{ scale: 1.05, y: -5 }}
+                className="bg-gradient-to-br from-gray-900/60 to-gray-800/40 rounded-2xl p-8 border border-purple-500/20 hover:border-purple-500/50 transition-all duration-300 backdrop-blur-sm"
+              >
+                <motion.div
+                  animate={{ 
+                    scale: [1, 1.3, 1],
+                    rotate: [0, 20, -20, 0]
+                  }}
+                  transition={{ duration: 2, repeat: Infinity, delay: 0.6 }}
+                  className="w-16 h-16 bg-gradient-to-br from-purple-500/30 to-pink-500/30 rounded-2xl flex items-center justify-center mb-6"
+                >
+                  <Database className="w-8 h-8 text-purple-400" />
+                </motion.div>
+                <h4 className="text-xl font-bold text-white mb-4">Memory Storage</h4>
+                <p className="text-gray-300 text-base leading-relaxed italic mb-4">
+                  "Remember I parked in section B"
+                </p>
+                <p className="text-gray-400 text-sm">
+                  Personal facts and locations stored intelligently and retrieved instantly.
+                </p>
+              </motion.div>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Smart Organization Section - Redesigned */}
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          viewport={{ once: true }}
+          className="mb-20 w-full"
+        >
+          <div className="max-w-6xl mx-auto px-4">
+            <div className="text-center mb-16">
+              <div className="flex justify-center space-x-6 mb-8">
+                <motion.div
+                  animate={{ 
+                    scale: [1, 1.2, 1],
+                    rotate: [0, 10, -10, 0],
                     boxShadow: [
-                      "0 0 20px rgba(168, 85, 247, 0.3)",
-                      "0 0 40px rgba(168, 85, 247, 0.6)",
-                      "0 0 20px rgba(168, 85, 247, 0.3)"
+                      "0 0 30px rgba(168, 85, 247, 0.4)",
+                      "0 0 60px rgba(168, 85, 247, 0.8)",
+                      "0 0 30px rgba(168, 85, 247, 0.4)"
                     ]
                   }}
-                  transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-                  className="w-16 h-16 bg-gradient-to-br from-purple-500/30 to-pink-500/30 rounded-xl flex items-center justify-center border border-purple-500/50 backdrop-blur-sm"
+                  transition={{ 
+                    scale: { duration: 3, repeat: Infinity },
+                    rotate: { duration: 4, repeat: Infinity },
+                    boxShadow: { duration: 2, repeat: Infinity }
+                  }}
+                  className="w-20 h-20 bg-gradient-to-br from-purple-500/40 to-pink-500/40 rounded-3xl flex items-center justify-center border border-purple-500/60 backdrop-blur-sm"
                 >
-                  <Calendar className="w-8 h-8 text-purple-400" />
+                  <Calendar className="w-10 h-10 text-purple-400" />
                 </motion.div>
                 <motion.div
                   animate={{ 
-                    scale: [1, 1.05, 1],
+                    scale: [1, 1.2, 1],
+                    rotate: [0, -10, 10, 0],
                     boxShadow: [
-                      "0 0 20px rgba(251, 191, 36, 0.3)",
-                      "0 0 40px rgba(251, 191, 36, 0.6)",
-                      "0 0 20px rgba(251, 191, 36, 0.3)"
+                      "0 0 30px rgba(251, 191, 36, 0.4)",
+                      "0 0 60px rgba(251, 191, 36, 0.8)",
+                      "0 0 30px rgba(251, 191, 36, 0.4)"
                     ]
                   }}
-                  transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
-                  className="w-16 h-16 bg-gradient-to-br from-yellow-500/30 to-orange-500/30 rounded-xl flex items-center justify-center border border-yellow-500/50 backdrop-blur-sm"
+                  transition={{ 
+                    scale: { duration: 3, repeat: Infinity, delay: 0.5 },
+                    rotate: { duration: 4, repeat: Infinity, delay: 0.5 },
+                    boxShadow: { duration: 2, repeat: Infinity, delay: 0.5 }
+                  }}
+                  className="w-20 h-20 bg-gradient-to-br from-yellow-500/40 to-orange-500/40 rounded-3xl flex items-center justify-center border border-yellow-500/60 backdrop-blur-sm"
                 >
-                  <Bell className="w-8 h-8 text-yellow-400" />
+                  <Bell className="w-10 h-10 text-yellow-400" />
                 </motion.div>
               </div>
-              <h3 className="text-4xl font-bold text-white mb-4">Smart Organization</h3>
-              <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-                Never miss an appointment or forget a task. Velora intelligently manages 
-                your calendar and reminders with natural language processing and smart prioritization.
+              <h3 className="text-5xl font-bold text-white mb-6">Never Miss Anything</h3>
+              <p className="text-2xl text-gray-300 max-w-4xl mx-auto leading-relaxed">
+                Your life, perfectly organized. <span className="text-purple-400">Smart scheduling</span> that adapts to you. 
+                <span className="text-yellow-400">Intelligent reminders</span> that actually help.
               </p>
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               <motion.div
-                whileHover={{ scale: 1.05 }}
-                className="bg-gray-900/50 rounded-xl p-6 border border-gray-700 hover:border-purple-500/30 transition-all duration-300"
+                whileHover={{ scale: 1.05, y: -5 }}
+                className="bg-gradient-to-br from-gray-900/60 to-gray-800/40 rounded-2xl p-8 border border-purple-500/20 hover:border-purple-500/50 transition-all duration-300 backdrop-blur-sm"
               >
-                <div className="flex items-center space-x-3 mb-4">
-                  <div className="w-3 h-3 bg-purple-400 rounded-full animate-pulse"></div>
-                  <span className="text-purple-400 font-semibold">Auto-Scheduling</span>
-                </div>
-                <p className="text-gray-300 text-sm">Creates events automatically from conversations</p>
-                <p className="text-gray-400 text-xs mt-2">"Meeting with John next Tuesday" becomes a calendar event</p>
+                <motion.div
+                  animate={{ 
+                    scale: [1, 1.2, 1],
+                    rotate: [0, 15, -15, 0]
+                  }}
+                  transition={{ duration: 3, repeat: Infinity }}
+                  className="w-16 h-16 bg-gradient-to-br from-purple-500/30 to-pink-500/30 rounded-2xl flex items-center justify-center mb-6"
+                >
+                  <Rocket className="w-8 h-8 text-purple-400" />
+                </motion.div>
+                <h4 className="text-xl font-bold text-white mb-4">Auto-Scheduling</h4>
+                <p className="text-gray-300 text-base leading-relaxed italic mb-4">
+                  "Meeting with John next Tuesday"
+                </p>
+                <p className="text-gray-400 text-sm">
+                  Becomes a calendar event automatically. No forms, no clicks, just magic.
+                </p>
               </motion.div>
               
               <motion.div
-                whileHover={{ scale: 1.05 }}
-                className="bg-gray-900/50 rounded-xl p-6 border border-gray-700 hover:border-yellow-500/30 transition-all duration-300"
+                whileHover={{ scale: 1.05, y: -5 }}
+                className="bg-gradient-to-br from-gray-900/60 to-gray-800/40 rounded-2xl p-8 border border-yellow-500/20 hover:border-yellow-500/50 transition-all duration-300 backdrop-blur-sm"
               >
-                <div className="flex items-center space-x-3 mb-4">
-                  <div className="w-3 h-3 bg-yellow-400 rounded-full animate-pulse"></div>
-                  <span className="text-yellow-400 font-semibold">Smart Reminders</span>
-                </div>
-                <p className="text-gray-300 text-sm">Intelligent scheduling and prioritization</p>
-                <p className="text-gray-400 text-xs mt-2">Context-aware reminders that adapt to your schedule</p>
+                <motion.div
+                  animate={{ 
+                    scale: [1, 1.2, 1],
+                    rotate: [0, -15, 15, 0]
+                  }}
+                  transition={{ duration: 3, repeat: Infinity, delay: 0.3 }}
+                  className="w-16 h-16 bg-gradient-to-br from-yellow-500/30 to-orange-500/30 rounded-2xl flex items-center justify-center mb-6"
+                >
+                  <Star className="w-8 h-8 text-yellow-400" />
+                </motion.div>
+                <h4 className="text-xl font-bold text-white mb-4">Smart Reminders</h4>
+                <p className="text-gray-300 text-base leading-relaxed italic mb-4">
+                  "Remind me about the presentation"
+                </p>
+                <p className="text-gray-400 text-sm">
+                  Context-aware reminders that know when you actually need them.
+                </p>
               </motion.div>
               
               <motion.div
-                whileHover={{ scale: 1.05 }}
-                className="bg-gray-900/50 rounded-xl p-6 border border-gray-700 hover:border-pink-500/30 transition-all duration-300"
+                whileHover={{ scale: 1.05, y: -5 }}
+                className="bg-gradient-to-br from-gray-900/60 to-gray-800/40 rounded-2xl p-8 border border-blue-500/20 hover:border-blue-500/50 transition-all duration-300 backdrop-blur-sm"
               >
-                <div className="flex items-center space-x-3 mb-4">
-                  <div className="w-3 h-3 bg-pink-400 rounded-full animate-pulse"></div>
-                  <span className="text-pink-400 font-semibold">Mobile Optimized</span>
-                </div>
-                <p className="text-gray-300 text-sm">Weekly and monthly views designed for mobile</p>
-                <p className="text-gray-400 text-xs mt-2">Perfect calendar experience on any device</p>
+                <motion.div
+                  animate={{ 
+                    scale: [1, 1.2, 1],
+                    rotate: [0, 20, -20, 0]
+                  }}
+                  transition={{ duration: 3, repeat: Infinity, delay: 0.6 }}
+                  className="w-16 h-16 bg-gradient-to-br from-blue-500/30 to-cyan-500/30 rounded-2xl flex items-center justify-center mb-6"
+                >
+                  <Smartphone className="w-8 h-8 text-blue-400" />
+                </motion.div>
+                <h4 className="text-xl font-bold text-white mb-4">Mobile Perfect</h4>
+                <p className="text-gray-300 text-base leading-relaxed italic mb-4">
+                  "Show me my week"
+                </p>
+                <p className="text-gray-400 text-sm">
+                  Weekly and monthly views designed for mobile. Perfect on any device.
+                </p>
+              </motion.div>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* New Interactive Demo Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          viewport={{ once: true }}
+          className="mb-20 w-full"
+        >
+          <div className="max-w-6xl mx-auto px-4">
+            <div className="text-center mb-16">
+              <motion.div
+                animate={{ 
+                  scale: [1, 1.1, 1],
+                  rotate: [0, 360],
+                  boxShadow: [
+                    "0 0 40px rgba(59, 130, 246, 0.5)",
+                    "0 0 80px rgba(59, 130, 246, 0.8)",
+                    "0 0 40px rgba(59, 130, 246, 0.5)"
+                  ]
+                }}
+                transition={{ 
+                  scale: { duration: 4, repeat: Infinity },
+                  rotate: { duration: 10, repeat: Infinity, ease: "linear" },
+                  boxShadow: { duration: 2, repeat: Infinity }
+                }}
+                className="w-32 h-32 bg-gradient-to-br from-electric-500/50 to-purple-500/50 rounded-full flex items-center justify-center border border-electric-500/70 backdrop-blur-sm mx-auto mb-8"
+              >
+                <motion.div
+                  animate={{ 
+                    scale: [1, 1.2, 1],
+                    rotate: [0, -360]
+                  }}
+                  transition={{ 
+                    scale: { duration: 2, repeat: Infinity },
+                    rotate: { duration: 6, repeat: Infinity, ease: "linear" }
+                  }}
+                >
+                  <Users className="w-16 h-16 text-electric-400" />
+                </motion.div>
+              </motion.div>
+              <h3 className="text-5xl font-bold text-white mb-6">Ready to Get Started?</h3>
+              <p className="text-2xl text-gray-300 max-w-4xl mx-auto leading-relaxed mb-12">
+                Join thousands who never forget another thought. <span className="text-electric-400">Start your AI memory journey today.</span>
+              </p>
+              
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="inline-block"
+              >
+                <button
+                  onClick={() => setAuthMode('signup')}
+                  className="bg-gradient-to-r from-electric-500 to-purple-500 hover:from-electric-400 hover:to-purple-400 text-white font-bold text-xl py-4 px-12 rounded-2xl transition-all duration-200 hover:scale-105 flex items-center justify-center space-x-3 shadow-2xl shadow-electric-500/25"
+                >
+                  <span>Start Remembering</span>
+                  <ArrowRight className="w-6 h-6" />
+                </button>
               </motion.div>
             </div>
           </div>
