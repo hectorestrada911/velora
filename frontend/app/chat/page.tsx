@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Send, Mic, MicOff, Calendar, Bell, Settings, Plus, Sparkles, Brain, Clock, CheckCircle, History, Trash2, Upload, FileText, X } from 'lucide-react'
+import { Send, Mic, MicOff, Calendar, Bell, Settings, Plus, Sparkles, Brain, Clock, CheckCircle, History, Trash2, Upload, FileText, X, BarChart3 } from 'lucide-react'
 import { toast } from 'react-hot-toast'
 import { calendarService } from '@/lib/calendarService'
 import VoiceCommand from '@/components/VoiceCommand'
@@ -16,6 +16,7 @@ import { crossReferenceService, SmartSuggestion, CrossReference } from '@/lib/cr
 import { memoryService } from '@/lib/memoryService'
 import { firestoreService, FirestoreConversation, FirestoreMessage } from '@/lib/firestoreService'
 import SmartSuggestions from '@/components/SmartSuggestions'
+import MemoryDashboard from '@/components/MemoryDashboard'
 
 
 interface Suggestion {
@@ -48,6 +49,7 @@ export default function ChatPage() {
   const [currentExampleIndex, setCurrentExampleIndex] = useState(0)
   const [hasUserInteracted, setHasUserInteracted] = useState(false)
   const [smartSuggestions, setSmartSuggestions] = useState<SmartSuggestion[]>([])
+  const [showMemoryDashboard, setShowMemoryDashboard] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
@@ -866,6 +868,13 @@ export default function ChatPage() {
             >
               <Sparkles className="w-4 h-4 sm:w-5 sm:h-5" />
             </button>
+            <button 
+              onClick={() => setShowMemoryDashboard(true)}
+              className="p-1.5 sm:p-2 text-gray-400 hover:text-white transition-colors duration-200 hover:bg-gray-800 rounded-lg min-w-[36px] min-h-[36px] flex items-center justify-center"
+              title="Memory Intelligence Dashboard"
+            >
+              <BarChart3 className="w-4 h-4 sm:w-5 sm:h-5" />
+            </button>
             <button className="p-1.5 sm:p-2 text-gray-400 hover:text-white transition-colors duration-200 hover:bg-gray-800 rounded-lg min-w-[36px] min-h-[36px] flex items-center justify-center">
               <Settings className="w-4 h-4 sm:w-5 sm:h-5" />
             </button>
@@ -1426,6 +1435,11 @@ export default function ChatPage() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Memory Intelligence Dashboard */}
+      {showMemoryDashboard && (
+        <MemoryDashboard onClose={() => setShowMemoryDashboard(false)} />
+      )}
     </div>
   )
 }
