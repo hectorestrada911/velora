@@ -26,7 +26,7 @@ interface Suggestion {
   id: string
   text: string
   icon: React.ReactNode
-  category: 'productivity' | 'reminder' | 'calendar' | 'general' | 'voice'
+  category: 'productivity' | 'reminder' | 'calendar' | 'general' | 'voice' | 'smart-calendar' | 'memory' | 'intelligence'
 }
 
 export default function ChatPage() {
@@ -92,27 +92,27 @@ export default function ChatPage() {
   const suggestions: Suggestion[] = [
     {
       id: '1',
-      text: 'Schedule a meeting tomorrow at 3pm',
+      text: 'What section did I park my car in?',
       icon: <Calendar className="w-4 h-4" />,
-      category: 'calendar'
+      category: 'smart-calendar'
     },
     {
       id: '2',
-      text: 'Remind me to call John about the project',
-      icon: <Bell className="w-4 h-4" />,
-      category: 'reminder'
+      text: 'Set a reminder to text my friend back',
+      icon: <Brain className="w-4 h-4" />,
+      category: 'memory'
     },
     {
       id: '3',
-      text: 'I need to finish the Q4 report by Friday',
+      text: 'Help me optimize my daily schedule',
       icon: <CheckCircle className="w-4 h-4" />,
       category: 'productivity'
     },
     {
       id: '4',
-      text: 'Brainstorm ideas for the new marketing campaign',
-      icon: <Brain className="w-4 h-4" />,
-      category: 'general'
+      text: 'Show me the password I saved for the work website',
+      icon: <History className="w-4 h-4" />,
+      category: 'intelligence'
     }
   ]
 
@@ -1135,16 +1135,16 @@ export default function ChatPage() {
                       )}
                     </div>
                     
-                    {/* Follow-up Questions */}
+                    {/* Follow-up Questions - More Natural */}
                     {message.analysis.followUpQuestions && message.analysis.followUpQuestions.length > 0 && (
                       <div className="mt-3 pt-3 border-t border-gray-600/30">
-                        <p className="text-xs text-gray-400 mb-2">Follow-up questions:</p>
-                        <div className="space-y-2">
-                          {message.analysis.followUpQuestions.map((question: string, index: number) => (
+                        <p className="text-xs text-gray-400 mb-2">You might also ask:</p>
+                        <div className="space-y-1">
+                          {message.analysis.followUpQuestions.slice(0, 2).map((question: string, index: number) => (
                             <button
                               key={index}
                               onClick={() => handleFollowUpQuestion(question)}
-                              className="block w-full text-left text-xs text-electric-300 hover:text-electric-400 p-2 rounded-lg hover:bg-electric-500/10 transition-colors duration-200"
+                              className="block w-full text-left text-xs text-gray-300 hover:text-electric-400 p-1.5 rounded hover:bg-gray-800/50 transition-colors duration-200"
                             >
                               {question}
                             </button>
@@ -1178,18 +1178,20 @@ export default function ChatPage() {
             </motion.div>
           )}
           
-          {/* Smart Suggestions */}
-          <SmartSuggestions
-            suggestions={smartSuggestions}
-            onSuggestionClick={(suggestion) => {
-              console.log('Suggestion clicked:', suggestion)
-              // Handle suggestion click - could open related content, create reminders, etc.
-            }}
-            onRelatedItemClick={(item) => {
-              console.log('Related item clicked:', item)
-              // Handle related item click - could navigate to calendar, reminders, etc.
-            }}
-          />
+          {/* Smart Suggestions - Only show when relevant and not overwhelming */}
+          {smartSuggestions.length > 0 && smartSuggestions.length <= 2 && (
+            <SmartSuggestions
+              suggestions={smartSuggestions}
+              onSuggestionClick={(suggestion) => {
+                console.log('Suggestion clicked:', suggestion)
+                // Handle suggestion click - could open related content, create reminders, etc.
+              }}
+              onRelatedItemClick={(item) => {
+                console.log('Related item clicked:', item)
+                // Handle related item click - could navigate to calendar, reminders, etc.
+              }}
+            />
+          )}
           
           <div ref={messagesEndRef} />
         </div>
