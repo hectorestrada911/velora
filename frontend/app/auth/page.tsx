@@ -969,6 +969,21 @@ export default function AuthPage() {
             Try Demo First
           </button>
         </motion.div>
+        
+        {/* Footer */}
+        <footer className="bg-gray-900/50 border-t border-gray-800/50 py-8 mt-20">
+          <div className="max-w-6xl mx-auto px-4 text-center">
+            <div className="flex flex-col md:flex-row justify-center items-center space-y-4 md:space-y-0 md:space-x-8 text-sm text-gray-400">
+              <a href="#" className="hover:text-white transition-colors">Terms of Service</a>
+              <a href="#" className="hover:text-white transition-colors">Privacy Policy</a>
+              <a href="mailto:aincorphelp@gmail.com" className="hover:text-white transition-colors">Contact</a>
+              <span>© 2024 Velora. All rights reserved.</span>
+            </div>
+            <div className="mt-4 text-xs text-gray-500">
+              Made with ❤️ by <a href="https://adincorp.co" target="_blank" rel="noopener noreferrer" className="text-electric-400 hover:text-electric-300 transition-colors">adincorp.co</a>
+            </div>
+          </div>
+        </footer>
       </div>
     )
   }
