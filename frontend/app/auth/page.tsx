@@ -378,11 +378,9 @@ export default function AuthPage() {
                   >
                     <motion.div
                       animate={{ 
-                        rotate: 360,
                         scale: [1, 1.05, 1]
                       }}
                       transition={{ 
-                        rotate: { duration: 10, repeat: Infinity, ease: "linear" },
                         scale: { duration: 2, repeat: Infinity }
                       }}
                       className="w-40 h-40 xl:w-48 xl:h-48 bg-gradient-to-br from-purple-500/20 to-yellow-500/20 rounded-full flex items-center justify-center border border-purple-500/30"
