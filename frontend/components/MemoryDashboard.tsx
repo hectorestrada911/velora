@@ -38,7 +38,7 @@ export default function MemoryDashboard({ onClose }: MemoryDashboardProps) {
   }, [])
 
   const loadMemories = () => {
-    const allMemories = memoryService.getMemories()
+    const allMemories = memoryService.getAllMemories()
     setMemories(allMemories)
     
     // Generate insights
