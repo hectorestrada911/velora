@@ -973,22 +973,27 @@ export default function AuthPage() {
         {/* Footer */}
         <footer className="bg-gray-900/80 border-t border-gray-700/50 py-12 mt-20">
           <div className="max-w-6xl mx-auto px-6">
-            <div className="flex flex-col items-center space-y-6">
+            <div className="flex flex-col items-center space-y-4">
               {/* Legal Links */}
               <div className="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-8 text-sm text-gray-400">
                 <a href="/terms" className="hover:text-white transition-colors duration-200">Terms of Service</a>
                 <a href="/privacy" className="hover:text-white transition-colors duration-200">Privacy Policy</a>
-                <a href="mailto:aincorphelp@gmail.com" className="hover:text-white transition-colors duration-200">Contact</a>
+                <button 
+                  onClick={() => {
+                    const email = 'aincorphelp@gmail.com';
+                    const subject = 'Contact Velora Support';
+                    const body = 'Hello,\n\nI would like to get in touch regarding:';
+                    window.open(`mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`, '_blank');
+                  }}
+                  className="hover:text-white transition-colors duration-200 cursor-pointer"
+                >
+                  Contact
+                </button>
               </div>
               
-              {/* Copyright */}
-              <div className="text-sm text-gray-500">
-                © 2024 Velora. All rights reserved.
-              </div>
-              
-              {/* Company Attribution */}
-              <div className="text-sm text-gray-500">
-                Engineered by <a href="https://aincorp.co" target="_blank" rel="noopener noreferrer" className="text-electric-400 hover:text-electric-300 transition-colors duration-200 font-medium">Aincorp</a>, San Francisco
+              {/* Copyright and Attribution */}
+              <div className="text-sm text-gray-500 text-center">
+                © 2024 Velora. All rights reserved. • Engineered by <a href="https://aincorp.co" target="_blank" rel="noopener noreferrer" className="text-electric-400 hover:text-electric-300 transition-colors duration-200 font-medium">Aincorp</a>, San Francisco
               </div>
             </div>
           </div>
