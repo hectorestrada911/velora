@@ -88,7 +88,9 @@ export default function AuthPage() {
 
   if (authMode === 'landing') {
     return (
-      <div className="min-h-screen bg-black flex flex-col items-center justify-center p-6">
+      <div className="bg-black">
+        {/* Hero Section */}
+        <div className="min-h-screen flex flex-col items-center justify-center p-6">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
@@ -97,29 +99,63 @@ export default function AuthPage() {
         >
           <motion.h1 
             animate={{ 
-              scale: [1, 1.02, 1],
+              scale: [1, 1.05, 1],
               textShadow: [
-                "0 0 20px rgba(59, 130, 246, 0.5)",
-                "0 0 30px rgba(59, 130, 246, 0.8)",
-                "0 0 20px rgba(59, 130, 246, 0.5)"
+                "0 0 30px rgba(59, 130, 246, 0.6)",
+                "0 0 50px rgba(59, 130, 246, 0.9)",
+                "0 0 30px rgba(59, 130, 246, 0.6)"
               ]
             }}
             transition={{ 
-              duration: 3, 
+              duration: 2.5, 
               repeat: Infinity, 
               ease: "easeInOut" 
             }}
-            className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-electric-500 via-purple-500 to-electric-600 bg-clip-text text-transparent"
+            className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-electric-500 via-purple-500 to-electric-600 bg-clip-text text-transparent"
           >
             Velora
           </motion.h1>
           
-          {/* Mobile Menu Icon */}
-          <div className="w-8 h-8 flex flex-col justify-center space-y-1">
-            <div className="w-6 h-1 bg-white rounded-full"></div>
-            <div className="w-6 h-1 bg-white rounded-full"></div>
-            <div className="w-6 h-1 bg-white rounded-full"></div>
-          </div>
+          {/* Enhanced Hamburger Menu */}
+          <motion.div 
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.95 }}
+            className="w-10 h-10 flex flex-col justify-center space-y-1.5 cursor-pointer group"
+          >
+            <motion.div 
+              className="w-7 h-1 bg-gradient-to-r from-electric-400 to-purple-400 rounded-full group-hover:from-electric-300 group-hover:to-purple-300 transition-all duration-200"
+              animate={{ 
+                boxShadow: [
+                  "0 0 5px rgba(59, 130, 246, 0.3)",
+                  "0 0 15px rgba(59, 130, 246, 0.6)",
+                  "0 0 5px rgba(59, 130, 246, 0.3)"
+                ]
+              }}
+              transition={{ duration: 2, repeat: Infinity }}
+            />
+            <motion.div 
+              className="w-7 h-1 bg-gradient-to-r from-electric-400 to-purple-400 rounded-full group-hover:from-electric-300 group-hover:to-purple-300 transition-all duration-200"
+              animate={{ 
+                boxShadow: [
+                  "0 0 5px rgba(59, 130, 246, 0.3)",
+                  "0 0 15px rgba(59, 130, 246, 0.6)",
+                  "0 0 5px rgba(59, 130, 246, 0.3)"
+                ]
+              }}
+              transition={{ duration: 2, repeat: Infinity, delay: 0.1 }}
+            />
+            <motion.div 
+              className="w-7 h-1 bg-gradient-to-r from-electric-400 to-purple-400 rounded-full group-hover:from-electric-300 group-hover:to-purple-300 transition-all duration-200"
+              animate={{ 
+                boxShadow: [
+                  "0 0 5px rgba(59, 130, 246, 0.3)",
+                  "0 0 15px rgba(59, 130, 246, 0.6)",
+                  "0 0 5px rgba(59, 130, 246, 0.3)"
+                ]
+              }}
+              transition={{ duration: 2, repeat: Infinity, delay: 0.2 }}
+            />
+          </motion.div>
         </motion.div>
 
 
@@ -241,80 +277,9 @@ export default function AuthPage() {
             </div>
           </motion.div>
         </motion.div>
+        </div>
 
-
-        {/* Feature Showcase Sections */}
-        
-        {/* Voice Commands Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          viewport={{ once: true }}
-          className="mb-20 w-full"
-        >
-          <div className="max-w-6xl mx-auto px-4">
-            <div className="text-center mb-12">
-              <motion.div
-                animate={{ 
-                  scale: [1, 1.05, 1],
-                  boxShadow: [
-                    "0 0 20px rgba(34, 197, 94, 0.3)",
-                    "0 0 40px rgba(34, 197, 94, 0.6)",
-                    "0 0 20px rgba(34, 197, 94, 0.3)"
-                  ]
-                }}
-                transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-                className="w-20 h-20 bg-gradient-to-br from-green-500/30 to-emerald-500/30 rounded-2xl flex items-center justify-center border border-green-500/50 backdrop-blur-sm mx-auto mb-6"
-              >
-                <Mic className="w-10 h-10 text-green-400" />
-              </motion.div>
-              <h3 className="text-4xl font-bold text-white mb-4">Voice Commands</h3>
-              <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-                Speak naturally to create reminders, schedule events, and ask questions. 
-                Velora understands context and remembers your preferences for a truly intelligent experience.
-              </p>
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              <motion.div
-                whileHover={{ scale: 1.05 }}
-                className="bg-gray-900/50 rounded-xl p-6 border border-gray-700 hover:border-green-500/30 transition-all duration-300"
-              >
-                <div className="flex items-center space-x-3 mb-4">
-                  <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
-                  <span className="text-green-400 font-semibold">Smart Reminders</span>
-                </div>
-                <p className="text-gray-300 text-sm italic">"Remind me to call mom tomorrow at 3pm"</p>
-                <p className="text-gray-400 text-xs mt-2">Creates intelligent reminders with context awareness</p>
-              </motion.div>
-              
-              <motion.div
-                whileHover={{ scale: 1.05 }}
-                className="bg-gray-900/50 rounded-xl p-6 border border-gray-700 hover:border-green-500/30 transition-all duration-300"
-              >
-                <div className="flex items-center space-x-3 mb-4">
-                  <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
-                  <span className="text-green-400 font-semibold">Calendar Queries</span>
-                </div>
-                <p className="text-gray-300 text-sm italic">"What do I have scheduled for Friday?"</p>
-                <p className="text-gray-400 text-xs mt-2">Natural language calendar interactions</p>
-              </motion.div>
-              
-              <motion.div
-                whileHover={{ scale: 1.05 }}
-                className="bg-gray-900/50 rounded-xl p-6 border border-gray-700 hover:border-green-500/30 transition-all duration-300"
-              >
-                <div className="flex items-center space-x-3 mb-4">
-                  <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
-                  <span className="text-green-400 font-semibold">Memory Storage</span>
-                </div>
-                <p className="text-gray-300 text-sm italic">"Remember I parked in section B"</p>
-                <p className="text-gray-400 text-xs mt-2">Personal facts and locations stored intelligently</p>
-              </motion.div>
-            </div>
-          </div>
-        </motion.div>
+        {/* Feature Showcase Sections - Only visible on scroll */}
 
         {/* Smart Memory Section */}
         <motion.div
@@ -382,6 +347,77 @@ export default function AuthPage() {
                 </div>
                 <p className="text-gray-300 text-sm">Context-aware recommendations based on your history</p>
                 <p className="text-gray-400 text-xs mt-2">Proactive assistance that learns from your patterns</p>
+              </motion.div>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Voice Commands Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          viewport={{ once: true }}
+          className="mb-20 w-full"
+        >
+          <div className="max-w-6xl mx-auto px-4">
+            <div className="text-center mb-12">
+              <motion.div
+                animate={{ 
+                  scale: [1, 1.05, 1],
+                  boxShadow: [
+                    "0 0 20px rgba(34, 197, 94, 0.3)",
+                    "0 0 40px rgba(34, 197, 94, 0.6)",
+                    "0 0 20px rgba(34, 197, 94, 0.3)"
+                  ]
+                }}
+                transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                className="w-20 h-20 bg-gradient-to-br from-green-500/30 to-emerald-500/30 rounded-2xl flex items-center justify-center border border-green-500/50 backdrop-blur-sm mx-auto mb-6"
+              >
+                <Mic className="w-10 h-10 text-green-400" />
+              </motion.div>
+              <h3 className="text-4xl font-bold text-white mb-4">Voice Commands</h3>
+              <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+                Speak naturally to create reminders, schedule events, and ask questions. 
+                Velora understands context and remembers your preferences for a truly intelligent experience.
+              </p>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                className="bg-gray-900/50 rounded-xl p-6 border border-gray-700 hover:border-green-500/30 transition-all duration-300"
+              >
+                <div className="flex items-center space-x-3 mb-4">
+                  <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
+                  <span className="text-green-400 font-semibold">Smart Reminders</span>
+                </div>
+                <p className="text-gray-300 text-sm italic">"Remind me to call mom tomorrow at 3pm"</p>
+                <p className="text-gray-400 text-xs mt-2">Creates intelligent reminders with context awareness</p>
+              </motion.div>
+              
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                className="bg-gray-900/50 rounded-xl p-6 border border-gray-700 hover:border-green-500/30 transition-all duration-300"
+              >
+                <div className="flex items-center space-x-3 mb-4">
+                  <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
+                  <span className="text-green-400 font-semibold">Calendar Queries</span>
+                </div>
+                <p className="text-gray-300 text-sm italic">"What do I have scheduled for Friday?"</p>
+                <p className="text-gray-400 text-xs mt-2">Natural language calendar interactions</p>
+              </motion.div>
+              
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                className="bg-gray-900/50 rounded-xl p-6 border border-gray-700 hover:border-green-500/30 transition-all duration-300"
+              >
+                <div className="flex items-center space-x-3 mb-4">
+                  <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
+                  <span className="text-green-400 font-semibold">Memory Storage</span>
+                </div>
+                <p className="text-gray-300 text-sm italic">"Remember I parked in section B"</p>
+                <p className="text-gray-400 text-xs mt-2">Personal facts and locations stored intelligently</p>
               </motion.div>
             </div>
           </div>
