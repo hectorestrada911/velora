@@ -587,40 +587,16 @@ export default function AuthPage() {
           </div>
         </motion.div>
 
-        {/* Action Buttons - Mobile Optimized */}
+        {/* Secondary CTA - Subtle option at bottom */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.8 }}
-          className="w-full max-w-sm space-y-4"
+          className="w-full flex justify-center"
         >
-          <div className="flex flex-col sm:flex-row items-center space-y-3 sm:space-y-0 sm:space-x-4">
-            <button
-              onClick={() => setAuthMode('signup')}
-              className="w-full sm:w-auto bg-electric-600 hover:bg-electric-700 text-white font-semibold py-3 md:py-4 px-6 rounded-lg transition-all duration-200 hover:scale-105 flex items-center justify-center space-x-2"
-            >
-              <span>Get Started</span>
-              <ArrowRight className="w-4 h-4 md:w-5 md:h-5" />
-            </button>
-            
-            <button
-              onClick={handleTryDemo}
-              className="text-electric-500 hover:text-electric-400 font-medium py-2 px-4 transition-colors duration-200 text-sm"
-            >
-              Try Now
-            </button>
-            
-            <button
-              onClick={() => setAuthMode('login')}
-              className="w-full sm:w-auto bg-gray-800 hover:bg-gray-700 text-white font-semibold py-3 md:py-4 px-6 rounded-lg transition-all duration-200 border border-gray-600 hover:border-gray-500"
-            >
-              Sign In
-            </button>
-          </div>
-          
           <button
             onClick={handleSkip}
-            className="w-full text-gray-400 hover:text-white font-medium py-2 md:py-3 px-6 transition-colors duration-200"
+            className="text-gray-400 hover:text-white font-medium py-2 px-4 transition-colors duration-200 text-sm"
           >
             Try Demo First
           </button>
