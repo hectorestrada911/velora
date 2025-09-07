@@ -39,7 +39,42 @@ export default function AuthPage() {
       window.location.href = '/chat'
     } catch (error: any) {
       console.error('Auth error:', error)
-      toast.error(error.message || 'Authentication failed')
+      
+      // Convert Firebase errors to user-friendly messages
+      let userMessage = 'Authentication failed'
+      
+      if (error.code) {
+        switch (error.code) {
+          case 'auth/invalid-credential':
+            userMessage = 'Invalid email or password. Please check your credentials and try again.'
+            break
+          case 'auth/user-not-found':
+            userMessage = 'No account found with this email. Please sign up first.'
+            break
+          case 'auth/wrong-password':
+            userMessage = 'Incorrect password. Please try again.'
+            break
+          case 'auth/email-already-in-use':
+            userMessage = 'An account with this email already exists. Please sign in instead.'
+            break
+          case 'auth/weak-password':
+            userMessage = 'Password is too weak. Please choose a stronger password.'
+            break
+          case 'auth/invalid-email':
+            userMessage = 'Please enter a valid email address.'
+            break
+          case 'auth/too-many-requests':
+            userMessage = 'Too many failed attempts. Please try again later.'
+            break
+          case 'auth/network-request-failed':
+            userMessage = 'Network error. Please check your connection and try again.'
+            break
+          default:
+            userMessage = error.message || 'Authentication failed. Please try again.'
+        }
+      }
+      
+      toast.error(userMessage)
     } finally {
       setIsLoading(false)
     }
@@ -90,7 +125,30 @@ export default function AuthPage() {
       window.location.href = '/chat'
     } catch (error: any) {
       console.error('Google sign-in error:', error)
-      toast.error(error.message || 'Google sign-in failed')
+      
+      // Convert Google sign-in errors to user-friendly messages
+      let userMessage = 'Google sign-in failed'
+      
+      if (error.code) {
+        switch (error.code) {
+          case 'auth/popup-closed-by-user':
+            userMessage = 'Sign-in cancelled. Please try again if you want to continue.'
+            break
+          case 'auth/popup-blocked':
+            userMessage = 'Popup was blocked. Please allow popups and try again.'
+            break
+          case 'auth/cancelled-popup-request':
+            userMessage = 'Sign-in was cancelled. Please try again.'
+            break
+          case 'auth/network-request-failed':
+            userMessage = 'Network error. Please check your connection and try again.'
+            break
+          default:
+            userMessage = error.message || 'Google sign-in failed. Please try again.'
+        }
+      }
+      
+      toast.error(userMessage)
     } finally {
       setIsLoading(false)
     }
