@@ -916,13 +916,11 @@ export default function AuthPage() {
                 className="w-32 h-32 bg-gradient-to-br from-electric-500/50 to-purple-500/50 rounded-full flex items-center justify-center border border-electric-500/70 backdrop-blur-sm mx-auto mb-8"
               >
                 <motion.div
-                  animate={{ 
-                    scale: [1, 1.2, 1],
-                    rotate: [0, -360]
+                  animate={{
+                    scale: [1, 1.2, 1]
                   }}
                   transition={{ 
-                    scale: { duration: 2, repeat: Infinity },
-                    rotate: { duration: 6, repeat: Infinity, ease: "linear" }
+                    scale: { duration: 2, repeat: Infinity }
                   }}
                 >
                   <Users className="w-16 h-16 text-electric-400" />
