@@ -973,7 +973,7 @@ export default function AuthPage() {
         {/* Footer */}
         <footer className="bg-gray-900/80 border-t border-gray-700/50 py-12 mt-20">
           <div className="max-w-6xl mx-auto px-6">
-            <div className="flex flex-col md:flex-row justify-between items-center space-y-6 md:space-y-0">
+            <div className="flex flex-col items-center space-y-6">
               {/* Legal Links */}
               <div className="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-8 text-sm text-gray-400">
                 <a href="/terms" className="hover:text-white transition-colors duration-200">Terms of Service</a>
