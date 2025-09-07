@@ -18,6 +18,7 @@ import { firestoreService, FirestoreConversation, FirestoreMessage } from '@/lib
 import SmartSuggestions from '@/components/SmartSuggestions'
 import MemoryDashboard from '@/components/MemoryDashboard'
 import MobileSidebar from '@/components/MobileSidebar'
+import SettingsModal from '@/components/SettingsModal'
 import { ErrorHandler } from '@/lib/errorHandler'
 
 
@@ -53,6 +54,7 @@ export default function ChatPage() {
   const [smartSuggestions, setSmartSuggestions] = useState<SmartSuggestion[]>([])
   const [showMemoryDashboard, setShowMemoryDashboard] = useState(false)
   const [showMobileSidebar, setShowMobileSidebar] = useState(false)
+  const [showSettings, setShowSettings] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
@@ -858,54 +860,62 @@ export default function ChatPage() {
               <Menu className="w-5 h-5" />
             </button>
 
-            {/* Desktop Navigation */}
-            {user && (
+            {/* Desktop Navigation - Organized */}
+            <div className="hidden lg:flex items-center gap-1">
+              {/* Core Features */}
+              <div className="flex items-center gap-1 border-r border-gray-700 pr-2">
+                {user && (
+                  <button 
+                    onClick={() => setShowConversationHistory(!showConversationHistory)}
+                    className="p-2 text-gray-400 hover:text-white transition-colors duration-200 hover:bg-gray-800 rounded-lg"
+                    title="Conversation History"
+                  >
+                    <History className="w-4 h-4" />
+                  </button>
+                )}
+                <button 
+                  onClick={() => window.location.href = '/calendar'}
+                  className="p-2 text-gray-400 hover:text-white transition-colors duration-200 hover:bg-gray-800 rounded-lg"
+                  title="Calendar"
+                >
+                  <Calendar className="w-4 h-4" />
+                </button>
+                <button 
+                  onClick={() => window.location.href = '/reminders'}
+                  className="p-2 text-gray-400 hover:text-white transition-colors duration-200 hover:bg-gray-800 rounded-lg"
+                  title="Reminders"
+                >
+                  <Bell className="w-4 h-4" />
+                </button>
+              </div>
+
+              {/* AI Features */}
+              <div className="flex items-center gap-1 border-r border-gray-700 pr-2">
+                <button 
+                  onClick={() => setShowMemoryDashboard(true)}
+                  className="p-2 text-gray-400 hover:text-white transition-colors duration-200 hover:bg-gray-800 rounded-lg"
+                  title="Memory Intelligence"
+                >
+                  <BarChart3 className="w-4 h-4" />
+                </button>
+                <button 
+                  onClick={() => window.location.href = '/memory'}
+                  className="p-2 text-gray-400 hover:text-white transition-colors duration-200 hover:bg-gray-800 rounded-lg"
+                  title="Memory Bank"
+                >
+                  <Brain className="w-4 h-4" />
+                </button>
+              </div>
+
+              {/* Settings */}
               <button 
-                onClick={() => setShowConversationHistory(!showConversationHistory)}
-                className="hidden lg:flex p-2 sm:p-2.5 text-gray-400 hover:text-white transition-colors duration-200 hover:bg-gray-800 rounded-lg min-w-[40px] min-h-[40px] items-center justify-center"
-                title="Conversation History"
+                onClick={() => setShowSettings(true)}
+                className="p-2 text-gray-400 hover:text-white transition-colors duration-200 hover:bg-gray-800 rounded-lg"
+                title="Settings"
               >
-                <History className="w-4 h-4 sm:w-5 sm:h-5" />
+                <Settings className="w-4 h-4" />
               </button>
-            )}
-            <button 
-              onClick={() => window.location.href = '/calendar'}
-              className="hidden lg:flex p-2 sm:p-2.5 text-gray-400 hover:text-white transition-colors duration-200 hover:bg-gray-800 rounded-lg min-w-[40px] min-h-[40px] items-center justify-center"
-              title="View Calendar"
-            >
-              <Calendar className="w-4 h-4 sm:w-5 sm:h-5" />
-            </button>
-            <button 
-              onClick={() => window.location.href = '/reminders'}
-              className="hidden lg:flex p-2 sm:p-2.5 text-gray-400 hover:text-white transition-colors duration-200 hover:bg-gray-800 rounded-lg min-w-[40px] min-h-[40px] items-center justify-center"
-              title="View Reminders"
-            >
-              <Bell className="w-4 h-4 sm:w-5 sm:h-5" />
-            </button>
-            <button 
-              onClick={() => window.location.href = '/memory'}
-              className="hidden lg:flex p-2 sm:p-2.5 text-gray-400 hover:text-white transition-colors duration-200 hover:bg-gray-800 rounded-lg min-w-[40px] min-h-[40px] items-center justify-center"
-              title="View Memory Bank"
-            >
-              <Brain className="w-4 h-4 sm:w-5 sm:h-5" />
-            </button>
-            <button 
-              onClick={() => window.location.href = '/demo'}
-              className="hidden lg:flex p-2 sm:p-2.5 text-gray-400 hover:text-white transition-colors duration-200 hover:bg-gray-800 rounded-lg min-w-[40px] min-h-[40px] items-center justify-center"
-              title="View Functionality Demo"
-            >
-              <Sparkles className="w-4 h-4 sm:w-5 sm:h-5" />
-            </button>
-            <button 
-              onClick={() => setShowMemoryDashboard(true)}
-              className="hidden lg:flex p-1.5 sm:p-2 text-gray-400 hover:text-white transition-colors duration-200 hover:bg-gray-800 rounded-lg min-w-[36px] min-h-[36px] items-center justify-center"
-              title="Memory Intelligence Dashboard"
-            >
-              <BarChart3 className="w-4 h-4 sm:w-5 sm:h-5" />
-            </button>
-            <button className="hidden lg:flex p-1.5 sm:p-2 text-gray-400 hover:text-white transition-colors duration-200 hover:bg-gray-800 rounded-lg min-w-[36px] min-h-[36px] items-center justify-center">
-              <Settings className="w-4 h-4 sm:w-5 sm:h-5" />
-            </button>
+            </div>
           </div>
         </div>
       </header>
@@ -1475,6 +1485,12 @@ export default function ChatPage() {
         onClose={() => setShowMobileSidebar(false)}
         onNavigate={handleNavigate}
         onToggleConversationHistory={() => setShowConversationHistory(!showConversationHistory)}
+      />
+
+      {/* Settings Modal */}
+      <SettingsModal
+        isOpen={showSettings}
+        onClose={() => setShowSettings(false)}
       />
     </div>
   )
