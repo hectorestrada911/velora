@@ -605,7 +605,9 @@ export default function AuthPage() {
                 >
                   <Target className="w-8 h-8 text-electric-400" />
                 </motion.div>
-                <h4 className="text-xl font-bold text-white mb-4">Smart Connections</h4>
+                <h4 className="text-xl font-bold text-white mb-4">
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-electric-500 to-purple-500">Smart</span> Connections
+                </h4>
                 <p className="text-gray-300 text-base leading-relaxed">
                   Connects your thoughts automatically. No more lost ideas.
                 </p>
@@ -625,7 +627,9 @@ export default function AuthPage() {
                 >
                   <Shield className="w-8 h-8 text-purple-400" />
                 </motion.div>
-                <h4 className="text-xl font-bold text-white mb-4">Never Forget</h4>
+                <h4 className="text-xl font-bold text-white mb-4">
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-electric-500 to-purple-500">Never</span> Forget
+                </h4>
                 <p className="text-gray-300 text-base leading-relaxed">
                   Captures every thought. From shower ideas to meeting notes.
                 </p>
@@ -645,7 +649,9 @@ export default function AuthPage() {
                 >
                   <TrendingUp className="w-8 h-8 text-green-400" />
                 </motion.div>
-                <h4 className="text-xl font-bold text-white mb-4">Gets Smarter</h4>
+                <h4 className="text-xl font-bold text-white mb-4">
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-electric-500 to-purple-500">Gets</span> Smarter
+                </h4>
                 <p className="text-gray-300 text-base leading-relaxed">
                   Learns your patterns. Suggests before you ask.
                 </p>
@@ -698,7 +704,9 @@ export default function AuthPage() {
                   <Mic className="w-12 h-12" />
                 </motion.div>
               </motion.div>
-              <h3 className="text-5xl font-bold text-white mb-6">Just Talk. It Understands.</h3>
+              <h3 className="text-5xl font-bold text-white mb-6">
+                Just <span className="text-transparent bg-clip-text bg-gradient-to-r from-electric-500 to-purple-500">Talk</span>. It Understands.
+              </h3>
               <p className="text-2xl text-gray-300 max-w-4xl mx-auto leading-relaxed">
                 Speak naturally. <span className="text-green-400">"Remind me to call mom"</span> becomes a smart reminder. 
                 <span className="text-green-400">"What's my schedule?"</span> shows your day. It just works.
@@ -807,7 +815,9 @@ export default function AuthPage() {
                   <Bell className="w-10 h-10 text-yellow-400" />
                 </motion.div>
               </div>
-              <h3 className="text-5xl font-bold text-white mb-6">Never Miss Anything</h3>
+              <h3 className="text-5xl font-bold text-white mb-6">
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-electric-500 to-purple-500">Never</span> Miss Anything
+              </h3>
               <p className="text-2xl text-gray-300 max-w-4xl mx-auto leading-relaxed">
                 Your life, perfectly organized. <span className="text-purple-400">Smart scheduling</span> that adapts to you. 
                 <span className="text-yellow-400">Intelligent reminders</span> that actually help.
@@ -923,7 +933,9 @@ export default function AuthPage() {
                   <Users className="w-16 h-16 text-electric-400" />
                 </motion.div>
               </motion.div>
-              <h3 className="text-5xl font-bold text-white mb-6">Ready to Get Started?</h3>
+              <h3 className="text-5xl font-bold text-white mb-6">
+                Ready to <span className="text-transparent bg-clip-text bg-gradient-to-r from-electric-500 to-purple-500">Get Started</span>?
+              </h3>
               <p className="text-2xl text-gray-300 max-w-4xl mx-auto leading-relaxed mb-12">
                 Join thousands who never forget another thought. <span className="text-electric-400">Start your AI memory journey today.</span>
               </p>
