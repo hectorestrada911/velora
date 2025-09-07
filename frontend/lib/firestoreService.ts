@@ -386,7 +386,7 @@ class FirestoreService {
     }
   }
 
-  async searchMemories(query: string): Promise<FirestoreMemory[]> {
+  async searchMemories(searchQuery: string): Promise<FirestoreMemory[]> {
     try {
       if (!db) {
         throw new Error('Firebase not initialized')
@@ -407,7 +407,7 @@ class FirestoreService {
       })) as FirestoreMemory[]
       
       // Simple text search
-      const searchTerm = query.toLowerCase()
+      const searchTerm = searchQuery.toLowerCase()
       return allMemories.filter(memory => 
         memory.title.toLowerCase().includes(searchTerm) ||
         memory.content.toLowerCase().includes(searchTerm) ||
