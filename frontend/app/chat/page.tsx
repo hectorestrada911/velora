@@ -185,8 +185,23 @@ export default function ChatPage() {
     
     setIsLoadingConversations(true)
     try {
-      const loadedConversations = await conversationService.getConversations()
-      setConversations(loadedConversations)
+      const conversations = await firestoreService.getConversations()
+      // Convert FirestoreConversation to Conversation format for compatibility
+      const convertedConversations = conversations.map(conv => ({
+        id: conv.id!,
+        title: conv.title,
+        messages: conv.messages.map(msg => ({
+          id: msg.id!,
+          type: msg.role === 'user' ? 'user' as const : 'ai' as const,
+          content: msg.content,
+          timestamp: msg.timestamp.toDate(),
+          analysis: msg.metadata
+        })),
+        createdAt: conv.createdAt.toDate(),
+        updatedAt: conv.updatedAt.toDate(),
+        userId: conv.userId
+      }))
+      setConversations(convertedConversations)
     } catch (error) {
       console.error('Error loading conversations:', error)
       // Only show error toast if it's not a "no data" scenario
@@ -213,29 +228,20 @@ export default function ChatPage() {
     }
   }
 
-  const saveConversation = async (messagesToSave: Message[]) => {
-    if (!user || messagesToSave.length === 0) return
-
-    try {
-      const conversationId = await conversationService.saveCurrentConversation(
-        messagesToSave, 
-        currentConversationId || undefined
-      )
-      setCurrentConversationId(conversationId)
-      
-      // Refresh conversations list
-      await loadConversations()
-    } catch (error) {
-      console.error('Error saving conversation:', error)
-      toast.error(ErrorHandler.getOperationErrorMessage('save-conversation', error))
-    }
-  }
 
   const loadConversation = async (conversationId: string) => {
     try {
-      const conversation = await conversationService.getConversation(conversationId)
+      const conversation = await firestoreService.getConversation(conversationId)
       if (conversation) {
-        setMessages(conversation.messages)
+        // Convert FirestoreMessage to Message format
+        const convertedMessages = conversation.messages.map(msg => ({
+          id: msg.id!,
+          type: msg.role === 'user' ? 'user' as const : 'ai' as const,
+          content: msg.content,
+          timestamp: msg.timestamp.toDate(),
+          analysis: msg.metadata
+        }))
+        setMessages(convertedMessages)
         setCurrentConversationId(conversationId)
         setShowSuggestions(false)
         setShowConversationHistory(false)
@@ -257,7 +263,7 @@ export default function ChatPage() {
 
   const deleteConversation = async (conversationId: string) => {
     try {
-      await conversationService.deleteConversation(conversationId)
+      await firestoreService.deleteConversation(conversationId)
       await loadConversations()
       
       if (currentConversationId === conversationId) {
@@ -301,7 +307,7 @@ export default function ChatPage() {
       
       setMessages(prev => {
         const newMessages = [...prev, fileMessage]
-        saveConversation(newMessages)
+        // Messages are now saved directly via firestoreService.addMessageToConversation
         return newMessages
       })
       
@@ -323,7 +329,7 @@ export default function ChatPage() {
       
       setMessages(prev => {
         const newMessages = [...prev, aiMessage]
-        saveConversation(newMessages)
+        // Messages are now saved directly via firestoreService.addMessageToConversation
         return newMessages
       })
       
@@ -368,7 +374,7 @@ export default function ChatPage() {
         
         setMessages(prev => {
           const newMessages = [...prev, searchMessage]
-          saveConversation(newMessages)
+          // Messages are now saved directly via firestoreService.addMessageToConversation
           return newMessages
         })
       } else {
@@ -381,7 +387,7 @@ export default function ChatPage() {
         
         setMessages(prev => {
           const newMessages = [...prev, noResultsMessage]
-          saveConversation(newMessages)
+          // Messages are now saved directly via firestoreService.addMessageToConversation
           return newMessages
         })
       }
@@ -475,7 +481,7 @@ export default function ChatPage() {
 
               setMessages(prev => {
                 const newMessages = [...prev, userMessage]
-                saveConversation(newMessages)
+                // Messages are now saved directly via firestoreService.addMessageToConversation
                 return newMessages
               })
 
@@ -538,7 +544,7 @@ export default function ChatPage() {
 
           setMessages(prev => {
             const newMessages = [...prev, userMessage]
-            saveConversation(newMessages)
+            // Messages are now saved directly via firestoreService.addMessageToConversation
             return newMessages
           })
 
@@ -692,7 +698,7 @@ export default function ChatPage() {
       setMessages(prev => {
         const newMessages = [...prev, aiMessage]
         // Save conversation after each message
-        saveConversation(newMessages)
+        // Messages are now saved directly via firestoreService.addMessageToConversation
         return newMessages
       })
 
@@ -702,7 +708,18 @@ export default function ChatPage() {
           // Create conversation if it doesn't exist
           let conversationId = currentConversationId
           if (!conversationId) {
-            conversationId = await firestoreService.createConversation(
+            // Create conversation with the first message
+            const initialMessages = [
+              {
+                id: Date.now().toString(),
+                type: 'user' as const,
+                content: inputValue,
+                timestamp: new Date(),
+                analysis: null
+              }
+            ]
+            conversationId = await conversationService.createConversation(
+              initialMessages,
               inputValue.length > 50 ? inputValue.substring(0, 50) + '...' : inputValue
             )
             setCurrentConversationId(conversationId)
@@ -763,7 +780,7 @@ export default function ChatPage() {
         setMessages(prev => {
           const newMessages = [...prev, suggestionMessage]
           // Save conversation after suggestion message
-          saveConversation(newMessages)
+          // Messages are now saved directly via firestoreService.addMessageToConversation
           return newMessages
         })
       }

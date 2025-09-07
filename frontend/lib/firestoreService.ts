@@ -338,6 +338,20 @@ class FirestoreService {
     }
   }
 
+  async deleteConversation(conversationId: string): Promise<void> {
+    try {
+      if (!db) {
+        throw new Error('Firebase not initialized')
+      }
+      
+      const conversationRef = doc(db!, 'conversations', conversationId)
+      await deleteDoc(conversationRef)
+    } catch (error) {
+      console.error('Error deleting conversation:', error)
+      throw error
+    }
+  }
+
   // Memories
   async addMemory(memory: Omit<FirestoreMemory, 'id' | 'userId' | 'createdAt' | 'updatedAt' | 'accessCount' | 'lastAccessed'>): Promise<string> {
     try {
