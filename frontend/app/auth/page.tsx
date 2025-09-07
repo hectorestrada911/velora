@@ -260,11 +260,11 @@ export default function AuthPage() {
               </motion.div>
               
               <h2 className="text-5xl xl:text-6xl font-bold text-white mb-6 leading-tight">
-                Your Brain,<br />
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-electric-500 to-purple-500">Velora</span> Brain,<br />
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-electric-500 to-purple-500">But Better</span>
               </h2>
               <p className="text-xl text-gray-300 mb-8 leading-relaxed">
-                Never lose a thought again. Turn ideas into action with AI that remembers everything.
+                Never lose a thought again. Turn ideas into action with <span className="text-electric-400">Velora</span> that remembers everything.
               </p>
               
               {/* Call-to-Action Buttons - Desktop */}
@@ -503,7 +503,7 @@ export default function AuthPage() {
               transition={{ delay: 0.4 }}
               className="text-3xl md:text-4xl font-bold text-white mb-4 leading-tight"
             >
-              Your Brain,<br />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-electric-500 to-purple-500">Velora</span> Brain,<br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-electric-500 to-purple-500">But Better</span>
             </motion.h2>
 
@@ -514,7 +514,7 @@ export default function AuthPage() {
               transition={{ delay: 0.6 }}
               className="text-gray-300 text-base md:text-lg leading-relaxed mb-8"
             >
-              Never lose a thought again. Turn ideas into action with AI that remembers everything.
+              Never lose a thought again. Turn ideas into action with <span className="text-electric-400">Velora</span> that remembers everything.
             </motion.p>
 
             {/* CTA Buttons */}
@@ -581,9 +581,11 @@ export default function AuthPage() {
               >
                 <Database className="w-12 h-12 text-electric-400" />
               </motion.div>
-              <h3 className="text-5xl font-bold text-white mb-6">Never Forget Again</h3>
+              <h3 className="text-5xl font-bold text-white mb-6">
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-electric-500 to-purple-500">Never Forget</span> Again
+              </h3>
               <p className="text-2xl text-gray-300 max-w-4xl mx-auto leading-relaxed">
-                Your AI remembers everything. <span className="text-electric-400">Parking spots, meeting notes, random thoughts</span> — 
+                <span className="text-electric-400">Velora</span> remembers everything. <span className="text-electric-400">Parking spots, meeting notes, random thoughts</span> — 
                 it all connects intelligently.
               </p>
             </div>
