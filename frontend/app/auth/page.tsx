@@ -89,13 +89,11 @@ export default function AuthPage() {
   if (authMode === 'landing') {
     return (
       <div className="bg-black">
-        {/* Hero Section */}
-        <div className="min-h-screen flex flex-col items-center justify-center p-6">
-        {/* Header */}
+        {/* Header - Fixed at top */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="w-full flex justify-between items-center mb-12"
+          className="w-full flex justify-between items-center p-6 absolute top-0 left-0 z-10"
         >
           <motion.h1 
             animate={{ 
@@ -158,7 +156,8 @@ export default function AuthPage() {
           </motion.div>
         </motion.div>
 
-
+        {/* Hero Section */}
+        <div className="min-h-screen flex flex-col items-center justify-center p-6">
         {/* Main Content - Responsive Layout */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
