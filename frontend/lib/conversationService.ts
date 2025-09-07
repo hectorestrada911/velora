@@ -92,32 +92,43 @@ export class ConversationService {
 
   async getConversations(limitCount: number = 50): Promise<Conversation[]> {
     if (!db) {
+      console.log('Firebase not initialized, returning empty conversations')
       return []
     }
 
-    const userId = this.getCurrentUserId()
-    const q = query(
-      collection(db, this.collectionName),
-      where('userId', '==', userId),
-      orderBy('updatedAt', 'desc'),
-      limit(limitCount)
-    )
-
-    const querySnapshot = await getDocs(q)
-    return querySnapshot.docs.map(doc => {
-      const data = doc.data()
-      return {
-        id: doc.id,
-        title: data.title,
-        messages: data.messages.map((msg: any) => ({
-          ...msg,
-          timestamp: msg.timestamp.toDate()
-        })),
-        createdAt: data.createdAt.toDate(),
-        updatedAt: data.updatedAt.toDate(),
-        userId: data.userId
+    try {
+      const userId = this.getCurrentUserId()
+      if (!userId || userId === 'current-user-id') {
+        console.log('No valid user ID, returning empty conversations')
+        return []
       }
-    })
+
+      const q = query(
+        collection(db, this.collectionName),
+        where('userId', '==', userId),
+        orderBy('updatedAt', 'desc'),
+        limit(limitCount)
+      )
+
+      const querySnapshot = await getDocs(q)
+      return querySnapshot.docs.map(doc => {
+        const data = doc.data()
+        return {
+          id: doc.id,
+          title: data.title,
+          messages: data.messages.map((msg: any) => ({
+            ...msg,
+            timestamp: msg.timestamp.toDate()
+          })),
+          createdAt: data.createdAt.toDate(),
+          updatedAt: data.updatedAt.toDate(),
+          userId: data.userId
+        }
+      })
+    } catch (error) {
+      console.error('Error in getConversations:', error)
+      return []
+    }
   }
 
   async getConversation(conversationId: string): Promise<Conversation | null> {

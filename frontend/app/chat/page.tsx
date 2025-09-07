@@ -128,10 +128,15 @@ export default function ChatPage() {
   // Load conversations and documents when user is authenticated
   useEffect(() => {
     if (user) {
+      // Set user ID first
       conversationService.setUserId(user.uid)
       documentService.setUserId(user.uid)
-      loadConversations()
-      loadDocuments()
+      
+      // Load data with a small delay to ensure services are ready
+      setTimeout(() => {
+        loadConversations()
+        loadDocuments()
+      }, 100)
     }
   }, [user])
 
@@ -157,7 +162,10 @@ export default function ChatPage() {
       setConversations(loadedConversations)
     } catch (error) {
       console.error('Error loading conversations:', error)
-      toast.error('Failed to load conversation history')
+      // Only show error toast if it's not a "no data" scenario
+      if (error instanceof Error && !error.message.includes('No documents')) {
+        toast.error('Failed to load conversation history')
+      }
     } finally {
       setIsLoadingConversations(false)
     }
@@ -171,7 +179,10 @@ export default function ChatPage() {
       setDocuments(loadedDocuments)
     } catch (error) {
       console.error('Error loading documents:', error)
-      toast.error('Failed to load documents')
+      // Only show error toast if it's not a "no data" scenario
+      if (error instanceof Error && !error.message.includes('No documents')) {
+        toast.error('Failed to load documents')
+      }
     }
   }
 

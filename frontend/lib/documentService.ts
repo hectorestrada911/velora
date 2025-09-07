@@ -82,11 +82,17 @@ export class DocumentService {
 
   async getDocuments(limitCount: number = 50): Promise<Document[]> {
     if (!db) {
+      console.log('Firebase not initialized, returning empty documents')
       return []
     }
 
     try {
       const userId = this.getCurrentUserId()
+      if (!userId || userId === 'current-user-id') {
+        console.log('No valid user ID, returning empty documents')
+        return []
+      }
+
       const q = query(
         collection(db, this.collectionName),
         where('userId', '==', userId),
@@ -115,7 +121,7 @@ export class DocumentService {
       })
     } catch (error) {
       console.error('Error getting documents:', error)
-      throw error
+      return []
     }
   }
 
