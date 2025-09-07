@@ -269,7 +269,7 @@ export default function AuthPage() {
                 
                 <button
                   onClick={handleTryDemo}
-                  className="bg-gradient-to-r from-electric-500 to-purple-500 hover:from-electric-400 hover:to-purple-400 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 hover:scale-105 w-fit"
+                  className="text-gray-400 hover:text-electric-400 font-medium py-2 px-4 transition-colors duration-200 text-sm mx-auto"
                 >
                   Try Demo
                 </button>
@@ -615,7 +615,7 @@ export default function AuthPage() {
           
           <button
             onClick={handleTryDemo}
-            className="w-full bg-gradient-to-r from-electric-500 to-purple-500 hover:from-electric-400 hover:to-purple-400 text-white font-semibold py-3 md:py-4 px-6 rounded-lg transition-all duration-200 hover:scale-105"
+            className="text-gray-400 hover:text-electric-400 font-medium py-2 px-4 transition-colors duration-200 text-sm mx-auto"
           >
             Try Demo
           </button>
