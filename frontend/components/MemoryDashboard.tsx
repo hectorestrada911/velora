@@ -14,7 +14,8 @@ import {
   RefreshCw,
   CheckCircle,
   AlertCircle,
-  Info
+  Info,
+  X
 } from 'lucide-react'
 import { memoryService } from '@/lib/memoryService'
 import { memoryTestScenarios, getRandomScenarios, validateMemoryCorrelation } from '@/lib/memoryTestScenarios'
