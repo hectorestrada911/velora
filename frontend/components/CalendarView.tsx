@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { Calendar, Clock, MapPin, User, Plus, ChevronLeft, ChevronRight, X, Edit, Trash2, Bell } from 'lucide-react'
 import { calendarService, CalendarEvent } from '@/lib/calendarService'
 import { toast } from 'react-hot-toast'
+import { ErrorHandler } from '@/lib/errorHandler'
 
 export default function CalendarView() {
   const [currentDate, setCurrentDate] = useState(new Date())
@@ -72,7 +73,9 @@ export default function CalendarView() {
       }
     } catch (error) {
       console.error('Failed to load events:', error)
-      toast.error('Failed to load calendar events')
+      if (ErrorHandler.shouldShowError(error, 'load-events')) {
+        toast.error(ErrorHandler.getOperationErrorMessage('load-events', error))
+      }
     }
   }
 
@@ -159,7 +162,7 @@ export default function CalendarView() {
       }
     } catch (error) {
       console.error('Failed to add event:', error)
-      toast.error('Failed to add event')
+      toast.error(ErrorHandler.getOperationErrorMessage('save-event', error))
     }
   }
 
@@ -217,7 +220,7 @@ export default function CalendarView() {
       }
     } catch (error) {
       console.error('Failed to update event:', error)
-      toast.error('Failed to update event')
+      toast.error(ErrorHandler.getOperationErrorMessage('update-event', error))
     }
   }
 
@@ -245,7 +248,7 @@ export default function CalendarView() {
       }
     } catch (error) {
       console.error('Failed to delete event:', error)
-      toast.error('Failed to delete event')
+      toast.error(ErrorHandler.getOperationErrorMessage('delete-event', error))
     }
   }
 

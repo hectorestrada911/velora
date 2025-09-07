@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { Bell, Clock, AlertCircle, CheckCircle, Plus, X, Edit, Trash2, Star } from 'lucide-react'
 import { calendarService, Reminder } from '@/lib/calendarService'
 import { toast } from 'react-hot-toast'
+import { ErrorHandler } from '@/lib/errorHandler'
 
 interface ReminderWithId extends Reminder {
   id: string
@@ -45,7 +46,9 @@ export default function RemindersView() {
       setReminders(validReminders)
     } catch (error) {
       console.error('Failed to load reminders:', error)
-      toast.error('Failed to load reminders')
+      if (ErrorHandler.shouldShowError(error, 'load-reminders')) {
+        toast.error(ErrorHandler.getOperationErrorMessage('load-reminders', error))
+      }
     }
   }
 
@@ -82,7 +85,7 @@ export default function RemindersView() {
       }
     } catch (error) {
       console.error('Failed to create reminder:', error)
-      toast.error('Failed to create reminder')
+      toast.error(ErrorHandler.getOperationErrorMessage('save-reminder', error))
     }
   }
 
@@ -100,7 +103,7 @@ export default function RemindersView() {
       }
     } catch (error) {
       console.error('Failed to toggle reminder:', error)
-      toast.error('Failed to update reminder')
+      toast.error(ErrorHandler.getOperationErrorMessage('update-reminder', error))
     }
   }
 
@@ -115,7 +118,7 @@ export default function RemindersView() {
       }
     } catch (error) {
       console.error('Failed to snooze reminder:', error)
-      toast.error('Failed to snooze reminder')
+      toast.error(ErrorHandler.getOperationErrorMessage('update-reminder', error))
     }
   }
 
@@ -141,7 +144,7 @@ export default function RemindersView() {
       }
     } catch (error) {
       console.error('Failed to delete reminder:', error)
-      toast.error('Failed to delete reminder')
+      toast.error(ErrorHandler.getOperationErrorMessage('delete-reminder', error))
     }
   }
 
@@ -178,7 +181,7 @@ export default function RemindersView() {
       }
     } catch (error) {
       console.error('Failed to complete reminder:', error)
-      toast.error('Failed to complete reminder')
+      toast.error(ErrorHandler.getOperationErrorMessage('update-reminder', error))
     }
   }
 
@@ -206,7 +209,7 @@ export default function RemindersView() {
       }
     } catch (error) {
       console.error('Failed to restore reminder:', error)
-      toast.error('Failed to restore reminder')
+      toast.error(ErrorHandler.getOperationErrorMessage('update-reminder', error))
     }
   }
 

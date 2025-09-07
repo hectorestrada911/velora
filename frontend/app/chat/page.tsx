@@ -17,6 +17,7 @@ import { memoryService } from '@/lib/memoryService'
 import { firestoreService, FirestoreConversation, FirestoreMessage } from '@/lib/firestoreService'
 import SmartSuggestions from '@/components/SmartSuggestions'
 import MemoryDashboard from '@/components/MemoryDashboard'
+import { ErrorHandler } from '@/lib/errorHandler'
 
 
 interface Suggestion {
@@ -163,8 +164,8 @@ export default function ChatPage() {
     } catch (error) {
       console.error('Error loading conversations:', error)
       // Only show error toast if it's not a "no data" scenario
-      if (error instanceof Error && !error.message.includes('No documents')) {
-        toast.error('Failed to load conversation history')
+      if (ErrorHandler.shouldShowError(error, 'load-conversations')) {
+        toast.error(ErrorHandler.getOperationErrorMessage('load-conversations', error))
       }
     } finally {
       setIsLoadingConversations(false)
@@ -180,8 +181,8 @@ export default function ChatPage() {
     } catch (error) {
       console.error('Error loading documents:', error)
       // Only show error toast if it's not a "no data" scenario
-      if (error instanceof Error && !error.message.includes('No documents')) {
-        toast.error('Failed to load documents')
+      if (ErrorHandler.shouldShowError(error, 'load-documents')) {
+        toast.error(ErrorHandler.getOperationErrorMessage('load-documents', error))
       }
     }
   }
@@ -200,7 +201,7 @@ export default function ChatPage() {
       await loadConversations()
     } catch (error) {
       console.error('Error saving conversation:', error)
-      toast.error('Failed to save conversation')
+      toast.error(ErrorHandler.getOperationErrorMessage('save-conversation', error))
     }
   }
 
@@ -216,7 +217,7 @@ export default function ChatPage() {
       }
     } catch (error) {
       console.error('Error loading conversation:', error)
-      toast.error('Failed to load conversation')
+      toast.error(ErrorHandler.getOperationErrorMessage('load-conversation', error))
     }
   }
 
@@ -240,7 +241,7 @@ export default function ChatPage() {
       toast.success('Conversation deleted')
     } catch (error) {
       console.error('Error deleting conversation:', error)
-      toast.error('Failed to delete conversation')
+      toast.error(ErrorHandler.getOperationErrorMessage('delete-conversation', error))
     }
   }
 
@@ -304,7 +305,7 @@ export default function ChatPage() {
       
     } catch (error) {
       console.error('Error uploading file:', error)
-      toast.error('Failed to upload file')
+      toast.error(ErrorHandler.getOperationErrorMessage('file-upload', error))
     } finally {
       setIsUploading(false)
     }
@@ -360,7 +361,7 @@ export default function ChatPage() {
       }
     } catch (error) {
       console.error('Error searching documents:', error)
-      toast.error('Failed to search documents')
+      toast.error(ErrorHandler.getOperationErrorMessage('search-documents', error))
     }
   }
 
@@ -422,7 +423,7 @@ export default function ChatPage() {
       // Start listening directly
       try {
         if (!voiceService || !voiceService.isSupported()) {
-          toast.error('Voice recognition not supported in this browser')
+          toast.error(ErrorHandler.getOperationErrorMessage('voice-recognition', { message: 'Voice recognition not supported in this browser' }))
           return
         }
 
@@ -456,7 +457,7 @@ export default function ChatPage() {
               handleSendMessage()
               toast.success('Voice input processed!')
             } else {
-              toast.error(result.message)
+              toast.error(ErrorHandler.getOperationErrorMessage('voice-recognition', { message: result.message }))
             }
           },
           (transcript: string) => {
@@ -485,7 +486,7 @@ export default function ChatPage() {
     // Start listening
     try {
       if (!voiceService || !voiceService.isSupported()) {
-        toast.error('Voice recognition not supported in this browser')
+        toast.error(ErrorHandler.getOperationErrorMessage('voice-recognition', { message: 'Voice recognition not supported in this browser' }))
         return
       }
 
@@ -525,7 +526,7 @@ export default function ChatPage() {
           toast.success('Voice input processed!')
         } else {
           setCurrentVoiceTranscript('')
-          toast.error(result.message)
+          toast.error(ErrorHandler.getOperationErrorMessage('voice-recognition', { message: result.message }))
         }
       },
       (transcript: string) => {
@@ -535,17 +536,17 @@ export default function ChatPage() {
       }
     )
 
-      if (success) {
-        setIsVoiceProcessing(true)
-        toast.success('Listening... Speak now!')
-      } else {
-        setIsVoiceListening(false)
-        toast.error('Failed to start voice recognition')
-      }
+    if (success) {
+      setIsVoiceProcessing(true)
+      toast.success('Listening... Speak now!')
+    } else {
+      setIsVoiceListening(false)
+      toast.error(ErrorHandler.getOperationErrorMessage('voice-recognition', { message: 'Failed to start voice recognition' }))
+    }
     } catch (error) {
       console.error('Error with voice service:', error)
       setIsVoiceListening(false)
-      toast.error('Voice service error occurred')
+      toast.error(ErrorHandler.getOperationErrorMessage('voice-recognition', error))
     }
   }
 
@@ -760,7 +761,7 @@ export default function ChatPage() {
       }
       
       setMessages(prev => [...prev, fallbackMessage])
-      toast.error('AI processing failed, please try again')
+      toast.error(ErrorHandler.getOperationErrorMessage('ai-processing', error))
     } finally {
       // Add a small delay to ensure typing animation is visible
       setTimeout(() => {
