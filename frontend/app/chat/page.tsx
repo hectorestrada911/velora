@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Send, Mic, MicOff, Calendar, Bell, Settings, Plus, Sparkles, Brain, Clock, CheckCircle, History, Trash2, Upload, FileText, X, BarChart3 } from 'lucide-react'
+import { Send, Mic, MicOff, Calendar, Bell, Settings, Plus, Sparkles, Brain, Clock, CheckCircle, History, Trash2, Upload, FileText, X, BarChart3, Menu } from 'lucide-react'
 import { toast } from 'react-hot-toast'
 import { calendarService } from '@/lib/calendarService'
 import VoiceCommand from '@/components/VoiceCommand'
@@ -17,6 +17,7 @@ import { memoryService } from '@/lib/memoryService'
 import { firestoreService, FirestoreConversation, FirestoreMessage } from '@/lib/firestoreService'
 import SmartSuggestions from '@/components/SmartSuggestions'
 import MemoryDashboard from '@/components/MemoryDashboard'
+import MobileSidebar from '@/components/MobileSidebar'
 import { ErrorHandler } from '@/lib/errorHandler'
 
 
@@ -51,8 +52,13 @@ export default function ChatPage() {
   const [hasUserInteracted, setHasUserInteracted] = useState(false)
   const [smartSuggestions, setSmartSuggestions] = useState<SmartSuggestion[]>([])
   const [showMemoryDashboard, setShowMemoryDashboard] = useState(false)
+  const [showMobileSidebar, setShowMobileSidebar] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
+
+  const handleNavigate = (path: string) => {
+    window.location.href = path
+  }
 
   const voiceExamples = [
     "Schedule a meeting tomorrow at 3pm",
@@ -843,10 +849,20 @@ export default function ChatPage() {
           </div>
           
           <div className="flex items-center gap-1.5 sm:gap-2 md:gap-4">
+            {/* Mobile Hamburger Menu */}
+            <button 
+              onClick={() => setShowMobileSidebar(true)}
+              className="lg:hidden p-2 text-gray-400 hover:text-white transition-colors duration-200 hover:bg-gray-800 rounded-lg min-w-[40px] min-h-[40px] flex items-center justify-center"
+              title="Menu"
+            >
+              <Menu className="w-5 h-5" />
+            </button>
+
+            {/* Desktop Navigation */}
             {user && (
               <button 
                 onClick={() => setShowConversationHistory(!showConversationHistory)}
-                className="p-2 sm:p-2.5 text-gray-400 hover:text-white transition-colors duration-200 hover:bg-gray-800 rounded-lg min-w-[40px] min-h-[40px] flex items-center justify-center"
+                className="hidden lg:flex p-2 sm:p-2.5 text-gray-400 hover:text-white transition-colors duration-200 hover:bg-gray-800 rounded-lg min-w-[40px] min-h-[40px] items-center justify-center"
                 title="Conversation History"
               >
                 <History className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -854,40 +870,40 @@ export default function ChatPage() {
             )}
             <button 
               onClick={() => window.location.href = '/calendar'}
-              className="p-2 sm:p-2.5 text-gray-400 hover:text-white transition-colors duration-200 hover:bg-gray-800 rounded-lg min-w-[40px] min-h-[40px] flex items-center justify-center"
+              className="hidden lg:flex p-2 sm:p-2.5 text-gray-400 hover:text-white transition-colors duration-200 hover:bg-gray-800 rounded-lg min-w-[40px] min-h-[40px] items-center justify-center"
               title="View Calendar"
             >
               <Calendar className="w-4 h-4 sm:w-5 sm:h-5" />
             </button>
             <button 
               onClick={() => window.location.href = '/reminders'}
-              className="p-2 sm:p-2.5 text-gray-400 hover:text-white transition-colors duration-200 hover:bg-gray-800 rounded-lg min-w-[40px] min-h-[40px] flex items-center justify-center"
+              className="hidden lg:flex p-2 sm:p-2.5 text-gray-400 hover:text-white transition-colors duration-200 hover:bg-gray-800 rounded-lg min-w-[40px] min-h-[40px] items-center justify-center"
               title="View Reminders"
             >
               <Bell className="w-4 h-4 sm:w-5 sm:h-5" />
             </button>
             <button 
               onClick={() => window.location.href = '/memory'}
-              className="p-2 sm:p-2.5 text-gray-400 hover:text-white transition-colors duration-200 hover:bg-gray-800 rounded-lg min-w-[40px] min-h-[40px] flex items-center justify-center"
+              className="hidden lg:flex p-2 sm:p-2.5 text-gray-400 hover:text-white transition-colors duration-200 hover:bg-gray-800 rounded-lg min-w-[40px] min-h-[40px] items-center justify-center"
               title="View Memory Bank"
             >
               <Brain className="w-4 h-4 sm:w-5 sm:h-5" />
             </button>
             <button 
               onClick={() => window.location.href = '/demo'}
-              className="p-2 sm:p-2.5 text-gray-400 hover:text-white transition-colors duration-200 hover:bg-gray-800 rounded-lg min-w-[40px] min-h-[40px] flex items-center justify-center"
+              className="hidden lg:flex p-2 sm:p-2.5 text-gray-400 hover:text-white transition-colors duration-200 hover:bg-gray-800 rounded-lg min-w-[40px] min-h-[40px] items-center justify-center"
               title="View Functionality Demo"
             >
               <Sparkles className="w-4 h-4 sm:w-5 sm:h-5" />
             </button>
             <button 
               onClick={() => setShowMemoryDashboard(true)}
-              className="p-1.5 sm:p-2 text-gray-400 hover:text-white transition-colors duration-200 hover:bg-gray-800 rounded-lg min-w-[36px] min-h-[36px] flex items-center justify-center"
+              className="hidden lg:flex p-1.5 sm:p-2 text-gray-400 hover:text-white transition-colors duration-200 hover:bg-gray-800 rounded-lg min-w-[36px] min-h-[36px] items-center justify-center"
               title="Memory Intelligence Dashboard"
             >
               <BarChart3 className="w-4 h-4 sm:w-5 sm:h-5" />
             </button>
-            <button className="p-1.5 sm:p-2 text-gray-400 hover:text-white transition-colors duration-200 hover:bg-gray-800 rounded-lg min-w-[36px] min-h-[36px] flex items-center justify-center">
+            <button className="hidden lg:flex p-1.5 sm:p-2 text-gray-400 hover:text-white transition-colors duration-200 hover:bg-gray-800 rounded-lg min-w-[36px] min-h-[36px] items-center justify-center">
               <Settings className="w-4 h-4 sm:w-5 sm:h-5" />
             </button>
           </div>
@@ -1452,6 +1468,14 @@ export default function ChatPage() {
       {showMemoryDashboard && (
         <MemoryDashboard onClose={() => setShowMemoryDashboard(false)} />
       )}
+
+      {/* Mobile Sidebar */}
+      <MobileSidebar
+        isOpen={showMobileSidebar}
+        onClose={() => setShowMobileSidebar(false)}
+        onNavigate={handleNavigate}
+        onToggleConversationHistory={() => setShowConversationHistory(!showConversationHistory)}
+      />
     </div>
   )
 }
