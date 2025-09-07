@@ -620,32 +620,36 @@ export default function AuthPage() {
             <div className="text-center mb-16">
               <motion.div
                 animate={{ 
-                  scale: [1, 1.2, 1],
-                  rotate: [0, 360],
+                  scale: [1, 1.08, 1],
                   boxShadow: [
-                    "0 0 30px rgba(34, 197, 94, 0.4)",
-                    "0 0 60px rgba(34, 197, 94, 0.8)",
-                    "0 0 30px rgba(34, 197, 94, 0.4)"
+                    "0 0 50px rgba(59, 130, 246, 0.4)",
+                    "0 0 100px rgba(168, 85, 247, 0.6)",
+                    "0 0 50px rgba(236, 72, 153, 0.4)"
                   ]
                 }}
                 transition={{ 
-                  scale: { duration: 2, repeat: Infinity },
-                  rotate: { duration: 8, repeat: Infinity, ease: "linear" },
-                  boxShadow: { duration: 2, repeat: Infinity }
+                  scale: { duration: 4, repeat: Infinity, ease: "easeInOut" },
+                  boxShadow: { duration: 3, repeat: Infinity }
                 }}
-                className="w-24 h-24 bg-gradient-to-br from-green-500/40 to-emerald-500/40 rounded-3xl flex items-center justify-center border border-green-500/60 backdrop-blur-sm mx-auto mb-8"
+                className="w-24 h-24 bg-gradient-to-br from-cyan-400/50 via-purple-500/50 to-pink-500/50 rounded-full flex items-center justify-center border border-cyan-400/60 backdrop-blur-sm mx-auto mb-8"
               >
                 <motion.div
                   animate={{ 
-                    scale: [1, 1.1, 1],
-                    rotate: [0, -360]
+                    scale: [1, 1.3, 1],
+                    rotate: [0, 180, 360],
+                    filter: [
+                      "drop-shadow(0 0 15px #06b6d4)",
+                      "drop-shadow(0 0 25px #8b5cf6)",
+                      "drop-shadow(0 0 15px #ec4899)"
+                    ]
                   }}
                   transition={{ 
-                    scale: { duration: 1.5, repeat: Infinity },
-                    rotate: { duration: 4, repeat: Infinity, ease: "linear" }
+                    duration: 3, 
+                    repeat: Infinity,
+                    ease: "easeInOut"
                   }}
                 >
-                  <Mic className="w-12 h-12 text-green-400" />
+                  <Mic className="w-12 h-12" />
                 </motion.div>
               </motion.div>
               <h3 className="text-5xl font-bold text-white mb-6">Just Talk. It Understands.</h3>
@@ -660,16 +664,9 @@ export default function AuthPage() {
                 whileHover={{ scale: 1.05, y: -5 }}
                 className="bg-gradient-to-br from-gray-900/60 to-gray-800/40 rounded-2xl p-8 border border-green-500/20 hover:border-green-500/50 transition-all duration-300 backdrop-blur-sm"
               >
-                <motion.div
-                  animate={{ 
-                    scale: [1, 1.3, 1],
-                    rotate: [0, 15, -15, 0]
-                  }}
-                  transition={{ duration: 2, repeat: Infinity }}
-                  className="w-16 h-16 bg-gradient-to-br from-green-500/30 to-emerald-500/30 rounded-2xl flex items-center justify-center mb-6"
-                >
+                <div className="w-16 h-16 bg-gradient-to-br from-green-500/30 to-emerald-500/30 rounded-2xl flex items-center justify-center mb-6">
                   <Bell className="w-8 h-8 text-green-400" />
-                </motion.div>
+                </div>
                 <h4 className="text-xl font-bold text-white mb-4">Smart Reminders</h4>
                 <p className="text-gray-300 text-base leading-relaxed italic mb-4">
                   "Remind me to call mom tomorrow at 3pm"
@@ -683,16 +680,9 @@ export default function AuthPage() {
                 whileHover={{ scale: 1.05, y: -5 }}
                 className="bg-gradient-to-br from-gray-900/60 to-gray-800/40 rounded-2xl p-8 border border-blue-500/20 hover:border-blue-500/50 transition-all duration-300 backdrop-blur-sm"
               >
-                <motion.div
-                  animate={{ 
-                    scale: [1, 1.3, 1],
-                    rotate: [0, -15, 15, 0]
-                  }}
-                  transition={{ duration: 2, repeat: Infinity, delay: 0.3 }}
-                  className="w-16 h-16 bg-gradient-to-br from-blue-500/30 to-cyan-500/30 rounded-2xl flex items-center justify-center mb-6"
-                >
+                <div className="w-16 h-16 bg-gradient-to-br from-blue-500/30 to-cyan-500/30 rounded-2xl flex items-center justify-center mb-6">
                   <Calendar className="w-8 h-8 text-blue-400" />
-                </motion.div>
+                </div>
                 <h4 className="text-xl font-bold text-white mb-4">Calendar Magic</h4>
                 <p className="text-gray-300 text-base leading-relaxed italic mb-4">
                   "What do I have scheduled for Friday?"
@@ -706,16 +696,9 @@ export default function AuthPage() {
                 whileHover={{ scale: 1.05, y: -5 }}
                 className="bg-gradient-to-br from-gray-900/60 to-gray-800/40 rounded-2xl p-8 border border-purple-500/20 hover:border-purple-500/50 transition-all duration-300 backdrop-blur-sm"
               >
-                <motion.div
-                  animate={{ 
-                    scale: [1, 1.3, 1],
-                    rotate: [0, 20, -20, 0]
-                  }}
-                  transition={{ duration: 2, repeat: Infinity, delay: 0.6 }}
-                  className="w-16 h-16 bg-gradient-to-br from-purple-500/30 to-pink-500/30 rounded-2xl flex items-center justify-center mb-6"
-                >
+                <div className="w-16 h-16 bg-gradient-to-br from-purple-500/30 to-pink-500/30 rounded-2xl flex items-center justify-center mb-6">
                   <Database className="w-8 h-8 text-purple-400" />
-                </motion.div>
+                </div>
                 <h4 className="text-xl font-bold text-white mb-4">Memory Storage</h4>
                 <p className="text-gray-300 text-base leading-relaxed italic mb-4">
                   "Remember I parked in section B"
