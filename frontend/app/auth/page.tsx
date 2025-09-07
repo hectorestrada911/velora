@@ -400,24 +400,24 @@ export default function AuthPage() {
                   </motion.div>
                 </motion.div>
 
-                {/* Floating Particles */}
+                {/* Floating Particles - Contained to Visual Area */}
                 {[...Array(6)].map((_, i) => (
                   <motion.div
                     key={i}
                     animate={{
-                      y: [0, -20, 0],
-                      opacity: [0.3, 0.8, 0.3],
-                      scale: [0.8, 1.2, 0.8]
+                      y: [0, -12, 0],
+                      opacity: [0.4, 0.9, 0.4],
+                      scale: [0.8, 1.3, 0.8]
                     }}
                     transition={{
-                      duration: 3 + i * 0.5,
+                      duration: 2.5 + i * 0.3,
                       repeat: Infinity,
-                      delay: i * 0.3
+                      delay: i * 0.2
                     }}
                     className="absolute w-2 h-2 bg-electric-400 rounded-full"
                     style={{
-                      left: `${20 + i * 15}%`,
-                      top: `${30 + (i % 2) * 40}%`
+                      left: `${30 + (i % 3) * 15}%`,
+                      top: `${40 + Math.floor(i / 3) * 20}%`
                     }}
                   />
                 ))}
@@ -427,26 +427,73 @@ export default function AuthPage() {
 
           {/* Mobile Layout - Resend Style */}
           <div className="lg:hidden text-center max-w-md mx-auto">
-            {/* Spinning Icon at Top */}
+            {/* Clean Spinning Icon with Particles */}
             <motion.div
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.2 }}
-              className="mb-8 flex justify-center"
+              className="mb-8 flex justify-center relative"
             >
+              {/* Main Spinning Icon */}
               <motion.div
-                animate={{ rotate: -360 }}
-                transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
-                className="w-32 h-32 bg-gradient-to-br from-blue-500/20 to-purple-500/20 rounded-full flex items-center justify-center border border-blue-500/30"
+                animate={{ 
+                  rotate: -360,
+                  boxShadow: [
+                    "0 0 20px rgba(59, 130, 246, 0.3)",
+                    "0 0 40px rgba(59, 130, 246, 0.6)",
+                    "0 0 20px rgba(59, 130, 246, 0.3)"
+                  ]
+                }}
+                transition={{ 
+                  rotate: { duration: 15, repeat: Infinity, ease: "linear" },
+                  boxShadow: { duration: 2, repeat: Infinity }
+                }}
+                className="w-32 h-32 bg-gradient-to-br from-blue-500/20 to-purple-500/20 rounded-full flex items-center justify-center border border-blue-500/30 backdrop-blur-sm"
               >
                 <motion.div
-                  animate={{ rotate: 360 }}
-                  transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
+                  animate={{ 
+                    rotate: 360,
+                    scale: [1, 1.05, 1]
+                  }}
+                  transition={{ 
+                    rotate: { duration: 10, repeat: Infinity, ease: "linear" },
+                    scale: { duration: 2, repeat: Infinity }
+                  }}
                   className="w-20 h-20 bg-gradient-to-br from-purple-500/20 to-yellow-500/20 rounded-full flex items-center justify-center border border-purple-500/30"
                 >
-                  <Brain className="w-10 h-10 text-electric-400" />
+                  <motion.div
+                    animate={{ 
+                      scale: [1, 1.1, 1],
+                      rotate: [0, 5, -5, 0]
+                    }}
+                    transition={{ duration: 3, repeat: Infinity }}
+                  >
+                    <Brain className="w-10 h-10 text-electric-400" />
+                  </motion.div>
                 </motion.div>
               </motion.div>
+
+              {/* Floating Particles for Mobile - Contained to Visual Area */}
+              {[...Array(4)].map((_, i) => (
+                <motion.div
+                  key={i}
+                  animate={{
+                    y: [0, -8, 0],
+                    opacity: [0.4, 0.9, 0.4],
+                    scale: [0.8, 1.3, 0.8]
+                  }}
+                  transition={{
+                    duration: 2.5 + i * 0.3,
+                    repeat: Infinity,
+                    delay: i * 0.2
+                  }}
+                  className="absolute w-1.5 h-1.5 bg-electric-400 rounded-full"
+                  style={{
+                    left: `${35 + (i % 2) * 20}%`,
+                    top: `${45 + Math.floor(i / 2) * 15}%`
+                  }}
+                />
+              ))}
             </motion.div>
 
             {/* Title */}
