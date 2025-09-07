@@ -761,7 +761,7 @@ export default function AuthPage() {
                 </motion.div>
               </motion.div>
               <h3 className="text-5xl font-bold text-white mb-6">
-                Just <span className="text-transparent bg-clip-text bg-gradient-to-r from-electric-500 to-purple-500">Talk</span>. It Understands.
+                Just <span className="text-transparent bg-clip-text bg-gradient-to-r from-electric-500 to-purple-500">talk</span>. <span className="text-transparent bg-clip-text bg-gradient-to-r from-electric-500 to-purple-500">Velora</span> understands.
               </h3>
               <p className="text-2xl text-gray-300 max-w-4xl mx-auto leading-relaxed">
                 Speak naturally. <span className="text-green-400">"Remind me to call mom"</span> becomes a smart reminder. 
