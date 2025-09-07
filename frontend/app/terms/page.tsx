@@ -91,7 +91,6 @@ export default function TermsPage() {
                 </p>
               </div>
             </motion.div>
-          </div>
 
             <motion.div
               initial={{ opacity: 0, x: -20 }}
