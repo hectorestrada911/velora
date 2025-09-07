@@ -252,7 +252,7 @@ export default function AuthPage() {
               <div className="flex items-center space-x-4">
                 <button
                   onClick={() => setAuthMode('signup')}
-                  className="bg-electric-600 hover:bg-electric-700 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 hover:scale-105 flex items-center justify-center space-x-2"
+                  className="bg-gradient-to-r from-electric-500 to-purple-500 hover:from-electric-400 hover:to-purple-400 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 hover:scale-105 flex items-center justify-center space-x-2"
                 >
                   <span>Get Started</span>
                   <ArrowRight className="w-4 h-4" />
@@ -360,7 +360,7 @@ export default function AuthPage() {
             >
               <button
                 onClick={() => setAuthMode('signup')}
-                className="w-full bg-electric-600 hover:bg-electric-700 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 hover:scale-105 flex items-center justify-center space-x-2"
+                className="w-full bg-gradient-to-r from-electric-500 to-purple-500 hover:from-electric-400 hover:to-purple-400 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 hover:scale-105 flex items-center justify-center space-x-2"
               >
                 <span>Get Started</span>
                 <ArrowRight className="w-4 h-4" />
