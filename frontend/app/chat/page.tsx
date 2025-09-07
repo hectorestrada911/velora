@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Send, Mic, MicOff, Calendar, Bell, Settings, Plus, Sparkles, Brain, Clock, CheckCircle, History, Trash2, Upload, FileText, X, BarChart3, Menu } from 'lucide-react'
+import { Send, Mic, MicOff, Calendar, Bell, Settings, Plus, Sparkles, Brain, Clock, CheckCircle, History, Trash2, Upload, FileText, X, BarChart3, Menu, ChevronDown } from 'lucide-react'
 import { toast } from 'react-hot-toast'
 import { calendarService } from '@/lib/calendarService'
 import VoiceCommand from '@/components/VoiceCommand'
@@ -55,12 +55,30 @@ export default function ChatPage() {
   const [showMemoryDashboard, setShowMemoryDashboard] = useState(false)
   const [showMobileSidebar, setShowMobileSidebar] = useState(false)
   const [showSettings, setShowSettings] = useState(false)
+  const [showOrganizeMenu, setShowOrganizeMenu] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const handleNavigate = (path: string) => {
     window.location.href = path
   }
+
+  // Close dropdowns when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (showOrganizeMenu) {
+        setShowOrganizeMenu(false)
+      }
+    }
+
+    if (showOrganizeMenu) {
+      document.addEventListener('mousedown', handleClickOutside)
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [showOrganizeMenu])
 
   const voiceExamples = [
     "Schedule a meeting tomorrow at 3pm",
@@ -860,60 +878,86 @@ export default function ChatPage() {
               <Menu className="w-5 h-5" />
             </button>
 
-            {/* Desktop Navigation - Organized */}
-            <div className="hidden lg:flex items-center gap-1">
-              {/* Core Features */}
-              <div className="flex items-center gap-1 border-r border-gray-700 pr-2">
-                {user && (
-                  <button 
-                    onClick={() => setShowConversationHistory(!showConversationHistory)}
-                    className="p-2 text-gray-400 hover:text-white transition-colors duration-200 hover:bg-gray-800 rounded-lg"
-                    title="Conversation History"
-                  >
-                    <History className="w-4 h-4" />
-                  </button>
-                )}
+            {/* Desktop Navigation - Compact with Labels */}
+            <div className="hidden lg:flex items-center gap-3">
+              {/* Organize Dropdown */}
+              <div className="relative">
                 <button 
-                  onClick={() => window.location.href = '/calendar'}
-                  className="p-2 text-gray-400 hover:text-white transition-colors duration-200 hover:bg-gray-800 rounded-lg"
-                  title="Calendar"
+                  onClick={() => setShowOrganizeMenu(!showOrganizeMenu)}
+                  className="flex items-center gap-2 px-3 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-800 rounded-lg transition-colors"
+                  title="Calendar & Reminders"
                 >
                   <Calendar className="w-4 h-4" />
+                  <span>Organize</span>
+                  <ChevronDown className="w-3 h-3" />
                 </button>
-                <button 
-                  onClick={() => window.location.href = '/reminders'}
-                  className="p-2 text-gray-400 hover:text-white transition-colors duration-200 hover:bg-gray-800 rounded-lg"
-                  title="Reminders"
-                >
-                  <Bell className="w-4 h-4" />
-                </button>
+                
+                {/* Dropdown Menu */}
+                <AnimatePresence>
+                  {showOrganizeMenu && (
+                    <motion.div
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                      className="absolute top-full left-0 mt-1 w-48 bg-gray-800 border border-gray-700 rounded-lg shadow-lg z-50"
+                    >
+                      <div className="py-1">
+                        <button
+                          onClick={() => {
+                            window.location.href = '/calendar'
+                            setShowOrganizeMenu(false)
+                          }}
+                          className="w-full flex items-center gap-3 px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-700 transition-colors"
+                        >
+                          <Calendar className="w-4 h-4" />
+                          <span>Calendar</span>
+                        </button>
+                        <button
+                          onClick={() => {
+                            window.location.href = '/reminders'
+                            setShowOrganizeMenu(false)
+                          }}
+                          className="w-full flex items-center gap-3 px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-700 transition-colors"
+                        >
+                          <Bell className="w-4 h-4" />
+                          <span>Reminders</span>
+                        </button>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
 
-              {/* AI Features */}
-              <div className="flex items-center gap-1 border-r border-gray-700 pr-2">
+              {/* Memory */}
+              <button 
+                onClick={() => setShowMemoryDashboard(true)}
+                className="flex items-center gap-2 px-3 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-800 rounded-lg transition-colors"
+                title="Memory & Intelligence"
+              >
+                <Brain className="w-4 h-4" />
+                <span>Memory</span>
+              </button>
+
+              {/* History */}
+              {user && (
                 <button 
-                  onClick={() => setShowMemoryDashboard(true)}
-                  className="p-2 text-gray-400 hover:text-white transition-colors duration-200 hover:bg-gray-800 rounded-lg"
-                  title="Memory Intelligence"
+                  onClick={() => setShowConversationHistory(!showConversationHistory)}
+                  className="flex items-center gap-2 px-3 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-800 rounded-lg transition-colors"
+                  title="Chat History"
                 >
-                  <BarChart3 className="w-4 h-4" />
+                  <History className="w-4 h-4" />
+                  <span>History</span>
                 </button>
-                <button 
-                  onClick={() => window.location.href = '/memory'}
-                  className="p-2 text-gray-400 hover:text-white transition-colors duration-200 hover:bg-gray-800 rounded-lg"
-                  title="Memory Bank"
-                >
-                  <Brain className="w-4 h-4" />
-                </button>
-              </div>
+              )}
 
               {/* Settings */}
               <button 
                 onClick={() => setShowSettings(true)}
-                className="p-2 text-gray-400 hover:text-white transition-colors duration-200 hover:bg-gray-800 rounded-lg"
-                title="Settings"
+                className="flex items-center gap-2 px-3 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-800 rounded-lg transition-colors"
+                title="Settings & Account"
               >
                 <Settings className="w-4 h-4" />
+                <span>Settings</span>
               </button>
             </div>
           </div>
