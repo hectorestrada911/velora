@@ -605,7 +605,7 @@ export default function AuthPage() {
                 </motion.div>
                 <h4 className="text-xl font-bold text-white mb-4">Smart Connections</h4>
                 <p className="text-gray-300 text-base leading-relaxed">
-                  Velora connects your "client mentioned loving Italian food" note to your "upcoming dinner with the same client," automatically suggesting the perfect restaurant reservation. It also links "brilliant marketing idea during your morning run" to your "Q4 campaign planning meeting," ensuring no creative spark gets lost. Your AI even remembers "Sarah mentioned her daughter's birthday is next week" and proactively suggests gift ideas when you're shopping.
+                  Connects your thoughts automatically. No more lost ideas.
                 </p>
               </motion.div>
               
@@ -623,10 +623,9 @@ export default function AuthPage() {
                 >
                   <Shield className="w-8 h-8 text-purple-400" />
                 </motion.div>
-                <h4 className="text-xl font-bold text-white mb-4">Personal Facts</h4>
+                <h4 className="text-xl font-bold text-white mb-4">Never Forget</h4>
                 <p className="text-gray-300 text-base leading-relaxed">
-                  Your preferences, locations, and important details are stored securely. 
-                  Never lose track of what matters to you.
+                  Captures every thought. From shower ideas to meeting notes.
                 </p>
               </motion.div>
               
@@ -644,10 +643,9 @@ export default function AuthPage() {
                 >
                   <TrendingUp className="w-8 h-8 text-green-400" />
                 </motion.div>
-                <h4 className="text-xl font-bold text-white mb-4">Proactive Intelligence</h4>
+                <h4 className="text-xl font-bold text-white mb-4">Gets Smarter</h4>
                 <p className="text-gray-300 text-base leading-relaxed">
-                  Learns your patterns and suggests actions before you even think of them. 
-                  Your AI gets smarter every day.
+                  Learns your patterns. Suggests before you ask.
                 </p>
               </motion.div>
             </div>
@@ -1212,6 +1210,18 @@ export default function AuthPage() {
             </motion.div>
           </motion.div>
         </motion.div>
+        
+        {/* Footer */}
+        <footer className="bg-gray-900/50 border-t border-gray-800/50 py-8 mt-20">
+          <div className="max-w-6xl mx-auto px-4 text-center">
+            <div className="flex flex-col md:flex-row justify-center items-center space-y-4 md:space-y-0 md:space-x-8 text-sm text-gray-400">
+              <a href="#" className="hover:text-white transition-colors">Terms of Service</a>
+              <a href="#" className="hover:text-white transition-colors">Privacy Policy</a>
+              <a href="#" className="hover:text-white transition-colors">Contact</a>
+              <span>© 2024 Velora. All rights reserved.</span>
+            </div>
+          </div>
+        </footer>
       </div>
     )
   }
