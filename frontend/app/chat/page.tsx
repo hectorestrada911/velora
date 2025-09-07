@@ -83,24 +83,6 @@ export default function ChatPage() {
       text: 'Brainstorm ideas for the new marketing campaign',
       icon: <Brain className="w-4 h-4" />,
       category: 'general'
-    },
-    {
-      id: '5',
-      text: 'Click the microphone button below to use voice input',
-      icon: <Mic className="w-4 h-4" />,
-      category: 'voice'
-    },
-    {
-      id: '6',
-      text: 'Upload my resume and help me analyze it',
-      icon: <FileText className="w-4 h-4" />,
-      category: 'general'
-    },
-    {
-      id: '7',
-      text: 'Find my resume in my uploaded documents',
-      icon: <FileText className="w-4 h-4" />,
-      category: 'general'
     }
   ]
 
@@ -1098,7 +1080,7 @@ export default function ChatPage() {
                   }}
                   onKeyPress={handleKeyPress}
                   placeholder={isVoiceListening ? "🎤 Voice recording active..." : "Tell me what you need to remember, schedule, or organize..."}
-                  className={`w-full bg-gray-800 border rounded-xl px-3 sm:px-4 py-2.5 sm:py-3 text-white placeholder-gray-400 focus:outline-none focus:border-electric-500 focus:ring-1 focus:ring-electric-500 transition-all duration-200 resize-none text-sm sm:text-base ${
+                  className={`w-full bg-gray-800 border rounded-xl px-4 sm:px-5 py-3.5 sm:py-4 text-white placeholder-gray-400 focus:outline-none focus:border-electric-500 focus:ring-1 focus:ring-electric-500 transition-all duration-200 resize-none text-sm sm:text-base ${
                     isVoiceListening 
                       ? 'border-electric-500 ring-2 ring-electric-500/30 bg-electric-500/5' 
                       : hasUserInteracted && inputValue.trim()
@@ -1106,7 +1088,7 @@ export default function ChatPage() {
                       : 'border-gray-600'
                   }`}
                   rows={1}
-                  style={{ minHeight: '44px', maxHeight: '120px' }}
+                  style={{ minHeight: '56px', maxHeight: '140px' }}
                   disabled={isVoiceListening}
                 />
               </div>
@@ -1123,7 +1105,7 @@ export default function ChatPage() {
                 <button
                   onClick={() => fileInputRef.current?.click()}
                   disabled={isUploading}
-                  className="p-2.5 sm:p-3 bg-gray-800 hover:bg-gray-700 text-gray-400 hover:text-white border border-gray-600 rounded-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed min-w-[44px] min-h-[44px] flex items-center justify-center"
+                  className="p-3 sm:p-4 bg-gray-800 hover:bg-gray-700 text-gray-400 hover:text-white border border-gray-600 rounded-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed min-w-[56px] min-h-[56px] flex items-center justify-center"
                   title={isUploading ? "Uploading..." : "Upload Document"}
                 >
                   {isUploading ? (
@@ -1135,7 +1117,7 @@ export default function ChatPage() {
                 
                 <button
                   onClick={handleVoiceInput}
-                  className={`p-2.5 sm:p-3 rounded-xl transition-all duration-200 min-w-[44px] min-h-[44px] flex items-center justify-center ${
+                  className={`p-3 sm:p-4 rounded-xl transition-all duration-200 min-w-[56px] min-h-[56px] flex items-center justify-center ${
                     isVoiceListening
                       ? 'bg-red-600 hover:bg-red-700 text-white'
                       : isVoiceProcessing
@@ -1156,7 +1138,7 @@ export default function ChatPage() {
                 <button
                   onClick={handleSendMessage}
                   disabled={!inputValue.trim() || isLoading}
-                  className={`p-2.5 sm:p-3 bg-gradient-to-r from-electric-600 via-purple-600 to-electric-500 hover:from-electric-700 hover:via-purple-700 hover:to-electric-600 text-white rounded-xl transition-all duration-200 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 min-w-[44px] min-h-[44px] flex items-center justify-center ${
+                  className={`p-3 sm:p-4 bg-gradient-to-r from-electric-600 via-purple-600 to-electric-500 hover:from-electric-700 hover:via-purple-700 hover:to-electric-600 text-white rounded-xl transition-all duration-200 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 min-w-[56px] min-h-[56px] flex items-center justify-center ${
                     hasUserInteracted && inputValue.trim() && !isLoading
                       ? 'ring-2 ring-electric-500/50 shadow-lg shadow-electric-500/30'
                       : ''
