@@ -306,53 +306,81 @@ export default function AuthPage() {
             </div>
           </div>
 
-          {/* Mobile Layout - Centered */}
-          <div className="lg:hidden text-center max-w-md mx-auto mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4 leading-tight">
-              Never Forget Another<br />
-              <span className="text-electric-400">Thought Again</span>
-            </h2>
-            <p className="text-gray-300 text-base md:text-lg leading-relaxed">
-              Turn your thoughts into action. Never lose another brilliant idea again.
-            </p>
-          </div>
+          {/* Mobile Layout - Resend Style */}
+          <div className="lg:hidden text-center max-w-md mx-auto">
+            {/* Spinning Icon at Top */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.2 }}
+              className="mb-8 flex justify-center"
+            >
+              <motion.div
+                animate={{ rotate: -360 }}
+                transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
+                className="w-32 h-32 bg-gradient-to-br from-blue-500/20 to-purple-500/20 rounded-full flex items-center justify-center border border-blue-500/30"
+              >
+                <motion.div
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
+                  className="w-20 h-20 bg-gradient-to-br from-purple-500/20 to-yellow-500/20 rounded-full flex items-center justify-center border border-purple-500/30"
+                >
+                  <Brain className="w-10 h-10 text-electric-400" />
+                </motion.div>
+              </motion.div>
+            </motion.div>
 
-          {/* Feature Icons - Mobile */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.6 }}
-            className="lg:hidden grid grid-cols-2 md:grid-cols-4 gap-4 mb-8 w-full max-w-2xl mx-auto"
-          >
-            <div className="text-center">
-              <div className="w-12 h-12 md:w-16 md:h-16 bg-electric-600/20 rounded-full flex items-center justify-center mx-auto mb-2 border border-electric-500/30">
-                <Brain className="w-6 h-6 md:w-8 md:h-8 text-electric-400" />
-              </div>
-              <p className="text-electric-300 text-sm md:text-base font-medium">AI Memory</p>
-              <p className="text-gray-400 text-xs">Never forget again</p>
-            </div>
-            <div className="text-center">
-              <div className="w-12 h-12 md:w-16 md:h-16 bg-purple-600/20 rounded-full flex items-center justify-center mx-auto mb-2 border border-purple-500/30">
-                <Calendar className="w-6 h-6 md:w-8 md:h-8 text-purple-400" />
-              </div>
-              <p className="text-purple-300 text-sm md:text-base font-medium">Smart Calendar</p>
-              <p className="text-gray-400 text-xs">Auto-scheduling</p>
-            </div>
-            <div className="text-center">
-              <div className="w-12 h-12 md:w-16 md:h-16 bg-yellow-600/20 rounded-full flex items-center justify-center mx-auto mb-2 border border-yellow-500/30">
-                <Bell className="w-6 h-6 md:w-8 md:h-8 text-yellow-400" />
-              </div>
-              <p className="text-yellow-300 text-sm md:text-base font-medium">Smart Reminders</p>
-              <p className="text-gray-400 text-xs">Context-aware</p>
-            </div>
-            <div className="text-center">
-              <div className="w-12 h-12 md:w-16 md:h-16 bg-green-600/20 rounded-full flex items-center justify-center mx-auto mb-2 border border-green-500/30">
-                <Sparkles className="w-6 h-6 md:w-8 md:h-8 text-green-400" />
-              </div>
-              <p className="text-green-300 text-sm md:text-base font-medium">Voice Commands</p>
-              <p className="text-gray-400 text-xs">Hands-free</p>
-            </div>
-          </motion.div>
+            {/* Title */}
+            <motion.h2
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4 }}
+              className="text-3xl md:text-4xl font-bold text-white mb-4 leading-tight"
+            >
+              Never Forget Another<br />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-electric-500 to-purple-500">Thought Again</span>
+            </motion.h2>
+
+            {/* Subtitle */}
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.6 }}
+              className="text-gray-300 text-base md:text-lg leading-relaxed mb-8"
+            >
+              Turn your thoughts into action. Never lose another brilliant idea again.
+            </motion.p>
+
+            {/* CTA Buttons */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.8 }}
+              className="flex flex-col space-y-4"
+            >
+              <button
+                onClick={() => setAuthMode('signup')}
+                className="w-full bg-electric-600 hover:bg-electric-700 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 hover:scale-105 flex items-center justify-center space-x-2"
+              >
+                <span>Get Started</span>
+                <ArrowRight className="w-4 h-4" />
+              </button>
+              
+              <button
+                onClick={() => setAuthMode('login')}
+                className="w-full text-gray-400 hover:text-white font-medium py-3 px-6 transition-colors duration-200"
+              >
+                Sign In
+              </button>
+              
+              <button
+                onClick={handleTryDemo}
+                className="text-electric-500 hover:text-electric-400 font-medium py-2 px-4 transition-colors duration-200 text-sm"
+              >
+                Try Now
+              </button>
+            </motion.div>
+          </div>
         </motion.div>
         </div>
 
