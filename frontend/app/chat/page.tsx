@@ -676,7 +676,7 @@ export default function ChatPage() {
             content: inputValue,
             metadata: {
               crossReferences: crossReferenceService.findRelatedContent(inputValue).map(ref => ref.id),
-              memoryIds: relevantMemories.map(m => m.id)
+              memoryContent: relevantMemories
             }
           })
 
