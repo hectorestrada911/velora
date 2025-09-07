@@ -185,6 +185,9 @@ export default function ChatPage() {
     
     setIsLoadingConversations(true)
     try {
+      // Ensure firestoreService has the current user set
+      firestoreService.setCurrentUser(user)
+      
       const conversations = await firestoreService.getConversations()
       // Convert FirestoreConversation to Conversation format for compatibility
       const convertedConversations = conversations.map(conv => ({
@@ -231,6 +234,11 @@ export default function ChatPage() {
 
   const loadConversation = async (conversationId: string) => {
     try {
+      // Ensure firestoreService has the current user set
+      if (user) {
+        firestoreService.setCurrentUser(user)
+      }
+      
       const conversation = await firestoreService.getConversation(conversationId)
       if (conversation) {
         // Convert FirestoreMessage to Message format
@@ -263,6 +271,11 @@ export default function ChatPage() {
 
   const deleteConversation = async (conversationId: string) => {
     try {
+      // Ensure firestoreService has the current user set
+      if (user) {
+        firestoreService.setCurrentUser(user)
+      }
+      
       await firestoreService.deleteConversation(conversationId)
       await loadConversations()
       
@@ -705,21 +718,13 @@ export default function ChatPage() {
       // Save to Firestore if user is authenticated
       if (user) {
         try {
+          // Ensure firestoreService has the current user set
+          firestoreService.setCurrentUser(user)
+          
           // Create conversation if it doesn't exist
           let conversationId = currentConversationId
           if (!conversationId) {
-            // Create conversation with the first message
-            const initialMessages = [
-              {
-                id: Date.now().toString(),
-                type: 'user' as const,
-                content: inputValue,
-                timestamp: new Date(),
-                analysis: null
-              }
-            ]
-            conversationId = await conversationService.createConversation(
-              initialMessages,
+            conversationId = await firestoreService.createConversation(
               inputValue.length > 50 ? inputValue.substring(0, 50) + '...' : inputValue
             )
             setCurrentConversationId(conversationId)
