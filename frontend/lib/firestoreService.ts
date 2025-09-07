@@ -8,10 +8,12 @@ import {
   query, 
   where, 
   orderBy,
-  Timestamp 
+  Timestamp,
+  limit,
+  startAfter
 } from 'firebase/firestore'
 import { db } from './firebase'
-import { useAuth } from '@/components/providers/AuthProvider'
+import { User } from 'firebase/auth'
 
 export interface FirestoreEvent {
   id?: string
@@ -35,11 +37,53 @@ export interface FirestoreReminder {
   createdAt: Timestamp
 }
 
+export interface FirestoreConversation {
+  id?: string
+  userId: string
+  title: string
+  messages: FirestoreMessage[]
+  createdAt: Timestamp
+  updatedAt: Timestamp
+  isActive: boolean
+}
+
+export interface FirestoreMessage {
+  id?: string
+  role: 'user' | 'assistant'
+  content: string
+  timestamp: Timestamp
+  metadata?: {
+    suggestions?: string[]
+    crossReferences?: string[]
+    memoryIds?: string[]
+  }
+}
+
+export interface FirestoreMemory {
+  id?: string
+  userId: string
+  title: string
+  content: string
+  category: 'personal' | 'work' | 'project' | 'contact' | 'location' | 'other'
+  tags: string[]
+  createdAt: Timestamp
+  updatedAt: Timestamp
+  accessCount: number
+  lastAccessed: Timestamp
+}
+
 class FirestoreService {
+  private currentUser: User | null = null
+
+  setCurrentUser(user: User | null) {
+    this.currentUser = user
+  }
+
   private getUserId(): string {
-    // This will be called from components that have access to auth context
-    // For now, we'll use a placeholder - in real implementation, this should come from auth context
-    return 'current-user-id'
+    if (!this.currentUser) {
+      throw new Error('User not authenticated')
+    }
+    return this.currentUser.uid
   }
 
   // Events
@@ -182,6 +226,225 @@ class FirestoreService {
       await deleteDoc(reminderRef)
     } catch (error) {
       console.error('Error deleting reminder:', error)
+      throw error
+    }
+  }
+
+  // Conversations
+  async createConversation(title: string): Promise<string> {
+    try {
+      if (!db) {
+        throw new Error('Firebase not initialized')
+      }
+      
+      const conversationData: Omit<FirestoreConversation, 'id'> = {
+        userId: this.getUserId(),
+        title,
+        messages: [],
+        createdAt: Timestamp.now(),
+        updatedAt: Timestamp.now(),
+        isActive: true
+      }
+      
+      const docRef = await addDoc(collection(db!, 'conversations'), conversationData)
+      return docRef.id
+    } catch (error) {
+      console.error('Error creating conversation:', error)
+      throw error
+    }
+  }
+
+  async getConversations(): Promise<FirestoreConversation[]> {
+    try {
+      if (!db) {
+        throw new Error('Firebase not initialized')
+      }
+      
+      const q = query(
+        collection(db!, 'conversations'),
+        where('userId', '==', this.getUserId()),
+        orderBy('updatedAt', 'desc')
+      )
+      
+      const querySnapshot = await getDocs(q)
+      return querySnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      })) as FirestoreConversation[]
+    } catch (error) {
+      console.error('Error getting conversations:', error)
+      throw error
+    }
+  }
+
+  async addMessageToConversation(conversationId: string, message: Omit<FirestoreMessage, 'id' | 'timestamp'>): Promise<void> {
+    try {
+      if (!db) {
+        throw new Error('Firebase not initialized')
+      }
+      
+      const conversationRef = doc(db!, 'conversations', conversationId)
+      const conversationDoc = await getDocs(query(collection(db!, 'conversations'), where('__name__', '==', conversationId)))
+      
+      if (conversationDoc.empty) {
+        throw new Error('Conversation not found')
+      }
+      
+      const conversation = conversationDoc.docs[0].data() as FirestoreConversation
+      const newMessage: FirestoreMessage = {
+        ...message,
+        id: `msg_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+        timestamp: Timestamp.now()
+      }
+      
+      const updatedMessages = [...conversation.messages, newMessage]
+      
+      await updateDoc(conversationRef, {
+        messages: updatedMessages,
+        updatedAt: Timestamp.now()
+      })
+    } catch (error) {
+      console.error('Error adding message to conversation:', error)
+      throw error
+    }
+  }
+
+  async getConversation(conversationId: string): Promise<FirestoreConversation | null> {
+    try {
+      if (!db) {
+        throw new Error('Firebase not initialized')
+      }
+      
+      const q = query(
+        collection(db!, 'conversations'),
+        where('__name__', '==', conversationId),
+        where('userId', '==', this.getUserId())
+      )
+      
+      const querySnapshot = await getDocs(q)
+      if (querySnapshot.empty) {
+        return null
+      }
+      
+      const doc = querySnapshot.docs[0]
+      return {
+        id: doc.id,
+        ...doc.data()
+      } as FirestoreConversation
+    } catch (error) {
+      console.error('Error getting conversation:', error)
+      throw error
+    }
+  }
+
+  // Memories
+  async addMemory(memory: Omit<FirestoreMemory, 'id' | 'userId' | 'createdAt' | 'updatedAt' | 'accessCount' | 'lastAccessed'>): Promise<string> {
+    try {
+      if (!db) {
+        throw new Error('Firebase not initialized')
+      }
+      
+      const now = Timestamp.now()
+      const memoryData: Omit<FirestoreMemory, 'id'> = {
+        ...memory,
+        userId: this.getUserId(),
+        createdAt: now,
+        updatedAt: now,
+        accessCount: 0,
+        lastAccessed: now
+      }
+      
+      const docRef = await addDoc(collection(db!, 'memories'), memoryData)
+      return docRef.id
+    } catch (error) {
+      console.error('Error adding memory:', error)
+      throw error
+    }
+  }
+
+  async getMemories(): Promise<FirestoreMemory[]> {
+    try {
+      if (!db) {
+        throw new Error('Firebase not initialized')
+      }
+      
+      const q = query(
+        collection(db!, 'memories'),
+        where('userId', '==', this.getUserId()),
+        orderBy('updatedAt', 'desc')
+      )
+      
+      const querySnapshot = await getDocs(q)
+      return querySnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      })) as FirestoreMemory[]
+    } catch (error) {
+      console.error('Error getting memories:', error)
+      throw error
+    }
+  }
+
+  async searchMemories(query: string): Promise<FirestoreMemory[]> {
+    try {
+      if (!db) {
+        throw new Error('Firebase not initialized')
+      }
+      
+      // Note: Firestore doesn't support full-text search natively
+      // This is a basic implementation - for production, consider using Algolia or similar
+      const q = query(
+        collection(db!, 'memories'),
+        where('userId', '==', this.getUserId()),
+        orderBy('updatedAt', 'desc')
+      )
+      
+      const querySnapshot = await getDocs(q)
+      const allMemories = querySnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      })) as FirestoreMemory[]
+      
+      // Simple text search
+      const searchTerm = query.toLowerCase()
+      return allMemories.filter(memory => 
+        memory.title.toLowerCase().includes(searchTerm) ||
+        memory.content.toLowerCase().includes(searchTerm) ||
+        memory.tags.some(tag => tag.toLowerCase().includes(searchTerm))
+      )
+    } catch (error) {
+      console.error('Error searching memories:', error)
+      throw error
+    }
+  }
+
+  async updateMemory(memoryId: string, updates: Partial<FirestoreMemory>): Promise<void> {
+    try {
+      if (!db) {
+        throw new Error('Firebase not initialized')
+      }
+      
+      const memoryRef = doc(db!, 'memories', memoryId)
+      await updateDoc(memoryRef, {
+        ...updates,
+        updatedAt: Timestamp.now()
+      })
+    } catch (error) {
+      console.error('Error updating memory:', error)
+      throw error
+    }
+  }
+
+  async deleteMemory(memoryId: string): Promise<void> {
+    try {
+      if (!db) {
+        throw new Error('Firebase not initialized')
+      }
+      
+      const memoryRef = doc(db!, 'memories', memoryId)
+      await deleteDoc(memoryRef)
+    } catch (error) {
+      console.error('Error deleting memory:', error)
       throw error
     }
   }

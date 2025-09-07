@@ -3,6 +3,7 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react'
 import { User, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut as firebaseSignOut } from 'firebase/auth'
 import { auth } from '@/lib/firebase'
+import { firestoreService } from '@/lib/firestoreService'
 
 interface AuthContextType {
   user: User | null
@@ -38,6 +39,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
     
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setUser(user)
+      // Update FirestoreService with current user
+      firestoreService.setCurrentUser(user)
       setLoading(false)
     })
     

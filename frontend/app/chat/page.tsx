@@ -14,6 +14,7 @@ import { documentService, Document } from '@/lib/documentService'
 import { voiceService } from '@/lib/voiceService'
 import { crossReferenceService, SmartSuggestion, CrossReference } from '@/lib/crossReferenceService'
 import { memoryService } from '@/lib/memoryService'
+import { firestoreService, FirestoreConversation, FirestoreMessage } from '@/lib/firestoreService'
 import SmartSuggestions from '@/components/SmartSuggestions'
 
 
@@ -654,6 +655,42 @@ export default function ChatPage() {
         saveConversation(newMessages)
         return newMessages
       })
+
+      // Save to Firestore if user is authenticated
+      if (user) {
+        try {
+          // Create conversation if it doesn't exist
+          let conversationId = currentConversationId
+          if (!conversationId) {
+            conversationId = await firestoreService.createConversation(
+              inputValue.length > 50 ? inputValue.substring(0, 50) + '...' : inputValue
+            )
+            setCurrentConversationId(conversationId)
+          }
+
+          // Add user message to Firestore
+          await firestoreService.addMessageToConversation(conversationId, {
+            role: 'user',
+            content: inputValue,
+            metadata: {
+              crossReferences: crossReferenceService.findRelatedContent(inputValue).map(ref => ref.id),
+              memoryIds: allRelevantMemories.map(m => m.id)
+            }
+          })
+
+          // Add AI message to Firestore
+          await firestoreService.addMessageToConversation(conversationId, {
+            role: 'assistant',
+            content: aiMessage.content,
+            metadata: {
+              suggestions: analysis.followUpQuestions || []
+            }
+          })
+        } catch (firestoreError) {
+          console.error('Error saving to Firestore:', firestoreError)
+          // Don't show error to user, just log it
+        }
+      }
 
       // Add AI response to cross-reference system
       crossReferenceService.addCrossReference(
