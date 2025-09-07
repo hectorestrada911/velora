@@ -75,7 +75,7 @@ export default function MemoryDashboard({ onClose }: MemoryDashboardProps) {
           const recallResult = memoryService.recallInformation(scenario.userInput)
           const validation = validateMemoryCorrelation(
             scenario.userInput,
-            recallResult.memories.map(m => m.content),
+            recallResult.memories,
             scenario.expectedCorrelation
           )
           
