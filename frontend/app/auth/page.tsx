@@ -605,8 +605,7 @@ export default function AuthPage() {
                 </motion.div>
                 <h4 className="text-xl font-bold text-white mb-4">Smart Connections</h4>
                 <p className="text-gray-300 text-base leading-relaxed">
-                  "Remember I parked in section B" connects to "Meeting with Sarah at 3pm" 
-                  because you mentioned parking for the meeting.
+                  Velora connects your "client mentioned loving Italian food" note to your "upcoming dinner with the same client," automatically suggesting the perfect restaurant reservation. It also links "brilliant marketing idea during your morning run" to your "Q4 campaign planning meeting," ensuring no creative spark gets lost. Your AI even remembers "Sarah mentioned her daughter's birthday is next week" and proactively suggests gift ideas when you're shopping.
                 </p>
               </motion.div>
               
