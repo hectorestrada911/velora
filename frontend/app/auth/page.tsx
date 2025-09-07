@@ -249,29 +249,27 @@ export default function AuthPage() {
               </p>
               
               {/* Call-to-Action Buttons - Desktop */}
-              <div className="flex flex-col space-y-4">
-                <div className="flex space-x-4">
-                  <button
-                    onClick={() => setAuthMode('signup')}
-                    className="bg-electric-600 hover:bg-electric-700 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 hover:scale-105 flex items-center justify-center space-x-2"
-                  >
-                    <span>Get Started</span>
-                    <ArrowRight className="w-4 h-4" />
-                  </button>
-                  
-                  <button
-                    onClick={() => setAuthMode('login')}
-                    className="text-gray-400 hover:text-white font-medium py-3 px-6 transition-colors duration-200"
-                  >
-                    Sign In
-                  </button>
-                </div>
+              <div className="flex items-center space-x-4">
+                <button
+                  onClick={() => setAuthMode('signup')}
+                  className="bg-electric-600 hover:bg-electric-700 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 hover:scale-105 flex items-center justify-center space-x-2"
+                >
+                  <span>Get Started</span>
+                  <ArrowRight className="w-4 h-4" />
+                </button>
                 
                 <button
                   onClick={handleTryDemo}
-                  className="text-gray-400 hover:text-electric-400 font-medium py-2 px-4 transition-colors duration-200 text-sm mx-auto"
+                  className="text-electric-500 hover:text-electric-400 font-medium py-2 px-4 transition-colors duration-200 text-sm"
                 >
-                  Try Demo
+                  Try Now
+                </button>
+                
+                <button
+                  onClick={() => setAuthMode('login')}
+                  className="text-gray-400 hover:text-white font-medium py-3 px-6 transition-colors duration-200"
+                >
+                  Sign In
                 </button>
               </div>
             </div>
@@ -596,29 +594,29 @@ export default function AuthPage() {
           transition={{ delay: 0.8 }}
           className="w-full max-w-sm space-y-4"
         >
-          <div className="space-y-3">
+          <div className="flex flex-col sm:flex-row items-center space-y-3 sm:space-y-0 sm:space-x-4">
             <button
               onClick={() => setAuthMode('signup')}
-              className="w-full bg-electric-600 hover:bg-electric-700 text-white font-semibold py-3 md:py-4 px-6 rounded-lg transition-all duration-200 hover:scale-105 flex items-center justify-center space-x-2"
+              className="w-full sm:w-auto bg-electric-600 hover:bg-electric-700 text-white font-semibold py-3 md:py-4 px-6 rounded-lg transition-all duration-200 hover:scale-105 flex items-center justify-center space-x-2"
             >
               <span>Get Started</span>
               <ArrowRight className="w-4 h-4 md:w-5 md:h-5" />
             </button>
             
             <button
+              onClick={handleTryDemo}
+              className="text-electric-500 hover:text-electric-400 font-medium py-2 px-4 transition-colors duration-200 text-sm"
+            >
+              Try Now
+            </button>
+            
+            <button
               onClick={() => setAuthMode('login')}
-              className="w-full bg-gray-800 hover:bg-gray-700 text-white font-semibold py-3 md:py-4 px-6 rounded-lg transition-all duration-200 border border-gray-600 hover:border-gray-500"
+              className="w-full sm:w-auto bg-gray-800 hover:bg-gray-700 text-white font-semibold py-3 md:py-4 px-6 rounded-lg transition-all duration-200 border border-gray-600 hover:border-gray-500"
             >
               Sign In
             </button>
           </div>
-          
-          <button
-            onClick={handleTryDemo}
-            className="text-gray-400 hover:text-electric-400 font-medium py-2 px-4 transition-colors duration-200 text-sm mx-auto"
-          >
-            Try Demo
-          </button>
           
           <button
             onClick={handleSkip}
