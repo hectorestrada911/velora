@@ -20,6 +20,7 @@ export default function AuthPage() {
     name: ''
   })
   const [isLoading, setIsLoading] = useState(false)
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -50,6 +51,15 @@ export default function AuthPage() {
     
     // For now, redirect to chat page
     window.location.href = '/chat'
+  }
+
+  const handleTryDemo = () => {
+    // Redirect to chat page for demo
+    window.location.href = '/chat'
+  }
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen)
   }
 
   const handleResendPassword = () => {
@@ -93,23 +103,23 @@ export default function AuthPage() {
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="w-full flex justify-between items-center p-6 absolute top-0 left-0 z-10"
+          className="w-full flex justify-between items-center px-12 py-6 absolute top-0 left-0 z-10"
         >
           <motion.h1 
             animate={{ 
-              scale: [1, 1.05, 1],
+              scale: [1, 1.02, 1],
               textShadow: [
+                "0 0 20px rgba(59, 130, 246, 0.4)",
                 "0 0 30px rgba(59, 130, 246, 0.6)",
-                "0 0 50px rgba(59, 130, 246, 0.9)",
-                "0 0 30px rgba(59, 130, 246, 0.6)"
+                "0 0 20px rgba(59, 130, 246, 0.4)"
               ]
             }}
             transition={{ 
-              duration: 2.5, 
+              duration: 3, 
               repeat: Infinity, 
               ease: "easeInOut" 
             }}
-            className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-electric-500 via-purple-500 to-electric-600 bg-clip-text text-transparent"
+            className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-electric-500 via-purple-500 to-electric-600 bg-clip-text text-transparent"
           >
             Velora
           </motion.h1>
@@ -118,6 +128,7 @@ export default function AuthPage() {
           <motion.div 
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.95 }}
+            onClick={toggleMenu}
             className="w-10 h-10 flex flex-col justify-center space-y-1.5 cursor-pointer group"
           >
             <motion.div 
@@ -156,6 +167,66 @@ export default function AuthPage() {
           </motion.div>
         </motion.div>
 
+        {/* Dropdown Menu */}
+        {isMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            className="absolute top-16 right-6 bg-gray-900/95 backdrop-blur-sm border border-gray-700 rounded-lg shadow-xl z-20 min-w-[220px]"
+          >
+            <div className="p-2">
+              <div className="px-4 py-2 text-xs text-gray-400 uppercase tracking-wide border-b border-gray-700 mb-2">
+                Account
+              </div>
+              <button
+                onClick={() => {
+                  setAuthMode('signup')
+                  setIsMenuOpen(false)
+                }}
+                className="w-full text-left px-4 py-3 text-white hover:bg-gray-800 rounded-md transition-colors duration-200 flex items-center space-x-3"
+              >
+                <User className="w-4 h-4" />
+                <span>Sign Up</span>
+              </button>
+              <button
+                onClick={() => {
+                  setAuthMode('login')
+                  setIsMenuOpen(false)
+                }}
+                className="w-full text-left px-4 py-3 text-white hover:bg-gray-800 rounded-md transition-colors duration-200 flex items-center space-x-3"
+              >
+                <Lock className="w-4 h-4" />
+                <span>Sign In</span>
+              </button>
+              
+              <div className="px-4 py-2 text-xs text-gray-400 uppercase tracking-wide border-b border-gray-700 mb-2 mt-4">
+                Explore
+              </div>
+              <button
+                onClick={() => {
+                  handleTryDemo()
+                  setIsMenuOpen(false)
+                }}
+                className="w-full text-left px-4 py-3 text-electric-400 hover:bg-gray-800 rounded-md transition-colors duration-200 flex items-center space-x-3"
+              >
+                <Sparkles className="w-4 h-4" />
+                <span>Try Demo</span>
+              </button>
+              <button
+                onClick={() => {
+                  window.location.href = '/chat'
+                  setIsMenuOpen(false)
+                }}
+                className="w-full text-left px-4 py-3 text-white hover:bg-gray-800 rounded-md transition-colors duration-200 flex items-center space-x-3"
+              >
+                <Brain className="w-4 h-4" />
+                <span>Go to Chat</span>
+              </button>
+            </div>
+          </motion.div>
+        )}
+
         {/* Hero Section */}
         <div className="min-h-screen flex flex-col items-center justify-center p-6">
         {/* Main Content - Responsive Layout */}
@@ -178,20 +249,29 @@ export default function AuthPage() {
               </p>
               
               {/* Call-to-Action Buttons - Desktop */}
-              <div className="flex space-x-4">
-                <button
-                  onClick={() => setAuthMode('signup')}
-                  className="bg-electric-600 hover:bg-electric-700 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 hover:scale-105 flex items-center space-x-2"
-                >
-                  <span>Get Started</span>
-                  <ArrowRight className="w-4 h-4" />
-                </button>
+              <div className="flex flex-col space-y-4">
+                <div className="flex space-x-4">
+                  <button
+                    onClick={() => setAuthMode('signup')}
+                    className="bg-electric-600 hover:bg-electric-700 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 hover:scale-105 flex items-center justify-center space-x-2"
+                  >
+                    <span>Get Started</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </button>
+                  
+                  <button
+                    onClick={() => setAuthMode('login')}
+                    className="text-gray-400 hover:text-white font-medium py-3 px-6 transition-colors duration-200"
+                  >
+                    Sign In
+                  </button>
+                </div>
                 
                 <button
-                  onClick={() => setAuthMode('login')}
-                  className="text-gray-400 hover:text-white font-medium py-3 px-6 transition-colors duration-200"
+                  onClick={handleTryDemo}
+                  className="bg-gradient-to-r from-electric-500 to-purple-500 hover:from-electric-400 hover:to-purple-400 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 hover:scale-105 w-fit"
                 >
-                  Sign In
+                  Try Demo
                 </button>
               </div>
             </div>
@@ -514,21 +594,30 @@ export default function AuthPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.8 }}
-          className="w-full max-w-sm space-y-3"
+          className="w-full max-w-sm space-y-4"
         >
-          <button
-            onClick={() => setAuthMode('signup')}
-            className="w-full bg-electric-600 hover:bg-electric-700 text-white font-semibold py-3 md:py-4 px-6 rounded-lg transition-all duration-200 hover:scale-105 flex items-center justify-center space-x-2"
-          >
-            <span>Get Started</span>
-            <ArrowRight className="w-4 h-4 md:w-5 md:h-5" />
-          </button>
+          <div className="space-y-3">
+            <button
+              onClick={() => setAuthMode('signup')}
+              className="w-full bg-electric-600 hover:bg-electric-700 text-white font-semibold py-3 md:py-4 px-6 rounded-lg transition-all duration-200 hover:scale-105 flex items-center justify-center space-x-2"
+            >
+              <span>Get Started</span>
+              <ArrowRight className="w-4 h-4 md:w-5 md:h-5" />
+            </button>
+            
+            <button
+              onClick={() => setAuthMode('login')}
+              className="w-full bg-gray-800 hover:bg-gray-700 text-white font-semibold py-3 md:py-4 px-6 rounded-lg transition-all duration-200 border border-gray-600 hover:border-gray-500"
+            >
+              Sign In
+            </button>
+          </div>
           
           <button
-            onClick={() => setAuthMode('login')}
-            className="w-full bg-gray-800 hover:bg-gray-700 text-white font-semibold py-3 md:py-4 px-6 rounded-lg transition-all duration-200 border border-gray-600 hover:border-gray-500"
+            onClick={handleTryDemo}
+            className="w-full bg-gradient-to-r from-electric-500 to-purple-500 hover:from-electric-400 hover:to-purple-400 text-white font-semibold py-3 md:py-4 px-6 rounded-lg transition-all duration-200 hover:scale-105"
           >
-            Sign In
+            Try Demo
           </button>
           
           <button
