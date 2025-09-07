@@ -901,7 +901,6 @@ export default function AuthPage() {
               <motion.div
                 animate={{ 
                   scale: [1, 1.1, 1],
-                  rotate: [0, 360],
                   boxShadow: [
                     "0 0 40px rgba(59, 130, 246, 0.5)",
                     "0 0 80px rgba(59, 130, 246, 0.8)",
@@ -910,7 +909,6 @@ export default function AuthPage() {
                 }}
                 transition={{ 
                   scale: { duration: 4, repeat: Infinity },
-                  rotate: { duration: 10, repeat: Infinity, ease: "linear" },
                   boxShadow: { duration: 2, repeat: Infinity }
                 }}
                 className="w-32 h-32 bg-gradient-to-br from-electric-500/50 to-purple-500/50 rounded-full flex items-center justify-center border border-electric-500/70 backdrop-blur-sm mx-auto mb-8"
