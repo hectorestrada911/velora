@@ -257,23 +257,41 @@ class FirestoreService {
 
   async getConversations(): Promise<FirestoreConversation[]> {
     try {
+      console.log('getConversations: Starting, db exists:', !!db)
+      console.log('getConversations: Current user:', this.currentUser?.uid)
+      
       if (!db) {
+        console.error('getConversations: Firebase not initialized - db is null')
         throw new Error('Firebase not initialized')
       }
       
+      const userId = this.getUserId()
+      console.log('getConversations: User ID:', userId)
+      
       const q = query(
         collection(db!, 'conversations'),
-        where('userId', '==', this.getUserId()),
+        where('userId', '==', userId),
         orderBy('updatedAt', 'desc')
       )
       
+      console.log('getConversations: Executing query')
       const querySnapshot = await getDocs(q)
-      return querySnapshot.docs.map(doc => ({
+      console.log('getConversations: Query result:', querySnapshot.docs.length, 'documents')
+      
+      const conversations = querySnapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data()
       })) as FirestoreConversation[]
+      
+      console.log('getConversations: Returning', conversations.length, 'conversations')
+      return conversations
     } catch (error) {
-      console.error('Error getting conversations:', error)
+      console.error('getConversations: Error details:', {
+        error,
+        message: error.message,
+        code: error.code,
+        stack: error.stack
+      })
       throw error
     }
   }

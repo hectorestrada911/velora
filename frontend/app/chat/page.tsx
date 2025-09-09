@@ -181,14 +181,21 @@ export default function ChatPage() {
   }, [isVoiceListening, voiceExamples.length])
 
   const loadConversations = async () => {
-    if (!user) return
+    if (!user) {
+      console.log('loadConversations: No user, skipping')
+      return
+    }
     
+    console.log('loadConversations: Starting with user:', user.uid)
     setIsLoadingConversations(true)
     try {
       // Ensure firestoreService has the current user set
       firestoreService.setCurrentUser(user)
+      console.log('loadConversations: User set in firestoreService')
       
       const conversations = await firestoreService.getConversations()
+      console.log('loadConversations: Got conversations:', conversations.length)
+      
       // Convert FirestoreConversation to Conversation format for compatibility
       const convertedConversations = conversations.map(conv => ({
         id: conv.id!,
@@ -205,11 +212,20 @@ export default function ChatPage() {
         userId: conv.userId
       }))
       setConversations(convertedConversations)
+      console.log('loadConversations: Successfully loaded', convertedConversations.length, 'conversations')
     } catch (error) {
-      console.error('Error loading conversations:', error)
+      console.error('loadConversations: Error details:', {
+        error,
+        message: error instanceof Error ? error.message : String(error),
+        code: (error as any)?.code,
+        stack: error instanceof Error ? error.stack : undefined
+      })
       // Only show error toast if it's not a "no data" scenario
       if (ErrorHandler.shouldShowError(error, 'load-conversations')) {
+        console.log('loadConversations: Showing error toast')
         toast.error(ErrorHandler.getOperationErrorMessage('load-conversations', error))
+      } else {
+        console.log('loadConversations: Suppressing error (expected scenario)')
       }
     } finally {
       setIsLoadingConversations(false)
