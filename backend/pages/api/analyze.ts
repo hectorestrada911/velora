@@ -109,9 +109,11 @@ IMPORTANT: Ask natural, conversational questions that a helpful human assistant 
 6. **Calendar Event**: If applicable, suggest a calendar event with:
    - title, startTime, endTime, description
    - Set to null if you need more information first
+   - CREATE BOTH calendar event AND reminder for time-based activities (e.g., "eat sushi at 6pm" = calendar event + reminder)
 7. **Reminder**: If applicable, suggest a reminder with:
    - title, dueDate, priority, description
    - Set to null if you need more information first
+   - CREATE BOTH reminder AND calendar event for scheduled activities (e.g., "meeting at 3pm" = reminder + calendar event)
 8. **AI Response**: A context-aware response that:
    - Acknowledges the request with personal context when relevant
    - References previous conversations or memories when appropriate
@@ -129,6 +131,8 @@ IMPORTANT: Ask natural, conversational questions that a helpful human assistant 
     - "calendar" for scheduled events
     - "voice" for hands-free input
     - "cross-reference" for connecting information
+
+IMPORTANT: For time-based activities (e.g., "eat sushi at 6pm", "meeting at 3pm", "call John tomorrow"), create BOTH a calendar event AND a reminder. This gives users both a scheduled block of time AND a notification to remember the activity.
 
 Return ONLY valid JSON in this exact format:
 {
