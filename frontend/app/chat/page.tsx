@@ -704,6 +704,9 @@ export default function ChatPage() {
 
       const analysis = await response.json()
       
+      // Auto-create calendar events and reminders from AI analysis
+      await autoCreateFromMessage(analysis)
+      
       // Check if user is asking about documents
       const lowerInput = inputValue.toLowerCase()
       if (lowerInput.includes('find') && (lowerInput.includes('resume') || lowerInput.includes('document') || lowerInput.includes('file'))) {
