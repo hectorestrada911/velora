@@ -288,9 +288,9 @@ class FirestoreService {
     } catch (error) {
       console.error('getConversations: Error details:', {
         error,
-        message: error.message,
-        code: error.code,
-        stack: error.stack
+        message: error instanceof Error ? error.message : String(error),
+        code: (error as any)?.code,
+        stack: error instanceof Error ? error.stack : undefined
       })
       throw error
     }
