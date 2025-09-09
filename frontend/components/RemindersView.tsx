@@ -137,7 +137,7 @@ export default function RemindersView() {
         const updatedStored = storedReminders.map(r => 
           r.id === reminderId ? { ...r, deleted: true, deletedAt: updatedReminder.deletedAt } : r
         )
-        localStorage.setItem('velora_reminders', JSON.stringify(updatedStored))
+        localStorage.setItem('velora-reminders', JSON.stringify(updatedStored))
         
         await loadReminders()
         toast.success('Reminder moved to trash!')
@@ -174,7 +174,7 @@ export default function RemindersView() {
         const updatedStored = storedReminders.map(r => 
           r.id === id ? { ...r, completed: true, completedAt: updatedReminder.completedAt } : r
         )
-        localStorage.setItem('velora_reminders', JSON.stringify(updatedStored))
+        localStorage.setItem('velora-reminders', JSON.stringify(updatedStored))
         
         await loadReminders()
         toast.success('Reminder completed!')
@@ -202,7 +202,7 @@ export default function RemindersView() {
         const updatedStored = storedReminders.map(r => 
           r.id === id ? { ...r, completed: false, deleted: false, completedAt: undefined, deletedAt: undefined } : r
         )
-        localStorage.setItem('velora_reminders', JSON.stringify(updatedStored))
+        localStorage.setItem('velora-reminders', JSON.stringify(updatedStored))
         
         await loadReminders()
         toast.success('Reminder restored!')
