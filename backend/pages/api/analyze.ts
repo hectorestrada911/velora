@@ -52,7 +52,20 @@ ${relevantMemories.map((memory: string) => `- ${memory}`).join('\n')}`
 ${recallSuggestions.map((suggestion: string) => `- ${suggestion}`).join('\n')}`
     }
 
-    const fullContext = conversationContext + memoryContext + recallContext + (conversationContext || memoryContext || recallContext ? '\n\nCURRENT MESSAGE:' : '')
+    // Add current date context
+    const currentDate = new Date()
+    const dateContext = `\n\nCURRENT DATE & TIME: ${currentDate.toISOString()} (${currentDate.toLocaleDateString('en-US', { 
+      weekday: 'long', 
+      year: 'numeric', 
+      month: 'long', 
+      day: 'numeric' 
+    })} at ${currentDate.toLocaleTimeString('en-US', { 
+      hour: 'numeric', 
+      minute: '2-digit',
+      hour12: true 
+    })})`
+
+    const fullContext = dateContext + conversationContext + memoryContext + recallContext + (conversationContext || memoryContext || recallContext ? '\n\nCURRENT MESSAGE:' : '')
 
     // Comprehensive system prompt for AI analysis
     const systemPrompt = `You are Velora, an intelligent AI productivity assistant with deep understanding of the user's personal context and preferences. You have access to a comprehensive memory system and can actively recall information across conversations.
@@ -134,6 +147,18 @@ IMPORTANT: Ask natural, conversational questions that a helpful human assistant 
 
 IMPORTANT: For time-based activities (e.g., "eat sushi at 6pm", "meeting at 3pm", "call John tomorrow"), create BOTH a calendar event AND a reminder. This gives users both a scheduled block of time AND a notification to remember the activity.
 
+DATE PARSING: Use the CURRENT DATE & TIME context to understand relative dates:
+- "tomorrow" = next day from current date
+- "next week" = 7 days from current date  
+- "Friday" = next Friday from current date
+- Always convert relative dates to specific ISO dates (YYYY-MM-DDTHH:MM:SSZ)
+
+NAMING OPTIMIZATION: Create clear, descriptive names:
+- Calendar events: "Sushi Dinner" (not "eat sushi")
+- Reminders: "Go to sushi restaurant" (not "eat sushi")
+- Use proper capitalization and clear action words
+- Make titles searchable and professional
+
 Return ONLY valid JSON in this exact format:
 {
   "type": "task|meeting|reminder|note|other",
@@ -148,7 +173,7 @@ Return ONLY valid JSON in this exact format:
     "topics": ["Q4 deadline"]
   },
   "calendarEvent": {
-    "title": "Call John about Q4 deadline",
+    "title": "Q4 Deadline Discussion with John",
     "startTime": "2024-01-15T10:00:00Z",
     "endTime": "2024-01-15T11:00:00Z",
     "description": "Discuss Q4 deadline with John"
