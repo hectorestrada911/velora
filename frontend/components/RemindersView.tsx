@@ -321,17 +321,17 @@ export default function RemindersView() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background-secondary to-background-tertiary p-4">
+    <div className="min-h-screen bg-gradient-to-br from-background via-background-secondary to-background-tertiary p-3 md:p-4">
       <div className="max-w-6xl mx-auto">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-8">
-          <div>
+        {/* Header - Mobile Optimized */}
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6 md:mb-8 space-y-4 md:space-y-0">
+          <div className="flex-1">
             <motion.div
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="flex items-center space-x-4 mb-3"
+              className="flex items-center space-x-3 md:space-x-4 mb-2 md:mb-3"
             >
-              <h1 className="text-5xl md:text-6xl font-extrabold bg-gradient-to-r from-electric-400 via-purple-400 to-electric-500 bg-clip-text text-transparent leading-tight">
+              <h1 className="text-3xl md:text-5xl lg:text-6xl font-extrabold bg-gradient-to-r from-electric-400 via-purple-400 to-electric-500 bg-clip-text text-transparent leading-tight">
                 My Reminders
               </h1>
               {getPendingRemindersCount() > 0 && (
@@ -341,12 +341,12 @@ export default function RemindersView() {
                   transition={{ delay: 0.4, type: "spring", stiffness: 200 }}
                   className="relative"
                 >
-                  <Bell className="w-6 h-6 md:w-8 md:h-8 text-electric-400" />
+                  <Bell className="w-5 h-5 md:w-6 md:h-6 lg:w-8 lg:h-8 text-electric-400" />
                   <motion.div
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
                     transition={{ delay: 0.6, type: "spring", stiffness: 200 }}
-                    className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center"
+                    className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full w-4 h-4 md:w-5 md:h-5 flex items-center justify-center"
                   >
                     {getPendingRemindersCount()}
                   </motion.div>
@@ -357,7 +357,7 @@ export default function RemindersView() {
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
-              className="text-electric-300 text-xl md:text-2xl font-semibold"
+              className="text-electric-300 text-lg md:text-xl lg:text-2xl font-semibold"
             >
               Never miss an important task or deadline
             </motion.p>
@@ -368,19 +368,19 @@ export default function RemindersView() {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.2 }}
             onClick={() => setShowAddReminder(true)}
-            className="bg-gradient-to-r from-electric-600 via-purple-600 to-electric-500 hover:from-electric-700 hover:via-purple-700 hover:to-electric-600 text-white px-8 py-4 rounded-xl font-bold transition-all duration-200 hover:scale-105 hover:shadow-glow flex items-center space-x-3 shadow-lg"
+            className="bg-gradient-to-r from-electric-600 via-purple-600 to-electric-500 hover:from-electric-700 hover:via-purple-700 hover:to-electric-600 text-white px-6 md:px-8 py-3 md:py-4 rounded-xl font-bold transition-all duration-200 hover:scale-105 hover:shadow-glow flex items-center justify-center space-x-2 md:space-x-3 shadow-lg w-full md:w-auto touch-manipulation"
           >
-            <Plus className="w-6 h-6" />
+            <Plus className="w-5 h-5 md:w-6 md:h-6" />
             <span>Add Reminder</span>
           </motion.button>
         </div>
 
-        {/* Filter Tabs */}
+        {/* Filter Tabs - Mobile Optimized */}
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
-          className="flex space-x-3 mb-8"
+          className="flex flex-wrap gap-2 md:gap-3 mb-6 md:mb-8"
         >
           {[
             { key: 'all', label: 'All', count: reminders.filter(r => !r.deleted).length },
@@ -393,13 +393,15 @@ export default function RemindersView() {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => setFilter(tab.key as any)}
-              className={`px-6 py-3 rounded-xl font-semibold transition-all duration-200 ${
+              className={`px-4 md:px-6 py-2 md:py-3 rounded-lg md:rounded-xl font-semibold transition-all duration-200 text-sm md:text-base touch-manipulation ${
                 filter === tab.key
                   ? 'bg-gradient-to-r from-electric-600 via-purple-600 to-electric-500 text-white shadow-lg'
                   : 'bg-background-elevated text-gray-400 hover:text-white hover:bg-background-tertiary border border-gray-600'
               }`}
             >
-              {tab.label} ({tab.count})
+              <span className="hidden sm:inline">{tab.label}</span>
+              <span className="sm:hidden">{tab.label.slice(0, 3)}</span>
+              <span className="ml-1">({tab.count})</span>
             </motion.button>
           ))}
         </motion.div>
@@ -431,7 +433,7 @@ export default function RemindersView() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
                 whileHover={{ scale: 1.02, y: -2 }}
-                className={`bg-background-elevated rounded-2xl p-6 border transition-all duration-200 shadow-lg ${
+                className={`bg-background-elevated rounded-xl md:rounded-2xl p-4 md:p-6 border transition-all duration-200 shadow-lg ${
                   reminder.completed
                     ? 'border-gray-600 opacity-60'
                     : isOverdue(reminder.dueDate)
@@ -439,13 +441,13 @@ export default function RemindersView() {
                     : 'border-gray-700 hover:border-electric-500/30 hover:shadow-xl'
                 }`}
               >
-                <div className="flex items-start space-x-4">
+                <div className="flex items-start space-x-3 md:space-x-4">
                   {/* Priority Icon */}
-                  <div className={`w-12 h-12 rounded-xl flex items-center justify-center shadow-lg ${
+                  <div className={`w-10 h-10 md:w-12 md:h-12 rounded-lg md:rounded-xl flex items-center justify-center shadow-lg flex-shrink-0 ${
                     reminder.completed ? 'bg-gray-600' : 'bg-gradient-to-r from-electric-600 via-purple-600 to-electric-500'
                   }`}>
                     {reminder.completed ? (
-                      <CheckCircle className="w-6 h-6 text-white" />
+                      <CheckCircle className="w-5 h-5 md:w-6 md:h-6 text-white" />
                     ) : (
                       getPriorityIcon(reminder.priority)
                     )}
@@ -453,14 +455,14 @@ export default function RemindersView() {
                   
                   {/* Content */}
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-start justify-between mb-2">
-                      <h3 className={`font-semibold ${
+                    <div className="flex flex-col md:flex-row md:items-start md:justify-between mb-2 space-y-2 md:space-y-0">
+                      <h3 className={`font-semibold text-base md:text-lg ${
                         reminder.completed ? 'text-gray-500 line-through' : 'text-electric-400'
                       }`}>
                         {reminder.title}
                       </h3>
                       
-                      <div className="flex items-center space-x-2">
+                      <div className="flex items-center space-x-2 flex-wrap">
                         {(() => {
                           const categoryInfo = getCategoryInfo((reminder as any).category || 'personal')
                           const IconComponent = categoryInfo.icon
@@ -481,10 +483,10 @@ export default function RemindersView() {
                             whileHover={{ scale: 1.2 }}
                             whileTap={{ scale: 0.9 }}
                             onClick={() => handleRestoreReminder(reminder.id)}
-                            className="p-2 text-gray-400 hover:text-green-400 transition-all duration-200 bg-gray-500/10 hover:bg-green-500/20 rounded-lg"
+                            className="p-2 md:p-2 text-gray-400 hover:text-green-400 transition-all duration-200 bg-gray-500/10 hover:bg-green-500/20 rounded-lg touch-manipulation"
                             title="Restore reminder"
                           >
-                            <CheckCircle className="w-5 h-5" />
+                            <CheckCircle className="w-4 h-4 md:w-5 md:h-5" />
                           </motion.button>
                         ) : (
                           // Normal view - show complete/snooze/edit/delete buttons
@@ -493,13 +495,13 @@ export default function RemindersView() {
                               whileHover={{ scale: 1.2 }}
                               whileTap={{ scale: 0.9 }}
                               onClick={() => handleToggleComplete(reminder.id)}
-                              className={`p-2 rounded-lg transition-all duration-200 ${
+                              className={`p-2 md:p-2 rounded-lg transition-all duration-200 touch-manipulation ${
                                 reminder.completed
                                   ? 'text-green-400 hover:text-green-300 bg-green-500/10 hover:bg-green-500/20'
                                   : 'text-gray-400 hover:text-green-400 bg-gray-500/10 hover:bg-green-500/20'
                               }`}
                             >
-                              <CheckCircle className="w-5 h-5" />
+                              <CheckCircle className="w-4 h-4 md:w-5 md:h-5" />
                             </motion.button>
                             
                             {!reminder.completed && (
@@ -507,14 +509,14 @@ export default function RemindersView() {
                                 <motion.button 
                                   whileHover={{ scale: 1.2 }}
                                   whileTap={{ scale: 0.9 }}
-                                  className="p-2 text-gray-400 hover:text-yellow-400 transition-all duration-200 bg-gray-500/10 hover:bg-yellow-500/20 rounded-lg"
+                                  className="p-2 md:p-2 text-gray-400 hover:text-yellow-400 transition-all duration-200 bg-gray-500/10 hover:bg-yellow-500/20 rounded-lg touch-manipulation"
                                   title="Snooze options"
                                 >
-                                  <Clock className="w-5 h-5" />
+                                  <Clock className="w-4 h-4 md:w-5 md:h-5" />
                                 </motion.button>
                                 
-                                {/* Snooze Options Dropdown */}
-                                <div className="absolute right-0 top-full mt-1 w-32 bg-gray-800 border border-gray-600 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10">
+                                {/* Snooze Options Dropdown - Mobile Optimized */}
+                                <div className="absolute right-0 top-full mt-1 w-36 md:w-32 bg-gray-800 border border-gray-600 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10">
                                   <div className="py-1">
                                     {[
                                       { label: '5 min', minutes: 5 },
@@ -525,7 +527,7 @@ export default function RemindersView() {
                                       <button
                                         key={option.label}
                                         onClick={() => handleSnoozeReminder(reminder.id, option.minutes)}
-                                        className="w-full px-3 py-2 text-left text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition-colors duration-200"
+                                        className="w-full px-3 py-2 text-left text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition-colors duration-200 touch-manipulation"
                                       >
                                         {option.label}
                                       </button>
@@ -539,17 +541,17 @@ export default function RemindersView() {
                               whileHover={{ scale: 1.2 }}
                               whileTap={{ scale: 0.9 }}
                               onClick={() => handleEditReminder(reminder)}
-                              className="p-2 text-gray-400 hover:text-blue-400 transition-all duration-200 bg-gray-500/10 hover:bg-blue-500/20 rounded-lg">
-                              <Edit className="w-5 h-5" />
+                              className="p-2 md:p-2 text-gray-400 hover:text-blue-400 transition-all duration-200 bg-gray-500/10 hover:bg-blue-500/20 rounded-lg touch-manipulation">
+                              <Edit className="w-4 h-4 md:w-5 md:h-5" />
                             </motion.button>
                             
                             <motion.button 
                               whileHover={{ scale: 1.2 }}
                               whileTap={{ scale: 0.9 }}
                               onClick={() => handleDeleteReminder(reminder.id)}
-                              className="p-2 text-gray-400 hover:text-red-400 transition-all duration-200 bg-gray-500/10 hover:bg-red-500/20 rounded-lg"
+                              className="p-2 md:p-2 text-gray-400 hover:text-red-400 transition-all duration-200 bg-gray-500/10 hover:bg-red-500/20 rounded-lg touch-manipulation"
                             >
-                              <Trash2 className="w-5 h-5" />
+                              <Trash2 className="w-4 h-4 md:w-5 md:h-5" />
                             </motion.button>
                           </>
                         )}
@@ -585,32 +587,32 @@ export default function RemindersView() {
           )}
         </div>
 
-        {/* Add Reminder Modal */}
+        {/* Add Reminder Modal - Mobile Optimized */}
         <AnimatePresence>
           {showAddReminder && (
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50"
+              className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-3 md:p-4 z-50"
             >
               <motion.div
                 initial={{ scale: 0.9, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 exit={{ scale: 0.9, opacity: 0 }}
-                className="bg-background-elevated rounded-2xl p-6 w-full max-w-md border border-gray-700"
+                className="bg-background-elevated rounded-xl md:rounded-2xl p-4 md:p-6 w-full max-w-md max-h-[90vh] overflow-y-auto border border-gray-700"
               >
-                <div className="flex items-center justify-between mb-6">
-                  <h3 className="text-xl font-semibold text-electric-400">Add New Reminder</h3>
+                <div className="flex items-center justify-between mb-4 md:mb-6">
+                  <h3 className="text-lg md:text-xl font-semibold text-electric-400">Add New Reminder</h3>
                   <button
                     onClick={() => setShowAddReminder(false)}
-                    className="text-gray-400 hover:text-white transition-colors duration-200"
+                    className="text-gray-400 hover:text-white transition-colors duration-200 p-1 touch-manipulation"
                   >
                     <X className="w-5 h-5" />
                   </button>
                 </div>
                 
-                <form onSubmit={(e) => { e.preventDefault(); handleAddReminder(); }} className="space-y-4">
+                <form onSubmit={(e) => { e.preventDefault(); handleAddReminder(); }} className="space-y-3 md:space-y-4">
                   <div>
                     <label className="block text-gray-300 text-sm font-medium mb-2">
                       Reminder Title *
@@ -654,7 +656,7 @@ export default function RemindersView() {
                     </select>
                   </div>
 
-                  {/* Reminder Category */}
+                  {/* Reminder Category - Mobile Optimized */}
                   <div>
                     <label className="block text-gray-300 text-sm font-medium mb-2">
                       Category
@@ -676,26 +678,26 @@ export default function RemindersView() {
                             key={category.value}
                             type="button"
                             onClick={() => setNewReminder({ ...newReminder, category: category.value as any })}
-                            className={`flex items-center space-x-2 p-2 rounded-lg border transition-all duration-200 ${
+                            className={`flex items-center space-x-2 p-2 md:p-3 rounded-lg border transition-all duration-200 touch-manipulation ${
                               newReminder.category === category.value
                                 ? `${category.color} text-white border-transparent`
                                 : 'bg-background-tertiary text-gray-300 border-gray-600 hover:border-gray-500'
                             }`}
                           >
                             <IconComponent className="w-4 h-4" />
-                            <span className="text-sm font-medium">{category.label}</span>
+                            <span className="text-xs md:text-sm font-medium">{category.label}</span>
                           </button>
                         )
                       })}
                     </div>
                   </div>
 
-                  {/* Quick Reminder Templates */}
+                  {/* Quick Reminder Templates - Mobile Optimized */}
                   <div>
                     <label className="block text-gray-300 text-sm font-medium mb-2">
                       Quick Templates
                     </label>
-                    <div className="flex flex-wrap gap-2">
+                    <div className="grid grid-cols-2 md:flex md:flex-wrap gap-2">
                       {[
                         { title: 'Call mom', category: 'communication', priority: 'medium' },
                         { title: 'Buy groceries', category: 'shopping', priority: 'high' },
@@ -715,7 +717,7 @@ export default function RemindersView() {
                               priority: template.priority as any
                             })
                           }}
-                          className="px-3 py-2 bg-background-tertiary hover:bg-background-secondary text-gray-300 hover:text-white border border-gray-600 hover:border-electric-500 rounded-lg text-sm font-medium transition-all duration-200"
+                          className="px-3 py-2 bg-background-tertiary hover:bg-background-secondary text-gray-300 hover:text-white border border-gray-600 hover:border-electric-500 rounded-lg text-xs md:text-sm font-medium transition-all duration-200 touch-manipulation text-center"
                         >
                           {template.title}
                         </button>
@@ -736,17 +738,17 @@ export default function RemindersView() {
                     />
                   </div>
                   
-                  <div className="flex space-x-3 pt-4">
+                  <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-3 pt-4">
                     <button
                       type="button"
                       onClick={() => setShowAddReminder(false)}
-                      className="flex-1 bg-background-tertiary hover:bg-background-secondary text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 border border-gray-600"
+                      className="flex-1 bg-background-tertiary hover:bg-background-secondary text-white font-medium py-3 md:py-2 px-4 rounded-lg transition-colors duration-200 border border-gray-600 touch-manipulation"
                     >
                       Cancel
                     </button>
                     <button
                       type="submit"
-                      className="flex-1 bg-gradient-to-r from-electric-600 via-purple-600 to-electric-500 hover:from-electric-700 hover:via-purple-700 hover:to-electric-600 text-white font-medium py-2 px-4 rounded-lg transition-all duration-200 hover:scale-105"
+                      className="flex-1 bg-gradient-to-r from-electric-600 via-purple-600 to-electric-500 hover:from-electric-700 hover:via-purple-700 hover:to-electric-600 text-white font-medium py-3 md:py-2 px-4 rounded-lg transition-all duration-200 hover:scale-105 touch-manipulation"
                     >
                       Add Reminder
                     </button>
