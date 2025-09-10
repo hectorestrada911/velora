@@ -92,25 +92,25 @@ export default function ChatPage() {
   const suggestions: Suggestion[] = [
     {
       id: '1',
-      text: 'What section did I park my car in?',
+      text: 'Remind me to call my mom tomorrow at 2pm',
       icon: <Calendar className="w-4 h-4" />,
       category: 'smart-calendar'
     },
     {
       id: '2',
-      text: 'Set a reminder to text my friend back',
+      text: 'Remember that I prefer morning meetings',
       icon: <Brain className="w-4 h-4" />,
       category: 'memory'
     },
     {
       id: '3',
-      text: 'Help me optimize my daily schedule',
+      text: 'Schedule a dentist appointment for next Friday',
       icon: <CheckCircle className="w-4 h-4" />,
       category: 'productivity'
     },
     {
       id: '4',
-      text: 'Show me the password I saved for the work website',
+      text: 'What do I have planned for tomorrow?',
       icon: <History className="w-4 h-4" />,
       category: 'intelligence'
     }
