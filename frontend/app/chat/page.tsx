@@ -444,9 +444,25 @@ export default function ChatPage() {
     }, 100)
   }
 
-  const handleVoiceResult = (result: VoiceResult) => {
-    if (result.success) {
-      // Add a system message showing the voice command result
+  const handleVoiceResult = async (result: VoiceResult) => {
+    if (result.success && result.data?.transcript) {
+      // Process the voice transcript through AI instead of showing generic message
+      const transcript = result.data.transcript
+      
+      // Add user message with the transcript
+      const userMessage: Message = {
+        id: Date.now().toString(),
+        type: 'user',
+        content: transcript,
+        timestamp: new Date()
+      }
+      
+      setMessages(prev => [...prev, userMessage])
+      
+      // Process through AI (same as handleSendMessage but with transcript)
+      await processVoiceInputWithAI(transcript)
+    } else if (result.success) {
+      // Fallback for non-transcript results
       const voiceMessage: Message = {
         id: Date.now().toString(),
         type: 'ai',
@@ -464,6 +480,101 @@ export default function ChatPage() {
 
   const handleVoiceTranscript = (transcript: string) => {
     setCurrentTranscript(transcript)
+  }
+
+  const processVoiceInputWithAI = async (transcript: string) => {
+    // Show loading state
+    setIsLoading(true)
+    
+    try {
+      // Get relevant memories for context and recall information
+      const relevantMemories = memoryService.getContextualMemories(transcript)
+      const recallInfo = memoryService.recallInformation(transcript)
+      
+      // Get calendar events and reminders for context
+      const calendarEvents = calendarService.getStoredEvents()
+      const reminders = calendarService.getStoredReminders()
+      
+      // Combine general context with specific recall information
+      const allRelevantMemories = [...relevantMemories, ...recallInfo.memories]
+      
+      // Add calendar and reminder context
+      const calendarContext = calendarEvents.length > 0 ? 
+        `\n\nCALENDAR EVENTS:\n${calendarEvents.map(event => 
+          `- ${event.title} on ${new Date(event.startTime).toLocaleDateString()} at ${new Date(event.startTime).toLocaleTimeString()}`
+        ).join('\n')}` : ''
+      
+      const reminderContext = reminders.length > 0 ? 
+        `\n\nREMINDERS:\n${reminders.map(reminder => 
+          `- ${reminder.title} (Due: ${new Date(reminder.dueDate).toLocaleDateString()} at ${new Date(reminder.dueDate).toLocaleTimeString()})`
+        ).join('\n')}` : ''
+
+      // Prepare conversation history for context
+      const conversationHistory = messages.slice(-10) // Send last 10 messages for context
+      
+      // Call AI backend
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://velora-production.up.railway.app/api/analyze'
+      const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          content: transcript + calendarContext + reminderContext,
+          conversationHistory: conversationHistory,
+          relevantMemories: allRelevantMemories,
+          recallSuggestions: recallInfo.suggestions
+        }),
+      })
+
+      if (!response.ok) {
+        throw new Error('AI analysis failed')
+      }
+
+      const analysis = await response.json()
+      
+      // Auto-create calendar events and reminders from AI analysis
+      await autoCreateFromMessage(analysis)
+      
+      // Add AI response
+      const aiMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        type: 'ai',
+        content: analysis.aiResponse || `I've processed your voice input: "${transcript}"`,
+        timestamp: new Date(),
+        analysis: analysis
+      }
+
+      setMessages(prev => [...prev, aiMessage])
+      
+      // Save to Firestore
+      if (user && currentConversationId) {
+        const firestoreMessage: Omit<FirestoreMessage, 'id' | 'timestamp'> = {
+          role: 'assistant',
+          content: aiMessage.content,
+          metadata: {
+            suggestions: analysis.suggestions || [],
+            crossReferences: analysis.crossReferences || [],
+            memoryIds: analysis.memoryIds || [],
+            memoryContent: analysis.memoryContent || []
+          }
+        }
+        await firestoreService.addMessageToConversation(currentConversationId, firestoreMessage)
+      }
+      
+    } catch (error) {
+      console.error('Error processing voice input:', error)
+      const errorMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        type: 'ai',
+        content: 'Sorry, I had trouble processing your voice input. Please try again.',
+        timestamp: new Date()
+      }
+      setMessages(prev => [...prev, errorMessage])
+      toast.error('Failed to process voice input')
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   const handleVoiceInput = async () => {

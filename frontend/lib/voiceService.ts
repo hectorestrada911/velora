@@ -151,12 +151,19 @@ export class VoiceService {
           result = await this.handleNavigationCommand(command, transcript)
           break
         case 'query':
-          result = await this.handleQueryCommand(command, transcript)
+          // For queries, let the AI handle it instead of local processing
+          result = {
+            success: true,
+            message: 'Voice input processed!',
+            data: { transcript: transcript }
+          }
           break
         default:
+          // For unrecognized commands, let AI handle it
           result = {
-            success: false,
-            message: 'I didn\'t understand that command. Try saying "schedule a meeting" or "remind me to"'
+            success: true,
+            message: 'Voice input processed!',
+            data: { transcript: transcript }
           }
       }
 
