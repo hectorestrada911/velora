@@ -603,30 +603,26 @@ export default function ChatPage() {
         setCurrentVoiceTranscript('')
 
         const success = await voiceService.startListening(
-          (result: VoiceResult) => {
+          async (result: VoiceResult) => {
             setIsVoiceListening(false)
             setIsVoiceProcessing(false)
             
-            if (result.success) {
-              // Use the current transcript for the message
-              const transcriptText = currentVoiceTranscript || 'Voice command executed'
+            if (result.success && result.data?.transcript) {
+              // Process the voice transcript through AI instead of showing generic message
+              const transcript = result.data.transcript
               
-              // Add the voice input as a user message
+              // Add user message with the transcript
               const userMessage: Message = {
                 id: Date.now().toString(),
                 type: 'user',
-                content: transcriptText,
+                content: transcript,
                 timestamp: new Date()
               }
-
-              setMessages(prev => {
-                const newMessages = [...prev, userMessage]
-                // Messages are now saved directly via firestoreService.addMessageToConversation
-                return newMessages
-              })
-
-              // Process the voice command
-              handleSendMessage()
+              
+              setMessages(prev => [...prev, userMessage])
+              
+              // Process through AI (same as handleSendMessage but with transcript)
+              await processVoiceInputWithAI(transcript)
               toast.success('Voice input processed!')
             } else {
               toast.error(ErrorHandler.getOperationErrorMessage('voice-recognition', { message: result.message }))
@@ -666,33 +662,26 @@ export default function ChatPage() {
     setCurrentVoiceTranscript('')
 
     const success = await voiceService.startListening(
-      (result: VoiceResult) => {
+      async (result: VoiceResult) => {
         setIsVoiceListening(false)
         setIsVoiceProcessing(false)
         
-        if (result.success) {
-          // Use the current transcript for the message
-          const transcriptText = currentVoiceTranscript || 'Voice command executed'
+        if (result.success && result.data?.transcript) {
+          // Process the voice transcript through AI instead of showing generic message
+          const transcript = result.data.transcript
           
-          // Add the voice input as a user message
+          // Add user message with the transcript
           const userMessage: Message = {
             id: Date.now().toString(),
             type: 'user',
-            content: transcriptText,
+            content: transcript,
             timestamp: new Date()
           }
-
-          setMessages(prev => {
-            const newMessages = [...prev, userMessage]
-            // Messages are now saved directly via firestoreService.addMessageToConversation
-            return newMessages
-          })
-
-          // Set the input value and process the message
-          setInputValue(transcriptText)
-          setTimeout(() => {
-            handleSendMessage()
-          }, 100)
+          
+          setMessages(prev => [...prev, userMessage])
+          
+          // Process through AI (same as handleSendMessage but with transcript)
+          await processVoiceInputWithAI(transcript)
           
           setCurrentVoiceTranscript('')
           toast.success('Voice input processed!')
