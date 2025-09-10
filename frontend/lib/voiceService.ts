@@ -140,31 +140,11 @@ export class VoiceService {
     try {
       let result: VoiceResult
 
-      switch (command.type) {
-        case 'calendar':
-          result = await this.handleCalendarCommand(command, transcript)
-          break
-        case 'reminder':
-          result = await this.handleReminderCommand(command, transcript)
-          break
-        case 'navigation':
-          result = await this.handleNavigationCommand(command, transcript)
-          break
-        case 'query':
-          // For queries, let the AI handle it instead of local processing
-          result = {
-            success: true,
-            message: 'Voice input processed!',
-            data: { transcript: transcript }
-          }
-          break
-        default:
-          // For unrecognized commands, let AI handle it
-          result = {
-            success: true,
-            message: 'Voice input processed!',
-            data: { transcript: transcript }
-          }
+      // Send ALL voice commands to AI for intelligent processing
+      result = {
+        success: true,
+        message: 'Voice input processed!',
+        data: { transcript: transcript }
       }
 
       if (this.onResultCallback) {
