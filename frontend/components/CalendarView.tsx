@@ -23,6 +23,7 @@ export default function CalendarView() {
     location: '',
     category: 'personal' as 'work' | 'personal' | 'health' | 'social'
   })
+  const [loadingOperations, setLoadingOperations] = useState<Set<string>>(new Set())
 
   useEffect(() => {
     loadEvents()
@@ -143,6 +144,7 @@ export default function CalendarView() {
       return
     }
 
+    setLoadingOperations(prev => new Set(prev).add('add-event'))
     try {
       const event: CalendarEvent = {
         title: newEvent.title,
@@ -164,6 +166,12 @@ export default function CalendarView() {
     } catch (error) {
       console.error('Failed to add event:', error)
       toast.error(ErrorHandler.getOperationErrorMessage('save-event', error))
+    } finally {
+      setLoadingOperations(prev => {
+        const newSet = new Set(prev)
+        newSet.delete('add-event')
+        return newSet
+      })
     }
   }
 
@@ -186,6 +194,7 @@ export default function CalendarView() {
       return
     }
 
+    setLoadingOperations(prev => new Set(prev).add('update-event'))
     try {
       // Find the stored event to get its ID
       const storedEvents = calendarService.getStoredEvents()
@@ -223,10 +232,17 @@ export default function CalendarView() {
     } catch (error) {
       console.error('Failed to update event:', error)
       toast.error(ErrorHandler.getOperationErrorMessage('update-event', error))
+    } finally {
+      setLoadingOperations(prev => {
+        const newSet = new Set(prev)
+        newSet.delete('update-event')
+        return newSet
+      })
     }
   }
 
   const handleDeleteEvent = async (eventToDelete: CalendarEvent) => {
+    setLoadingOperations(prev => new Set(prev).add(`delete-${eventToDelete.title}`))
     try {
       // Find the event ID from stored events
       const storedEvents = calendarService.getStoredEvents()
@@ -251,6 +267,12 @@ export default function CalendarView() {
     } catch (error) {
       console.error('Failed to delete event:', error)
       toast.error(ErrorHandler.getOperationErrorMessage('delete-event', error))
+    } finally {
+      setLoadingOperations(prev => {
+        const newSet = new Set(prev)
+        newSet.delete(`delete-${eventToDelete.title}`)
+        return newSet
+      })
     }
   }
 
@@ -678,12 +700,13 @@ export default function CalendarView() {
                       <div className="flex space-x-2 ml-4">
                         <button 
                           onClick={() => handleEditEvent(event)}
-                          className="p-2 text-gray-400 hover:text-electric-400 transition-colors duration-200">
+                          className="p-2 text-gray-400 hover:text-electric-400 transition-colors duration-200 touch-manipulation">
                           <Edit className="w-4 h-4" />
                         </button>
                         <button 
                           onClick={() => handleDeleteEvent(event)}
-                          className="p-2 text-gray-400 hover:text-red-400 transition-colors duration-200">
+                          disabled={loadingOperations.has(`delete-${event.title}`)}
+                          className="p-2 text-gray-400 hover:text-red-400 transition-colors duration-200 touch-manipulation disabled:opacity-50 disabled:cursor-not-allowed">
                           <Trash2 className="w-4 h-4" />
                         </button>
                       </div>
@@ -812,12 +835,13 @@ export default function CalendarView() {
                       <div className="flex items-center space-x-2">
                         <button 
                           onClick={() => handleEditEvent(event)}
-                          className="p-2 text-gray-400 hover:text-blue-400 transition-colors duration-200">
+                          className="p-2 text-gray-400 hover:text-blue-400 transition-colors duration-200 touch-manipulation">
                           <Edit className="w-4 h-4" />
                         </button>
                         <button 
                           onClick={() => handleDeleteEvent(event)}
-                          className="p-2 text-gray-400 hover:text-red-400 transition-colors duration-200"
+                          disabled={loadingOperations.has(`delete-${event.title}`)}
+                          className="p-2 text-gray-400 hover:text-red-400 transition-colors duration-200 touch-manipulation disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                           <Trash2 className="w-4 h-4" />
                         </button>
@@ -957,6 +981,42 @@ export default function CalendarView() {
                     </div>
                   </div>
 
+                  {/* Event Templates */}
+                  <div>
+                    <label className="block text-gray-300 text-sm font-medium mb-2">
+                      Quick Templates
+                    </label>
+                    <div className="grid grid-cols-2 md:flex md:flex-wrap gap-2">
+                      {[
+                        { title: 'Team Meeting', category: 'work', duration: 60, description: 'Weekly team sync' },
+                        { title: 'Doctor Appointment', category: 'health', duration: 30, description: 'Medical checkup' },
+                        { title: 'Lunch with Friends', category: 'social', duration: 90, description: 'Catch up over lunch' },
+                        { title: 'Gym Session', category: 'health', duration: 60, description: 'Workout session' },
+                        { title: 'Project Review', category: 'work', duration: 120, description: 'Review project progress' },
+                        { title: 'Date Night', category: 'personal', duration: 180, description: 'Romantic dinner' }
+                      ].map((template) => (
+                        <button
+                          key={template.title}
+                          type="button"
+                          onClick={() => {
+                            const startDate = new Date(newEvent.startTime || new Date())
+                            const endDate = new Date(startDate.getTime() + template.duration * 60000)
+                            setNewEvent({
+                              ...newEvent,
+                              title: template.title,
+                              category: template.category as any,
+                              description: template.description,
+                              endTime: endDate.toISOString().slice(0, 16)
+                            })
+                          }}
+                          className="px-3 py-2 bg-background-tertiary hover:bg-background-secondary text-gray-300 hover:text-white border border-gray-600 hover:border-electric-500 rounded-lg text-xs md:text-sm font-medium transition-all duration-200 touch-manipulation text-center"
+                        >
+                          {template.title}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
                   {/* Duration Presets */}
                   <div>
                     <label className="block text-gray-300 text-sm font-medium mb-2">
@@ -994,7 +1054,7 @@ export default function CalendarView() {
                               })
                             }
                           }}
-                          className="px-3 py-2 bg-background-tertiary hover:bg-background-secondary text-gray-300 hover:text-white border border-gray-600 hover:border-electric-500 rounded-lg text-sm font-medium transition-all duration-200"
+                          className="px-3 py-2 bg-background-tertiary hover:bg-background-secondary text-gray-300 hover:text-white border border-gray-600 hover:border-electric-500 rounded-lg text-sm font-medium transition-all duration-200 touch-manipulation"
                         >
                           {preset.label}
                         </button>
@@ -1002,19 +1062,20 @@ export default function CalendarView() {
                     </div>
                   </div>
                   
-                  <div className="flex space-x-3 pt-4">
+                  <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-3 pt-4">
                     <button
                       type="button"
                       onClick={() => setShowAddEvent(false)}
-                      className="flex-1 bg-background-tertiary hover:bg-background-secondary text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 border border-gray-600"
+                      className="flex-1 bg-background-tertiary hover:bg-background-secondary text-white font-medium py-3 md:py-2 px-4 rounded-lg transition-colors duration-200 border border-gray-600 touch-manipulation"
                     >
                       Cancel
                     </button>
                     <button
                       type="submit"
-                      className="flex-1 bg-gradient-to-r from-electric-600 via-purple-600 to-electric-500 hover:from-electric-700 hover:via-purple-700 hover:to-electric-600 text-white font-medium py-2 px-4 rounded-lg transition-all duration-200 hover:scale-105"
+                      disabled={loadingOperations.has('add-event')}
+                      className="flex-1 bg-gradient-to-r from-electric-600 via-purple-600 to-electric-500 hover:from-electric-700 hover:via-purple-700 hover:to-electric-600 text-white font-medium py-3 md:py-2 px-4 rounded-lg transition-all duration-200 hover:scale-105 touch-manipulation disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
                     >
-                      Add Event
+                      {loadingOperations.has('add-event') ? 'Adding...' : 'Add Event'}
                     </button>
                   </div>
                 </form>
