@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Calendar, Clock, MapPin, User, Plus, ChevronLeft, ChevronRight, X, Edit, Trash2, Bell } from 'lucide-react'
+import { Calendar, Clock, MapPin, User, Plus, ChevronLeft, ChevronRight, X, Edit, Trash2, Bell, Briefcase, Heart, Dumbbell, Users, Tag } from 'lucide-react'
 import { calendarService, CalendarEvent } from '@/lib/calendarService'
 import { toast } from 'react-hot-toast'
 import { ErrorHandler } from '@/lib/errorHandler'
@@ -20,7 +20,8 @@ export default function CalendarView() {
     startTime: '',
     endTime: '',
     description: '',
-    location: ''
+    location: '',
+    category: 'personal' as 'work' | 'personal' | 'health' | 'social'
   })
 
   useEffect(() => {
@@ -155,7 +156,7 @@ export default function CalendarView() {
       if (success) {
         await loadEvents() // Reload events from storage
         setShowAddEvent(false)
-        setNewEvent({ title: '', startTime: '', endTime: '', description: '', location: '' })
+        setNewEvent({ title: '', startTime: '', endTime: '', description: '', location: '', category: 'personal' })
         toast.success('Event added successfully!')
       } else {
         toast.error('Failed to add event')
@@ -173,7 +174,8 @@ export default function CalendarView() {
       startTime: event.startTime.toISOString().slice(0, 16), // Format for datetime-local input
       endTime: event.endTime.toISOString().slice(0, 16),
       description: event.description || '',
-      location: event.location || ''
+      location: event.location || '',
+      category: (event as any).category || 'personal'
     })
     setShowEditEvent(true)
   }
@@ -210,7 +212,7 @@ export default function CalendarView() {
           await loadEvents() // Reload from storage
           setShowEditEvent(false)
           setEditingEvent(null)
-          setNewEvent({ title: '', startTime: '', endTime: '', description: '', location: '' })
+          setNewEvent({ title: '', startTime: '', endTime: '', description: '', location: '', category: 'personal' })
           toast.success('Event updated successfully!')
         } else {
           toast.error('Failed to update event')
@@ -254,6 +256,16 @@ export default function CalendarView() {
 
   const formatTime = (date: Date) => {
     return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+  }
+
+  const getCategoryInfo = (category: string) => {
+    const categories = {
+      work: { icon: Briefcase, color: 'bg-blue-600', textColor: 'text-blue-400' },
+      personal: { icon: Heart, color: 'bg-pink-600', textColor: 'text-pink-400' },
+      health: { icon: Dumbbell, color: 'bg-green-600', textColor: 'text-green-400' },
+      social: { icon: Users, color: 'bg-purple-600', textColor: 'text-purple-400' }
+    }
+    return categories[category as keyof typeof categories] || categories.personal
   }
 
   const days = getDaysInMonth(currentDate)
@@ -476,18 +488,21 @@ export default function CalendarView() {
                           
                           {/* Desktop: Show event titles */}
                           <div className="hidden md:block space-y-1">
-                            {getEventsForDate(day).slice(0, 2).map((event, eventIndex) => (
-                              <motion.div
-                                key={eventIndex}
-                                initial={{ opacity: 0, scale: 0.8 }}
-                                animate={{ opacity: 1, scale: 1 }}
-                                transition={{ delay: eventIndex * 0.1 }}
-                                className="text-xs p-1 bg-gradient-to-r from-electric-600/30 to-purple-600/30 text-white rounded-md truncate border border-electric-500/20 shadow-sm"
-                                title={event.title}
-                              >
-                                {event.title}
-                              </motion.div>
-                            ))}
+                            {getEventsForDate(day).slice(0, 2).map((event, eventIndex) => {
+                              const categoryInfo = getCategoryInfo((event as any).category || 'personal')
+                              return (
+                                <motion.div
+                                  key={eventIndex}
+                                  initial={{ opacity: 0, scale: 0.8 }}
+                                  animate={{ opacity: 1, scale: 1 }}
+                                  transition={{ delay: eventIndex * 0.1 }}
+                                  className={`text-xs p-1 text-white rounded-md truncate border shadow-sm ${categoryInfo.color}/30 border-${categoryInfo.color.replace('bg-', '')}/20`}
+                                  title={event.title}
+                                >
+                                  {event.title}
+                                </motion.div>
+                              )
+                            })}
                             {getEventsForDate(day).length > 2 && (
                               <div className="text-xs text-gray-400 text-center bg-gray-700/50 rounded-md p-1">
                                 +{getEventsForDate(day).length - 2} more
@@ -550,24 +565,27 @@ export default function CalendarView() {
                     
                     {/* Events for this day */}
                     <div className="space-y-2">
-                      {getEventsForDate(day).map((event, eventIndex) => (
-                        <motion.div
-                          key={eventIndex}
-                          initial={{ opacity: 0, x: -20 }}
-                          animate={{ opacity: 1, x: 0 }}
-                          transition={{ delay: eventIndex * 0.1 }}
-                          className="p-2 bg-gradient-to-r from-electric-600/30 to-purple-600/30 text-white rounded-lg border border-electric-500/20"
-                        >
-                          <div className="font-medium text-sm">{event.title}</div>
-                          <div className="text-xs text-gray-300 mt-1">
-                            {new Date(event.startTime).toLocaleTimeString('en-US', { 
-                              hour: 'numeric', 
-                              minute: '2-digit',
-                              hour12: true 
-                            })}
-                          </div>
-                        </motion.div>
-                      ))}
+                      {getEventsForDate(day).map((event, eventIndex) => {
+                        const categoryInfo = getCategoryInfo((event as any).category || 'personal')
+                        return (
+                          <motion.div
+                            key={eventIndex}
+                            initial={{ opacity: 0, x: -20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ delay: eventIndex * 0.1 }}
+                            className={`p-2 text-white rounded-lg border ${categoryInfo.color}/30 border-${categoryInfo.color.replace('bg-', '')}/20`}
+                          >
+                            <div className="font-medium text-sm">{event.title}</div>
+                            <div className="text-xs text-gray-300 mt-1">
+                              {new Date(event.startTime).toLocaleTimeString('en-US', { 
+                                hour: 'numeric', 
+                                minute: '2-digit',
+                                hour12: true 
+                              })}
+                            </div>
+                          </motion.div>
+                        )
+                      })}
                       {getEventsForDate(day).length === 0 && (
                         <div className="text-gray-400 text-center py-2 text-sm">
                           No events
@@ -615,7 +633,19 @@ export default function CalendarView() {
                   >
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
-                        <h4 className="font-bold text-white text-lg mb-2">{event.title}</h4>
+                        <div className="flex items-center space-x-2 mb-2">
+                          <h4 className="font-bold text-white text-lg">{event.title}</h4>
+                          {(() => {
+                            const categoryInfo = getCategoryInfo((event as any).category || 'personal')
+                            const IconComponent = categoryInfo.icon
+                            return (
+                              <div className={`flex items-center space-x-1 px-2 py-1 rounded-full ${categoryInfo.color} text-white text-xs`}>
+                                <IconComponent className="w-3 h-3" />
+                                <span className="capitalize">{(event as any).category || 'personal'}</span>
+                              </div>
+                            )
+                          })()}
+                        </div>
                         <div className="space-y-2 text-sm text-gray-300">
                           <div className="flex items-center space-x-2">
                             <Clock className="w-4 h-4 text-electric-400" />
@@ -713,7 +743,8 @@ export default function CalendarView() {
                       startTime: selectedDate.toISOString().slice(0, 16),
                       endTime: selectedDate.toISOString().slice(0, 16),
                       description: '',
-                      location: ''
+                      location: '',
+                      category: 'personal'
                     })
                     setShowAddEvent(true)
                   }}
@@ -747,7 +778,19 @@ export default function CalendarView() {
                   >
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
-                        <h4 className="text-electric-400 font-semibold mb-2">{event.title}</h4>
+                        <div className="flex items-center space-x-2 mb-2">
+                          <h4 className="text-electric-400 font-semibold">{event.title}</h4>
+                          {(() => {
+                            const categoryInfo = getCategoryInfo((event as any).category || 'personal')
+                            const IconComponent = categoryInfo.icon
+                            return (
+                              <div className={`flex items-center space-x-1 px-2 py-1 rounded-full ${categoryInfo.color} text-white text-xs`}>
+                                <IconComponent className="w-3 h-3" />
+                                <span className="capitalize">{(event as any).category || 'personal'}</span>
+                              </div>
+                            )
+                          })()}
+                        </div>
                         {event.description && (
                           <p className="text-gray-300 text-sm mb-2">{event.description}</p>
                         )}
@@ -881,6 +924,83 @@ export default function CalendarView() {
                       placeholder="Enter event location"
                     />
                   </div>
+
+                  {/* Event Category */}
+                  <div>
+                    <label className="block text-gray-300 text-sm font-medium mb-2">
+                      Category
+                    </label>
+                    <div className="grid grid-cols-2 gap-2">
+                      {[
+                        { value: 'work', label: 'Work', icon: Briefcase, color: 'bg-blue-600' },
+                        { value: 'personal', label: 'Personal', icon: Heart, color: 'bg-pink-600' },
+                        { value: 'health', label: 'Health', icon: Dumbbell, color: 'bg-green-600' },
+                        { value: 'social', label: 'Social', icon: Users, color: 'bg-purple-600' }
+                      ].map((category) => {
+                        const IconComponent = category.icon
+                        return (
+                          <button
+                            key={category.value}
+                            type="button"
+                            onClick={() => setNewEvent({ ...newEvent, category: category.value as any })}
+                            className={`flex items-center space-x-2 p-3 rounded-lg border transition-all duration-200 ${
+                              newEvent.category === category.value
+                                ? `${category.color} text-white border-transparent`
+                                : 'bg-background-tertiary text-gray-300 border-gray-600 hover:border-gray-500'
+                            }`}
+                          >
+                            <IconComponent className="w-4 h-4" />
+                            <span className="text-sm font-medium">{category.label}</span>
+                          </button>
+                        )
+                      })}
+                    </div>
+                  </div>
+
+                  {/* Duration Presets */}
+                  <div>
+                    <label className="block text-gray-300 text-sm font-medium mb-2">
+                      Quick Duration
+                    </label>
+                    <div className="flex flex-wrap gap-2">
+                      {[
+                        { label: '15 min', minutes: 15 },
+                        { label: '30 min', minutes: 30 },
+                        { label: '1 hour', minutes: 60 },
+                        { label: '2 hours', minutes: 120 },
+                        { label: 'All day', minutes: 0 }
+                      ].map((preset) => (
+                        <button
+                          key={preset.label}
+                          type="button"
+                          onClick={() => {
+                            if (preset.minutes === 0) {
+                              // All day event
+                              const startDate = new Date(newEvent.startTime)
+                              const endDate = new Date(startDate)
+                              endDate.setDate(endDate.getDate() + 1)
+                              setNewEvent({
+                                ...newEvent,
+                                startTime: startDate.toISOString().slice(0, 16),
+                                endTime: endDate.toISOString().slice(0, 16)
+                              })
+                            } else {
+                              // Set end time based on start time + duration
+                              const startDate = new Date(newEvent.startTime)
+                              const endDate = new Date(startDate.getTime() + preset.minutes * 60000)
+                              setNewEvent({
+                                ...newEvent,
+                                endTime: endDate.toISOString().slice(0, 16)
+                              })
+                            }
+                          }}
+                          className="px-3 py-2 bg-background-tertiary hover:bg-background-secondary text-gray-300 hover:text-white border border-gray-600 hover:border-electric-500 rounded-lg text-sm font-medium transition-all duration-200"
+                        >
+                          {preset.label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
                   
                   <div className="flex space-x-3 pt-4">
                     <button
@@ -924,7 +1044,7 @@ export default function CalendarView() {
                     onClick={() => {
                       setShowEditEvent(false)
                       setEditingEvent(null)
-                      setNewEvent({ title: '', startTime: '', endTime: '', description: '', location: '' })
+                      setNewEvent({ title: '', startTime: '', endTime: '', description: '', location: '', category: 'personal' })
                     }}
                     className="text-gray-400 hover:text-white transition-colors duration-200"
                   >
@@ -988,13 +1108,90 @@ export default function CalendarView() {
                     />
                   </div>
 
+                  {/* Event Category */}
+                  <div>
+                    <label className="block text-gray-300 text-sm font-medium mb-2">
+                      Category
+                    </label>
+                    <div className="grid grid-cols-2 gap-2">
+                      {[
+                        { value: 'work', label: 'Work', icon: Briefcase, color: 'bg-blue-600' },
+                        { value: 'personal', label: 'Personal', icon: Heart, color: 'bg-pink-600' },
+                        { value: 'health', label: 'Health', icon: Dumbbell, color: 'bg-green-600' },
+                        { value: 'social', label: 'Social', icon: Users, color: 'bg-purple-600' }
+                      ].map((category) => {
+                        const IconComponent = category.icon
+                        return (
+                          <button
+                            key={category.value}
+                            type="button"
+                            onClick={() => setNewEvent({ ...newEvent, category: category.value as any })}
+                            className={`flex items-center space-x-2 p-3 rounded-lg border transition-all duration-200 ${
+                              newEvent.category === category.value
+                                ? `${category.color} text-white border-transparent`
+                                : 'bg-gray-800 text-gray-300 border-gray-600 hover:border-gray-500'
+                            }`}
+                          >
+                            <IconComponent className="w-4 h-4" />
+                            <span className="text-sm font-medium">{category.label}</span>
+                          </button>
+                        )
+                      })}
+                    </div>
+                  </div>
+
+                  {/* Duration Presets */}
+                  <div>
+                    <label className="block text-gray-300 text-sm font-medium mb-2">
+                      Quick Duration
+                    </label>
+                    <div className="flex flex-wrap gap-2">
+                      {[
+                        { label: '15 min', minutes: 15 },
+                        { label: '30 min', minutes: 30 },
+                        { label: '1 hour', minutes: 60 },
+                        { label: '2 hours', minutes: 120 },
+                        { label: 'All day', minutes: 0 }
+                      ].map((preset) => (
+                        <button
+                          key={preset.label}
+                          type="button"
+                          onClick={() => {
+                            if (preset.minutes === 0) {
+                              // All day event
+                              const startDate = new Date(newEvent.startTime)
+                              const endDate = new Date(startDate)
+                              endDate.setDate(endDate.getDate() + 1)
+                              setNewEvent({
+                                ...newEvent,
+                                startTime: startDate.toISOString().slice(0, 16),
+                                endTime: endDate.toISOString().slice(0, 16)
+                              })
+                            } else {
+                              // Set end time based on start time + duration
+                              const startDate = new Date(newEvent.startTime)
+                              const endDate = new Date(startDate.getTime() + preset.minutes * 60000)
+                              setNewEvent({
+                                ...newEvent,
+                                endTime: endDate.toISOString().slice(0, 16)
+                              })
+                            }
+                          }}
+                          className="px-3 py-2 bg-gray-800 hover:bg-gray-700 text-gray-300 hover:text-white border border-gray-600 hover:border-electric-500 rounded-lg text-sm font-medium transition-all duration-200"
+                        >
+                          {preset.label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
                   <div className="flex space-x-3 pt-4">
                     <button
                       type="button"
                       onClick={() => {
                         setShowEditEvent(false)
                         setEditingEvent(null)
-                        setNewEvent({ title: '', startTime: '', endTime: '', description: '', location: '' })
+                        setNewEvent({ title: '', startTime: '', endTime: '', description: '', location: '', category: 'personal' })
                       }}
                       className="flex-1 bg-gray-700 hover:bg-gray-600 text-white font-medium py-2 px-4 rounded-lg transition-all duration-200"
                     >
