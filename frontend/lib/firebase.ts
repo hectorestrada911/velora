@@ -1,5 +1,5 @@
 import { initializeApp, getApps } from 'firebase/app'
-import { getAuth } from 'firebase/auth'
+import { getAuth, setPersistence, browserLocalPersistence } from 'firebase/auth'
 import { getFirestore } from 'firebase/firestore'
 import { getStorage } from 'firebase/storage'
 
@@ -29,5 +29,12 @@ if (process.env.NEXT_PUBLIC_FIREBASE_API_KEY && process.env.NEXT_PUBLIC_FIREBASE
 export const auth = app ? getAuth(app) : null
 export const db = app ? getFirestore(app) : null
 export const storage = app ? getStorage(app) : null
+
+// Configure auth persistence to keep users logged in
+if (auth) {
+  setPersistence(auth, browserLocalPersistence).catch((error) => {
+    console.error('Error setting auth persistence:', error)
+  })
+}
 
 export default app

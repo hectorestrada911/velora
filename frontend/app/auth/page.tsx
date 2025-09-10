@@ -19,6 +19,7 @@ export default function AuthPage() {
     password: '',
     name: ''
   })
+  const [rememberMe, setRememberMe] = useState(true)
   const [isLoading, setIsLoading] = useState(false)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
 
@@ -1151,6 +1152,22 @@ export default function AuthPage() {
                 />
               </div>
             </div>
+
+            {/* Remember Me Checkbox - Only show on login */}
+            {authMode === 'login' && (
+              <div className="flex items-center space-x-3">
+                <input
+                  type="checkbox"
+                  id="rememberMe"
+                  checked={rememberMe}
+                  onChange={(e) => setRememberMe(e.target.checked)}
+                  className="w-4 h-4 text-electric-600 bg-gray-800 border-gray-600 rounded focus:ring-electric-500 focus:ring-2"
+                />
+                <label htmlFor="rememberMe" className="text-gray-300 text-sm">
+                  Keep me signed in
+                </label>
+              </div>
+            )}
 
             <button
               type="submit"
