@@ -662,8 +662,23 @@ export default function ChatPage() {
     const relevantMemories = memoryService.getContextualMemories(inputValue)
     const recallInfo = memoryService.recallInformation(inputValue)
     
+    // Get calendar events and reminders for context
+    const calendarEvents = calendarService.getStoredEvents()
+    const reminders = calendarService.getStoredReminders()
+    
     // Combine general context with specific recall information
     const allRelevantMemories = [...relevantMemories, ...recallInfo.memories]
+    
+    // Add calendar and reminder context
+    const calendarContext = calendarEvents.length > 0 ? 
+      `\n\nCALENDAR EVENTS:\n${calendarEvents.map(event => 
+        `- ${event.title} on ${new Date(event.startTime).toLocaleDateString()} at ${new Date(event.startTime).toLocaleTimeString()}`
+      ).join('\n')}` : ''
+    
+    const reminderContext = reminders.length > 0 ? 
+      `\n\nREMINDERS:\n${reminders.map(reminder => 
+        `- ${reminder.title} (Due: ${new Date(reminder.dueDate).toLocaleDateString()} at ${new Date(reminder.dueDate).toLocaleTimeString()})`
+      ).join('\n')}` : ''
     
     // Generate smart suggestions based on user input with message context
     generateSmartSuggestions(inputValue, userMessage.id)
@@ -691,7 +706,7 @@ export default function ChatPage() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ 
-          content: inputValue,
+          content: inputValue + calendarContext + reminderContext,
           conversationHistory: conversationHistory,
           relevantMemories: allRelevantMemories,
           recallSuggestions: recallInfo.suggestions
