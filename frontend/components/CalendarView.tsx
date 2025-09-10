@@ -651,7 +651,9 @@ export default function CalendarView() {
                           className="p-2 text-gray-400 hover:text-electric-400 transition-colors duration-200">
                           <Edit className="w-4 h-4" />
                         </button>
-                        <button className="p-2 text-gray-400 hover:text-red-400 transition-colors duration-200">
+                        <button 
+                          onClick={() => handleDeleteEvent(event)}
+                          className="p-2 text-gray-400 hover:text-red-400 transition-colors duration-200">
                           <Trash2 className="w-4 h-4" />
                         </button>
                       </div>
