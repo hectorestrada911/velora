@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Bell, Clock, AlertCircle, CheckCircle, Plus, X, Edit, Trash2, Star } from 'lucide-react'
+import { Bell, Clock, AlertCircle, CheckCircle, Plus, X, Edit, Trash2, Star, Briefcase, Heart, Dumbbell, ShoppingCart, BookOpen, Home, Car, Phone } from 'lucide-react'
 import { calendarService, Reminder } from '@/lib/calendarService'
 import { toast } from 'react-hot-toast'
 import { ErrorHandler } from '@/lib/errorHandler'
@@ -24,6 +24,7 @@ export default function RemindersView() {
     title: '',
     dueDate: '',
     priority: 'medium' as 'low' | 'medium' | 'high' | 'urgent',
+    category: 'personal' as 'work' | 'personal' | 'health' | 'shopping' | 'learning' | 'home' | 'transport' | 'communication',
     description: ''
   })
   const [editingReminderId, setEditingReminderId] = useState<string | null>(null)
@@ -71,6 +72,7 @@ export default function RemindersView() {
         title: newReminder.title,
         dueDate: new Date(newReminder.dueDate),
         priority: newReminder.priority,
+        category: newReminder.category,
         description: newReminder.description
       }
 
@@ -78,7 +80,7 @@ export default function RemindersView() {
       if (success) {
         await loadReminders() // Reload to get the new reminder with ID
         setShowAddReminder(false)
-        setNewReminder({ title: '', dueDate: '', priority: 'medium', description: '' })
+        setNewReminder({ title: '', dueDate: '', priority: 'medium', category: 'personal', description: '' })
         toast.success('Reminder created successfully!')
       } else {
         toast.error('Failed to create reminder')
@@ -153,6 +155,7 @@ export default function RemindersView() {
       title: reminder.title,
       dueDate: reminder.dueDate.toISOString().slice(0, 16),
       priority: reminder.priority,
+      category: (reminder as any).category || 'personal',
       description: reminder.description || ''
     })
     setShowAddReminder(true)
@@ -241,6 +244,20 @@ export default function RemindersView() {
       default:
         return <Bell className="w-4 h-4" />
     }
+  }
+
+  const getCategoryInfo = (category: string) => {
+    const categories = {
+      work: { icon: Briefcase, color: 'bg-blue-600', textColor: 'text-blue-400' },
+      personal: { icon: Heart, color: 'bg-pink-600', textColor: 'text-pink-400' },
+      health: { icon: Dumbbell, color: 'bg-green-600', textColor: 'text-green-400' },
+      shopping: { icon: ShoppingCart, color: 'bg-orange-600', textColor: 'text-orange-400' },
+      learning: { icon: BookOpen, color: 'bg-purple-600', textColor: 'text-purple-400' },
+      home: { icon: Home, color: 'bg-indigo-600', textColor: 'text-indigo-400' },
+      transport: { icon: Car, color: 'bg-gray-600', textColor: 'text-gray-400' },
+      communication: { icon: Phone, color: 'bg-teal-600', textColor: 'text-teal-400' }
+    }
+    return categories[category as keyof typeof categories] || categories.personal
   }
 
   const isOverdue = (dueDate: Date) => {
@@ -444,6 +461,16 @@ export default function RemindersView() {
                       </h3>
                       
                       <div className="flex items-center space-x-2">
+                        {(() => {
+                          const categoryInfo = getCategoryInfo((reminder as any).category || 'personal')
+                          const IconComponent = categoryInfo.icon
+                          return (
+                            <div className={`flex items-center space-x-1 px-2 py-1 rounded-full text-xs ${categoryInfo.color} text-white`}>
+                              <IconComponent className="w-3 h-3" />
+                              <span className="capitalize">{(reminder as any).category || 'personal'}</span>
+                            </div>
+                          )
+                        })()}
                         <span className={`px-2 py-1 rounded-full text-xs font-medium ${getPriorityColor(reminder.priority)}`}>
                           {reminder.priority}
                         </span>
@@ -476,15 +503,36 @@ export default function RemindersView() {
                             </motion.button>
                             
                             {!reminder.completed && (
-                              <motion.button 
-                                whileHover={{ scale: 1.2 }}
-                                whileTap={{ scale: 0.9 }}
-                                onClick={() => handleSnoozeReminder(reminder.id, 15)}
-                                className="p-2 text-gray-400 hover:text-yellow-400 transition-all duration-200 bg-gray-500/10 hover:bg-yellow-500/20 rounded-lg"
-                                title="Snooze 15 minutes"
-                              >
-                                <Clock className="w-5 h-5" />
-                              </motion.button>
+                              <div className="relative group">
+                                <motion.button 
+                                  whileHover={{ scale: 1.2 }}
+                                  whileTap={{ scale: 0.9 }}
+                                  className="p-2 text-gray-400 hover:text-yellow-400 transition-all duration-200 bg-gray-500/10 hover:bg-yellow-500/20 rounded-lg"
+                                  title="Snooze options"
+                                >
+                                  <Clock className="w-5 h-5" />
+                                </motion.button>
+                                
+                                {/* Snooze Options Dropdown */}
+                                <div className="absolute right-0 top-full mt-1 w-32 bg-gray-800 border border-gray-600 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10">
+                                  <div className="py-1">
+                                    {[
+                                      { label: '5 min', minutes: 5 },
+                                      { label: '15 min', minutes: 15 },
+                                      { label: '1 hour', minutes: 60 },
+                                      { label: 'Tomorrow', minutes: 24 * 60 }
+                                    ].map((option) => (
+                                      <button
+                                        key={option.label}
+                                        onClick={() => handleSnoozeReminder(reminder.id, option.minutes)}
+                                        className="w-full px-3 py-2 text-left text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition-colors duration-200"
+                                      >
+                                        {option.label}
+                                      </button>
+                                    ))}
+                                  </div>
+                                </div>
+                              </div>
                             )}
                             
                             <motion.button 
@@ -604,6 +652,75 @@ export default function RemindersView() {
                       <option value="high">High</option>
                       <option value="urgent">Urgent</option>
                     </select>
+                  </div>
+
+                  {/* Reminder Category */}
+                  <div>
+                    <label className="block text-gray-300 text-sm font-medium mb-2">
+                      Category
+                    </label>
+                    <div className="grid grid-cols-2 gap-2">
+                      {[
+                        { value: 'work', label: 'Work', icon: Briefcase, color: 'bg-blue-600' },
+                        { value: 'personal', label: 'Personal', icon: Heart, color: 'bg-pink-600' },
+                        { value: 'health', label: 'Health', icon: Dumbbell, color: 'bg-green-600' },
+                        { value: 'shopping', label: 'Shopping', icon: ShoppingCart, color: 'bg-orange-600' },
+                        { value: 'learning', label: 'Learning', icon: BookOpen, color: 'bg-purple-600' },
+                        { value: 'home', label: 'Home', icon: Home, color: 'bg-indigo-600' },
+                        { value: 'transport', label: 'Transport', icon: Car, color: 'bg-gray-600' },
+                        { value: 'communication', label: 'Communication', icon: Phone, color: 'bg-teal-600' }
+                      ].map((category) => {
+                        const IconComponent = category.icon
+                        return (
+                          <button
+                            key={category.value}
+                            type="button"
+                            onClick={() => setNewReminder({ ...newReminder, category: category.value as any })}
+                            className={`flex items-center space-x-2 p-2 rounded-lg border transition-all duration-200 ${
+                              newReminder.category === category.value
+                                ? `${category.color} text-white border-transparent`
+                                : 'bg-background-tertiary text-gray-300 border-gray-600 hover:border-gray-500'
+                            }`}
+                          >
+                            <IconComponent className="w-4 h-4" />
+                            <span className="text-sm font-medium">{category.label}</span>
+                          </button>
+                        )
+                      })}
+                    </div>
+                  </div>
+
+                  {/* Quick Reminder Templates */}
+                  <div>
+                    <label className="block text-gray-300 text-sm font-medium mb-2">
+                      Quick Templates
+                    </label>
+                    <div className="flex flex-wrap gap-2">
+                      {[
+                        { title: 'Call mom', category: 'communication', priority: 'medium' },
+                        { title: 'Buy groceries', category: 'shopping', priority: 'high' },
+                        { title: 'Doctor appointment', category: 'health', priority: 'high' },
+                        { title: 'Team meeting', category: 'work', priority: 'medium' },
+                        { title: 'Study session', category: 'learning', priority: 'medium' },
+                        { title: 'Clean house', category: 'home', priority: 'low' }
+                      ].map((template) => (
+                        <button
+                          key={template.title}
+                          type="button"
+                          onClick={() => {
+                            setNewReminder({
+                              ...newReminder,
+                              title: template.title,
+                              category: template.category as any,
+                              priority: template.priority as any
+                            })
+                          }}
+                          className="px-3 py-2 bg-background-tertiary hover:bg-background-secondary text-gray-300 hover:text-white border border-gray-600 hover:border-electric-500 rounded-lg text-sm font-medium transition-all duration-200"
+                        >
+                          {template.title}
+                        </button>
+                      ))}
+                    </div>
                   </div>
                   
                   <div>

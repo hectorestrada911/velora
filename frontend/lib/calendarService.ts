@@ -10,6 +10,7 @@ export interface Reminder {
   title: string;
   dueDate: Date;
   priority: 'low' | 'medium' | 'high' | 'urgent';
+  category?: 'work' | 'personal' | 'health' | 'shopping' | 'learning' | 'home' | 'transport' | 'communication';
   description?: string;
   completed?: boolean;
 }
