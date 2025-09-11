@@ -642,7 +642,7 @@ export default function AuthPage() {
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-electric-500 to-purple-500">Never Forget</span> Again
               </h3>
               <p className="text-2xl text-gray-300 max-w-4xl mx-auto leading-relaxed">
-                <span className="text-electric-400">Velora</span> remembers everything. <span className="text-electric-400">Parking spots, meeting notes, random thoughts</span> — 
+                <span className="text-electric-400">Velora</span> remembers everything. <span className="text-electric-400">Parking spots, meeting notes, random thoughts</span> 
                 it all connects intelligently.
               </p>
             </div>
