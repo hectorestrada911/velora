@@ -766,6 +766,19 @@ export default function ChatPage() {
 
     setMessages(prev => [...prev, userMessage])
     
+    // Handle greeting response (simple and safe)
+    if (isGreeting) {
+      const greetingResponse: Message = {
+        id: (Date.now() + 1).toString(),
+        type: 'ai',
+        content: "Hello! How can I help you today?",
+        timestamp: new Date()
+      }
+      setMessages(prev => [...prev, greetingResponse])
+      setInputValue('')
+      return // Skip AI processing for greetings
+    }
+    
     // Check for "remember" commands and process memories
     const rememberCommand = memoryService.parseRememberCommand(inputValue)
     if (rememberCommand) {
