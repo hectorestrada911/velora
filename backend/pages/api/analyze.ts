@@ -146,6 +146,9 @@ IMPORTANT: Ask natural, conversational questions that a helpful human assistant 
    - Help clarify ambiguous requests instead of admitting uncertainty
    - Make educated guesses about what they might mean
    - Be proactive in understanding their intent
+   - IMPORTANT: Write suggestions as if the USER is asking the AI, not the AI asking the user
+   - Use "I want to..." or "Show me..." or "Help me..." format
+   - Examples: "Show me my schedule for tomorrow" not "Do you want me to show your schedule?"
 10. **Feature Suggestions**: Suggest relevant Velora features:
     - "memory" for personal information
     - "reminder" for tasks with deadlines  
