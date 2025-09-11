@@ -735,8 +735,27 @@ export default function ChatPage() {
     setSmartSuggestions(suggestions)
   }
 
+  // Simple greeting detection function (safe - doesn't change AI behavior)
+  const detectGreeting = (text: string): boolean => {
+    const lowerText = text.toLowerCase().trim()
+    const greetingPatterns = [
+      /\b(hi|hello|hey)\b/i,
+      /\b(good morning|good afternoon|good evening)\b/i,
+      /\b(greetings|howdy)\b/i
+    ]
+    
+    const isGreeting = greetingPatterns.some(pattern => pattern.test(lowerText))
+    if (isGreeting) {
+      console.log('🎉 Greeting detected:', text)
+    }
+    return isGreeting
+  }
+
   const handleSendMessage = async () => {
     if (!inputValue.trim()) return
+
+    // Detect greeting (safe - just logs, doesn't change behavior)
+    const isGreeting = detectGreeting(inputValue)
 
     const userMessage: Message = {
       id: Date.now().toString(),
