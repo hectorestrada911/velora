@@ -319,7 +319,7 @@ export default function AuthPage() {
               </motion.div>
               
               <h2 className="text-5xl xl:text-6xl font-bold text-white mb-6 leading-tight">
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-electric-500 to-purple-500">Velora</span> - <span className="text-transparent bg-clip-text bg-gradient-to-r from-electric-500 to-purple-500">Never</span> Forget
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-electric-500 to-purple-500">Never</span> forget with <span className="text-transparent bg-clip-text bg-gradient-to-r from-electric-500 to-purple-500">Velora</span>
               </h2>
               <p className="text-xl text-gray-300 mb-8 leading-relaxed">
                 Never lose a thought again. Turn ideas into action with <span className="text-electric-400">Velora</span> that remembers everything.
@@ -561,7 +561,7 @@ export default function AuthPage() {
               transition={{ delay: 0.4 }}
               className="text-3xl md:text-4xl font-bold text-white mb-4 leading-tight"
             >
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-electric-500 to-purple-500">Velora</span> - <span className="text-transparent bg-clip-text bg-gradient-to-r from-electric-500 to-purple-500">Never</span> Forget
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-electric-500 to-purple-500">Never</span> forget with <span className="text-transparent bg-clip-text bg-gradient-to-r from-electric-500 to-purple-500">Velora</span>
             </motion.h2>
 
             {/* Subtitle */}
