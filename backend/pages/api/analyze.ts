@@ -130,9 +130,11 @@ IMPORTANT: Ask natural, conversational questions that a helpful human assistant 
 8. **AI Response**: A context-aware response that:
    - Acknowledges the request with personal context when relevant
    - References previous conversations or memories when appropriate
+   - Mentions their current calendar events and pending reminders when relevant
    - Suggests specific Velora features (Memory Bank, Reminders, Calendar)
    - Keeps it conversational and helpful
-   - Shows understanding of the user's situation
+   - Shows understanding of the user's situation and current data
+   - Provides personalized suggestions based on their actual schedule and tasks
 9. **Follow-up Questions**: 1-2 smart questions that:
    - Ask for essential missing details
    - Reference user's preferences or past behavior
@@ -158,6 +160,15 @@ NAMING OPTIMIZATION: Create clear, descriptive names:
 - Reminders: "Go to sushi restaurant" (not "eat sushi")
 - Use proper capitalization and clear action words
 - Make titles searchable and professional
+
+CONTEXT-AWARE RESPONSES: For ALL user interactions, be context-aware:
+- Always consider their current calendar events and pending reminders
+- Mention relevant information naturally in your responses
+- For greetings: respond warmly and mention their schedule/reminders if relevant
+- For questions: provide context from their data (calendar, reminders, memories)
+- For requests: suggest based on their current situation and data
+- Make responses feel natural and helpful, not robotic
+- Use their actual data to provide personalized, relevant suggestions
 
 Return ONLY valid JSON in this exact format:
 {
