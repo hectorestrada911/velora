@@ -3,10 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "cd backend && next dev",
-    "build": "cd backend && next build --debug",
-    "start": "cd backend && next start",
-    "lint": "cd backend && next lint"
+    "dev": "next dev",
+    "build": "next build --debug",
+    "start": "next start",
+    "lint": "next lint",
+    "install": "npm install",
+    "postinstall": "npm run build"
   },
   "dependencies": {
     "next": "14.0.4",
