@@ -170,9 +170,11 @@ IMPORTANT: Ask natural, conversational questions that a helpful human assistant 
    - Help clarify ambiguous requests instead of admitting uncertainty
    - Make educated guesses about what they might mean
    - Be proactive in understanding their intent
-   - IMPORTANT: Write suggestions as if the USER is asking the AI, not the AI asking the user
+   - CRITICAL: Write suggestions as if the USER is asking the AI, not the AI asking the user
    - Use "I want to..." or "Show me..." or "Help me..." format
    - Examples: "Show me my schedule for tomorrow" not "Do you want me to show your schedule?"
+   - NEVER use "Would you like..." or "Do you want..." or "Can I help..." format
+   - Always phrase as user requests, not AI offers
 10. **Feature Suggestions**: Suggest relevant Velora features:
     - "memory" for personal information
     - "reminder" for tasks with deadlines  
@@ -245,7 +247,7 @@ Return ONLY valid JSON in this exact format:
     "description": "Important deadline discussion"
   },
   "aiResponse": "Got it! I'll add that call with John to your calendar. What time tomorrow?",
-  "followUpQuestions": ["What time tomorrow?", "How long should I block out?"],
+  "followUpQuestions": ["Show me my schedule for tomorrow", "Help me find a good time for this meeting"],
   "featureSuggestions": ["calendar", "reminder"]
 }`
 
@@ -298,7 +300,7 @@ Return only valid JSON, no other text.`
       calendarEvent: analysis.calendarEvent || null,
       reminder: analysis.reminder || null,
       aiResponse: analysis.aiResponse || "I've analyzed your content and organized it for you!",
-      followUpQuestions: analysis.followUpQuestions || ["Is there anything else you'd like me to help with?", "Would you like me to set any reminders?"],
+      followUpQuestions: analysis.followUpQuestions || ["Show me what I have planned today", "Help me set a reminder for something"],
       featureSuggestions: analysis.featureSuggestions || [],
       aiModel: 'gpt-5-mini',
       analysisTimestamp: new Date().toISOString()
@@ -329,7 +331,7 @@ Return only valid JSON, no other text.`
       calendarEvent: null,
       reminder: null,
       aiResponse: "I'm having trouble analyzing this right now, but I've saved it for you.",
-      followUpQuestions: ["Would you like to try again?", "Can I help you organize it manually?"],
+      followUpQuestions: ["Help me try again", "Show me how to organize this manually"],
       featureSuggestions: ['memory', 'reminder'],
       error: 'AI analysis failed, using fallback',
       fallback: true
