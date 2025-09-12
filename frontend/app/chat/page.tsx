@@ -1719,7 +1719,7 @@ export default function ChatPage() {
         )}
       </AnimatePresence>
 
-      {/* Memory Intelligence Dashboard */}
+      {/* Remember Dashboard */}
       {showMemoryDashboard && (
         <MemoryDashboard onClose={() => setShowMemoryDashboard(false)} />
       )}

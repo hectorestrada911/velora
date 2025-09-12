@@ -124,7 +124,10 @@ export default function MemoryDashboard({ onClose }: MemoryDashboardProps) {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <Brain className="w-8 h-8 text-electric-400" />
-              <h2 className="text-2xl font-bold text-white">Memory Intelligence Dashboard</h2>
+              <div>
+                <h2 className="text-2xl font-bold text-white">Remember Dashboard</h2>
+                <p className="text-gray-400 text-sm mt-1">View and manage your saved information</p>
+              </div>
             </div>
             <button
               onClick={onClose}
@@ -138,7 +141,7 @@ export default function MemoryDashboard({ onClose }: MemoryDashboardProps) {
           <div className="flex gap-1 mt-4">
             {[
               { id: 'overview', label: 'Overview', icon: BarChart3 },
-              { id: 'test', label: 'Memory Tests', icon: Target },
+              { id: 'test', label: 'Remember Tests', icon: Target },
               { id: 'analytics', label: 'Analytics', icon: TrendingUp },
               { id: 'insights', label: 'Insights', icon: Lightbulb }
             ].map(({ id, label, icon: Icon }) => (
@@ -176,7 +179,7 @@ export default function MemoryDashboard({ onClose }: MemoryDashboardProps) {
                       <Brain className="w-8 h-8 text-electric-400" />
                       <div>
                         <p className="text-2xl font-bold text-white">{memories.length}</p>
-                        <p className="text-gray-400 text-sm">Total Memories</p>
+                        <p className="text-gray-400 text-sm">Total Remembered Items</p>
                       </div>
                     </div>
                   </div>
@@ -191,7 +194,7 @@ export default function MemoryDashboard({ onClose }: MemoryDashboardProps) {
                             return daysSinceCreated < 7
                           }).length}
                         </p>
-                        <p className="text-gray-400 text-sm">Recent Memories</p>
+                        <p className="text-gray-400 text-sm">Recent Items</p>
                       </div>
                     </div>
                   </div>
@@ -225,7 +228,7 @@ export default function MemoryDashboard({ onClose }: MemoryDashboardProps) {
                     <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                     <input
                       type="text"
-                      placeholder="Search memories..."
+                      placeholder="Search remembered items..."
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                       className="w-full bg-gray-800 border border-gray-700 rounded-lg pl-10 pr-4 py-2 text-white placeholder-gray-400 focus:outline-none focus:border-electric-500"
