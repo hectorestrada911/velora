@@ -1274,7 +1274,7 @@ export default function ChatPage() {
         )}
 
         {/* Chat Messages */}
-        <div className="space-y-4 md:space-y-6 mb-20 md:mb-6">
+        <div className="space-y-4 md:space-y-6 mb-32 md:mb-24">
           {messages.map((message) => (
             <motion.div
               key={message.id}
@@ -1379,6 +1379,8 @@ export default function ChatPage() {
           )}
           
           <div ref={messagesEndRef} />
+          {/* Extra space to ensure content is visible above fixed input */}
+          <div className="h-8 md:h-12"></div>
         </div>
 
         {/* Input Area - Mobile Optimized */}
