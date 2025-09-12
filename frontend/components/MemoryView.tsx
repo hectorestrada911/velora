@@ -134,7 +134,7 @@ export default function MemoryView() {
             >
               <Brain className="w-8 h-8 md:w-10 md:h-10 text-electric-400" />
               <h1 className="text-3xl md:text-5xl lg:text-6xl font-extrabold text-electric-400 leading-tight">
-                My Memory Bank
+                Remember
               </h1>
             </motion.div>
             <motion.p 
@@ -143,7 +143,7 @@ export default function MemoryView() {
               transition={{ delay: 0.1 }}
               className="text-electric-300 text-lg md:text-xl lg:text-2xl font-semibold"
             >
-              Store and recall your personal information
+              Save important details and recall them anytime
             </motion.p>
           </div>
           
@@ -182,6 +182,38 @@ export default function MemoryView() {
               </div>
             )
           })}
+        </motion.div>
+
+        {/* Examples */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4 }}
+          className="mb-8"
+        >
+          <h3 className="text-xl font-bold text-white mb-4">How to use Remember:</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="bg-gray-900 rounded-xl p-4 border border-gray-700">
+              <h4 className="text-electric-400 font-semibold mb-2">Personal Info</h4>
+              <p className="text-gray-300 text-sm mb-2">"REMEMBER I'm allergic to peanuts"</p>
+              <p className="text-gray-400 text-xs">Saves health information for future reference</p>
+            </div>
+            <div className="bg-gray-900 rounded-xl p-4 border border-gray-700">
+              <h4 className="text-electric-400 font-semibold mb-2">Locations</h4>
+              <p className="text-gray-300 text-sm mb-2">"REMEMBER I parked in section B"</p>
+              <p className="text-gray-400 text-xs">Tracks where you left things</p>
+            </div>
+            <div className="bg-gray-900 rounded-xl p-4 border border-gray-700">
+              <h4 className="text-electric-400 font-semibold mb-2">Preferences</h4>
+              <p className="text-gray-300 text-sm mb-2">"REMEMBER I prefer morning meetings"</p>
+              <p className="text-gray-400 text-xs">Saves your preferences and habits</p>
+            </div>
+            <div className="bg-gray-900 rounded-xl p-4 border border-gray-700">
+              <h4 className="text-electric-400 font-semibold mb-2">Relationships</h4>
+              <p className="text-gray-300 text-sm mb-2">"REMEMBER John is my project manager"</p>
+              <p className="text-gray-400 text-xs">Keeps track of important people</p>
+            </div>
+          </div>
         </motion.div>
 
         {/* Search and Filters */}

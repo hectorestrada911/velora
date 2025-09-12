@@ -26,7 +26,7 @@ interface Suggestion {
   id: string
   text: string
   icon: React.ReactNode
-  category: 'productivity' | 'reminder' | 'calendar' | 'general' | 'voice' | 'smart-calendar' | 'memory' | 'intelligence'
+  category: 'productivity' | 'reminder' | 'calendar' | 'general' | 'voice' | 'smart-calendar' | 'memory' | 'remember' | 'intelligence'
 }
 
 export default function ChatPage() {
@@ -100,7 +100,19 @@ export default function ChatPage() {
       id: '2',
       text: 'Remember that I prefer morning meetings',
       icon: <Brain className="w-4 h-4" />,
-      category: 'memory'
+      category: 'remember'
+    },
+    {
+      id: '5',
+      text: 'Remember I parked in section B',
+      icon: <Brain className="w-4 h-4" />,
+      category: 'remember'
+    },
+    {
+      id: '6',
+      text: 'Remember John is my project manager',
+      icon: <Brain className="w-4 h-4" />,
+      category: 'remember'
     },
     {
       id: '3',
@@ -1113,14 +1125,14 @@ export default function ChatPage() {
                 </AnimatePresence>
               </div>
 
-              {/* Memory */}
+              {/* Remember */}
               <button 
                 onClick={() => setShowMemoryDashboard(true)}
                 className="flex items-center gap-2 px-3 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-800 rounded-lg transition-colors"
-                title="Memory & Intelligence"
+                title="Remember & Intelligence"
               >
                 <Brain className="w-4 h-4" />
-                <span>Memory</span>
+                <span>Remember</span>
               </button>
 
               {/* History */}
