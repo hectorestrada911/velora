@@ -117,12 +117,20 @@ export default function ChatPage() {
   ]
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+    // Small delay to ensure DOM is updated
+    setTimeout(() => {
+      if (messagesEndRef.current) {
+        messagesEndRef.current.scrollIntoView({ behavior: 'smooth' })
+      } else {
+        // Fallback: scroll to bottom of page
+        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' })
+      }
+    }, 100)
   }
 
   useEffect(() => {
     scrollToBottom()
-  }, [messages])
+  }, [messages, isLoading])
 
   // Initialize cross-reference service with sample data
   useEffect(() => {
