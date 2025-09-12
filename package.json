@@ -1,0 +1,15 @@
+{
+  "name": "velora",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Velora - Never forget with AI",
+  "scripts": {
+    "build": "cd backend && npm ci && npm run build",
+    "start": "cd backend && npm start",
+    "dev": "cd backend && npm run dev"
+  },
+  "workspaces": [
+    "backend",
+    "frontend"
+  ]
+}
