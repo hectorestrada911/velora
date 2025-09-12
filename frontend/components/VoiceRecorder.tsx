@@ -353,7 +353,7 @@ export function VoiceRecorder() {
 • Calendar event: ${analyzedContent.calendarEvent?.title || 'N/A'}
 • Reminder: ${analyzedContent.reminder?.title || 'N/A'}
 
-Would you like me to create these now?`
+Help me create these now?`
 
     if (window.confirm(confirmMessage)) {
       let successCount = 0
@@ -905,7 +905,7 @@ Would you like me to create these now?`
                       animate={{ opacity: 1, y: 0 }}
                       className="border-t border-gray-700 pt-4"
                     >
-                      <h5 className="text-sm font-medium text-gray-300 mb-3">Would you like me to:</h5>
+                      <h5 className="text-sm font-medium text-gray-300 mb-3">Help me:</h5>
                       <div className="space-y-2">
                         {analyzedContent.followUpQuestions.map((question, index) => (
                           <button

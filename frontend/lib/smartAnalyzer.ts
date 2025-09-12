@@ -462,9 +462,9 @@ function generateAIResponse(text: string, type: string, extractedData: any): str
     case 'meeting':
       return `I've detected a meeting with ${people}${dueDate}. Should I add it to your calendar?`
     case 'contact':
-      return `I've found contact information for ${people}. Would you like me to save this?`
+      return `I've found contact information for ${people}. Help me save this to my contacts.`
     case 'idea':
-      return `Great idea! I've captured this for you. Would you like me to create a reminder to follow up?`
+      return `Great idea! I've captured this for you. Help me create a reminder to follow up.`
     default:
       return `I've analyzed your note and organized it for you!`
   }
@@ -474,19 +474,19 @@ function generateFollowUpQuestions(text: string, type: string, extractedData: an
   const questions = []
   
   if (extractedData.dueDate) {
-    questions.push(`Should I set a reminder for ${extractedData.dueDate.toLocaleDateString()}?`)
+    questions.push(`Help me set a reminder for ${extractedData.dueDate.toLocaleDateString()}`)
   }
   
   if (extractedData.people?.length > 0) {
-    questions.push(`Would you like me to add this to your contacts?`)
+    questions.push(`Help me add this to my contacts`)
   }
   
   if (type === 'task' || type === 'reminder') {
-    questions.push(`Should I add this to your calendar?`)
+    questions.push(`Help me add this to my calendar`)
   }
   
   if (questions.length === 0) {
-    questions.push(`Is there anything else you'd like me to help with?`)
+    questions.push(`Help me with something else`)
   }
   
   return questions.slice(0, 3) // Limit to 3 questions

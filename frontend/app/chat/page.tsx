@@ -926,7 +926,7 @@ export default function ChatPage() {
         const suggestionMessage: Message = {
           id: (Date.now() + 2).toString(),
           type: 'ai',
-          content: 'I can help you create these items. Would you like me to:',
+          content: 'I can help you create these items. Help me:',
           timestamp: new Date(),
           analysis: {
             type: 'suggestion',

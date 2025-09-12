@@ -195,7 +195,7 @@ This makes your documents searchable and actionable!`;
         topics: []
       },
       aiResponse: "I've analyzed your document and organized it for you!",
-      followUpQuestions: ["Would you like me to create any reminders?", "Should I add this to your calendar?"]
+      followUpQuestions: ["Help me create reminders from this document", "Show me how to add this to my calendar"]
     };
   };
 
@@ -413,7 +413,7 @@ This makes your documents searchable and actionable!`;
                         animate={{ opacity: 1, y: 0 }}
                         className="mt-4 pt-4 border-t border-gray-700"
                       >
-                        <h5 className="text-sm font-medium text-gray-300 mb-3">Would you like me to:</h5>
+                        <h5 className="text-sm font-medium text-gray-300 mb-3">Help me:</h5>
                         <div className="space-y-2">
                           {file.analysis.followUpQuestions.map((question: string, index: number) => (
                             <button
