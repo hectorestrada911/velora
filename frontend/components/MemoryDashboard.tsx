@@ -222,6 +222,53 @@ export default function MemoryDashboard({ onClose }: MemoryDashboardProps) {
                   </div>
                 </div>
 
+                {/* How to Use Remember */}
+                <div className="bg-gradient-to-r from-gray-800 to-gray-900 rounded-xl p-6 border border-gray-700">
+                  <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
+                    <Brain className="w-5 h-5 text-electric-400" />
+                    How to Use Remember
+                  </h3>
+                  <p className="text-gray-300 mb-4">
+                    Simply type "REMEMBER" followed by any information you want to save. Velora will automatically categorize and store it for future reference.
+                  </p>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-3">
+                      <h4 className="text-electric-400 font-semibold">Personal Information</h4>
+                      <div className="space-y-2">
+                        <div className="bg-gray-700 rounded-lg p-3">
+                          <code className="text-green-400 text-sm">"REMEMBER I'm allergic to peanuts"</code>
+                          <p className="text-gray-400 text-xs mt-1">Saves health information</p>
+                        </div>
+                        <div className="bg-gray-700 rounded-lg p-3">
+                          <code className="text-green-400 text-sm">"REMEMBER I prefer morning meetings"</code>
+                          <p className="text-gray-400 text-xs mt-1">Saves your preferences</p>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="space-y-3">
+                      <h4 className="text-electric-400 font-semibold">Locations & Context</h4>
+                      <div className="space-y-2">
+                        <div className="bg-gray-700 rounded-lg p-3">
+                          <code className="text-green-400 text-sm">"REMEMBER I parked in section B"</code>
+                          <p className="text-gray-400 text-xs mt-1">Tracks where you left things</p>
+                        </div>
+                        <div className="bg-gray-700 rounded-lg p-3">
+                          <code className="text-green-400 text-sm">"REMEMBER John is my project manager"</code>
+                          <p className="text-gray-400 text-xs mt-1">Keeps track of important people</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="mt-4 p-3 bg-electric-500/10 border border-electric-500/20 rounded-lg">
+                    <p className="text-electric-300 text-sm">
+                      <strong>💡 Tip:</strong> Velora will automatically suggest using Remember when you mention personal information that could be useful later!
+                    </p>
+                  </div>
+                </div>
+
                 {/* Search and Filter */}
                 <div className="flex gap-4">
                   <div className="flex-1 relative">
