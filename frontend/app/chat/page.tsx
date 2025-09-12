@@ -523,7 +523,8 @@ export default function ChatPage() {
           content: transcript + calendarContext + reminderContext,
           conversationHistory: conversationHistory,
           relevantMemories: allRelevantMemories,
-          recallSuggestions: recallInfo.suggestions
+          recallSuggestions: recallInfo.suggestions,
+          currentDate: new Date().toISOString()
         }),
       })
 
@@ -828,7 +829,8 @@ export default function ChatPage() {
           content: inputValue + calendarContext + reminderContext,
           conversationHistory: conversationHistory,
           relevantMemories: allRelevantMemories,
-          recallSuggestions: recallInfo.suggestions
+          recallSuggestions: recallInfo.suggestions,
+          currentDate: new Date().toISOString()
         }),
       })
 

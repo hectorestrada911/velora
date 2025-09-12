@@ -25,11 +25,32 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   try {
-    const { content, conversationHistory, relevantMemories, recallSuggestions } = req.body
+    const { content, conversationHistory, relevantMemories, recallSuggestions, currentDate: clientCurrentDate } = req.body
 
     if (!content) {
       return res.status(400).json({ error: 'Content is required' })
     }
+
+    // Get current date/time for time-aware responses
+    const now = new Date(clientCurrentDate || new Date().toISOString())
+    const currentTime = now.toLocaleTimeString('en-US', { 
+      hour: 'numeric', 
+      minute: '2-digit',
+      hour12: true 
+    })
+    const currentDateStr = now.toLocaleDateString('en-US', { 
+      weekday: 'long', 
+      year: 'numeric', 
+      month: 'long', 
+      day: 'numeric' 
+    })
+    const hour = now.getHours()
+    
+    // Determine time of day for greetings
+    let timeOfDay = 'day'
+    if (hour < 12) timeOfDay = 'morning'
+    else if (hour < 17) timeOfDay = 'afternoon'
+    else timeOfDay = 'evening'
 
     // Build conversation context
     let conversationContext = ''
@@ -69,6 +90,9 @@ ${recallSuggestions.map((suggestion: string) => `- ${suggestion}`).join('\n')}`
 
     // Comprehensive system prompt for AI analysis
     const systemPrompt = `You are Velora, an intelligent AI productivity assistant with deep understanding of the user's personal context and preferences. You have access to a comprehensive memory system and can actively recall information across conversations.
+
+CURRENT DATE & TIME: ${currentDateStr} at ${currentTime} (${timeOfDay})
+Use this information to provide time-aware responses and appropriate greetings.
 
 VELORA APP CONTEXT - You understand these specific features:
 1. **Memory Bank**: Users can save personal information with "REMEMBER" commands
@@ -178,6 +202,14 @@ CONTEXT-AWARE RESPONSES: For ALL user interactions, be context-aware:
 - For requests: suggest based on their current situation and data
 - Make responses feel natural and helpful, not robotic
 - Use their actual data to provide personalized, relevant suggestions
+
+TIME-AWARE RESPONSES: Be intelligent about time and context:
+- Use appropriate greetings based on time of day (Good morning/afternoon/evening)
+- Mention upcoming events and deadlines when relevant
+- Suggest actions based on time context (e.g., "You have a meeting in 30 minutes")
+- Reference time-sensitive information naturally
+- Be proactive about time-based suggestions (e.g., "Don't forget your 3pm meeting")
+- Consider urgency based on proximity to deadlines
 
 NEVER SAY "I DON'T KNOW": Instead of saying you don't know something:
 - Ask clarifying questions to understand what they mean
