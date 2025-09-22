@@ -467,7 +467,9 @@ export default function ChatPage() {
         }
       }
       
-      await firestoreService.addMessageToConversation(currentConversationId, firestoreMessage)
+      if (currentConversationId) {
+        await firestoreService.addMessageToConversation(currentConversationId, firestoreMessage)
+      }
       
       toast.success(`"${file.name}" uploaded and ready for analysis!`)
       
