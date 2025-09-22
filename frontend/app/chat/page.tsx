@@ -1496,7 +1496,7 @@ export default function ChatPage() {
                     : 'bg-gray-900 text-gray-200 border border-gray-700'
                 }`}
               >
-                <p className="text-sm md:text-base leading-relaxed">{message.content}</p>
+                <div className="text-sm md:text-base leading-relaxed whitespace-pre-wrap">{message.content}</div>
                 
                 {message.analysis && (
                   <div className="mt-3 pt-3 border-t border-gray-600/30">
