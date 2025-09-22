@@ -8,7 +8,7 @@ import { User, Lock, Mail, ArrowRight, Sparkles, Brain, Calendar, Bell, CheckCir
 import Link from 'next/link'
 import { toast } from 'react-hot-toast'
 import { useAuth } from '@/components/providers/AuthProvider'
-import { signInWithPopup, GoogleAuthProvider } from 'firebase/auth'
+import { signInWithPopup, GoogleAuthProvider, sendPasswordResetEmail } from 'firebase/auth'
 import { auth } from '@/lib/firebase'
 
 export default function AuthPage() {
@@ -108,15 +108,50 @@ export default function AuthPage() {
     setIsMenuOpen(!isMenuOpen)
   }
 
-  const handleResendPassword = () => {
-    // TODO: Implement password reset functionality
-    console.log('Resending password reset for:', formData.email)
-    
-    // For now, show success message and redirect
-    toast.success('Password reset link sent! Check your email.')
-    setTimeout(() => {
-      window.location.href = '/chat'
-    }, 2000)
+  const handleResendPassword = async () => {
+    if (!formData.email) {
+      toast.error('Please enter your email address first')
+      return
+    }
+
+    try {
+      if (!auth) {
+        throw new Error('Firebase not initialized. Please check your environment variables.')
+      }
+
+      await sendPasswordResetEmail(auth, formData.email)
+      toast.success('Password reset link sent! Check your email and spam folder.')
+      
+      // Redirect back to login after a delay
+      setTimeout(() => {
+        setAuthMode('login')
+      }, 3000)
+    } catch (error: any) {
+      console.error('Password reset error:', error)
+      
+      let userMessage = 'Failed to send password reset email'
+      
+      if (error.code) {
+        switch (error.code) {
+          case 'auth/user-not-found':
+            userMessage = 'No account found with this email address'
+            break
+          case 'auth/invalid-email':
+            userMessage = 'Please enter a valid email address'
+            break
+          case 'auth/too-many-requests':
+            userMessage = 'Too many requests. Please try again later'
+            break
+          case 'auth/network-request-failed':
+            userMessage = 'Network error. Please check your connection and try again'
+            break
+          default:
+            userMessage = error.message || 'Failed to send password reset email'
+        }
+      }
+      
+      toast.error(userMessage)
+    }
   }
 
   const handleGoogleSignIn = async () => {
@@ -329,10 +364,10 @@ export default function AuthPage() {
               </motion.div>
               
               <h2 className="text-5xl xl:text-6xl font-bold text-white mb-6 leading-tight">
-                Your <span className="text-transparent bg-clip-text bg-gradient-to-r from-electric-500 to-purple-500">AI Second Brain</span> for everything you know
+                Never lose a <span className="text-transparent bg-clip-text bg-gradient-to-r from-electric-500 to-purple-500">thought</span> again
               </h2>
               <p className="text-xl text-gray-300 mb-8 leading-relaxed">
-                Your personal AI that knows everything you've read, written, and saved. <span className="text-electric-400">Velora</span> connects all your documents, emails, and notes into one intelligent assistant.
+                Stop drowning in information. <span className="text-electric-400">Velora</span> remembers everything so you can focus on what matters most.
               </p>
               
               {/* Call-to-Action Button - Desktop */}
@@ -557,7 +592,7 @@ export default function AuthPage() {
               transition={{ delay: 0.4 }}
               className="text-3xl md:text-4xl font-bold text-white mb-4 leading-tight"
             >
-              Your <span className="text-transparent bg-clip-text bg-gradient-to-r from-electric-500 to-purple-500">AI Second Brain</span>
+              Never lose a <span className="text-transparent bg-clip-text bg-gradient-to-r from-electric-500 to-purple-500">thought</span> again
             </motion.h2>
 
             {/* Subtitle */}
@@ -567,7 +602,7 @@ export default function AuthPage() {
               transition={{ delay: 0.6 }}
               className="text-gray-300 text-base md:text-lg leading-relaxed mb-8"
             >
-              Your personal AI that knows everything you've read, written, and saved. <span className="text-electric-400">Velora</span> connects all your documents, emails, and notes into one intelligent assistant.
+              Stop drowning in information. <span className="text-electric-400">Velora</span> remembers everything so you can focus on what matters most.
             </motion.p>
 
             {/* CTA Buttons */}
@@ -635,11 +670,11 @@ export default function AuthPage() {
                 <Database className="w-12 h-12 text-electric-400" />
               </motion.div>
               <h3 className="text-5xl font-bold text-white mb-6">
-                Your <span className="text-transparent bg-clip-text bg-gradient-to-r from-electric-500 to-purple-500">Personal Knowledge Engine</span>
+                Finally, <span className="text-transparent bg-clip-text bg-gradient-to-r from-electric-500 to-purple-500">everything in one place</span>
               </h3>
               <p className="text-2xl text-gray-300 max-w-4xl mx-auto leading-relaxed">
-                Ask <span className="text-electric-400">Velora</span> anything about your knowledge. <span className="text-electric-400">"What did I decide in last week's meeting?"</span> 
-                Get instant answers from your documents, emails, and notes.
+                No more hunting through 10 different apps. <span className="text-electric-400">Velora</span> finds what you need instantly. 
+                <span className="text-electric-400">"What did I decide in last week's meeting?"</span> - Get the answer in seconds.
               </p>
             </div>
             
@@ -659,10 +694,10 @@ export default function AuthPage() {
                   <Target className="w-8 h-8 text-electric-400" />
                 </motion.div>
                 <h4 className="text-xl font-bold text-white mb-4">
-                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-electric-500 to-purple-500">Unified</span> Search
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-electric-500 to-purple-500">Stop</span> Searching
                 </h4>
                 <p className="text-gray-300 text-base leading-relaxed">
-                  Find anything across all your files instantly. Just ask in plain language.
+                  No more digging through folders. Ask naturally and get instant answers.
                 </p>
               </motion.div>
               
@@ -681,10 +716,10 @@ export default function AuthPage() {
                   <Shield className="w-8 h-8 text-purple-400" />
                 </motion.div>
                 <h4 className="text-xl font-bold text-white mb-4">
-                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-electric-500 to-purple-500">AI</span> Summaries
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-electric-500 to-purple-500">Save</span> Hours
                 </h4>
                 <p className="text-gray-300 text-base leading-relaxed">
-                  Turn 30-page PDFs into 5-key-point summaries in seconds.
+                  Turn 30-page reports into 5 key points. Get the gist instantly.
                 </p>
               </motion.div>
               
@@ -703,10 +738,10 @@ export default function AuthPage() {
                   <TrendingUp className="w-8 h-8 text-green-400" />
                 </motion.div>
                 <h4 className="text-xl font-bold text-white mb-4">
-                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-electric-500 to-purple-500">Source</span> Transparency
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-electric-500 to-purple-500">Never</span> Forget
                 </h4>
                 <p className="text-gray-300 text-base leading-relaxed">
-                  Every answer cites the original document. Your knowledge, your control.
+                  Everything you've read, written, and saved. Always accessible, never lost.
                 </p>
               </motion.div>
             </div>
