@@ -122,8 +122,9 @@ export default function FileUpload({ onContentAnalyzed }: FileUploadProps) {
     formData.append('file', file);
 
     try {
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || '/api/pdf-analyze';
-      const response = await fetch(apiUrl, {
+      const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://velora-production.up.railway.app'
+      const apiUrl = baseUrl.replace(/\/api\/.*$/, '')
+      const response = await fetch(`${apiUrl}/api/pdf-analyze`, {
         method: 'POST',
         body: formData,
       });
@@ -166,8 +167,9 @@ export default function FileUpload({ onContentAnalyzed }: FileUploadProps) {
     formData.append('file', file);
 
     try {
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || '/api/pdf-analyze';
-      const response = await fetch(apiUrl, {
+      const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://velora-production.up.railway.app'
+      const apiUrl = baseUrl.replace(/\/api\/.*$/, '')
+      const response = await fetch(`${apiUrl}/api/pdf-analyze`, {
         method: 'POST',
         body: formData,
       });
