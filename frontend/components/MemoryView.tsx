@@ -7,21 +7,15 @@ import { memoryService, Memory } from '@/lib/memoryService'
 import { toast } from 'react-hot-toast'
 
 const categoryIcons = {
-  personal: Brain,
-  preference: Heart,
-  location: MapPin,
-  relationship: Heart,
-  context: Briefcase,
-  habit: Clock
+  personal: Heart,
+  work: Briefcase,
+  life: MapPin
 }
 
 const categoryColors = {
-  personal: 'text-blue-400 bg-blue-500/20',
-  preference: 'text-pink-400 bg-pink-500/20',
-  location: 'text-green-400 bg-green-500/20',
-  relationship: 'text-purple-400 bg-purple-500/20',
-  context: 'text-orange-400 bg-orange-500/20',
-  habit: 'text-cyan-400 bg-cyan-500/20'
+  personal: 'text-pink-400 bg-pink-500/20',
+  work: 'text-blue-400 bg-blue-500/20',
+  life: 'text-green-400 bg-green-500/20'
 }
 
 const importanceColors = {
