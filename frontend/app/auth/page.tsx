@@ -225,7 +225,7 @@ export default function AuthPage() {
             }}
             className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-electric-500 via-purple-500 to-electric-600 bg-clip-text text-transparent"
           >
-            Velora
+            Velora AI
           </motion.h1>
           
           {/* Enhanced Hamburger Menu */}
@@ -683,7 +683,7 @@ export default function AuthPage() {
                 Finally, <span className="text-transparent bg-clip-text bg-gradient-to-r from-electric-500 to-purple-500">everything in one place</span>
               </h3>
               <p className="text-2xl text-gray-300 max-w-4xl mx-auto leading-relaxed">
-                No more hunting through 10 different apps. <span className="text-electric-400">Velora</span> finds what you need instantly. 
+                No more hunting through 10 different apps. <span className="text-electric-400">Velora AI</span> finds what you need instantly. 
                 <span className="text-electric-400">"What did I decide in last week's meeting?"</span> - Get the answer in seconds.
               </p>
             </div>
@@ -1093,7 +1093,7 @@ export default function AuthPage() {
               
               {/* Copyright and Attribution */}
               <div className="text-sm text-gray-500 text-center">
-                © 2024 Velora. All rights reserved. • Engineered by <a href="https://aincorp.co" target="_blank" rel="noopener noreferrer" className="text-electric-400 hover:text-electric-300 transition-colors duration-200 font-medium">Aincorp</a>, San Francisco
+                © 2024 Velora AI. All rights reserved. • Engineered by <a href="https://aincorp.co" target="_blank" rel="noopener noreferrer" className="text-electric-400 hover:text-electric-300 transition-colors duration-200 font-medium">Aincorp</a>, San Francisco
               </div>
             </div>
           </div>
@@ -1134,7 +1134,7 @@ export default function AuthPage() {
             </h2>
             <p className="text-gray-300 text-sm md:text-base">
               {authMode === 'signup' 
-                ? 'Start your productivity journey with Velora' 
+                ? 'Start your productivity journey with Velora AI' 
                 : 'Sign in to continue your journey'
               }
             </p>
@@ -1405,7 +1405,7 @@ export default function AuthPage() {
               <a href="#" className="hover:text-white transition-colors">Terms of Service</a>
               <a href="#" className="hover:text-white transition-colors">Privacy Policy</a>
               <a href="#" className="hover:text-white transition-colors">Contact</a>
-              <span>© 2024 Velora. All rights reserved.</span>
+              <span>© 2024 Velora AI. All rights reserved.</span>
             </div>
           </div>
         </footer>
