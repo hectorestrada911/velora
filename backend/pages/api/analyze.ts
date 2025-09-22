@@ -52,17 +52,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     else if (hour < 17) timeOfDay = 'afternoon'
     else timeOfDay = 'evening'
 
-    // Build conversation context
+    // Build conversation context (expanded from 10 to 50 messages)
     let conversationContext = ''
     if (conversationHistory && conversationHistory.length > 0) {
-      conversationContext = `\n\nCONVERSATION HISTORY (for context):
+      conversationContext = `\n\nCONVERSATION HISTORY (for context - last 50 messages):
 ${conversationHistory.map((msg: any) => `${msg.type === 'user' ? 'User' : 'Assistant'}: ${msg.content}`).join('\n')}`
     }
 
-    // Build memory context
+    // Build memory context (expanded to include more memories)
     let memoryContext = ''
     if (relevantMemories && relevantMemories.length > 0) {
-      memoryContext = `\n\nRELEVANT MEMORIES (use these for context):
+      memoryContext = `\n\nRELEVANT MEMORIES (use these for context - last 100 memories):
 ${relevantMemories.map((memory: string) => `- ${memory}`).join('\n')}`
     }
 
@@ -86,7 +86,28 @@ ${recallSuggestions.map((suggestion: string) => `- ${suggestion}`).join('\n')}`
       hour12: true 
     })})`
 
-    const fullContext = dateContext + conversationContext + memoryContext + recallContext + (conversationContext || memoryContext || recallContext ? '\n\nCURRENT MESSAGE:' : '')
+    // Build additional context (if available)
+    let additionalContext = ''
+    
+    // Add document context if available
+    if (req.body.documents && req.body.documents.length > 0) {
+      additionalContext += `\n\nRECENT DOCUMENTS (for reference):
+${req.body.documents.map((doc: any) => `- ${doc.name}: ${doc.summary || 'No summary available'}`).join('\n')}`
+    }
+    
+    // Add email context if available
+    if (req.body.recentEmails && req.body.recentEmails.length > 0) {
+      additionalContext += `\n\nRECENT EMAILS (for context):
+${req.body.recentEmails.map((email: any) => `- From: ${email.from}, Subject: ${email.subject}, Date: ${email.date}`).join('\n')}`
+    }
+    
+    // Add calendar context if available
+    if (req.body.upcomingEvents && req.body.upcomingEvents.length > 0) {
+      additionalContext += `\n\nUPCOMING CALENDAR EVENTS (next 7 days):
+${req.body.upcomingEvents.map((event: any) => `- ${event.title} on ${event.date} at ${event.time}`).join('\n')}`
+    }
+
+    const fullContext = dateContext + conversationContext + memoryContext + recallContext + additionalContext + (conversationContext || memoryContext || recallContext || additionalContext ? '\n\nCURRENT MESSAGE:' : '')
 
     // Comprehensive system prompt for AI analysis
     const systemPrompt = `You are Velora, an intelligent AI productivity assistant with deep understanding of the user's personal context and preferences. You have access to a comprehensive memory system and can actively recall information across conversations.

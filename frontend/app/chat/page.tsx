@@ -632,7 +632,7 @@ export default function ChatPage() {
         ).join('\n')}` : ''
 
       // Prepare conversation history for context
-      const conversationHistory = messages.slice(-10) // Send last 10 messages for context
+      const conversationHistory = messages.slice(-50) // Send last 50 messages for context
       
       // Call AI backend
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://velora-production.up.railway.app/api/analyze'
@@ -940,7 +940,7 @@ export default function ChatPage() {
       console.log('API URL being used:', apiUrl)
       console.log('Environment variable:', process.env.NEXT_PUBLIC_API_URL)
       // Prepare conversation history for context
-      const conversationHistory = messages.slice(-10) // Send last 10 messages for context
+      const conversationHistory = messages.slice(-50) // Send last 50 messages for context
       
       const response = await fetch(apiUrl, {
         method: 'POST',
