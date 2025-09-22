@@ -119,7 +119,7 @@ export default function MemoryView({ onClose }: MemoryViewProps) {
 
   const toggleReminderComplete = async (reminderId: string) => {
     try {
-      await calendarService.toggleReminderComplete(reminderId)
+      await calendarService.markReminderComplete(reminderId)
       loadItems()
       toast.success('Reminder updated!')
     } catch (error) {
