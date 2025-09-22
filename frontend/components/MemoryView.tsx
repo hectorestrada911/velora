@@ -99,7 +99,7 @@ export default function MemoryView({ onClose }: MemoryViewProps) {
         category: newReminder.category
       }
 
-      await calendarService.addReminder(reminder)
+      await calendarService.createReminder(reminder)
       toast.success('Reminder added!')
       
       // Reset form
