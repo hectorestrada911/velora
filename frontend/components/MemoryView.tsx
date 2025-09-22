@@ -9,6 +9,7 @@ import {
   Heart,
   Briefcase,
   Home,
+  Plus,
   Clock,
   CheckCircle,
   AlertCircle,
@@ -36,6 +37,13 @@ interface MemoryItem {
 export default function MemoryView({ onClose }: MemoryViewProps) {
   const [items, setItems] = useState<MemoryItem[]>([])
   const [searchQuery, setSearchQuery] = useState('')
+  const [showAddReminder, setShowAddReminder] = useState(false)
+  const [newReminder, setNewReminder] = useState({
+    title: '',
+    dueDate: '',
+    priority: 'medium' as 'low' | 'medium' | 'high' | 'urgent',
+    category: 'personal' as 'work' | 'personal' | 'life'
+  })
 
   useEffect(() => {
     loadItems()
@@ -71,6 +79,43 @@ export default function MemoryView({ onClose }: MemoryViewProps) {
     setItems(allItems)
   }
 
+
+  const addReminder = async () => {
+    if (!newReminder.title.trim()) {
+      toast.error('Please enter a reminder title')
+      return
+    }
+
+    if (!newReminder.dueDate) {
+      toast.error('Please select a due date')
+      return
+    }
+
+    try {
+      const reminder: Reminder = {
+        title: newReminder.title,
+        dueDate: new Date(newReminder.dueDate),
+        priority: newReminder.priority,
+        category: newReminder.category
+      }
+
+      await calendarService.addReminder(reminder)
+      toast.success('Reminder added!')
+      
+      // Reset form
+      setNewReminder({
+        title: '',
+        dueDate: '',
+        priority: 'medium',
+        category: 'personal'
+      })
+      setShowAddReminder(false)
+      loadItems()
+    } catch (error) {
+      console.error('Error adding reminder:', error)
+      toast.error('Failed to add reminder')
+    }
+  }
 
   const toggleReminderComplete = async (reminderId: string) => {
     try {
@@ -149,16 +194,25 @@ export default function MemoryView({ onClose }: MemoryViewProps) {
 
         {/* Content */}
         <div className="p-6 space-y-4">
-          {/* Search */}
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
-            <input
-              type="text"
-              placeholder="Search your memories and reminders..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-electric-500"
-            />
+          {/* Search and Add Reminder */}
+          <div className="flex space-x-3">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <input
+                type="text"
+                placeholder="Search your memories and reminders..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-10 pr-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-electric-500"
+              />
+            </div>
+            <button
+              onClick={() => setShowAddReminder(true)}
+              className="px-4 py-3 bg-gradient-to-r from-purple-500 to-blue-500 text-white rounded-lg font-medium hover:from-purple-400 hover:to-blue-400 transition-colors flex items-center space-x-2"
+            >
+              <Plus className="w-4 h-4" />
+              <span>Add Reminder</span>
+            </button>
           </div>
 
           {/* Items List */}
@@ -239,6 +293,51 @@ export default function MemoryView({ onClose }: MemoryViewProps) {
             )}
           </div>
         </div>
+
+        {/* Add Reminder Modal */}
+        {showAddReminder && (
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-60 p-4">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="bg-gray-900 rounded-xl border border-gray-700 w-full max-w-md p-6"
+            >
+              <h3 className="text-lg font-semibold text-white mb-4">Add Reminder</h3>
+              
+              <div className="space-y-4">
+                <input
+                  type="text"
+                  placeholder="Reminder title"
+                  value={newReminder.title}
+                  onChange={(e) => setNewReminder({...newReminder, title: e.target.value})}
+                  className="w-full p-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-electric-500"
+                />
+                
+                <input
+                  type="datetime-local"
+                  value={newReminder.dueDate}
+                  onChange={(e) => setNewReminder({...newReminder, dueDate: e.target.value})}
+                  className="w-full p-3 bg-gray-800 border border-gray-700 rounded-lg text-white focus:outline-none focus:border-electric-500"
+                />
+              </div>
+              
+              <div className="flex space-x-3 mt-6">
+                <button
+                  onClick={addReminder}
+                  className="flex-1 bg-gradient-to-r from-purple-500 to-blue-500 text-white py-2 px-4 rounded-lg font-medium hover:from-purple-400 hover:to-blue-400 transition-colors"
+                >
+                  Add Reminder
+                </button>
+                <button
+                  onClick={() => setShowAddReminder(false)}
+                  className="px-4 py-2 bg-gray-700 text-gray-300 rounded-lg hover:bg-gray-600 transition-colors"
+                >
+                  Cancel
+                </button>
+              </div>
+            </motion.div>
+          </div>
+        )}
 
       </motion.div>
     </div>
