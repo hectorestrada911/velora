@@ -332,7 +332,7 @@ export default function AuthPage() {
                 Your <span className="text-transparent bg-clip-text bg-gradient-to-r from-electric-500 to-purple-500">AI Second Brain</span> for everything you know
               </h2>
               <p className="text-xl text-gray-300 mb-8 leading-relaxed">
-                Like ChatGPT, but for your personal knowledge. <span className="text-electric-400">Velora</span> connects all your documents, emails, and notes into one intelligent assistant.
+                Your personal AI that knows everything you've read, written, and saved. <span className="text-electric-400">Velora</span> connects all your documents, emails, and notes into one intelligent assistant.
               </p>
               
               {/* Call-to-Action Button - Desktop */}
@@ -567,7 +567,7 @@ export default function AuthPage() {
               transition={{ delay: 0.6 }}
               className="text-gray-300 text-base md:text-lg leading-relaxed mb-8"
             >
-              Like ChatGPT, but for your personal knowledge. <span className="text-electric-400">Velora</span> connects all your documents, emails, and notes into one intelligent assistant.
+              Your personal AI that knows everything you've read, written, and saved. <span className="text-electric-400">Velora</span> connects all your documents, emails, and notes into one intelligent assistant.
             </motion.p>
 
             {/* CTA Buttons */}
@@ -635,7 +635,7 @@ export default function AuthPage() {
                 <Database className="w-12 h-12 text-electric-400" />
               </motion.div>
               <h3 className="text-5xl font-bold text-white mb-6">
-                Your <span className="text-transparent bg-clip-text bg-gradient-to-r from-electric-500 to-purple-500">Personal Google</span>
+                Your <span className="text-transparent bg-clip-text bg-gradient-to-r from-electric-500 to-purple-500">Personal Knowledge Engine</span>
               </h3>
               <p className="text-2xl text-gray-300 max-w-4xl mx-auto leading-relaxed">
                 Ask <span className="text-electric-400">Velora</span> anything about your knowledge. <span className="text-electric-400">"What did I decide in last week's meeting?"</span> 
@@ -811,7 +811,7 @@ export default function AuthPage() {
                   "What did I learn about machine learning last month?"
                 </p>
                 <p className="text-gray-400 text-sm">
-                  Your personal Google that knows everything you've read, written, and saved.
+                  Your personal knowledge base that knows everything you've read, written, and saved.
                 </p>
               </motion.div>
             </div>
