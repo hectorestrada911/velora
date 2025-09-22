@@ -374,10 +374,10 @@ export default function AuthPage() {
               </motion.div>
               
               <h2 className="text-5xl xl:text-6xl font-bold text-white mb-6 leading-tight">
-                Never lose a <span className="text-transparent bg-clip-text bg-gradient-to-r from-electric-500 to-purple-500">thought</span> again
+                Never lose a <span className="text-transparent bg-clip-text bg-gradient-to-r from-electric-500 to-purple-500">thought</span> with <span className="text-transparent bg-clip-text bg-gradient-to-r from-electric-500 to-purple-500">Velora AI</span>
               </h2>
               <p className="text-xl text-gray-300 mb-8 leading-relaxed">
-                Stop drowning in information. <span className="text-electric-400">Velora</span> remembers everything so you can focus on what matters most.
+                Stop drowning in information. <span className="text-electric-400">Velora AI</span> remembers everything so you can focus on what matters most.
               </p>
               
               {/* Call-to-Action Button - Desktop */}
@@ -602,7 +602,7 @@ export default function AuthPage() {
               transition={{ delay: 0.4 }}
               className="text-3xl md:text-4xl font-bold text-white mb-4 leading-tight"
             >
-              Never lose a <span className="text-transparent bg-clip-text bg-gradient-to-r from-electric-500 to-purple-500">thought</span> again
+              Never lose a <span className="text-transparent bg-clip-text bg-gradient-to-r from-electric-500 to-purple-500">thought</span> with <span className="text-transparent bg-clip-text bg-gradient-to-r from-electric-500 to-purple-500">Velora AI</span>
             </motion.h2>
 
             {/* Subtitle */}
@@ -612,7 +612,7 @@ export default function AuthPage() {
               transition={{ delay: 0.6 }}
               className="text-gray-300 text-base md:text-lg leading-relaxed mb-8"
             >
-              Stop drowning in information. <span className="text-electric-400">Velora</span> remembers everything so you can focus on what matters most.
+              Stop drowning in information. <span className="text-electric-400">Velora AI</span> remembers everything so you can focus on what matters most.
             </motion.p>
 
             {/* CTA Buttons */}

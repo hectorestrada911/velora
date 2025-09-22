@@ -82,7 +82,7 @@ export default function MobileSidebar({
                   <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-blue-500 rounded-lg flex items-center justify-center">
                     <span className="text-white font-bold text-sm">V</span>
                   </div>
-                  <span className="text-white font-semibold">Velora</span>
+                  <span className="text-white font-semibold">Velora AI</span>
                 </div>
                 <button
                   onClick={onClose}

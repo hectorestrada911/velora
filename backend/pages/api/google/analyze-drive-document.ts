@@ -82,7 +82,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     // Analyze content with AI
-    const analysisPrompt = `You are Velora, an AI assistant specialized in analyzing documents and extracting actionable insights. Analyze this Google Drive document and extract key information.
+    const analysisPrompt = `You are Velora AI, an AI assistant specialized in analyzing documents and extracting actionable insights. Analyze this Google Drive document and extract key information.
 
 CURRENT DATE & TIME: ${new Date().toISOString()}
 

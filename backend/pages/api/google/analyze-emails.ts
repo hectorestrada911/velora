@@ -94,7 +94,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     // Enhanced AI analysis using our comprehensive system
-    const analysisPrompt = `You are Velora, an AI assistant specialized in analyzing emails and extracting actionable insights. Analyze these emails and extract tasks, deadlines, meetings, and important information.
+    const analysisPrompt = `You are Velora AI, an AI assistant specialized in analyzing emails and extracting actionable insights. Analyze these emails and extract tasks, deadlines, meetings, and important information.
 
 CURRENT DATE & TIME: ${new Date().toISOString()}
 
@@ -163,7 +163,7 @@ Return ONLY valid JSON in this exact format:
       messages: [
         {
           role: "system",
-          content: "You are Velora, an AI assistant that helps users organize their emails into actionable tasks, meetings, and reminders. Extract only concrete, actionable items from emails."
+          content: "You are Velora AI, an AI assistant that helps users organize their emails into actionable tasks, meetings, and reminders. Extract only concrete, actionable items from emails."
         },
         {
           role: "user",

@@ -7,9 +7,9 @@ import { AuthProvider } from '@/components/providers/AuthProvider'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'Velora: Cursor Prompt — Build "TalkNotes"',
-  description: 'Capture ideas and tasks with your voice. Get searchable notes, smart reminders, and a weekly recap—automatically.',
-  keywords: 'voice notes, productivity, reminders, voice capture, AI transcription',
+  title: 'Velora AI: Never lose a thought again',
+  description: 'Stop drowning in information. Velora AI remembers everything so you can focus on what matters most.',
+  keywords: 'AI assistant, productivity, memory, voice notes, smart reminders, AI transcription',
 }
 
 export default function RootLayout({

@@ -23,7 +23,7 @@ export function Header() {
             <div className="w-8 h-8 bg-gradient-to-br from-electric-600 to-accent-500 rounded-lg flex items-center justify-center shadow-glow">
               <span className="text-white font-bold text-lg">V</span>
             </div>
-            <span className="text-xl font-bold text-gray-100">Velora</span>
+            <span className="text-xl font-bold text-gray-100">Velora AI</span>
           </Link>
 
           {/* Desktop Navigation */}
