@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Send, Mic, MicOff, Calendar, Bell, Settings, Plus, Sparkles, Brain, Clock, CheckCircle, History, Trash2, Upload, FileText, X, BarChart3, Menu, ChevronDown } from 'lucide-react'
+import { Send, Mic, MicOff, Calendar, Bell, Settings, Plus, Sparkles, Brain, Clock, CheckCircle, History, Trash2, Upload, FileText, X, BarChart3, Menu, ChevronDown, Mail, ExternalLink } from 'lucide-react'
 import { toast } from 'react-hot-toast'
 import { calendarService } from '@/lib/calendarService'
 import VoiceCommand from '@/components/VoiceCommand'
@@ -56,12 +56,109 @@ export default function ChatPage() {
   const [showMobileSidebar, setShowMobileSidebar] = useState(false)
   const [showSettings, setShowSettings] = useState(false)
   const [showOrganizeMenu, setShowOrganizeMenu] = useState(false)
+  const [isGoogleConnected, setIsGoogleConnected] = useState(false)
+  const [isConnectingGoogle, setIsConnectingGoogle] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const handleNavigate = (path: string) => {
     window.location.href = path
   }
+
+  // Google Workspace Integration Functions
+  const checkGoogleConnection = async () => {
+    try {
+      const apiUrl = 'https://velora-production.up.railway.app'
+      const response = await fetch(`${apiUrl}/api/google/status`)
+      if (response.ok) {
+        setIsGoogleConnected(true)
+      }
+    } catch (error) {
+      console.error('Error checking Google connection:', error)
+      setIsGoogleConnected(false)
+    }
+  }
+
+  const handleConnectGoogle = async () => {
+    setIsConnectingGoogle(true)
+    try {
+      const apiUrl = 'https://velora-production.up.railway.app'
+      const response = await fetch(`${apiUrl}/api/google/auth`)
+      const { authUrl } = await response.json()
+      
+      // Open OAuth flow in popup
+      const popup = window.open(
+        authUrl,
+        'google-auth',
+        'width=500,height=600,scrollbars=yes,resizable=yes'
+      )
+      
+      // Check if popup was closed
+      const checkClosed = setInterval(() => {
+        if (popup?.closed) {
+          clearInterval(checkClosed)
+          setIsConnectingGoogle(false)
+          checkGoogleConnection() // Check if connection was successful
+        }
+      }, 1000)
+    } catch (error) {
+      console.error('Error connecting to Google:', error)
+      toast.error('Failed to connect to Google Workspace')
+      setIsConnectingGoogle(false)
+    }
+  }
+
+  const handleAnalyzeEmails = async () => {
+    if (!isGoogleConnected) {
+      toast.error('Please connect to Google Workspace first')
+      return
+    }
+
+    setIsAnalyzingEmails(true)
+    try {
+      const apiUrl = 'https://velora-production.up.railway.app'
+      const response = await fetch(`${apiUrl}/api/google/analyze-emails`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          userId: user?.uid || 'current-user'
+        }),
+      })
+
+      if (response.ok) {
+        const analysis = await response.json()
+        setEmailAnalysis(analysis)
+        
+        // Add analysis results to chat
+        const analysisMessage = `📧 **Email Analysis Complete!**\n\n**Tasks Found:** ${analysis.tasks?.length || 0}\n**Meetings:** ${analysis.meetings?.length || 0}\n**Reminders:** ${analysis.reminders?.length || 0}\n\nI've analyzed your recent emails and found actionable items. Ask me about any specific task or meeting!`
+        
+        const newMessage: Message = {
+          id: Date.now().toString(),
+          text: analysisMessage,
+          isUser: false,
+          timestamp: new Date(),
+          type: 'text'
+        }
+        
+        setMessages(prev => [...prev, newMessage])
+        toast.success('Email analysis complete!')
+      } else {
+        throw new Error('Failed to analyze emails')
+      }
+    } catch (error) {
+      console.error('Error analyzing emails:', error)
+      toast.error('Failed to analyze emails')
+    } finally {
+      setIsAnalyzingEmails(false)
+    }
+  }
+
+  // Check Google connection on mount
+  useEffect(() => {
+    checkGoogleConnection()
+  }, [])
 
   // Close dropdowns when clicking outside
   useEffect(() => {
@@ -1380,6 +1477,101 @@ export default function ChatPage() {
                   <div className="w-2 h-2 bg-electric-400 rounded-full animate-bounce"></div>
                   <div className="w-2 h-2 bg-electric-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
                   <div className="w-2 h-2 bg-electric-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                </div>
+              </div>
+            </motion.div>
+          )}
+          
+          {/* Google Workspace Integration - Prominent and Accessible */}
+          {!isGoogleConnected && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="bg-gradient-to-r from-blue-500/10 to-purple-500/10 border border-blue-500/20 rounded-xl p-6 mb-6"
+            >
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-4">
+                  <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-500 rounded-xl flex items-center justify-center">
+                    <Mail className="w-6 h-6 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-semibold text-white mb-1">
+                      Connect Google Workspace
+                    </h3>
+                    <p className="text-gray-300 text-sm">
+                      Analyze your emails, create calendar events, and never miss important tasks
+                    </p>
+                  </div>
+                </div>
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={handleConnectGoogle}
+                  disabled={isConnectingGoogle}
+                  className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-400 hover:to-purple-400 disabled:opacity-50 text-white font-semibold py-2 px-6 rounded-lg transition-all duration-200 flex items-center space-x-2"
+                >
+                  {isConnectingGoogle ? (
+                    <>
+                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                      <span>Connecting...</span>
+                    </>
+                  ) : (
+                    <>
+                      <ExternalLink className="w-4 h-4" />
+                      <span>Connect</span>
+                    </>
+                  )}
+                </motion.button>
+              </div>
+            </motion.div>
+          )}
+
+          {/* Google Workspace Connected - Show Actions */}
+          {isGoogleConnected && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="bg-gradient-to-r from-green-500/10 to-blue-500/10 border border-green-500/20 rounded-xl p-4 mb-6"
+            >
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-3">
+                  <div className="w-8 h-8 bg-green-500 rounded-lg flex items-center justify-center">
+                    <CheckCircle className="w-5 h-5 text-white" />
+                  </div>
+                  <div>
+                    <h4 className="text-white font-medium">Google Workspace Connected</h4>
+                    <p className="text-gray-300 text-sm">Ready to analyze your emails and calendar</p>
+                  </div>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={handleAnalyzeEmails}
+                    disabled={isAnalyzingEmails}
+                    className="bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-400 hover:to-blue-400 disabled:opacity-50 text-white font-medium py-2 px-4 rounded-lg transition-all duration-200 flex items-center space-x-2 text-sm"
+                  >
+                    {isAnalyzingEmails ? (
+                      <>
+                        <div className="w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                        <span>Analyzing...</span>
+                      </>
+                    ) : (
+                      <>
+                        <Mail className="w-3 h-3" />
+                        <span>Analyze Emails</span>
+                      </>
+                    )}
+                  </motion.button>
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => window.open('https://calendar.google.com', '_blank')}
+                    className="bg-gray-700 hover:bg-gray-600 text-white font-medium py-2 px-4 rounded-lg transition-all duration-200 flex items-center space-x-2 text-sm"
+                  >
+                    <Calendar className="w-3 h-3" />
+                    <span>Open Calendar</span>
+                  </motion.button>
                 </div>
               </div>
             </motion.div>
