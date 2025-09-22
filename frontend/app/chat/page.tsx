@@ -460,9 +460,11 @@ export default function ChatPage() {
       
       // Save to Firestore
       const firestoreMessage: Omit<FirestoreMessage, 'id' | 'timestamp'> = {
-        type: 'ai',
+        role: 'assistant',
         content: aiMessage.content,
-        analysis: aiMessage.analysis
+        metadata: {
+          analysis: aiMessage.analysis
+        }
       }
       
       await firestoreService.addMessageToConversation(currentConversationId, firestoreMessage)

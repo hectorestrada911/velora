@@ -92,161 +92,52 @@ export default function MobileSidebar({
                 </button>
               </div>
 
-              {/* Google Workspace Integration */}
+              {/* Simplified Mobile Navigation - Just Sign In */}
               <div className="mb-6">
-                {!isGoogleConnected ? (
+                {!user ? (
                   <button
                     onClick={() => {
-                      onConnectGoogle?.()
-                      onClose()
+                      // Navigate to auth page
+                      window.location.href = '/auth'
                     }}
-                    disabled={isConnectingGoogle}
-                    className="w-full flex items-center space-x-3 p-3 text-white bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-400 hover:to-purple-400 disabled:opacity-50 rounded-lg transition-colors"
+                    className="w-full flex items-center justify-center space-x-3 p-4 text-white bg-gradient-to-r from-electric-600 to-accent-500 hover:from-electric-500 hover:to-accent-400 rounded-lg transition-colors font-medium"
                   >
-                    {isConnectingGoogle ? (
-                      <>
-                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                        <span>Connecting...</span>
-                      </>
-                    ) : (
-                      <>
-                        <Mail className="w-5 h-5" />
-                        <span>Connect Google</span>
-                      </>
-                    )}
+                    <User className="w-5 h-5" />
+                    <span>Sign In</span>
                   </button>
                 ) : (
-                  <div className="space-y-2">
+                  <div className="space-y-3">
                     <div className="flex items-center space-x-3 p-3 bg-green-500/20 border border-green-500/30 rounded-lg">
                       <CheckCircle className="w-5 h-5 text-green-400" />
-                      <span className="text-green-400 font-medium">Google Connected</span>
+                      <span className="text-green-400 font-medium">Signed In</span>
                     </div>
                     <button
-                      onClick={() => {
-                        onAnalyzeEmails?.()
-                        onClose()
-                      }}
-                      disabled={isAnalyzingEmails}
-                      className="w-full flex items-center space-x-3 p-3 text-white bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-400 hover:to-blue-400 disabled:opacity-50 rounded-lg transition-colors"
+                      onClick={handleSignOut}
+                      className="w-full flex items-center justify-center space-x-3 p-3 text-gray-300 hover:text-white bg-gray-800 hover:bg-gray-700 rounded-lg transition-colors"
                     >
-                      {isAnalyzingEmails ? (
-                        <>
-                          <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                          <span>Analyzing...</span>
-                        </>
-                      ) : (
-                        <>
-                          <Mail className="w-5 h-5" />
-                          <span>Analyze Emails</span>
-                        </>
-                      )}
+                      <X className="w-5 h-5" />
+                      <span>Sign Out</span>
                     </button>
                   </div>
                 )}
               </div>
 
-              {/* New Chat */}
+              {/* Simple Mobile Navigation */}
               <div className="mb-6">
                 <button
                   onClick={() => {
                     onNavigate('/chat')
                     onClose()
                   }}
-                  className="w-full flex items-center space-x-3 p-3 text-white bg-gray-800 hover:bg-gray-700 rounded-lg transition-colors"
-                >
-                  <Plus className="w-5 h-5" />
-                  <span>New Chat</span>
-                </button>
-              </div>
-
-              {/* Recent */}
-              <div className="mb-6">
-                <h3 className="text-sm font-medium text-gray-400 uppercase tracking-wider mb-3">
-                  Recent
-                </h3>
-                <button
-                  onClick={() => {
-                    onToggleConversationHistory()
-                    onClose()
-                  }}
                   className="w-full flex items-center space-x-3 p-3 text-gray-300 hover:text-white hover:bg-gray-800 rounded-lg transition-colors"
                 >
-                  <History className="w-5 h-5" />
-                  <span>Chat History</span>
+                  <MessageSquare className="w-5 h-5" />
+                  <span>Chat</span>
                 </button>
               </div>
 
-              {/* Features */}
-              <div className="mb-6">
-                <h3 className="text-sm font-medium text-gray-400 uppercase tracking-wider mb-3">
-                  Features
-                </h3>
-                <div className="space-y-2">
-                  <button
-                    onClick={() => {
-                      onNavigate('/calendar')
-                      onClose()
-                    }}
-                    className="w-full flex items-center space-x-3 p-3 text-gray-300 hover:text-white hover:bg-gray-800 rounded-lg transition-colors"
-                  >
-                    <Calendar className="w-5 h-5" />
-                    <span>Calendar</span>
-                  </button>
-                  <button
-                    onClick={() => {
-                      onNavigate('/reminders')
-                      onClose()
-                    }}
-                    className="w-full flex items-center space-x-3 p-3 text-gray-300 hover:text-white hover:bg-gray-800 rounded-lg transition-colors"
-                  >
-                    <Bell className="w-5 h-5" />
-                    <span>Reminders</span>
-                  </button>
-                  <button
-                    onClick={() => {
-                      onNavigate('/memory')
-                      onClose()
-                    }}
-                    className="w-full flex items-center space-x-3 p-3 text-gray-300 hover:text-white hover:bg-gray-800 rounded-lg transition-colors"
-                  >
-                    <Brain className="w-5 h-5" />
-                    <span>Memory</span>
-                  </button>
-                  <button
-                    onClick={() => {
-                      onNavigate('/voice')
-                      onClose()
-                    }}
-                    className="w-full flex items-center space-x-3 p-3 text-gray-300 hover:text-white hover:bg-gray-800 rounded-lg transition-colors"
-                  >
-                    <Mic className="w-5 h-5" />
-                    <span>Voice</span>
-                  </button>
-                </div>
-              </div>
 
-              {/* Quick Actions */}
-              <div className="mb-6">
-                <h3 className="text-sm font-medium text-gray-400 uppercase tracking-wider mb-3">
-                  Quick Actions
-                </h3>
-                <div className="space-y-2">
-                  <button
-                    onClick={() => {
-                      onNavigate('/demo')
-                      onClose()
-                    }}
-                    className="w-full flex items-center space-x-3 p-3 text-gray-300 hover:text-white hover:bg-gray-800 rounded-lg transition-colors"
-                  >
-                    <Play className="w-5 h-5" />
-                    <span>Try Demo</span>
-                  </button>
-                  <button className="w-full flex items-center space-x-3 p-3 text-gray-300 hover:text-white hover:bg-gray-800 rounded-lg transition-colors">
-                    <Settings className="w-5 h-5" />
-                    <span>Settings</span>
-                  </button>
-                </div>
-              </div>
+
 
               {/* User Profile */}
               {user && (
