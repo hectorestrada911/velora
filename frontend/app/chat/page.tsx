@@ -16,7 +16,7 @@ import { crossReferenceService, SmartSuggestion, CrossReference } from '@/lib/cr
 import { memoryService } from '@/lib/memoryService'
 import { firestoreService, FirestoreConversation, FirestoreMessage } from '@/lib/firestoreService'
 import SmartSuggestions from '@/components/SmartSuggestions'
-import MemoryDashboard from '@/components/MemoryDashboard'
+import MemoryView from '@/components/MemoryView'
 import MobileSidebar from '@/components/MobileSidebar'
 import SettingsModal from '@/components/SettingsModal'
 import { ErrorHandler } from '@/lib/errorHandler'
@@ -52,7 +52,7 @@ export default function ChatPage() {
   const [currentExampleIndex, setCurrentExampleIndex] = useState(0)
   const [hasUserInteracted, setHasUserInteracted] = useState(false)
   const [smartSuggestions, setSmartSuggestions] = useState<SmartSuggestion[]>([])
-  const [showMemoryDashboard, setShowMemoryDashboard] = useState(false)
+  const [showMemoryView, setShowMemoryView] = useState(false)
   const [showMobileSidebar, setShowMobileSidebar] = useState(false)
   const [showSettings, setShowSettings] = useState(false)
   const [showOrganizeMenu, setShowOrganizeMenu] = useState(false)
@@ -1330,9 +1330,9 @@ export default function ChatPage() {
 
               {/* Remember */}
               <button 
-                onClick={() => setShowMemoryDashboard(true)}
+                onClick={() => setShowMemoryView(true)}
                 className="flex items-center gap-2 px-3 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-800 rounded-lg transition-colors"
-                title="Remember & Intelligence"
+                title="Memory Bank"
               >
                 <Brain className="w-4 h-4" />
                 <span>Remember</span>
@@ -2005,9 +2005,9 @@ export default function ChatPage() {
         )}
       </AnimatePresence>
 
-      {/* Remember Dashboard */}
-      {showMemoryDashboard && (
-        <MemoryDashboard onClose={() => setShowMemoryDashboard(false)} />
+      {/* Memory View */}
+      {showMemoryView && (
+        <MemoryView onClose={() => setShowMemoryView(false)} />
       )}
 
       {/* Mobile Sidebar */}
