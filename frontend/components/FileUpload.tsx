@@ -18,7 +18,8 @@ interface UploadedFile {
   content?: string;
   analysis?: any;
   pdfAnalysis?: any;
-  status: 'uploading' | 'processing' | 'analyzing' | 'completed' | 'error';
+  status: 'pending' | 'uploading' | 'processing' | 'analyzing' | 'completed' | 'error';
+  file?: File; // Store the actual file for later processing
 }
 
 export default function FileUpload({ onContentAnalyzed }: FileUploadProps) {
@@ -44,9 +45,18 @@ export default function FileUpload({ onContentAnalyzed }: FileUploadProps) {
     await processFiles(droppedFiles);
   }, []);
 
-  const handleFileSelect = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileSelect = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFiles = Array.from(e.target.files || []);
-    await processFiles(selectedFiles);
+    // Just add files to the list, don't process them yet
+    const newFiles: UploadedFile[] = selectedFiles.map(file => ({
+      id: Math.random().toString(36).substr(2, 9),
+      name: file.name,
+      type: file.type,
+      size: file.size,
+      status: 'pending',
+      file: file // Store the actual file for later processing
+    }));
+    setFiles(prev => [...prev, ...newFiles]);
   }, []);
 
   const processFiles = async (fileList: File[]) => {
@@ -63,6 +73,18 @@ export default function FileUpload({ onContentAnalyzed }: FileUploadProps) {
     for (const file of fileList) {
       await processFile(file);
     }
+  };
+
+  const startProcessingFile = async (fileId: string) => {
+    const fileObj = files.find(f => f.id === fileId);
+    if (!fileObj || !fileObj.file) return;
+
+    // Update status to uploading
+    setFiles(prev => prev.map(f => 
+      f.id === fileId ? { ...f, status: 'uploading' } : f
+    ));
+
+    await processFile(fileObj.file);
   };
 
   const processFile = async (file: File) => {
@@ -282,6 +304,8 @@ export default function FileUpload({ onContentAnalyzed }: FileUploadProps) {
 
   const getStatusIcon = (status: string) => {
     switch (status) {
+      case 'pending':
+        return <File className="w-4 h-4 text-yellow-400" />;
       case 'uploading':
         return <Upload className="w-4 h-4 animate-pulse" />;
       case 'processing':
@@ -299,6 +323,8 @@ export default function FileUpload({ onContentAnalyzed }: FileUploadProps) {
 
   const getStatusColor = (status: string) => {
     switch (status) {
+      case 'pending':
+        return 'text-yellow-400';
       case 'uploading':
         return 'text-blue-400';
       case 'processing':
@@ -396,6 +422,7 @@ export default function FileUpload({ onContentAnalyzed }: FileUploadProps) {
                       </div>
                       
                       <div className="text-sm text-gray-500 mt-1">
+                        {file.status === 'pending' && 'Ready to process'}
                         {file.status === 'uploading' && 'Uploading...'}
                         {file.status === 'processing' && 'Extracting text...'}
                         {file.status === 'analyzing' && 'AI is analyzing...'}
@@ -405,12 +432,22 @@ export default function FileUpload({ onContentAnalyzed }: FileUploadProps) {
                     </div>
                   </div>
                   
-                  <button
-                    onClick={() => removeFile(file.id)}
-                    className="text-gray-400 hover:text-red-400 transition-colors"
-                  >
-                    <X className="w-4 h-4" />
-                  </button>
+                  <div className="flex items-center space-x-2">
+                    {file.status === 'pending' && (
+                      <button
+                        onClick={() => startProcessingFile(file.id)}
+                        className="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded-lg transition-colors"
+                      >
+                        Process
+                      </button>
+                    )}
+                    <button
+                      onClick={() => removeFile(file.id)}
+                      className="text-gray-400 hover:text-red-400 transition-colors"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  </div>
                 </div>
 
                 {/* Analysis Results */}
