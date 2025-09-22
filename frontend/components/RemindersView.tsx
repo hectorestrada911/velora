@@ -24,7 +24,7 @@ export default function RemindersView() {
     title: '',
     dueDate: '',
     priority: 'medium' as 'low' | 'medium' | 'high' | 'urgent',
-    category: 'personal' as 'work' | 'personal' | 'health' | 'shopping' | 'learning' | 'home' | 'transport' | 'communication',
+    category: 'personal' as 'work' | 'personal' | 'life',
     description: ''
   })
   const [editingReminderId, setEditingReminderId] = useState<string | null>(null)
@@ -250,12 +250,7 @@ export default function RemindersView() {
     const categories = {
       work: { icon: Briefcase, color: 'bg-blue-600', textColor: 'text-blue-400' },
       personal: { icon: Heart, color: 'bg-pink-600', textColor: 'text-pink-400' },
-      health: { icon: Dumbbell, color: 'bg-green-600', textColor: 'text-green-400' },
-      shopping: { icon: ShoppingCart, color: 'bg-orange-600', textColor: 'text-orange-400' },
-      learning: { icon: BookOpen, color: 'bg-purple-600', textColor: 'text-purple-400' },
-      home: { icon: Home, color: 'bg-indigo-600', textColor: 'text-indigo-400' },
-      transport: { icon: Car, color: 'bg-gray-600', textColor: 'text-gray-400' },
-      communication: { icon: Phone, color: 'bg-teal-600', textColor: 'text-teal-400' }
+      life: { icon: Home, color: 'bg-green-600', textColor: 'text-green-400' }
     }
     return categories[category as keyof typeof categories] || categories.personal
   }
@@ -661,16 +656,11 @@ export default function RemindersView() {
                     <label className="block text-gray-300 text-sm font-medium mb-2">
                       Category
                     </label>
-                    <div className="grid grid-cols-2 gap-2">
+                    <div className="grid grid-cols-3 gap-2">
                       {[
                         { value: 'work', label: 'Work', icon: Briefcase, color: 'bg-blue-600' },
                         { value: 'personal', label: 'Personal', icon: Heart, color: 'bg-pink-600' },
-                        { value: 'health', label: 'Health', icon: Dumbbell, color: 'bg-green-600' },
-                        { value: 'shopping', label: 'Shopping', icon: ShoppingCart, color: 'bg-orange-600' },
-                        { value: 'learning', label: 'Learning', icon: BookOpen, color: 'bg-purple-600' },
-                        { value: 'home', label: 'Home', icon: Home, color: 'bg-indigo-600' },
-                        { value: 'transport', label: 'Transport', icon: Car, color: 'bg-gray-600' },
-                        { value: 'communication', label: 'Communication', icon: Phone, color: 'bg-teal-600' }
+                        { value: 'life', label: 'Life', icon: Home, color: 'bg-green-600' }
                       ].map((category) => {
                         const IconComponent = category.icon
                         return (

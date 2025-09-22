@@ -1,7 +1,7 @@
 export interface Memory {
   id: string
   content: string
-  category: 'personal' | 'preference' | 'location' | 'relationship' | 'context' | 'habit'
+  category: 'personal' | 'work' | 'life'
   tags: string[]
   createdAt: string
   lastAccessed?: string
@@ -235,16 +235,21 @@ class MemoryService {
     let category: Memory['category'] = 'personal'
     let importance: Memory['importance'] = 'medium'
 
-    if (lowerInput.includes('prefer') || lowerInput.includes('like') || lowerInput.includes('hate')) {
-      category = 'preference'
-    } else if (lowerInput.includes('parked') || lowerInput.includes('location') || lowerInput.includes('address')) {
-      category = 'location'
-    } else if (lowerInput.includes('birthday') || lowerInput.includes('anniversary') || lowerInput.includes('name')) {
-      category = 'relationship'
-    } else if (lowerInput.includes('project') || lowerInput.includes('working') || lowerInput.includes('task')) {
-      category = 'context'
-    } else if (lowerInput.includes('usually') || lowerInput.includes('always') || lowerInput.includes('every')) {
-      category = 'habit'
+    // Work-related keywords
+    if (lowerInput.includes('project') || lowerInput.includes('working') || lowerInput.includes('task') || 
+        lowerInput.includes('manager') || lowerInput.includes('colleague') || lowerInput.includes('meeting') ||
+        lowerInput.includes('deadline') || lowerInput.includes('client') || lowerInput.includes('company')) {
+      category = 'work'
+    } 
+    // Life-related keywords (locations, habits, general context)
+    else if (lowerInput.includes('parked') || lowerInput.includes('location') || lowerInput.includes('address') ||
+             lowerInput.includes('usually') || lowerInput.includes('always') || lowerInput.includes('every') ||
+             lowerInput.includes('habit') || lowerInput.includes('routine')) {
+      category = 'life'
+    }
+    // Personal (default) - health, preferences, relationships
+    else {
+      category = 'personal'
     }
 
     // Determine importance

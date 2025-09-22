@@ -109,7 +109,7 @@ export default function MemoryDashboard({ onClose }: MemoryDashboardProps) {
     return matchesSearch && matchesCategory
   })
 
-  const categories = ['all', 'personal', 'preference', 'location', 'relationship', 'context', 'habit']
+  const categories = ['all', 'personal', 'work', 'life']
 
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
@@ -232,32 +232,28 @@ export default function MemoryDashboard({ onClose }: MemoryDashboardProps) {
                     Simply type "REMEMBER" followed by any information you want to save. Velora will automatically categorize and store it for future reference.
                   </p>
                   
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div className="space-y-3">
-                      <h4 className="text-electric-400 font-semibold">Personal Information</h4>
-                      <div className="space-y-2">
-                        <div className="bg-gray-700 rounded-lg p-3">
-                          <code className="text-green-400 text-sm">"REMEMBER I'm allergic to peanuts"</code>
-                          <p className="text-gray-400 text-xs mt-1">Saves health information</p>
-                        </div>
-                        <div className="bg-gray-700 rounded-lg p-3">
-                          <code className="text-green-400 text-sm">"REMEMBER I prefer morning meetings"</code>
-                          <p className="text-gray-400 text-xs mt-1">Saves your preferences</p>
-                        </div>
+                      <h4 className="text-electric-400 font-semibold">Personal</h4>
+                      <div className="bg-gray-700 rounded-lg p-3">
+                        <code className="text-green-400 text-sm">"REMEMBER I'm allergic to peanuts"</code>
+                        <p className="text-gray-400 text-xs mt-1">Health info, preferences, personal details</p>
                       </div>
                     </div>
                     
                     <div className="space-y-3">
-                      <h4 className="text-electric-400 font-semibold">Locations & Context</h4>
-                      <div className="space-y-2">
-                        <div className="bg-gray-700 rounded-lg p-3">
-                          <code className="text-green-400 text-sm">"REMEMBER I parked in section B"</code>
-                          <p className="text-gray-400 text-xs mt-1">Tracks where you left things</p>
-                        </div>
-                        <div className="bg-gray-700 rounded-lg p-3">
-                          <code className="text-green-400 text-sm">"REMEMBER John is my project manager"</code>
-                          <p className="text-gray-400 text-xs mt-1">Keeps track of important people</p>
-                        </div>
+                      <h4 className="text-electric-400 font-semibold">Work</h4>
+                      <div className="bg-gray-700 rounded-lg p-3">
+                        <code className="text-green-400 text-sm">"REMEMBER John is my project manager"</code>
+                        <p className="text-gray-400 text-xs mt-1">Colleagues, projects, work preferences</p>
+                      </div>
+                    </div>
+                    
+                    <div className="space-y-3">
+                      <h4 className="text-electric-400 font-semibold">Life</h4>
+                      <div className="bg-gray-700 rounded-lg p-3">
+                        <code className="text-green-400 text-sm">"REMEMBER I parked in section B"</code>
+                        <p className="text-gray-400 text-xs mt-1">Locations, habits, general context</p>
                       </div>
                     </div>
                   </div>
