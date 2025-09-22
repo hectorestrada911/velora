@@ -96,12 +96,11 @@ export class DocumentService {
       const q = query(
         collection(db, this.collectionName),
         where('userId', '==', userId),
-        orderBy('updatedAt', 'desc'),
         limit(limitCount)
       )
 
       const querySnapshot = await getDocs(q)
-      return querySnapshot.docs.map(doc => {
+      const documents = querySnapshot.docs.map(doc => {
         const data = doc.data()
         return {
           id: doc.id,
@@ -119,6 +118,9 @@ export class DocumentService {
           updatedAt: data.updatedAt.toDate()
         }
       })
+      
+      // Sort by updatedAt in descending order (most recent first)
+      return documents.sort((a, b) => b.updatedAt.getTime() - a.updatedAt.getTime())
     } catch (error) {
       console.error('Error getting documents:', error)
       return []
