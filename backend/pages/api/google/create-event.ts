@@ -2,6 +2,19 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { google } from 'googleapis';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  // Handle CORS preflight
+  if (req.method === 'OPTIONS') {
+    res.setHeader('Access-Control-Allow-Origin', 'https://velora-beta-one.vercel.app')
+    res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS')
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization')
+    return res.status(200).end()
+  }
+
+  // Set CORS headers for all responses
+  res.setHeader('Access-Control-Allow-Origin', 'https://velora-beta-one.vercel.app')
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS')
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization')
+
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }

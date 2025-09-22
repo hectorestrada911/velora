@@ -51,7 +51,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const emails = [];
 
     // Process each email
-    for (const message of messages.slice(0, 5)) { // Limit to 5 emails for analysis
+    for (const message of messages.slice(0, 10)) { // Limit to 10 emails for analysis
       try {
         const emailResponse = await gmail.users.messages.get({
           userId: 'me',
@@ -93,58 +93,73 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }
     }
 
-    // Analyze emails with AI
-    const analysisPrompt = `
-    Analyze these emails and extract actionable tasks, deadlines, and important information.
-    Focus on finding:
-    1. Tasks that need to be done
-    2. Deadlines and due dates
-    3. Meeting requests or appointments
-    4. Important information to remember
-    5. Follow-up actions required
+    // Enhanced AI analysis using our comprehensive system
+    const analysisPrompt = `You are Velora, an AI assistant specialized in analyzing emails and extracting actionable insights. Analyze these emails and extract tasks, deadlines, meetings, and important information.
 
-    Emails:
-    ${emails.map(email => `
-    Subject: ${email.subject}
-    From: ${email.from}
-    Date: ${email.date}
-    Content: ${email.body}
-    `).join('\n---\n')}
+CURRENT DATE & TIME: ${new Date().toISOString()}
 
-    Return a JSON response with this structure:
+EMAIL ANALYSIS TASKS:
+1. **Task Extraction**: Find actionable items that need to be completed
+2. **Deadline Identification**: Extract due dates and time-sensitive items
+3. **Meeting Detection**: Identify meeting requests, appointments, and calls
+4. **Priority Assessment**: Determine urgency and importance
+5. **Follow-up Actions**: Find items requiring responses or follow-up
+6. **Memory Suggestions**: Identify information worth remembering
+
+ANALYSIS REQUIREMENTS:
+- Extract specific tasks with clear descriptions
+- Identify deadlines and due dates (convert to YYYY-MM-DD format)
+- Find meeting requests with dates, times, and attendees
+- Assess priority based on urgency and importance
+- Suggest follow-up actions and reminders
+- Focus on actionable items, not just information
+
+EMAILS TO ANALYZE:
+${emails.map(email => `
+Subject: ${email.subject}
+From: ${email.from}
+Date: ${email.date}
+Content: ${email.body}
+`).join('\n---\n')}
+
+Return ONLY valid JSON in this exact format:
+{
+  "tasks": [
     {
-      "tasks": [
-        {
-          "task": "Task description",
-          "deadline": "YYYY-MM-DD or null",
-          "priority": "high|medium|low",
-          "source": "email subject or sender",
-          "emailId": "email ID"
-        }
-      ],
-      "meetings": [
-        {
-          "title": "Meeting title",
-          "date": "YYYY-MM-DD",
-          "time": "HH:MM",
-          "attendees": ["email1", "email2"],
-          "source": "email subject or sender",
-          "emailId": "email ID"
-        }
-      ],
-      "reminders": [
-        {
-          "reminder": "What to remember",
-          "priority": "high|medium|low",
-          "source": "email subject or sender",
-          "emailId": "email ID"
-        }
-      ]
+      "task": "Clear, actionable task description",
+      "deadline": "YYYY-MM-DD or null",
+      "priority": "high|medium|low",
+      "source": "email sender name",
+      "emailId": "email id"
     }
-    `;
+  ],
+  "meetings": [
+    {
+      "title": "Meeting or appointment title",
+      "date": "YYYY-MM-DD",
+      "time": "HH:MM",
+      "attendees": ["attendee1", "attendee2"],
+      "source": "email sender name",
+      "emailId": "email id"
+    }
+  ],
+  "reminders": [
+    {
+      "reminder": "Reminder description",
+      "priority": "high|medium|low",
+      "source": "email sender name",
+      "emailId": "email id"
+    }
+  ],
+  "memorySuggestions": [
+    "REMEMBER Important information from emails",
+    "REMEMBER Contact details or preferences"
+  ],
+  "summary": "Brief summary of email analysis findings"
+}`;
 
     const aiResponse = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
+      model: "gpt-5",
       messages: [
         {
           role: "system",
