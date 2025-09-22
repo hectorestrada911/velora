@@ -1,36 +1,23 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { 
   Brain, 
-  TrendingUp, 
-  Lightbulb, 
-  Target, 
-  BarChart3, 
   Search,
-  Plus,
-  Filter,
-  RefreshCw,
-  CheckCircle,
-  AlertCircle,
-  Info,
-  X
+  X,
+  Heart,
+  Briefcase,
+  Home
 } from 'lucide-react'
 import { memoryService } from '@/lib/memoryService'
-import { memoryTestScenarios, getRandomScenarios, validateMemoryCorrelation } from '@/lib/memoryTestScenarios'
-import MemoryAnalytics, { MemoryInsight } from '@/lib/memoryAnalytics'
 
 interface MemoryDashboardProps {
   onClose: () => void
 }
 
 export default function MemoryDashboard({ onClose }: MemoryDashboardProps) {
-  const [activeTab, setActiveTab] = useState<'overview' | 'test' | 'analytics' | 'insights'>('overview')
   const [memories, setMemories] = useState<any[]>([])
-  const [insights, setInsights] = useState<MemoryInsight[]>([])
-  const [testResults, setTestResults] = useState<any[]>([])
-  const [isRunningTests, setIsRunningTests] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedCategory, setSelectedCategory] = useState<string>('all')
 
@@ -41,445 +28,141 @@ export default function MemoryDashboard({ onClose }: MemoryDashboardProps) {
   const loadMemories = () => {
     const allMemories = memoryService.getAllMemories()
     setMemories(allMemories)
-    
-    // Generate insights
-    const analytics = new MemoryAnalytics(allMemories)
-    setInsights(analytics.generateInsights())
   }
 
-  const runMemoryTests = async () => {
-    setIsRunningTests(true)
-    const results: any[] = []
-    const testScenarios = getRandomScenarios(20) // Test 20 random scenarios
-    
-    for (const scenario of testScenarios) {
-      try {
-        // Simulate user input
-        if (scenario.userInput.startsWith('REMEMBER')) {
-          // Test memory creation
-          const rememberResult = memoryService.parseRememberCommand(scenario.userInput)
-          if (rememberResult) {
-            const memory = memoryService.addMemory(
-              rememberResult.content,
-              rememberResult.category,
-              rememberResult.importance
-            )
-            results.push({
-              scenario,
-              success: true,
-              result: 'Memory created successfully',
-              memory
-            })
-          }
-        } else {
-          // Test memory retrieval
-          const recallResult = memoryService.recallInformation(scenario.userInput)
-          const validation = validateMemoryCorrelation(
-            scenario.userInput,
-            recallResult.memories,
-            scenario.expectedCorrelation
-          )
-          
-          results.push({
-            scenario,
-            success: validation.score > 50,
-            result: `Correlation score: ${validation.score.toFixed(1)}%`,
-            validation,
-            retrievedMemories: recallResult.memories
-          })
-        }
-      } catch (error) {
-        results.push({
-          scenario,
-          success: false,
-          result: `Error: ${error}`,
-          error
-        })
-      }
-    }
-    
-    setTestResults(results)
-    setIsRunningTests(false)
-    loadMemories() // Refresh memories after tests
-  }
-
+  const categories = ['all', 'personal', 'work', 'life']
+  
   const filteredMemories = memories.filter(memory => {
     const matchesSearch = memory.content.toLowerCase().includes(searchQuery.toLowerCase())
     const matchesCategory = selectedCategory === 'all' || memory.category === selectedCategory
     return matchesSearch && matchesCategory
   })
 
-  const categories = ['all', 'personal', 'work', 'life']
+  const getCategoryIcon = (category: string) => {
+    switch (category) {
+      case 'personal': return <Heart className="w-4 h-4" />
+      case 'work': return <Briefcase className="w-4 h-4" />
+      case 'life': return <Home className="w-4 h-4" />
+      default: return <Brain className="w-4 h-4" />
+    }
+  }
+
+  const getCategoryColor = (category: string) => {
+    switch (category) {
+      case 'personal': return 'text-pink-400 bg-pink-500/20'
+      case 'work': return 'text-blue-400 bg-blue-500/20'
+      case 'life': return 'text-green-400 bg-green-500/20'
+      default: return 'text-gray-400 bg-gray-500/20'
+    }
+  }
 
   return (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
       <motion.div
-        initial={{ opacity: 0, scale: 0.9 }}
+        initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
-        exit={{ opacity: 0, scale: 0.9 }}
-        className="bg-gray-900 rounded-2xl w-full max-w-6xl h-[90vh] overflow-hidden border border-gray-700"
+        exit={{ opacity: 0, scale: 0.95 }}
+        className="bg-gray-900 rounded-xl border border-gray-700 w-full max-w-2xl max-h-[80vh] overflow-hidden"
       >
         {/* Header */}
-        <div className="bg-gray-800 border-b border-gray-700 p-6">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <Brain className="w-8 h-8 text-electric-400" />
-              <div>
-                <h2 className="text-2xl font-bold text-white">Remember Dashboard</h2>
-                <p className="text-gray-400 text-sm mt-1">View and manage your saved information</p>
-              </div>
+        <div className="flex items-center justify-between p-6 border-b border-gray-700">
+          <div className="flex items-center space-x-3">
+            <div className="w-8 h-8 bg-gradient-to-r from-electric-500 to-purple-500 rounded-lg flex items-center justify-center">
+              <Brain className="w-4 h-4 text-white" />
             </div>
-            <button
-              onClick={onClose}
-              className="text-gray-400 hover:text-white transition-colors"
-            >
-              <X className="w-6 h-6" />
-            </button>
+            <div>
+              <h2 className="text-xl font-semibold text-white">Memory Bank</h2>
+              <p className="text-gray-400 text-sm">Your saved information</p>
+            </div>
           </div>
-          
-          {/* Tabs */}
-          <div className="flex gap-1 mt-4">
-            {[
-              { id: 'overview', label: 'Overview', icon: BarChart3 },
-              { id: 'test', label: 'Remember Tests', icon: Target },
-              { id: 'analytics', label: 'Analytics', icon: TrendingUp },
-              { id: 'insights', label: 'Insights', icon: Lightbulb }
-            ].map(({ id, label, icon: Icon }) => (
-              <button
-                key={id}
-                onClick={() => setActiveTab(id as any)}
-                className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors ${
-                  activeTab === id
-                    ? 'bg-electric-500 text-white'
-                    : 'text-gray-400 hover:text-white hover:bg-gray-700'
-                }`}
-              >
-                <Icon className="w-4 h-4" />
-                {label}
-              </button>
-            ))}
-          </div>
+          <button
+            onClick={onClose}
+            className="p-2 hover:bg-gray-800 rounded-lg transition-colors"
+          >
+            <X className="w-5 h-5 text-gray-400" />
+          </button>
         </div>
 
         {/* Content */}
-        <div className="p-6 h-full overflow-y-auto">
-          <AnimatePresence mode="wait">
-            {activeTab === 'overview' && (
-              <motion.div
-                key="overview"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                className="space-y-6"
+        <div className="p-6 space-y-6">
+          {/* How to Use */}
+          <div className="bg-gradient-to-r from-electric-500/10 to-purple-500/10 border border-electric-500/20 rounded-lg p-4">
+            <h3 className="text-white font-medium mb-2">How to Use</h3>
+            <p className="text-gray-300 text-sm">
+              Simply type <span className="text-electric-400 font-mono">"REMEMBER"</span> followed by any information you want to save. 
+              Velora will automatically categorize and store it.
+            </p>
+          </div>
+
+          {/* Search */}
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+            <input
+              type="text"
+              placeholder="Search your memories..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full pl-10 pr-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-electric-500"
+            />
+          </div>
+
+          {/* Categories */}
+          <div className="flex space-x-2">
+            {categories.map((category) => (
+              <button
+                key={category}
+                onClick={() => setSelectedCategory(category)}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                  selectedCategory === category
+                    ? 'bg-electric-500 text-white'
+                    : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
+                }`}
               >
-                {/* Stats Cards */}
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                  <div className="bg-gray-800 rounded-xl p-4 border border-gray-700">
-                    <div className="flex items-center gap-3">
-                      <Brain className="w-8 h-8 text-electric-400" />
-                      <div>
-                        <p className="text-2xl font-bold text-white">{memories.length}</p>
-                        <p className="text-gray-400 text-sm">Total Remembered Items</p>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div className="bg-gray-800 rounded-xl p-4 border border-gray-700">
-                    <div className="flex items-center gap-3">
-                      <TrendingUp className="w-8 h-8 text-green-400" />
-                      <div>
-                        <p className="text-2xl font-bold text-white">
-                          {memories.filter(m => {
-                            const daysSinceCreated = (Date.now() - new Date(m.createdAt).getTime()) / (1000 * 60 * 60 * 24)
-                            return daysSinceCreated < 7
-                          }).length}
-                        </p>
-                        <p className="text-gray-400 text-sm">Recent Items</p>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div className="bg-gray-800 rounded-xl p-4 border border-gray-700">
-                    <div className="flex items-center gap-3">
-                      <Target className="w-8 h-8 text-blue-400" />
-                      <div>
-                        <p className="text-2xl font-bold text-white">
-                          {new Set(memories.map(m => m.category)).size}
-                        </p>
-                        <p className="text-gray-400 text-sm">Categories</p>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div className="bg-gray-800 rounded-xl p-4 border border-gray-700">
-                    <div className="flex items-center gap-3">
-                      <Lightbulb className="w-8 h-8 text-yellow-400" />
-                      <div>
-                        <p className="text-2xl font-bold text-white">{insights.length}</p>
-                        <p className="text-gray-400 text-sm">Insights</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                {category === 'all' ? 'All' : category.charAt(0).toUpperCase() + category.slice(1)}
+              </button>
+            ))}
+          </div>
 
-                {/* How to Use Remember */}
-                <div className="bg-gradient-to-r from-gray-800 to-gray-900 rounded-xl p-6 border border-gray-700">
-                  <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
-                    <Brain className="w-5 h-5 text-electric-400" />
-                    How to Use Remember
-                  </h3>
-                  <p className="text-gray-300 mb-4">
-                    Simply type "REMEMBER" followed by any information you want to save. Velora will automatically categorize and store it for future reference.
-                  </p>
-                  
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div className="space-y-3">
-                      <h4 className="text-electric-400 font-semibold">Personal</h4>
-                      <div className="bg-gray-700 rounded-lg p-3">
-                        <code className="text-green-400 text-sm">"REMEMBER I'm allergic to peanuts"</code>
-                        <p className="text-gray-400 text-xs mt-1">Health info, preferences, personal details</p>
-                      </div>
+          {/* Memories List */}
+          <div className="space-y-3 max-h-96 overflow-y-auto">
+            {filteredMemories.length === 0 ? (
+              <div className="text-center py-8">
+                <Brain className="w-12 h-12 text-gray-600 mx-auto mb-4" />
+                <p className="text-gray-400">
+                  {searchQuery ? 'No memories found matching your search.' : 'No memories saved yet.'}
+                </p>
+                <p className="text-gray-500 text-sm mt-2">
+                  Try saying "REMEMBER I prefer morning meetings" in the chat.
+                </p>
+              </div>
+            ) : (
+              filteredMemories.map((memory) => (
+                <motion.div
+                  key={memory.id}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="bg-gray-800 rounded-lg p-4 border border-gray-700"
+                >
+                  <div className="flex items-start space-x-3">
+                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${getCategoryColor(memory.category)}`}>
+                      {getCategoryIcon(memory.category)}
                     </div>
-                    
-                    <div className="space-y-3">
-                      <h4 className="text-electric-400 font-semibold">Work</h4>
-                      <div className="bg-gray-700 rounded-lg p-3">
-                        <code className="text-green-400 text-sm">"REMEMBER John is my project manager"</code>
-                        <p className="text-gray-400 text-xs mt-1">Colleagues, projects, work preferences</p>
-                      </div>
-                    </div>
-                    
-                    <div className="space-y-3">
-                      <h4 className="text-electric-400 font-semibold">Life</h4>
-                      <div className="bg-gray-700 rounded-lg p-3">
-                        <code className="text-green-400 text-sm">"REMEMBER I parked in section B"</code>
-                        <p className="text-gray-400 text-xs mt-1">Locations, habits, general context</p>
+                    <div className="flex-1">
+                      <p className="text-white text-sm">{memory.content}</p>
+                      <div className="flex items-center space-x-2 mt-2">
+                        <span className={`px-2 py-1 rounded text-xs font-medium ${getCategoryColor(memory.category)}`}>
+                          {memory.category}
+                        </span>
+                        <span className="text-gray-500 text-xs">
+                          {new Date(memory.timestamp).toLocaleDateString()}
+                        </span>
                       </div>
                     </div>
                   </div>
-                  
-                  <div className="mt-4 p-3 bg-electric-500/10 border border-electric-500/20 rounded-lg">
-                    <p className="text-electric-300 text-sm">
-                      <strong>💡 Tip:</strong> Velora will automatically suggest using Remember when you mention personal information that could be useful later!
-                    </p>
-                  </div>
-                </div>
-
-                {/* Search and Filter */}
-                <div className="flex gap-4">
-                  <div className="flex-1 relative">
-                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-                    <input
-                      type="text"
-                      placeholder="Search remembered items..."
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      className="w-full bg-gray-800 border border-gray-700 rounded-lg pl-10 pr-4 py-2 text-white placeholder-gray-400 focus:outline-none focus:border-electric-500"
-                    />
-                  </div>
-                  
-                  <select
-                    value={selectedCategory}
-                    onChange={(e) => setSelectedCategory(e.target.value)}
-                    className="bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-electric-500"
-                  >
-                    {categories.map(category => (
-                      <option key={category} value={category} className="capitalize">
-                        {category === 'all' ? 'All Categories' : category}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                {/* Memories List */}
-                <div className="space-y-3">
-                  {filteredMemories.map((memory, index) => (
-                    <motion.div
-                      key={memory.id}
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: index * 0.1 }}
-                      className="bg-gray-800 rounded-lg p-4 border border-gray-700 hover:border-gray-600 transition-colors"
-                    >
-                      <div className="flex items-start justify-between">
-                        <div className="flex-1">
-                          <p className="text-white">{memory.content}</p>
-                          <div className="flex items-center gap-4 mt-2 text-sm text-gray-400">
-                            <span className="capitalize">{memory.category}</span>
-                            <span>•</span>
-                            <span>{new Date(memory.createdAt).toLocaleDateString()}</span>
-                            <span>•</span>
-                            <span>Accessed {memory.accessCount || 0} times</span>
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                            memory.importance === 'high' ? 'bg-red-500/20 text-red-400' :
-                            memory.importance === 'medium' ? 'bg-yellow-500/20 text-yellow-400' :
-                            'bg-green-500/20 text-green-400'
-                          }`}>
-                            {memory.importance}
-                          </span>
-                        </div>
-                      </div>
-                    </motion.div>
-                  ))}
-                </div>
-              </motion.div>
+                </motion.div>
+              ))
             )}
-
-            {activeTab === 'test' && (
-              <motion.div
-                key="test"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                className="space-y-6"
-              >
-                <div className="flex items-center justify-between">
-                  <h3 className="text-xl font-bold text-white">Memory Correlation Tests</h3>
-                  <button
-                    onClick={runMemoryTests}
-                    disabled={isRunningTests}
-                    className="flex items-center gap-2 bg-electric-500 hover:bg-electric-600 text-white px-4 py-2 rounded-lg transition-colors disabled:opacity-50"
-                  >
-                    {isRunningTests ? (
-                      <RefreshCw className="w-4 h-4 animate-spin" />
-                    ) : (
-                      <Target className="w-4 h-4" />
-                    )}
-                    {isRunningTests ? 'Running Tests...' : 'Run Tests'}
-                  </button>
-                </div>
-
-                {testResults.length > 0 && (
-                  <div className="space-y-4">
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                      <div className="bg-green-500/20 border border-green-500/30 rounded-lg p-4">
-                        <div className="flex items-center gap-2">
-                          <CheckCircle className="w-5 h-5 text-green-400" />
-                          <span className="text-green-400 font-medium">
-                            {testResults.filter(r => r.success).length} Passed
-                          </span>
-                        </div>
-                      </div>
-                      
-                      <div className="bg-red-500/20 border border-red-500/30 rounded-lg p-4">
-                        <div className="flex items-center gap-2">
-                          <AlertCircle className="w-5 h-5 text-red-400" />
-                          <span className="text-red-400 font-medium">
-                            {testResults.filter(r => !r.success).length} Failed
-                          </span>
-                        </div>
-                      </div>
-                      
-                      <div className="bg-blue-500/20 border border-blue-500/30 rounded-lg p-4">
-                        <div className="flex items-center gap-2">
-                          <Info className="w-5 h-5 text-blue-400" />
-                          <span className="text-blue-400 font-medium">
-                            {((testResults.filter(r => r.success).length / testResults.length) * 100).toFixed(1)}% Success Rate
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="space-y-3">
-                      {testResults.map((result, index) => (
-                        <motion.div
-                          key={index}
-                          initial={{ opacity: 0, y: 20 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{ delay: index * 0.05 }}
-                          className={`rounded-lg p-4 border ${
-                            result.success 
-                              ? 'bg-green-500/10 border-green-500/30' 
-                              : 'bg-red-500/10 border-red-500/30'
-                          }`}
-                        >
-                          <div className="flex items-start justify-between">
-                            <div className="flex-1">
-                              <p className="text-white font-medium">{result.scenario.description}</p>
-                              <p className="text-gray-400 text-sm mt-1">{result.scenario.userInput}</p>
-                              <p className={`text-sm mt-2 ${
-                                result.success ? 'text-green-400' : 'text-red-400'
-                              }`}>
-                                {result.result}
-                              </p>
-                            </div>
-                            <div className="flex items-center gap-2">
-                              {result.success ? (
-                                <CheckCircle className="w-5 h-5 text-green-400" />
-                              ) : (
-                                <AlertCircle className="w-5 h-5 text-red-400" />
-                              )}
-                            </div>
-                          </div>
-                        </motion.div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </motion.div>
-            )}
-
-            {activeTab === 'insights' && (
-              <motion.div
-                key="insights"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                className="space-y-6"
-              >
-                <h3 className="text-xl font-bold text-white">AI Memory Insights</h3>
-                
-                <div className="space-y-4">
-                  {insights.map((insight, index) => (
-                    <motion.div
-                      key={index}
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: index * 0.1 }}
-                      className={`rounded-lg p-4 border ${
-                        insight.type === 'pattern' ? 'bg-blue-500/10 border-blue-500/30' :
-                        insight.type === 'suggestion' ? 'bg-yellow-500/10 border-yellow-500/30' :
-                        insight.type === 'correlation' ? 'bg-purple-500/10 border-purple-500/30' :
-                        'bg-orange-500/10 border-orange-500/30'
-                      }`}
-                    >
-                      <div className="flex items-start gap-3">
-                        <div className={`p-2 rounded-lg ${
-                          insight.type === 'pattern' ? 'bg-blue-500/20' :
-                          insight.type === 'suggestion' ? 'bg-yellow-500/20' :
-                          insight.type === 'correlation' ? 'bg-purple-500/20' :
-                          'bg-orange-500/20'
-                        }`}>
-                          {insight.type === 'pattern' && <TrendingUp className="w-5 h-5 text-blue-400" />}
-                          {insight.type === 'suggestion' && <Lightbulb className="w-5 h-5 text-yellow-400" />}
-                          {insight.type === 'correlation' && <Target className="w-5 h-5 text-purple-400" />}
-                          {insight.type === 'gap' && <AlertCircle className="w-5 h-5 text-orange-400" />}
-                        </div>
-                        
-                        <div className="flex-1">
-                          <h4 className="text-white font-medium">{insight.title}</h4>
-                          <p className="text-gray-400 text-sm mt-1">{insight.description}</p>
-                          <div className="flex items-center gap-2 mt-2">
-                            <span className="text-xs text-gray-500">
-                              Confidence: {(insight.confidence * 100).toFixed(0)}%
-                            </span>
-                            {insight.actionable && (
-                              <span className="text-xs bg-green-500/20 text-green-400 px-2 py-1 rounded-full">
-                                Actionable
-                              </span>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                    </motion.div>
-                  ))}
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
+          </div>
         </div>
       </motion.div>
     </div>
