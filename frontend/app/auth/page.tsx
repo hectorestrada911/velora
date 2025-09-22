@@ -380,7 +380,7 @@ export default function AuthPage() {
                 Stop drowning in information. <span className="text-electric-400">Velora AI</span> remembers everything so you can focus on what matters most.
               </p>
               
-              {/* Call-to-Action Button - Desktop */}
+              {/* Call-to-Action Button - Desktop - Simplified to just Sign In */}
               <div className="flex items-center space-x-4">
                 <button
                   onClick={() => setAuthMode('login')}
@@ -615,7 +615,7 @@ export default function AuthPage() {
               Stop drowning in information. <span className="text-electric-400">Velora AI</span> remembers everything so you can focus on what matters most.
             </motion.p>
 
-            {/* CTA Buttons */}
+            {/* CTA Buttons - Simplified to just Sign In */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -623,25 +623,11 @@ export default function AuthPage() {
               className="flex flex-col space-y-4"
             >
               <button
-                onClick={() => setAuthMode('signup')}
+                onClick={() => setAuthMode('login')}
                 className="w-full bg-gradient-to-r from-electric-500 to-purple-500 hover:from-electric-400 hover:to-purple-400 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 hover:scale-105 flex items-center justify-center space-x-2"
               >
-                <span>Start Building</span>
+                <span>Sign In</span>
                 <ArrowRight className="w-4 h-4" />
-              </button>
-              
-              <button
-                onClick={() => setAuthMode('login')}
-                className="w-full text-gray-400 hover:text-white font-medium py-3 px-6 transition-colors duration-200"
-              >
-                Sign In
-              </button>
-              
-              <button
-                onClick={handleTryDemo}
-                className="text-electric-500 hover:text-electric-400 font-medium py-2 px-4 transition-colors duration-200 text-sm"
-              >
-                Try Now
               </button>
             </motion.div>
           </div>
@@ -1044,10 +1030,10 @@ export default function AuthPage() {
                 className="inline-block"
               >
                 <button
-                  onClick={() => setAuthMode('signup')}
+                  onClick={() => setAuthMode('login')}
                   className="bg-gradient-to-r from-electric-500 to-purple-500 hover:from-electric-400 hover:to-purple-400 text-white font-bold text-xl py-4 px-12 rounded-2xl transition-all duration-200 hover:scale-105 flex items-center justify-center space-x-3 shadow-2xl shadow-electric-500/25"
                 >
-                  <span>Start Building</span>
+                  <span>Sign In</span>
                   <ArrowRight className="w-6 h-6" />
                 </button>
               </motion.div>
