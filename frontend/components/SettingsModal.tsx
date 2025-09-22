@@ -17,6 +17,7 @@ import {
   Info
 } from 'lucide-react'
 import { useAuth } from '@/components/providers/AuthProvider'
+import GoogleWorkspaceIntegration from './GoogleWorkspaceIntegration'
 
 interface SettingsModalProps {
   isOpen: boolean
@@ -176,6 +177,14 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                       />
                     </button>
                   </div>
+                </div>
+
+                {/* Integrations */}
+                <div className="space-y-4">
+                  <h3 className="text-sm font-medium text-gray-400 uppercase tracking-wider">
+                    Integrations
+                  </h3>
+                  <GoogleWorkspaceIntegration />
                 </div>
 
                 {/* Support */}
