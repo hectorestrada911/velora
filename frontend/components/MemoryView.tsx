@@ -56,7 +56,7 @@ export default function MemoryView({ onClose }: MemoryViewProps) {
       type: 'memory' as const,
       content: memory.content,
       category: memory.category,
-      timestamp: new Date(memory.timestamp)
+      timestamp: new Date(memory.createdAt)
     }))
 
     // Load reminders
