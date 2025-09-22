@@ -329,34 +329,20 @@ export default function AuthPage() {
               </motion.div>
               
               <h2 className="text-5xl xl:text-6xl font-bold text-white mb-6 leading-tight">
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-electric-500 to-purple-500">Never</span> forget with <span className="text-transparent bg-clip-text bg-gradient-to-r from-electric-500 to-purple-500">Velora</span>
+                Your <span className="text-transparent bg-clip-text bg-gradient-to-r from-electric-500 to-purple-500">AI Second Brain</span> for everything you know
               </h2>
               <p className="text-xl text-gray-300 mb-8 leading-relaxed">
-                Never lose a thought again. Turn ideas into action with <span className="text-electric-400">Velora</span> that remembers everything.
+                Like ChatGPT, but for your personal knowledge. <span className="text-electric-400">Velora</span> connects all your documents, emails, and notes into one intelligent assistant.
               </p>
               
-              {/* Call-to-Action Buttons - Desktop */}
+              {/* Call-to-Action Button - Desktop */}
               <div className="flex items-center space-x-4">
                 <button
-                  onClick={() => setAuthMode('signup')}
-                  className="bg-gradient-to-r from-electric-500 to-purple-500 hover:from-electric-400 hover:to-purple-400 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 hover:scale-105 flex items-center justify-center space-x-2"
-                >
-                  <span>Get Started</span>
-                  <ArrowRight className="w-4 h-4" />
-                </button>
-                
-                <button
-                  onClick={handleTryDemo}
-                  className="text-electric-500 hover:text-electric-400 font-medium py-2 px-4 transition-colors duration-200 text-sm"
-                >
-                  Try Now
-                </button>
-                
-                <button
                   onClick={() => setAuthMode('login')}
-                  className="text-gray-400 hover:text-white font-medium py-3 px-6 transition-colors duration-200"
+                  className="bg-gradient-to-r from-electric-500 to-purple-500 hover:from-electric-400 hover:to-purple-400 text-white font-semibold py-3 px-8 rounded-lg transition-all duration-200 hover:scale-105 flex items-center justify-center space-x-2 text-lg"
                 >
-                  Sign In
+                  <span>Sign In</span>
+                  <ArrowRight className="w-5 h-5" />
                 </button>
               </div>
             </div>
@@ -571,7 +557,7 @@ export default function AuthPage() {
               transition={{ delay: 0.4 }}
               className="text-3xl md:text-4xl font-bold text-white mb-4 leading-tight"
             >
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-electric-500 to-purple-500">Never</span> forget with <span className="text-transparent bg-clip-text bg-gradient-to-r from-electric-500 to-purple-500">Velora</span>
+              Your <span className="text-transparent bg-clip-text bg-gradient-to-r from-electric-500 to-purple-500">AI Second Brain</span>
             </motion.h2>
 
             {/* Subtitle */}
@@ -581,7 +567,7 @@ export default function AuthPage() {
               transition={{ delay: 0.6 }}
               className="text-gray-300 text-base md:text-lg leading-relaxed mb-8"
             >
-              Never lose a thought again. Turn ideas into action with <span className="text-electric-400">Velora</span> that remembers everything.
+              Like ChatGPT, but for your personal knowledge. <span className="text-electric-400">Velora</span> connects all your documents, emails, and notes into one intelligent assistant.
             </motion.p>
 
             {/* CTA Buttons */}
@@ -595,7 +581,7 @@ export default function AuthPage() {
                 onClick={() => setAuthMode('signup')}
                 className="w-full bg-gradient-to-r from-electric-500 to-purple-500 hover:from-electric-400 hover:to-purple-400 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 hover:scale-105 flex items-center justify-center space-x-2"
               >
-                <span>Get Started</span>
+                <span>Start Building</span>
                 <ArrowRight className="w-4 h-4" />
               </button>
               
@@ -649,11 +635,11 @@ export default function AuthPage() {
                 <Database className="w-12 h-12 text-electric-400" />
               </motion.div>
               <h3 className="text-5xl font-bold text-white mb-6">
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-electric-500 to-purple-500">Never Forget</span> Again
+                Your <span className="text-transparent bg-clip-text bg-gradient-to-r from-electric-500 to-purple-500">Personal Google</span>
               </h3>
               <p className="text-2xl text-gray-300 max-w-4xl mx-auto leading-relaxed">
-                <span className="text-electric-400">Velora</span> remembers everything. <span className="text-electric-400">Parking spots, meeting notes, random thoughts</span> 
-                it all connects intelligently.
+                Ask <span className="text-electric-400">Velora</span> anything about your knowledge. <span className="text-electric-400">"What did I decide in last week's meeting?"</span> 
+                Get instant answers from your documents, emails, and notes.
               </p>
             </div>
             
@@ -673,10 +659,10 @@ export default function AuthPage() {
                   <Target className="w-8 h-8 text-electric-400" />
                 </motion.div>
                 <h4 className="text-xl font-bold text-white mb-4">
-                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-electric-500 to-purple-500">Smart</span> Connections
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-electric-500 to-purple-500">Unified</span> Search
                 </h4>
                 <p className="text-gray-300 text-base leading-relaxed">
-                  Connects your thoughts automatically. No more lost ideas.
+                  Find anything across all your files instantly. Just ask in plain language.
                 </p>
               </motion.div>
               
@@ -695,10 +681,10 @@ export default function AuthPage() {
                   <Shield className="w-8 h-8 text-purple-400" />
                 </motion.div>
                 <h4 className="text-xl font-bold text-white mb-4">
-                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-electric-500 to-purple-500">Never</span> Forget
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-electric-500 to-purple-500">AI</span> Summaries
                 </h4>
                 <p className="text-gray-300 text-base leading-relaxed">
-                  Captures every thought. From shower ideas to meeting notes.
+                  Turn 30-page PDFs into 5-key-point summaries in seconds.
                 </p>
               </motion.div>
               
@@ -717,10 +703,10 @@ export default function AuthPage() {
                   <TrendingUp className="w-8 h-8 text-green-400" />
                 </motion.div>
                 <h4 className="text-xl font-bold text-white mb-4">
-                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-electric-500 to-purple-500">Gets</span> Smarter
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-electric-500 to-purple-500">Source</span> Transparency
                 </h4>
                 <p className="text-gray-300 text-base leading-relaxed">
-                  Learns your patterns. Suggests before you ask.
+                  Every answer cites the original document. Your knowledge, your control.
                 </p>
               </motion.div>
             </div>
@@ -772,11 +758,11 @@ export default function AuthPage() {
                 </motion.div>
               </motion.div>
               <h3 className="text-5xl font-bold text-white mb-6">
-                Just <span className="text-transparent bg-clip-text bg-gradient-to-r from-electric-500 to-purple-500">talk</span>. <span className="text-transparent bg-clip-text bg-gradient-to-r from-electric-500 to-purple-500">Velora</span> understands.
+                Ask <span className="text-transparent bg-clip-text bg-gradient-to-r from-electric-500 to-purple-500">anything</span> about your knowledge
               </h3>
               <p className="text-2xl text-gray-300 max-w-4xl mx-auto leading-relaxed">
-                Speak naturally. <span className="text-green-400">"Remind me to call mom"</span> becomes a smart reminder. 
-                <span className="text-green-400">"What's my schedule?"</span> shows your day. It just works.
+                Natural language queries. <span className="text-green-400">"Summarize my Q3 report"</span> gets instant insights. 
+                <span className="text-green-400">"What did John say about Project Alpha?"</span> finds the exact email. It just works.
               </p>
             </div>
             
@@ -788,12 +774,12 @@ export default function AuthPage() {
                 <div className="w-16 h-16 bg-gradient-to-br from-green-500/30 to-emerald-500/30 rounded-2xl flex items-center justify-center mb-6">
                   <Bell className="w-8 h-8 text-green-400" />
                 </div>
-                <h4 className="text-xl font-bold text-white mb-4">Smart Reminders</h4>
+                <h4 className="text-xl font-bold text-white mb-4">Document Intelligence</h4>
                 <p className="text-gray-300 text-base leading-relaxed italic mb-4">
-                  "Remind me to call mom tomorrow at 3pm"
+                  "What are the key takeaways from my research papers?"
                 </p>
                 <p className="text-gray-400 text-sm">
-                  Creates intelligent reminders with perfect timing and context awareness.
+                  AI analyzes your PDFs, emails, and documents to extract insights instantly.
                 </p>
               </motion.div>
               
@@ -804,12 +790,12 @@ export default function AuthPage() {
                 <div className="w-16 h-16 bg-gradient-to-br from-blue-500/30 to-cyan-500/30 rounded-2xl flex items-center justify-center mb-6">
                   <Calendar className="w-8 h-8 text-blue-400" />
                 </div>
-                <h4 className="text-xl font-bold text-white mb-4">Calendar Magic</h4>
+                <h4 className="text-xl font-bold text-white mb-4">Cross-Document Queries</h4>
                 <p className="text-gray-300 text-base leading-relaxed italic mb-4">
-                  "What do I have scheduled for Friday?"
+                  "Gather insights from my meeting notes and project docs"
                 </p>
                 <p className="text-gray-400 text-sm">
-                  Natural language calendar interactions that feel like talking to a friend.
+                  Ask questions that span multiple documents and get coherent answers.
                 </p>
               </motion.div>
               
@@ -820,12 +806,12 @@ export default function AuthPage() {
                 <div className="w-16 h-16 bg-gradient-to-br from-purple-500/30 to-pink-500/30 rounded-2xl flex items-center justify-center mb-6">
                   <Database className="w-8 h-8 text-purple-400" />
                 </div>
-                <h4 className="text-xl font-bold text-white mb-4">Memory Storage</h4>
+                <h4 className="text-xl font-bold text-white mb-4">Personal Knowledge Base</h4>
                 <p className="text-gray-300 text-base leading-relaxed italic mb-4">
-                  "Remember I parked in section B"
+                  "What did I learn about machine learning last month?"
                 </p>
                 <p className="text-gray-400 text-sm">
-                  Personal facts and locations stored intelligently and retrieved instantly.
+                  Your personal Google that knows everything you've read, written, and saved.
                 </p>
               </motion.div>
             </div>
@@ -1001,10 +987,10 @@ export default function AuthPage() {
                 </motion.div>
               </motion.div>
               <h3 className="text-5xl font-bold text-white mb-6">
-                Ready to <span className="text-transparent bg-clip-text bg-gradient-to-r from-electric-500 to-purple-500">Get Started</span>?
+                Ready to build your <span className="text-transparent bg-clip-text bg-gradient-to-r from-electric-500 to-purple-500">AI Second Brain</span>?
               </h3>
               <p className="text-2xl text-gray-300 max-w-4xl mx-auto leading-relaxed mb-12">
-                Join thousands who never forget another thought. <span className="text-electric-400">Start your AI memory journey today.</span>
+                Join the future of personal knowledge management. <span className="text-electric-400">Your AI assistant for everything you know.</span>
               </p>
               
               <motion.div
@@ -1016,7 +1002,7 @@ export default function AuthPage() {
                   onClick={() => setAuthMode('signup')}
                   className="bg-gradient-to-r from-electric-500 to-purple-500 hover:from-electric-400 hover:to-purple-400 text-white font-bold text-xl py-4 px-12 rounded-2xl transition-all duration-200 hover:scale-105 flex items-center justify-center space-x-3 shadow-2xl shadow-electric-500/25"
                 >
-                  <span>Start Remembering</span>
+                  <span>Start Building</span>
                   <ArrowRight className="w-6 h-6" />
                 </button>
               </motion.div>
