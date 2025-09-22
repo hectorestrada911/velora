@@ -74,19 +74,37 @@ export default function ChatPage() {
       // Check if we have stored tokens
       const storedTokens = localStorage.getItem('google_workspace_tokens')
       if (storedTokens) {
-        setIsGoogleConnected(true)
-        return
-      }
-
-      // Fallback to API check
-      const apiUrl = 'https://velora-production.up.railway.app'
-      const response = await fetch(`${apiUrl}/api/google/status`)
-      if (response.ok) {
-        setIsGoogleConnected(true)
+        // Validate tokens with the backend
+        const apiUrl = 'https://velora-production.up.railway.app'
+        const response = await fetch(`${apiUrl}/api/google/status`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            tokens: JSON.parse(storedTokens)
+          })
+        })
+        
+        if (response.ok) {
+          const result = await response.json()
+          setIsGoogleConnected(result.connected)
+          if (!result.connected) {
+            // Clear invalid tokens
+            localStorage.removeItem('google_workspace_tokens')
+          }
+        } else {
+          setIsGoogleConnected(false)
+          localStorage.removeItem('google_workspace_tokens')
+        }
+      } else {
+        setIsGoogleConnected(false)
       }
     } catch (error) {
       console.error('Error checking Google connection:', error)
       setIsGoogleConnected(false)
+      // Clear potentially corrupted tokens
+      localStorage.removeItem('google_workspace_tokens')
     }
   }
 
@@ -127,6 +145,7 @@ export default function ChatPage() {
   const handleAnalyzeEmails = async () => {
     if (!isGoogleConnected) {
       toast.error('Please connect to Google Workspace first')
+      setShowGoogleModal(true)
       return
     }
 
@@ -134,6 +153,7 @@ export default function ChatPage() {
     const storedTokens = localStorage.getItem('google_workspace_tokens')
     if (!storedTokens) {
       toast.error('Google Workspace tokens not found. Please reconnect.')
+      setShowGoogleModal(true)
       return
     }
 
@@ -1425,8 +1445,8 @@ export default function ChatPage() {
           </motion.div>
         )}
 
-        {/* Google Workspace Connected - Show Actions */}
-        {isGoogleConnected && (
+        {/* Google Workspace Status */}
+        {isGoogleConnected ? (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -1474,6 +1494,35 @@ export default function ChatPage() {
                     <span>Calendar</span>
                   </motion.button>
                 </div>
+              </div>
+            </div>
+          </motion.div>
+        ) : (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mb-6"
+          >
+            <div className="bg-gradient-to-r from-red-500/10 to-orange-500/10 border border-red-500/20 rounded-xl p-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-3">
+                  <div className="w-8 h-8 bg-red-500 rounded-lg flex items-center justify-center">
+                    <X className="w-4 h-4 text-white" />
+                  </div>
+                  <div>
+                    <h4 className="text-white font-medium">Google Workspace Not Connected</h4>
+                    <p className="text-gray-300 text-sm">Connect to analyze your emails and calendar</p>
+                  </div>
+                </div>
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={handleConnectGoogle}
+                  className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-400 hover:to-purple-400 text-white font-medium py-2 px-4 rounded-lg transition-all duration-200 flex items-center space-x-2 text-sm"
+                >
+                  <ExternalLink className="w-3 h-3" />
+                  <span>Connect Google</span>
+                </motion.button>
               </div>
             </div>
           </motion.div>
