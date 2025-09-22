@@ -14,11 +14,11 @@ export default function PricingPage() {
       price: { monthly: 0, annual: 0 },
       description: 'Perfect for getting started',
       features: [
-        'Up to 100 documents',
-        'Basic AI summaries',
-        'Voice notes (10/month)',
-        'Email support',
-        'Mobile app access'
+        'Up to 20 documents',
+        '5 AI queries per day',
+        'Basic voice notes',
+        'Gmail integration only',
+        'Email support'
       ],
       limitations: [
         'Limited AI queries',
@@ -36,13 +36,14 @@ export default function PricingPage() {
       description: 'For power users and professionals',
       features: [
         'Unlimited documents',
+        'Unlimited AI queries',
         'Advanced AI summaries',
         'Unlimited voice notes',
-        'Priority support',
-        'All integrations',
+        'All integrations (Gmail, Drive, Calendar)',
         'Advanced search',
         'Export capabilities',
-        'Custom reminders'
+        'Priority support',
+        '7-day free trial'
       ],
       limitations: [],
       cta: 'Start Pro Trial',
@@ -271,7 +272,7 @@ export default function PricingPage() {
                 Is there a free trial?
               </h3>
               <p className="text-gray-300 text-sm">
-                Yes! Pro plan comes with a 14-day free trial. No credit card required to start.
+                Yes! Pro plan comes with a 7-day free trial. No credit card required to start.
               </p>
             </div>
             
