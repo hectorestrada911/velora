@@ -104,21 +104,37 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 }
 
 async function processPDF(file: any) {
-  // Read and parse the PDF
-  const pdfBuffer = fs.readFileSync(file.filepath)
-  const pdfData = await pdf(pdfBuffer)
-  
-  // Extract text content
-  const textContent = pdfData.text
-  
-  if (!textContent || textContent.trim().length === 0) {
-    throw new Error('No text content found in PDF')
+  try {
+    // Read and parse the PDF
+    const pdfBuffer = fs.readFileSync(file.filepath)
+    const pdfData = await pdf(pdfBuffer)
+    
+    // Extract text content
+    const textContent = pdfData.text
+    
+    console.log(`PDF processing: ${file.originalFilename}`)
+    console.log(`Text length: ${textContent ? textContent.length : 0}`)
+    console.log(`First 200 chars: ${textContent ? textContent.substring(0, 200) : 'No text'}`)
+    
+    if (!textContent || textContent.trim().length === 0) {
+      console.error('No text content found in PDF')
+      throw new Error('No text content found in PDF')
+    }
+
+    // Clean up the uploaded file
+    fs.unlinkSync(file.filepath)
+
+    return await analyzeContent(textContent, file, 'pdf')
+  } catch (error) {
+    console.error('PDF processing error:', error)
+    // Clean up the uploaded file even if processing fails
+    try {
+      fs.unlinkSync(file.filepath)
+    } catch (cleanupError) {
+      console.error('Error cleaning up file:', cleanupError)
+    }
+    throw error
   }
-
-  // Clean up the uploaded file
-  fs.unlinkSync(file.filepath)
-
-  return await analyzeContent(textContent, file, 'pdf')
 }
 
 async function processImage(file: any) {
