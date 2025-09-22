@@ -57,6 +57,7 @@ export interface FirestoreMessage {
     crossReferences?: string[]
     memoryIds?: string[]
     memoryContent?: string[]
+    analysis?: any
   }
 }
 
