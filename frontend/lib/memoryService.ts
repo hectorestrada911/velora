@@ -196,13 +196,13 @@ class MemoryService {
     }
 
     if (lowerQuery.includes('preference') || lowerQuery.includes('like') || lowerQuery.includes('hate')) {
-      const preferenceMemories = this.getMemoriesByCategory('preference')
+      const preferenceMemories = this.getMemoriesByCategory('personal')
       memories.push(...preferenceMemories.map(m => m.content))
       suggestions.push('Here are your saved preferences')
     }
 
     if (lowerQuery.includes('birthday') || lowerQuery.includes('anniversary')) {
-      const relationshipMemories = this.getMemoriesByCategory('relationship')
+      const relationshipMemories = this.getMemoriesByCategory('personal')
       memories.push(...relationshipMemories.map(m => m.content))
       suggestions.push('Here are your saved relationship dates')
     }
