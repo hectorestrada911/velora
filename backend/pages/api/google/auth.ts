@@ -8,6 +8,19 @@ const oauth2Client = new google.auth.OAuth2(
 );
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  // Handle CORS preflight
+  if (req.method === 'OPTIONS') {
+    res.setHeader('Access-Control-Allow-Origin', 'https://velora-beta-one.vercel.app')
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization')
+    return res.status(200).end()
+  }
+
+  // Set CORS headers for all responses
+  res.setHeader('Access-Control-Allow-Origin', 'https://velora-beta-one.vercel.app')
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization')
+
   if (req.method === 'GET') {
     // Generate OAuth URL
     const scopes = [
