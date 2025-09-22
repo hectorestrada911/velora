@@ -28,7 +28,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     // Create the calendar event
     const response = await calendar.events.insert({
       calendarId: 'primary',
-      resource: {
+      requestBody: {
         summary: event.title || event.summary,
         description: event.description,
         start: {
