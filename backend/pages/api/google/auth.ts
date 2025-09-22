@@ -1,0 +1,49 @@
+import { NextApiRequest, NextApiResponse } from 'next';
+import { google } from 'googleapis';
+
+const oauth2Client = new google.auth.OAuth2(
+  process.env.GOOGLE_CLIENT_ID,
+  process.env.GOOGLE_CLIENT_SECRET,
+  `${process.env.APP_URL}/auth/google/callback`
+);
+
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  if (req.method === 'GET') {
+    // Generate OAuth URL
+    const scopes = [
+      'https://www.googleapis.com/auth/gmail.readonly',
+      'https://www.googleapis.com/auth/calendar',
+      'https://www.googleapis.com/auth/drive.readonly'
+    ];
+
+    const authUrl = oauth2Client.generateAuthUrl({
+      access_type: 'offline',
+      scope: scopes,
+      prompt: 'consent'
+    });
+
+    res.status(200).json({ authUrl });
+  } else if (req.method === 'POST') {
+    // Exchange code for tokens
+    try {
+      const { code } = req.body;
+
+      if (!code) {
+        return res.status(400).json({ error: 'Authorization code is required' });
+      }
+
+      const { tokens } = await oauth2Client.getToken(code);
+
+      res.status(200).json({
+        success: true,
+        tokens
+      });
+    } catch (error) {
+      console.error('Error exchanging code for tokens:', error);
+      res.status(500).json({ error: 'Failed to exchange code for tokens' });
+    }
+  } else {
+    res.setHeader('Allow', ['GET', 'POST']);
+    res.status(405).json({ error: 'Method not allowed' });
+  }
+}

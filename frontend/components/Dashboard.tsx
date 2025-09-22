@@ -7,6 +7,7 @@ import { toast } from 'react-hot-toast'
 import { VoiceRecorder } from './VoiceRecorder'
 import { Calendar as CalendarComponent } from './Calendar'
 import FileUpload from './FileUpload'
+import GoogleWorkspaceIntegration from './GoogleWorkspaceIntegration'
 
 interface Note {
   id: string
@@ -202,6 +203,15 @@ export function Dashboard() {
           <h3 className="text-lg font-semibold text-gray-100 mb-4">Upload Documents for AI Analysis</h3>
           <p className="text-gray-400 mb-4">Drop PDFs, Word docs, or text files. Our AI will read, understand, and organize everything intelligently.</p>
           <FileUpload onContentAnalyzed={handleFileContentAnalyzed} />
+        </motion.div>
+
+        {/* Google Workspace Integration */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.45 }}
+        >
+          <GoogleWorkspaceIntegration />
         </motion.div>
 
       {/* Upcoming Reminders */}

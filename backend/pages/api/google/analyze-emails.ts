@@ -1,0 +1,166 @@
+import { NextApiRequest, NextApiResponse } from 'next';
+import { google } from 'googleapis';
+import OpenAI from 'openai';
+
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
+});
+
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Method not allowed' });
+  }
+
+  try {
+    const { tokens, userId } = req.body;
+
+    if (!tokens || !userId) {
+      return res.status(400).json({ error: 'Tokens and userId are required' });
+    }
+
+    // Set up Google OAuth client
+    const oauth2Client = new google.auth.OAuth2(
+      process.env.GOOGLE_CLIENT_ID,
+      process.env.GOOGLE_CLIENT_SECRET,
+      `${process.env.APP_URL}/auth/google/callback`
+    );
+
+    oauth2Client.setCredentials(tokens);
+
+    // Initialize Gmail API
+    const gmail = google.gmail({ version: 'v1', auth: oauth2Client });
+
+    // Get recent emails
+    const response = await gmail.users.messages.list({
+      userId: 'me',
+      maxResults: 10,
+      q: 'in:inbox'
+    });
+
+    const messages = response.data.messages || [];
+    const emails = [];
+
+    // Process each email
+    for (const message of messages.slice(0, 5)) { // Limit to 5 emails for analysis
+      try {
+        const emailResponse = await gmail.users.messages.get({
+          userId: 'me',
+          id: message.id,
+          format: 'full'
+        });
+
+        const email = emailResponse.data;
+        const headers = email.payload?.headers || [];
+        
+        const subject = headers.find(h => h.name === 'Subject')?.value || '';
+        const from = headers.find(h => h.name === 'From')?.value || '';
+        const date = headers.find(h => h.name === 'Date')?.value || '';
+
+        // Extract email body
+        let body = '';
+        if (email.payload?.body?.data) {
+          body = Buffer.from(email.payload.body.data, 'base64').toString();
+        } else if (email.payload?.parts) {
+          for (const part of email.payload.parts) {
+            if (part.mimeType === 'text/plain' && part.body?.data) {
+              body = Buffer.from(part.body.data, 'base64').toString();
+              break;
+            }
+          }
+        }
+
+        emails.push({
+          id: message.id,
+          subject,
+          from,
+          date,
+          body: body.substring(0, 1000), // Limit body length for AI analysis
+          threadId: email.threadId || ''
+        });
+      } catch (error) {
+        console.error('Error processing email:', error);
+        continue;
+      }
+    }
+
+    // Analyze emails with AI
+    const analysisPrompt = `
+    Analyze these emails and extract actionable tasks, deadlines, and important information.
+    Focus on finding:
+    1. Tasks that need to be done
+    2. Deadlines and due dates
+    3. Meeting requests or appointments
+    4. Important information to remember
+    5. Follow-up actions required
+
+    Emails:
+    ${emails.map(email => `
+    Subject: ${email.subject}
+    From: ${email.from}
+    Date: ${email.date}
+    Content: ${email.body}
+    `).join('\n---\n')}
+
+    Return a JSON response with this structure:
+    {
+      "tasks": [
+        {
+          "task": "Task description",
+          "deadline": "YYYY-MM-DD or null",
+          "priority": "high|medium|low",
+          "source": "email subject or sender",
+          "emailId": "email ID"
+        }
+      ],
+      "meetings": [
+        {
+          "title": "Meeting title",
+          "date": "YYYY-MM-DD",
+          "time": "HH:MM",
+          "attendees": ["email1", "email2"],
+          "source": "email subject or sender",
+          "emailId": "email ID"
+        }
+      ],
+      "reminders": [
+        {
+          "reminder": "What to remember",
+          "priority": "high|medium|low",
+          "source": "email subject or sender",
+          "emailId": "email ID"
+        }
+      ]
+    }
+    `;
+
+    const aiResponse = await openai.chat.completions.create({
+      model: "gpt-4o-mini",
+      messages: [
+        {
+          role: "system",
+          content: "You are Velora, an AI assistant that helps users organize their emails into actionable tasks, meetings, and reminders. Extract only concrete, actionable items from emails."
+        },
+        {
+          role: "user",
+          content: analysisPrompt
+        }
+      ],
+      response_format: { type: "json_object" },
+    });
+
+    const analysis = JSON.parse(aiResponse.choices[0].message.content || '{}');
+
+    res.status(200).json({
+      success: true,
+      emails: emails.length,
+      analysis
+    });
+
+  } catch (error) {
+    console.error('Error analyzing emails:', error);
+    res.status(500).json({ 
+      error: 'Failed to analyze emails',
+      details: error instanceof Error ? error.message : 'Unknown error'
+    });
+  }
+}
