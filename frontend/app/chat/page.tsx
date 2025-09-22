@@ -1140,6 +1140,35 @@ export default function ChatPage() {
           </div>
           
           <div className="flex items-center gap-1.5 sm:gap-2 md:gap-4">
+            {/* Google Workspace Connection Button */}
+            {!isGoogleConnected ? (
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={handleConnectGoogle}
+                disabled={isConnectingGoogle}
+                className="hidden sm:flex items-center gap-2 px-3 py-2 bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-400 hover:to-purple-400 disabled:opacity-50 text-white text-sm font-medium rounded-lg transition-all duration-200"
+                title="Connect Google Workspace"
+              >
+                {isConnectingGoogle ? (
+                  <>
+                    <div className="w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    <span className="hidden md:inline">Connecting...</span>
+                  </>
+                ) : (
+                  <>
+                    <Mail className="w-4 h-4" />
+                    <span className="hidden md:inline">Connect Google</span>
+                  </>
+                )}
+              </motion.button>
+            ) : (
+              <div className="hidden sm:flex items-center gap-2 px-3 py-2 bg-green-500/20 border border-green-500/30 text-green-400 text-sm font-medium rounded-lg">
+                <CheckCircle className="w-4 h-4" />
+                <span className="hidden md:inline">Google Connected</span>
+              </div>
+            )}
+
             {/* Mobile Hamburger Menu */}
               <button 
               onClick={() => setShowMobileSidebar(true)}
@@ -1147,7 +1176,7 @@ export default function ChatPage() {
               title="Menu"
             >
               <Menu className="w-5 h-5" />
-              </button>
+            </button>
 
             {/* Desktop Navigation - Compact with Labels */}
             <div className="hidden lg:flex items-center gap-3">
@@ -1335,117 +1364,55 @@ export default function ChatPage() {
           </motion.div>
         )}
 
-        {/* Google Workspace Integration - Most Prominent */}
-        {!isGoogleConnected && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="mb-8"
-          >
-            <div className="bg-gradient-to-r from-blue-500/20 to-purple-500/20 border-2 border-blue-500/30 rounded-2xl p-6 md:p-8">
-              <div className="text-center mb-6">
-                <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                  <Mail className="w-8 h-8 text-white" />
-                </div>
-                <h2 className="text-2xl md:text-3xl font-bold text-white mb-2">
-                  Connect Your Google Workspace
-                </h2>
-                <p className="text-gray-300 text-lg">
-                  Unlock the full power of your AI assistant
-                </p>
-              </div>
-              
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                <div className="text-center p-4 bg-gray-900/50 rounded-xl">
-                  <Mail className="w-6 h-6 text-blue-400 mx-auto mb-2" />
-                  <h3 className="text-white font-medium mb-1">Email Analysis</h3>
-                  <p className="text-gray-400 text-sm">Extract tasks and deadlines</p>
-                </div>
-                <div className="text-center p-4 bg-gray-900/50 rounded-xl">
-                  <Calendar className="w-6 h-6 text-green-400 mx-auto mb-2" />
-                  <h3 className="text-white font-medium mb-1">Smart Calendar</h3>
-                  <p className="text-gray-400 text-sm">Auto-create events</p>
-                </div>
-                <div className="text-center p-4 bg-gray-900/50 rounded-xl">
-                  <Brain className="w-6 h-6 text-purple-400 mx-auto mb-2" />
-                  <h3 className="text-white font-medium mb-1">AI Insights</h3>
-                  <p className="text-gray-400 text-sm">Never miss important info</p>
-                </div>
-              </div>
-              
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={handleConnectGoogle}
-                disabled={isConnectingGoogle}
-                className="w-full bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-400 hover:to-purple-400 disabled:opacity-50 text-white font-bold py-4 px-8 rounded-xl transition-all duration-200 flex items-center justify-center space-x-3 text-lg"
-              >
-                {isConnectingGoogle ? (
-                  <>
-                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                    <span>Connecting to Google...</span>
-                  </>
-                ) : (
-                  <>
-                    <ExternalLink className="w-5 h-5" />
-                    <span>Connect Google Workspace</span>
-                  </>
-                )}
-              </motion.button>
-            </div>
-          </motion.div>
-        )}
-
         {/* Google Workspace Connected - Show Actions */}
         {isGoogleConnected && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="mb-8"
+            className="mb-6"
           >
-            <div className="bg-gradient-to-r from-green-500/20 to-blue-500/20 border-2 border-green-500/30 rounded-2xl p-6">
-              <div className="flex items-center justify-between mb-4">
+            <div className="bg-gradient-to-r from-green-500/10 to-blue-500/10 border border-green-500/20 rounded-xl p-4">
+              <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-3">
-                  <div className="w-12 h-12 bg-green-500 rounded-xl flex items-center justify-center">
-                    <CheckCircle className="w-6 h-6 text-white" />
+                  <div className="w-8 h-8 bg-green-500 rounded-lg flex items-center justify-center">
+                    <CheckCircle className="w-4 h-4 text-white" />
                   </div>
                   <div>
-                    <h3 className="text-xl font-bold text-white">Google Workspace Connected</h3>
-                    <p className="text-gray-300">Ready to analyze your emails and calendar</p>
+                    <h4 className="text-white font-medium">Google Workspace Connected</h4>
+                    <p className="text-gray-300 text-sm">Ready to analyze your emails and calendar</p>
                   </div>
                 </div>
-              </div>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  onClick={handleAnalyzeEmails}
-                  disabled={isAnalyzingEmails}
-                  className="bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-400 hover:to-blue-400 disabled:opacity-50 text-white font-semibold py-4 px-6 rounded-xl transition-all duration-200 flex items-center justify-center space-x-3"
-                >
-                  {isAnalyzingEmails ? (
-                    <>
-                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                      <span>Analyzing Emails...</span>
-                    </>
-                  ) : (
-                    <>
-                      <Mail className="w-5 h-5" />
-                      <span>Analyze My Emails</span>
-                    </>
-                  )}
-                </motion.button>
-                
-                <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  onClick={() => window.open('https://calendar.google.com', '_blank')}
-                  className="bg-gradient-to-r from-green-500 to-blue-500 hover:from-green-400 hover:to-blue-400 text-white font-semibold py-4 px-6 rounded-xl transition-all duration-200 flex items-center justify-center space-x-3"
-                >
-                  <Calendar className="w-5 h-5" />
-                  <span>Open My Calendar</span>
-                </motion.button>
+                <div className="flex items-center space-x-2">
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={handleAnalyzeEmails}
+                    disabled={isAnalyzingEmails}
+                    className="bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-400 hover:to-blue-400 disabled:opacity-50 text-white font-medium py-2 px-4 rounded-lg transition-all duration-200 flex items-center space-x-2 text-sm"
+                  >
+                    {isAnalyzingEmails ? (
+                      <>
+                        <div className="w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                        <span>Analyzing...</span>
+                      </>
+                    ) : (
+                      <>
+                        <Mail className="w-3 h-3" />
+                        <span>Analyze Emails</span>
+                      </>
+                    )}
+                  </motion.button>
+                  
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => window.open('https://calendar.google.com', '_blank')}
+                    className="bg-gray-700 hover:bg-gray-600 text-white font-medium py-2 px-4 rounded-lg transition-all duration-200 flex items-center space-x-2 text-sm"
+                  >
+                    <Calendar className="w-3 h-3" />
+                    <span>Calendar</span>
+                  </motion.button>
+                </div>
               </div>
             </div>
           </motion.div>
@@ -1930,6 +1897,11 @@ export default function ChatPage() {
         onClose={() => setShowMobileSidebar(false)}
         onNavigate={handleNavigate}
         onToggleConversationHistory={() => setShowConversationHistory(!showConversationHistory)}
+        isGoogleConnected={isGoogleConnected}
+        isConnectingGoogle={isConnectingGoogle}
+        onConnectGoogle={handleConnectGoogle}
+        onAnalyzeEmails={handleAnalyzeEmails}
+        isAnalyzingEmails={isAnalyzingEmails}
       />
 
       {/* Settings Modal */}

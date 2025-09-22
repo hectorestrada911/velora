@@ -13,7 +13,10 @@ import {
   Settings,
   Play,
   User,
-  Plus
+  Plus,
+  Mail,
+  CheckCircle,
+  ExternalLink
 } from 'lucide-react'
 import { useAuth } from '@/components/providers/AuthProvider'
 
@@ -22,13 +25,23 @@ interface MobileSidebarProps {
   onClose: () => void
   onNavigate: (path: string) => void
   onToggleConversationHistory: () => void
+  isGoogleConnected?: boolean
+  isConnectingGoogle?: boolean
+  onConnectGoogle?: () => void
+  onAnalyzeEmails?: () => void
+  isAnalyzingEmails?: boolean
 }
 
 export default function MobileSidebar({ 
   isOpen, 
   onClose, 
   onNavigate, 
-  onToggleConversationHistory 
+  onToggleConversationHistory,
+  isGoogleConnected = false,
+  isConnectingGoogle = false,
+  onConnectGoogle,
+  onAnalyzeEmails,
+  isAnalyzingEmails = false
 }: MobileSidebarProps) {
   const { user, signOut } = useAuth()
 
@@ -77,6 +90,59 @@ export default function MobileSidebar({
                 >
                   <X className="w-5 h-5" />
                 </button>
+              </div>
+
+              {/* Google Workspace Integration */}
+              <div className="mb-6">
+                {!isGoogleConnected ? (
+                  <button
+                    onClick={() => {
+                      onConnectGoogle?.()
+                      onClose()
+                    }}
+                    disabled={isConnectingGoogle}
+                    className="w-full flex items-center space-x-3 p-3 text-white bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-400 hover:to-purple-400 disabled:opacity-50 rounded-lg transition-colors"
+                  >
+                    {isConnectingGoogle ? (
+                      <>
+                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                        <span>Connecting...</span>
+                      </>
+                    ) : (
+                      <>
+                        <Mail className="w-5 h-5" />
+                        <span>Connect Google</span>
+                      </>
+                    )}
+                  </button>
+                ) : (
+                  <div className="space-y-2">
+                    <div className="flex items-center space-x-3 p-3 bg-green-500/20 border border-green-500/30 rounded-lg">
+                      <CheckCircle className="w-5 h-5 text-green-400" />
+                      <span className="text-green-400 font-medium">Google Connected</span>
+                    </div>
+                    <button
+                      onClick={() => {
+                        onAnalyzeEmails?.()
+                        onClose()
+                      }}
+                      disabled={isAnalyzingEmails}
+                      className="w-full flex items-center space-x-3 p-3 text-white bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-400 hover:to-blue-400 disabled:opacity-50 rounded-lg transition-colors"
+                    >
+                      {isAnalyzingEmails ? (
+                        <>
+                          <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                          <span>Analyzing...</span>
+                        </>
+                      ) : (
+                        <>
+                          <Mail className="w-5 h-5" />
+                          <span>Analyze Emails</span>
+                        </>
+                      )}
+                    </button>
+                  </div>
+                )}
               </div>
 
               {/* New Chat */}
