@@ -118,7 +118,16 @@ export default function ChatPage() {
     try {
       const apiUrl = 'https://velora-production.up.railway.app'
       const response = await fetch(`${apiUrl}/api/google/auth`)
+      
+      if (!response.ok) {
+        throw new Error('Failed to get Google OAuth URL')
+      }
+      
       const { authUrl } = await response.json()
+
+      if (!authUrl) {
+        throw new Error('Google OAuth not configured. Please set up Google Client ID and Secret.')
+      }
       
       // Open OAuth flow in popup
       const popup = window.open(
@@ -137,7 +146,7 @@ export default function ChatPage() {
       }, 1000)
     } catch (error) {
       console.error('Error connecting to Google:', error)
-      toast.error('Failed to connect to Google Workspace')
+      toast.error('Google OAuth not configured. Please set up Google Client ID and Secret in environment variables.')
       setIsConnectingGoogle(false)
     }
   }
