@@ -71,6 +71,14 @@ export default function ChatPage() {
   // Google Workspace Integration Functions
   const checkGoogleConnection = async () => {
     try {
+      // Check if we have stored tokens
+      const storedTokens = localStorage.getItem('google_workspace_tokens')
+      if (storedTokens) {
+        setIsGoogleConnected(true)
+        return
+      }
+
+      // Fallback to API check
       const apiUrl = 'https://velora-production.up.railway.app'
       const response = await fetch(`${apiUrl}/api/google/status`)
       if (response.ok) {
@@ -122,6 +130,13 @@ export default function ChatPage() {
       return
     }
 
+    // Get stored Google tokens
+    const storedTokens = localStorage.getItem('google_workspace_tokens')
+    if (!storedTokens) {
+      toast.error('Google Workspace tokens not found. Please reconnect.')
+      return
+    }
+
     setIsAnalyzingEmails(true)
     try {
       const apiUrl = 'https://velora-production.up.railway.app'
@@ -131,6 +146,7 @@ export default function ChatPage() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
+          tokens: JSON.parse(storedTokens),
           userId: user?.uid || 'current-user'
         }),
       })
