@@ -205,6 +205,12 @@ export default function ChatPage() {
       text: 'What do I have planned for tomorrow?',
       icon: <History className="w-4 h-4" />,
       category: 'intelligence'
+    },
+    {
+      id: '3',
+      text: 'Schedule a dentist appointment for next Friday',
+      icon: <CheckCircle className="w-4 h-4" />,
+      category: 'productivity'
     }
   ]
 
@@ -1432,7 +1438,7 @@ export default function ChatPage() {
             className="mb-6 md:mb-8"
           >
             <h3 className="text-lg font-semibold text-electric-400 mb-4 text-center">
-              Or try these quick actions:
+              Try asking:
             </h3>
             <div className="grid grid-cols-1 gap-3 md:gap-4">
               {suggestions.map((suggestion) => (
