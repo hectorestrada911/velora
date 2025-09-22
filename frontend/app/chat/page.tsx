@@ -1977,31 +1977,19 @@ export default function ChatPage() {
                 </div>
               </div>
 
-              {/* Real Examples */}
+              {/* Simple Example */}
               <div className="bg-gray-800/50 rounded-xl p-6 mb-8">
                 <h3 className="text-white font-semibold mb-4 flex items-center">
                   <Sparkles className="w-5 h-5 text-electric-400 mr-2" />
-                  Here's what you'll be able to do:
+                  Just ask naturally:
                 </h3>
-                <div className="space-y-3">
-                  <div className="flex items-start space-x-3">
-                    <div className="w-2 h-2 bg-electric-400 rounded-full mt-2 flex-shrink-0"></div>
-                    <p className="text-gray-300 text-sm">
-                      <span className="text-white font-medium">"Analyze my emails"</span> → Instantly extract all pending tasks and deadlines
-                    </p>
-                  </div>
-                  <div className="flex items-start space-x-3">
-                    <div className="w-2 h-2 bg-electric-400 rounded-full mt-2 flex-shrink-0"></div>
-                    <p className="text-gray-300 text-sm">
-                      <span className="text-white font-medium">"Schedule a meeting with John"</span> → Automatically creates calendar event and sends invite
-                    </p>
-                  </div>
-                  <div className="flex items-start space-x-3">
-                    <div className="w-2 h-2 bg-electric-400 rounded-full mt-2 flex-shrink-0"></div>
-                    <p className="text-gray-300 text-sm">
-                      <span className="text-white font-medium">"What did Sarah say about the project?"</span> → Finds relevant emails and summarizes key points
-                    </p>
-                  </div>
+                <div className="text-center">
+                  <p className="text-gray-300 text-lg">
+                    <span className="text-white font-medium">"Analyze my emails"</span>
+                  </p>
+                  <p className="text-gray-400 text-sm mt-2">
+                    And I'll extract all your tasks, deadlines, and important info instantly
+                  </p>
                 </div>
               </div>
 
