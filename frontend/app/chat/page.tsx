@@ -428,11 +428,7 @@ export default function ChatPage() {
     }
   }
 
-  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const files = event.target.files
-    if (!files || files.length === 0) return
-
-    const file = files[0]
+  const processPendingFile = async (file: File, userPrompt: string) => {
     setIsUploading(true)
     
     try {
@@ -448,50 +444,68 @@ export default function ChatPage() {
       // Reload documents list
       await loadDocuments()
       
-      // Create a message about the uploaded file
-      const fileMessage: Message = {
-        id: Date.now().toString(),
-        type: 'user',
-        content: `I uploaded a file: ${file.name}`,
-        timestamp: new Date()
-      }
-      
-      setMessages(prev => {
-        const newMessages = [...prev, fileMessage]
-        // Messages are now saved directly via firestoreService.addMessageToConversation
-        return newMessages
-      })
-      
-      // AI response about the file
+      // Create AI response about the uploaded file
       const aiMessage: Message = {
-        id: (Date.now() + 1).toString(),
+        id: Date.now().toString(),
         type: 'ai',
         content: `I've saved your file "${file.name}" permanently! I can help you analyze it, search for it later, or answer questions about its content. What would you like me to do with it?`,
         timestamp: new Date(),
         analysis: {
           type: 'file_upload',
-          priority: 'medium',
-          summary: `File uploaded: ${file.name}`,
-          fileName: file.name,
-          fileContent: content.substring(0, 200) + '...',
-          documentId: documentId
+          priority: 'medium'
         }
       }
       
-      setMessages(prev => {
-        const newMessages = [...prev, aiMessage]
-        // Messages are now saved directly via firestoreService.addMessageToConversation
-        return newMessages
-      })
+      setMessages(prev => [...prev, aiMessage])
       
-      toast.success(`File "${file.name}" uploaded and saved permanently!`)
+      // Save to Firestore
+      const firestoreMessage: Omit<FirestoreMessage, 'id' | 'timestamp'> = {
+        type: 'ai',
+        content: aiMessage.content,
+        analysis: aiMessage.analysis
+      }
+      
+      await firestoreService.addMessageToConversation(currentConversationId, firestoreMessage)
+      
+      toast.success(`"${file.name}" uploaded and ready for analysis!`)
       
     } catch (error) {
-      console.error('Error uploading file:', error)
-      toast.error(ErrorHandler.getOperationErrorMessage('file-upload', error))
+      console.error('Error processing file:', error)
+      toast.error(`Failed to process "${file.name}"`)
+      
+      const errorMessage: Message = {
+        id: Date.now().toString(),
+        type: 'ai',
+        content: `Sorry, I had trouble processing "${file.name}". Please try again.`,
+        timestamp: new Date()
+      }
+      
+      setMessages(prev => [...prev, errorMessage])
     } finally {
       setIsUploading(false)
     }
+  }
+
+  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files
+    if (!files || files.length === 0) return
+
+    const file = files[0]
+    
+    // Just store the file and let user type a prompt first
+    const fileMessage: Message = {
+      id: Date.now().toString(),
+      type: 'user',
+      content: `I want to upload a file: ${file.name}`,
+      timestamp: new Date(),
+      pendingFile: file // Store the file for later processing
+    }
+    
+    setMessages(prev => {
+        const newMessages = [...prev, fileMessage]
+        // Messages are now saved directly via firestoreService.addMessageToConversation
+        return newMessages
+      })
   }
 
   const readFileContent = (file: File): Promise<string> => {
@@ -880,6 +894,10 @@ export default function ChatPage() {
     // Detect greeting (safe - just logs, doesn't change behavior)
     const isGreeting = detectGreeting(inputValue)
 
+    // Check if there's a pending file to process
+    const lastMessage = messages[messages.length - 1]
+    const pendingFile = lastMessage?.pendingFile
+
     const userMessage: Message = {
       id: Date.now().toString(),
       type: 'user',
@@ -888,6 +906,17 @@ export default function ChatPage() {
     }
 
     setMessages(prev => [...prev, userMessage])
+
+    // If there's a pending file, process it now
+    if (pendingFile) {
+      await processPendingFile(pendingFile, inputValue)
+      // Remove the pending file from the previous message
+      setMessages(prev => prev.map(msg => 
+        msg.id === lastMessage.id 
+          ? { ...msg, pendingFile: undefined }
+          : msg
+      ))
+    }
     
     // Check for "remember" commands and process memories
     const rememberCommand = memoryService.parseRememberCommand(inputValue)

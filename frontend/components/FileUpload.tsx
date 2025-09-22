@@ -37,12 +37,21 @@ export default function FileUpload({ onContentAnalyzed }: FileUploadProps) {
     setIsDragOver(false);
   }, []);
 
-  const handleDrop = useCallback(async (e: React.DragEvent) => {
+  const handleDrop = useCallback((e: React.DragEvent) => {
     e.preventDefault();
     setIsDragOver(false);
     
     const droppedFiles = Array.from(e.dataTransfer.files);
-    await processFiles(droppedFiles);
+    // Just add files to the list, don't process them yet (same as handleFileSelect)
+    const newFiles: UploadedFile[] = droppedFiles.map(file => ({
+      id: Math.random().toString(36).substr(2, 9),
+      name: file.name,
+      type: file.type,
+      size: file.size,
+      status: 'pending',
+      file: file // Store the actual file for later processing
+    }));
+    setFiles(prev => [...prev, ...newFiles]);
   }, []);
 
   const handleFileSelect = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {

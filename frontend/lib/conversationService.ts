@@ -19,6 +19,7 @@ export interface Message {
   content: string
   timestamp: Date
   analysis?: any
+  pendingFile?: File // For files waiting to be processed
 }
 
 export interface Conversation {
