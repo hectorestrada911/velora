@@ -47,7 +47,8 @@ export default function GoogleWorkspaceIntegration({ onIntegrationComplete }: Go
 
   const checkConnectionStatus = async () => {
     try {
-      const response = await fetch('/api/google/status')
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://velora-production.up.railway.app'
+      const response = await fetch(`${apiUrl}/api/google/status`)
       if (response.ok) {
         setIsConnected(true)
         setConnectionStatus('connected')
@@ -63,7 +64,8 @@ export default function GoogleWorkspaceIntegration({ onIntegrationComplete }: Go
 
     try {
       // Get OAuth URL from backend
-      const response = await fetch('/api/google/auth')
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://velora-production.up.railway.app'
+      const response = await fetch(`${apiUrl}/api/google/auth`)
       const { authUrl } = await response.json()
 
       // Open OAuth flow in popup
@@ -95,7 +97,8 @@ export default function GoogleWorkspaceIntegration({ onIntegrationComplete }: Go
     setIsAnalyzing(true)
 
     try {
-      const response = await fetch('/api/google/analyze-emails', {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://velora-production.up.railway.app'
+      const response = await fetch(`${apiUrl}/api/google/analyze-emails`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
