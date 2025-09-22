@@ -32,3 +32,4 @@ This is the backend API for the Velora voice-first productivity app.
 - `FIREBASE_*` - Firebase configuration
 - `STRIPE_SECRET_KEY` - Stripe secret key
 - `RESEND_API_KEY` - Resend email service key
+# Google Workspace Integration - Sun Sep 21 19:26:33 PDT 2025
