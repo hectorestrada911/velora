@@ -4,7 +4,7 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { motion as motion2 } from 'framer-motion'
-import { User, Lock, Mail, ArrowRight, Sparkles, Brain, Calendar, Bell, CheckCircle, Clock, Mic, Zap, Target, Lightbulb, MessageSquare, Database, Shield, Rocket, Star, TrendingUp, Users, Globe, Smartphone, Laptop } from 'lucide-react'
+import { User, Lock, Mail, ArrowRight, Sparkles, Brain, Calendar, Bell, CheckCircle, Clock, Mic, Zap, Target, Lightbulb, MessageSquare, Database, Shield, Rocket, Star, TrendingUp, Users, Globe, Smartphone, Laptop, Crown } from 'lucide-react'
 import Link from 'next/link'
 import { toast } from 'react-hot-toast'
 import { useAuth } from '@/components/providers/AuthProvider'
@@ -307,6 +307,16 @@ export default function AuthPage() {
               <div className="px-4 py-2 text-xs text-gray-400 uppercase tracking-wide border-b border-gray-700 mb-2 mt-4">
                 Explore
               </div>
+              <button
+                onClick={() => {
+                  window.location.href = '/pricing'
+                  setIsMenuOpen(false)
+                }}
+                className="w-full text-left px-4 py-3 text-white hover:bg-gray-800 rounded-md transition-colors duration-200 flex items-center space-x-3"
+              >
+                <Crown className="w-4 h-4" />
+                <span>Pricing</span>
+              </button>
               <button
                 onClick={() => {
                   handleTryDemo()
