@@ -134,10 +134,10 @@ export class GoogleWorkspaceService {
       const message = response.data;
       const headers = message.payload?.headers || [];
       
-      const subject = headers.find(h => h.name === 'Subject')?.value || '';
-      const from = headers.find(h => h.name === 'From')?.value || '';
-      const to = headers.find(h => h.name === 'To')?.value || '';
-      const date = headers.find(h => h.name === 'Date')?.value || '';
+      const subject = headers.find((h: any) => h.name === 'Subject')?.value || '';
+      const from = headers.find((h: any) => h.name === 'From')?.value || '';
+      const to = headers.find((h: any) => h.name === 'To')?.value || '';
+      const date = headers.find((h: any) => h.name === 'Date')?.value || '';
 
       // Extract email body
       let body = '';
