@@ -1,5 +1,5 @@
 import MemoryView from '@/components/MemoryView'
 
 export default function MemoryPage() {
-  return <MemoryView />
+  return <MemoryView onClose={() => window.history.back()} />
 }
