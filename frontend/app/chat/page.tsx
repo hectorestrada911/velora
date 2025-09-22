@@ -58,6 +58,8 @@ export default function ChatPage() {
   const [showOrganizeMenu, setShowOrganizeMenu] = useState(false)
   const [isGoogleConnected, setIsGoogleConnected] = useState(false)
   const [isConnectingGoogle, setIsConnectingGoogle] = useState(false)
+  const [isAnalyzingEmails, setIsAnalyzingEmails] = useState(false)
+  const [emailAnalysis, setEmailAnalysis] = useState<any>(null)
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
@@ -136,10 +138,9 @@ export default function ChatPage() {
         
         const newMessage: Message = {
           id: Date.now().toString(),
-          text: analysisMessage,
-          isUser: false,
-          timestamp: new Date(),
-          type: 'text'
+          content: analysisMessage,
+          type: 'ai',
+          timestamp: new Date()
         }
         
         setMessages(prev => [...prev, newMessage])
