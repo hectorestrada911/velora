@@ -77,6 +77,8 @@ export default function FileUpload({ onContentAnalyzed }: FileUploadProps) {
       
       if (file.type === 'application/pdf') {
         content = await extractPDFText(file);
+      } else if (file.type.startsWith('image/')) {
+        content = await extractImageText(file);
       } else if (file.type.includes('text/') || file.type.includes('document')) {
         content = await extractTextFile(file);
       } else {
@@ -155,6 +157,50 @@ export default function FileUpload({ onContentAnalyzed }: FileUploadProps) {
       console.error('PDF processing error:', error);
       // Fallback to file name if processing fails
       return `PDF: ${file.name} (processing failed - file uploaded)`;
+    }
+  };
+
+  const extractImageText = async (file: File): Promise<string> => {
+    // Send image to backend for processing
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || '/api/pdf-analyze';
+      const response = await fetch(apiUrl, {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error('Image processing failed');
+      }
+
+      const result = await response.json();
+      
+      // Store the full analysis result for later use
+      setFiles(prev => prev.map(f => 
+        f.name === file.name ? { ...f, pdfAnalysis: result } : f
+      ));
+
+      // Save to PDF service for future reference
+      const savedPDF = pdfService.addPDF(result, result.summary || '');
+      
+      // Notify parent component
+      onContentAnalyzed({
+        type: 'image',
+        content: result.summary || 'Image processed successfully',
+        analysis: result,
+        fileName: file.name,
+        pdfId: savedPDF.id
+      });
+
+      // Return the extracted text for display
+      return result.summary || 'Image processed successfully';
+    } catch (error) {
+      console.error('Image processing error:', error);
+      // Fallback to file name if processing fails
+      return `Image: ${file.name} (processing failed - file uploaded)`;
     }
   };
 
@@ -284,7 +330,7 @@ export default function FileUpload({ onContentAnalyzed }: FileUploadProps) {
         <input
           type="file"
           multiple
-          accept=".pdf,.txt,.doc,.docx,.md"
+          accept=".pdf,.txt,.doc,.docx,.md,.jpg,.jpeg,.png,.gif,.webp"
           onChange={handleFileSelect}
           className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
         />
@@ -303,12 +349,12 @@ export default function FileUpload({ onContentAnalyzed }: FileUploadProps) {
               Upload Your Documents
             </h3>
             <p className="text-gray-400 max-w-md mx-auto">
-              Drop PDFs, Word docs, or text files here. Our AI will read, understand, and organize everything for you.
+              Drop PDFs, images, Word docs, or text files here. Our AI will read, understand, and organize everything for you.
             </p>
           </div>
           
           <div className="text-sm text-gray-500">
-            Supports: PDF, Word, Text, Markdown
+            Supports: PDF, Images (JPG, PNG, GIF, WebP), Word, Text, Markdown
           </div>
         </div>
       </motion.div>
