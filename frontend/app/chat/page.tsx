@@ -60,6 +60,7 @@ export default function ChatPage() {
   const [isConnectingGoogle, setIsConnectingGoogle] = useState(false)
   const [isAnalyzingEmails, setIsAnalyzingEmails] = useState(false)
   const [emailAnalysis, setEmailAnalysis] = useState<any>(null)
+  const [showGoogleModal, setShowGoogleModal] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
@@ -81,7 +82,12 @@ export default function ChatPage() {
     }
   }
 
-  const handleConnectGoogle = async () => {
+  const handleConnectGoogle = () => {
+    setShowGoogleModal(true)
+  }
+
+  const handleStartGoogleConnection = async () => {
+    setShowGoogleModal(false)
     setIsConnectingGoogle(true)
     try {
       const apiUrl = 'https://velora-production.up.railway.app'
@@ -1909,6 +1915,134 @@ export default function ChatPage() {
         isOpen={showSettings}
         onClose={() => setShowSettings(false)}
       />
+
+      {/* Google Workspace Connection Modal */}
+      <AnimatePresence>
+        {showGoogleModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50"
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0, y: 20 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.9, opacity: 0, y: 20 }}
+              className="bg-gray-900 rounded-2xl p-8 w-full max-w-2xl border border-gray-700 max-h-[90vh] overflow-y-auto"
+            >
+              {/* Header */}
+              <div className="text-center mb-8">
+                <div className="w-20 h-20 bg-gradient-to-r from-blue-500 to-purple-500 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                  <Mail className="w-10 h-10 text-white" />
+                </div>
+                <h2 className="text-3xl font-bold text-white mb-3">
+                  Unlock Your AI's Full Potential
+                </h2>
+                <p className="text-gray-300 text-lg leading-relaxed">
+                  Connect Google Workspace and transform your AI assistant into a powerful productivity companion
+                </p>
+              </div>
+
+              {/* Benefits Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <div className="text-center p-6 bg-gradient-to-br from-blue-500/10 to-purple-500/10 border border-blue-500/20 rounded-xl">
+                  <div className="w-12 h-12 bg-blue-500 rounded-xl flex items-center justify-center mx-auto mb-4">
+                    <Mail className="w-6 h-6 text-white" />
+                  </div>
+                  <h3 className="text-white font-semibold mb-2">Smart Email Analysis</h3>
+                  <p className="text-gray-300 text-sm">
+                    Never miss important tasks or deadlines buried in your inbox
+                  </p>
+                </div>
+
+                <div className="text-center p-6 bg-gradient-to-br from-green-500/10 to-blue-500/10 border border-green-500/20 rounded-xl">
+                  <div className="w-12 h-12 bg-green-500 rounded-xl flex items-center justify-center mx-auto mb-4">
+                    <Calendar className="w-6 h-6 text-white" />
+                  </div>
+                  <h3 className="text-white font-semibold mb-2">Auto Calendar Events</h3>
+                  <p className="text-gray-300 text-sm">
+                    Automatically create calendar events from your emails and conversations
+                  </p>
+                </div>
+
+                <div className="text-center p-6 bg-gradient-to-br from-purple-500/10 to-pink-500/10 border border-purple-500/20 rounded-xl">
+                  <div className="w-12 h-12 bg-purple-500 rounded-xl flex items-center justify-center mx-auto mb-4">
+                    <Brain className="w-6 h-6 text-white" />
+                  </div>
+                  <h3 className="text-white font-semibold mb-2">AI-Powered Insights</h3>
+                  <p className="text-gray-300 text-sm">
+                    Get intelligent summaries and actionable insights from your data
+                  </p>
+                </div>
+              </div>
+
+              {/* Real Examples */}
+              <div className="bg-gray-800/50 rounded-xl p-6 mb-8">
+                <h3 className="text-white font-semibold mb-4 flex items-center">
+                  <Sparkles className="w-5 h-5 text-electric-400 mr-2" />
+                  Here's what you'll be able to do:
+                </h3>
+                <div className="space-y-3">
+                  <div className="flex items-start space-x-3">
+                    <div className="w-2 h-2 bg-electric-400 rounded-full mt-2 flex-shrink-0"></div>
+                    <p className="text-gray-300 text-sm">
+                      <span className="text-white font-medium">"Analyze my emails"</span> → Instantly extract all pending tasks and deadlines
+                    </p>
+                  </div>
+                  <div className="flex items-start space-x-3">
+                    <div className="w-2 h-2 bg-electric-400 rounded-full mt-2 flex-shrink-0"></div>
+                    <p className="text-gray-300 text-sm">
+                      <span className="text-white font-medium">"Schedule a meeting with John"</span> → Automatically creates calendar event and sends invite
+                    </p>
+                  </div>
+                  <div className="flex items-start space-x-3">
+                    <div className="w-2 h-2 bg-electric-400 rounded-full mt-2 flex-shrink-0"></div>
+                    <p className="text-gray-300 text-sm">
+                      <span className="text-white font-medium">"What did Sarah say about the project?"</span> → Finds relevant emails and summarizes key points
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Security Note */}
+              <div className="bg-green-500/10 border border-green-500/20 rounded-xl p-4 mb-8">
+                <div className="flex items-center space-x-3">
+                  <CheckCircle className="w-5 h-5 text-green-400 flex-shrink-0" />
+                  <div>
+                    <h4 className="text-green-400 font-medium">Your data is secure</h4>
+                    <p className="text-gray-300 text-sm">
+                      We use Google's official OAuth 2.0. Your credentials are never stored, and you can revoke access anytime.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex flex-col sm:flex-row gap-4">
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={handleStartGoogleConnection}
+                  className="flex-1 bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-400 hover:to-purple-400 text-white font-bold py-4 px-8 rounded-xl transition-all duration-200 flex items-center justify-center space-x-3"
+                >
+                  <ExternalLink className="w-5 h-5" />
+                  <span>Connect Google Workspace</span>
+                </motion.button>
+                
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={() => setShowGoogleModal(false)}
+                  className="px-8 py-4 text-gray-400 hover:text-white transition-colors duration-200"
+                >
+                  Maybe Later
+                </motion.button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   )
 }
