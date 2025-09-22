@@ -202,13 +202,13 @@ export default function ChatPage() {
     },
     {
       id: '2',
-      text: 'What do I have planned for tomorrow?',
+      text: 'What can you help me with?',
       icon: <History className="w-4 h-4" />,
       category: 'intelligence'
     },
     {
       id: '3',
-      text: 'Schedule a dentist appointment for next Friday',
+      text: 'Create a reminder to call mom tomorrow',
       icon: <CheckCircle className="w-4 h-4" />,
       category: 'productivity'
     }
