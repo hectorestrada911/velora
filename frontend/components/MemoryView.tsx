@@ -9,7 +9,6 @@ import {
   Heart,
   Briefcase,
   Home,
-  Plus,
   Clock,
   CheckCircle,
   AlertCircle,
@@ -37,16 +36,6 @@ interface MemoryItem {
 export default function MemoryView({ onClose }: MemoryViewProps) {
   const [items, setItems] = useState<MemoryItem[]>([])
   const [searchQuery, setSearchQuery] = useState('')
-  const [selectedCategory, setSelectedCategory] = useState<string>('all')
-  const [selectedType, setSelectedType] = useState<string>('all')
-  const [showAddReminder, setShowAddReminder] = useState(false)
-  const [newReminder, setNewReminder] = useState({
-    title: '',
-    dueDate: '',
-    priority: 'medium' as 'low' | 'medium' | 'high' | 'urgent',
-    category: 'personal' as 'work' | 'personal' | 'life',
-    description: ''
-  })
 
   useEffect(() => {
     loadItems()
@@ -82,44 +71,6 @@ export default function MemoryView({ onClose }: MemoryViewProps) {
     setItems(allItems)
   }
 
-  const addReminder = async () => {
-    if (!newReminder.title.trim()) {
-      toast.error('Please enter a reminder title')
-      return
-    }
-
-    if (!newReminder.dueDate) {
-      toast.error('Please select a due date')
-      return
-    }
-
-    try {
-      const reminder: Reminder = {
-        title: newReminder.title,
-        dueDate: new Date(newReminder.dueDate),
-        priority: newReminder.priority,
-        category: newReminder.category,
-        description: newReminder.description
-      }
-
-      await calendarService.addReminder(reminder)
-      toast.success('Reminder added successfully!')
-      
-      // Reset form
-      setNewReminder({
-        title: '',
-        dueDate: '',
-        priority: 'medium',
-        category: 'personal',
-        description: ''
-      })
-      setShowAddReminder(false)
-      loadItems()
-    } catch (error) {
-      console.error('Error adding reminder:', error)
-      toast.error('Failed to add reminder')
-    }
-  }
 
   const toggleReminderComplete = async (reminderId: string) => {
     try {
@@ -132,14 +83,9 @@ export default function MemoryView({ onClose }: MemoryViewProps) {
     }
   }
 
-  const categories = ['all', 'personal', 'work', 'life']
-  const types = ['all', 'memory', 'reminder']
-  
   const filteredItems = items.filter(item => {
     const matchesSearch = item.content.toLowerCase().includes(searchQuery.toLowerCase())
-    const matchesCategory = selectedCategory === 'all' || item.category === selectedCategory
-    const matchesType = selectedType === 'all' || item.type === selectedType
-    return matchesSearch && matchesCategory && matchesType
+    return matchesSearch
   })
 
   const getCategoryIcon = (category: string) => {
@@ -202,16 +148,7 @@ export default function MemoryView({ onClose }: MemoryViewProps) {
         </div>
 
         {/* Content */}
-        <div className="p-6 space-y-6">
-          {/* How to Use */}
-          <div className="bg-gradient-to-r from-electric-500/10 to-purple-500/10 border border-electric-500/20 rounded-lg p-4">
-            <h3 className="text-white font-medium mb-2">How to Use</h3>
-            <p className="text-gray-300 text-sm">
-              Type <span className="text-electric-400 font-mono">"REMEMBER"</span> to save information, 
-              or <span className="text-purple-400 font-mono">"Create a reminder"</span> to set tasks with due dates.
-            </p>
-          </div>
-
+        <div className="p-6 space-y-4">
           {/* Search */}
           <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
@@ -222,52 +159,6 @@ export default function MemoryView({ onClose }: MemoryViewProps) {
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full pl-10 pr-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-electric-500"
             />
-          </div>
-
-          {/* Filters */}
-          <div className="flex flex-wrap gap-2">
-            {/* Type Filter */}
-            <div className="flex space-x-1">
-              {types.map((type) => (
-                <button
-                  key={type}
-                  onClick={() => setSelectedType(type)}
-                  className={`px-3 py-1 rounded-lg text-sm font-medium transition-colors ${
-                    selectedType === type
-                      ? 'bg-electric-500 text-white'
-                      : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
-                  }`}
-                >
-                  {type === 'all' ? 'All' : type === 'memory' ? 'Memories' : 'Reminders'}
-                </button>
-              ))}
-            </div>
-
-            {/* Category Filter */}
-            <div className="flex space-x-1">
-              {categories.map((category) => (
-                <button
-                  key={category}
-                  onClick={() => setSelectedCategory(category)}
-                  className={`px-3 py-1 rounded-lg text-sm font-medium transition-colors ${
-                    selectedCategory === category
-                      ? 'bg-purple-500 text-white'
-                      : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
-                  }`}
-                >
-                  {category === 'all' ? 'All' : category.charAt(0).toUpperCase() + category.slice(1)}
-                </button>
-              ))}
-            </div>
-
-            {/* Add Reminder Button */}
-            <button
-              onClick={() => setShowAddReminder(true)}
-              className="ml-auto px-4 py-2 bg-gradient-to-r from-purple-500 to-blue-500 text-white rounded-lg text-sm font-medium hover:from-purple-400 hover:to-blue-400 transition-colors flex items-center space-x-2"
-            >
-              <Plus className="w-4 h-4" />
-              <span>Add Reminder</span>
-            </button>
           </div>
 
           {/* Items List */}
@@ -349,84 +240,6 @@ export default function MemoryView({ onClose }: MemoryViewProps) {
           </div>
         </div>
 
-        {/* Add Reminder Modal */}
-        {showAddReminder && (
-          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-60 p-4">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              className="bg-gray-900 rounded-xl border border-gray-700 w-full max-w-md p-6"
-            >
-              <h3 className="text-lg font-semibold text-white mb-4">Add Reminder</h3>
-              
-              <div className="space-y-4">
-                <input
-                  type="text"
-                  placeholder="Reminder title"
-                  value={newReminder.title}
-                  onChange={(e) => setNewReminder({...newReminder, title: e.target.value})}
-                  className="w-full p-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-electric-500"
-                />
-                
-                <input
-                  type="datetime-local"
-                  value={newReminder.dueDate}
-                  onChange={(e) => setNewReminder({...newReminder, dueDate: e.target.value})}
-                  className="w-full p-3 bg-gray-800 border border-gray-700 rounded-lg text-white focus:outline-none focus:border-electric-500"
-                />
-                
-                <div className="grid grid-cols-3 gap-2">
-                  {[
-                    { value: 'work', label: 'Work', icon: Briefcase, color: 'bg-blue-600' },
-                    { value: 'personal', label: 'Personal', icon: Heart, color: 'bg-pink-600' },
-                    { value: 'life', label: 'Life', icon: Home, color: 'bg-green-600' }
-                  ].map((category) => (
-                    <button
-                      key={category.value}
-                      onClick={() => setNewReminder({...newReminder, category: category.value as any})}
-                      className={`p-3 rounded-lg text-white text-sm font-medium transition-colors ${
-                        newReminder.category === category.value ? category.color : 'bg-gray-700 hover:bg-gray-600'
-                      }`}
-                    >
-                      {category.label}
-                    </button>
-                  ))}
-                </div>
-                
-                <div className="flex space-x-2">
-                  {['low', 'medium', 'high', 'urgent'].map((priority) => (
-                    <button
-                      key={priority}
-                      onClick={() => setNewReminder({...newReminder, priority: priority as any})}
-                      className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                        newReminder.priority === priority 
-                          ? getPriorityColor(priority)
-                          : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
-                      }`}
-                    >
-                      {priority}
-                    </button>
-                  ))}
-                </div>
-              </div>
-              
-              <div className="flex space-x-3 mt-6">
-                <button
-                  onClick={addReminder}
-                  className="flex-1 bg-gradient-to-r from-purple-500 to-blue-500 text-white py-2 px-4 rounded-lg font-medium hover:from-purple-400 hover:to-blue-400 transition-colors"
-                >
-                  Add Reminder
-                </button>
-                <button
-                  onClick={() => setShowAddReminder(false)}
-                  className="px-4 py-2 bg-gray-700 text-gray-300 rounded-lg hover:bg-gray-600 transition-colors"
-                >
-                  Cancel
-                </button>
-              </div>
-            </motion.div>
-          </div>
-        )}
       </motion.div>
     </div>
   )
