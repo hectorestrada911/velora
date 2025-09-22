@@ -17,15 +17,25 @@ export default function AuthPage() {
   const [formData, setFormData] = useState({
     email: '',
     password: '',
+    confirmPassword: '',
     name: ''
   })
   const [rememberMe, setRememberMe] = useState(true)
   const [isLoading, setIsLoading] = useState(false)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [passwordError, setPasswordError] = useState('')
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
+    setPasswordError('')
+    
+    // Validate password confirmation for signup
+    if (authMode === 'signup' && formData.password !== formData.confirmPassword) {
+      setPasswordError('Passwords do not match')
+      setIsLoading(false)
+      return
+    }
     
     try {
       if (authMode === 'signup') {
@@ -1152,6 +1162,36 @@ export default function AuthPage() {
                 />
               </div>
             </div>
+
+            {/* Password Confirmation - Only show on signup */}
+            {authMode === 'signup' && (
+              <div>
+                <label className="block text-gray-300 text-sm font-medium mb-2">
+                  Confirm Password
+                </label>
+                <div className="relative">
+                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4 md:w-5 md:h-5" />
+                  <input
+                    type="password"
+                    value={formData.confirmPassword}
+                    onChange={(e) => {
+                      setFormData({ ...formData, confirmPassword: e.target.value })
+                      if (passwordError) setPasswordError('')
+                    }}
+                    className={`w-full bg-gray-800 border rounded-lg px-10 py-3 text-white placeholder-gray-400 focus:outline-none focus:ring-1 transition-all duration-200 text-sm md:text-base ${
+                      passwordError 
+                        ? 'border-red-500 focus:border-red-500 focus:ring-red-500' 
+                        : 'border-gray-600 focus:border-electric-500 focus:ring-electric-500'
+                    }`}
+                    placeholder="Confirm your password"
+                    required
+                  />
+                </div>
+                {passwordError && (
+                  <p className="text-red-400 text-sm mt-1">{passwordError}</p>
+                )}
+              </div>
+            )}
 
             {/* Remember Me Checkbox - Only show on login */}
             {authMode === 'login' && (
