@@ -124,11 +124,11 @@ class PDFService {
           const lowerContent = content.toLowerCase()
           
           if (lowerContent.includes('prefer') || lowerContent.includes('like')) {
-            category = 'preference'
+            category = 'personal'
           } else if (lowerContent.includes('client') || lowerContent.includes('company')) {
-            category = 'relationship'
+            category = 'work'
           } else if (lowerContent.includes('budget') || lowerContent.includes('cost')) {
-            category = 'context'
+            category = 'work'
           }
 
           memoryService.addMemory(content, category, 'medium')
