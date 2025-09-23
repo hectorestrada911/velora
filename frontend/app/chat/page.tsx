@@ -492,10 +492,10 @@ export default function ChatPage() {
       const calendarEvents = calendarService.getStoredEvents()
       const reminders = calendarService.getStoredReminders()
       
-      // Build context for AI - relevantMemories are Memory objects, recallInfo.memories are strings
+      // Build context for AI - both relevantMemories and recallInfo.memories are strings
       const memoryContext = (relevantMemories.length > 0 || recallInfo.memories.length > 0) ? 
         `\n\nRELEVANT MEMORIES:\n${[
-          ...relevantMemories.map(memory => `- ${memory.content}`),
+          ...relevantMemories.map(memory => `- ${memory}`),
           ...recallInfo.memories.map(memory => `- ${memory}`)
         ].join('\n')}` : ''
       
