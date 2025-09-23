@@ -13,7 +13,8 @@ import {
   Clock,
   CheckCircle,
   AlertCircle,
-  Bell
+  Bell,
+  Trash2
 } from 'lucide-react'
 import { memoryService } from '@/lib/memoryService'
 import { calendarService, Reminder } from '@/lib/calendarService'
@@ -125,6 +126,28 @@ export default function MemoryView({ onClose }: MemoryViewProps) {
     } catch (error) {
       console.error('Error updating reminder:', error)
       toast.error('Failed to update reminder')
+    }
+  }
+
+  const deleteMemory = async (memoryId: string) => {
+    try {
+      await memoryService.deleteMemory(memoryId)
+      loadItems()
+      toast.success('Memory deleted!')
+    } catch (error) {
+      console.error('Error deleting memory:', error)
+      toast.error('Failed to delete memory')
+    }
+  }
+
+  const deleteReminder = async (reminderId: string) => {
+    try {
+      await calendarService.deleteReminder(reminderId)
+      loadItems()
+      toast.success('Reminder deleted!')
+    } catch (error) {
+      console.error('Error deleting reminder:', error)
+      toast.error('Failed to delete reminder')
     }
   }
 
@@ -275,18 +298,30 @@ export default function MemoryView({ onClose }: MemoryViewProps) {
                       </div>
                     </div>
                     
-                    {item.type === 'reminder' && (
+                    {/* Action Buttons */}
+                    <div className="flex items-center space-x-2">
+                      {item.type === 'reminder' && (
+                        <button
+                          onClick={() => toggleReminderComplete(item.id)}
+                          className={`p-2 rounded-lg transition-colors ${
+                            item.completed 
+                              ? 'bg-green-500/20 text-green-400 hover:bg-green-500/30'
+                              : 'bg-gray-700 text-gray-400 hover:bg-gray-600'
+                          }`}
+                          title={item.completed ? 'Mark as incomplete' : 'Mark as complete'}
+                        >
+                          <CheckCircle className="w-4 h-4" />
+                        </button>
+                      )}
+                      
                       <button
-                        onClick={() => toggleReminderComplete(item.id)}
-                        className={`p-2 rounded-lg transition-colors ${
-                          item.completed 
-                            ? 'bg-green-500/20 text-green-400 hover:bg-green-500/30'
-                            : 'bg-gray-700 text-gray-400 hover:bg-gray-600'
-                        }`}
+                        onClick={() => item.type === 'memory' ? deleteMemory(item.id) : deleteReminder(item.id)}
+                        className="p-2 rounded-lg bg-red-500/20 text-red-400 hover:bg-red-500/30 transition-colors"
+                        title={`Delete ${item.type}`}
                       >
-                        <CheckCircle className="w-4 h-4" />
+                        <Trash2 className="w-4 h-4" />
                       </button>
-                    )}
+                    </div>
                   </div>
                 </motion.div>
               ))
