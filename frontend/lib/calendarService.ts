@@ -94,7 +94,9 @@ export class CalendarService {
         createdAt: new Date().toISOString()
       };
       events.push(newEvent);
-      localStorage.setItem('velora-events', JSON.stringify(events));
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('velora-events', JSON.stringify(events));
+      }
       return true;
     } catch (error) {
       console.error('Failed to add to local calendar:', error);
@@ -105,8 +107,11 @@ export class CalendarService {
   // Get stored events
   getStoredEvents(): Array<CalendarEvent & { id: string; createdAt: string }> {
     try {
-      const stored = localStorage.getItem('velora-events');
-      return stored ? JSON.parse(stored) : [];
+      if (typeof window !== 'undefined') {
+        const stored = localStorage.getItem('velora-events');
+        return stored ? JSON.parse(stored) : [];
+      }
+      return [];
     } catch {
       return [];
     }
@@ -117,7 +122,9 @@ export class CalendarService {
     try {
       const events = this.getStoredEvents();
       const filtered = events.filter(e => e.id !== eventId);
-      localStorage.setItem('velora-events', JSON.stringify(filtered));
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('velora-events', JSON.stringify(filtered));
+      }
       return true;
     } catch (error) {
       console.error('Failed to delete event:', error);
@@ -135,7 +142,9 @@ export class CalendarService {
         createdAt: new Date().toISOString()
       });
       
-      localStorage.setItem('velora-reminders', JSON.stringify(reminders));
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('velora-reminders', JSON.stringify(reminders));
+      }
       
       // Schedule notification if supported
       if ('Notification' in window && Notification.permission === 'granted') {
@@ -188,7 +197,9 @@ export class CalendarService {
       if (index === -1) return false;
       
       reminders[index] = { ...reminders[index], ...updates };
-      localStorage.setItem('velora-reminders', JSON.stringify(reminders));
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('velora-reminders', JSON.stringify(reminders));
+      }
       return true;
     } catch (error) {
       console.error('Failed to update reminder:', error);

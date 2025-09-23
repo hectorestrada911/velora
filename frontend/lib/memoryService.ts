@@ -25,9 +25,11 @@ class MemoryService {
 
   private loadMemories(): void {
     try {
-      const stored = localStorage.getItem(this.STORAGE_KEY)
-      if (stored) {
-        this.memories = JSON.parse(stored)
+      if (typeof window !== 'undefined') {
+        const stored = localStorage.getItem(this.STORAGE_KEY)
+        if (stored) {
+          this.memories = JSON.parse(stored)
+        }
       }
     } catch (error) {
       console.error('Failed to load memories:', error)
@@ -37,7 +39,9 @@ class MemoryService {
 
   private saveMemories(): void {
     try {
-      localStorage.setItem(this.STORAGE_KEY, JSON.stringify(this.memories))
+      if (typeof window !== 'undefined') {
+        localStorage.setItem(this.STORAGE_KEY, JSON.stringify(this.memories))
+      }
     } catch (error) {
       console.error('Failed to save memories:', error)
     }
