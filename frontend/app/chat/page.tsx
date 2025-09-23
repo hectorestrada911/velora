@@ -61,6 +61,7 @@ export default function ChatPage() {
   const [isAnalyzingEmails, setIsAnalyzingEmails] = useState(false)
   const [emailAnalysis, setEmailAnalysis] = useState<any>(null)
   const [showGoogleModal, setShowGoogleModal] = useState(false)
+  const [pendingFile, setPendingFile] = useState<File | null>(null)
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
@@ -630,18 +631,13 @@ Please analyze this document and respond to the user's request. If they didn't s
 
     const file = files[0]
     
-    // Create user message showing file upload
-    const fileMessage: Message = {
-      id: Date.now().toString(),
-      type: 'user',
-      content: `I want to upload a file: ${file.name}`,
-      timestamp: new Date()
+    // Store the file for later processing (ChatGPT style)
+    setPendingFile(file)
+    
+    // Clear the file input so the same file can be selected again if needed
+    if (fileInputRef.current) {
+      fileInputRef.current.value = ''
     }
-    
-    setMessages(prev => [...prev, fileMessage])
-    
-    // Automatically process the file with a default prompt
-    await processPendingFile(file, `Please analyze this document and provide a summary of its key points.`)
   }
 
   const readFileContent = async (file: File): Promise<string> => {
@@ -1055,10 +1051,6 @@ Please analyze this document and respond to the user's request. If they didn't s
     // Detect greeting (safe - just logs, doesn't change behavior)
     const isGreeting = detectGreeting(inputValue)
 
-    // Check if there's a pending file to process
-    const lastMessage = messages[messages.length - 1]
-    const pendingFile = lastMessage?.pendingFile
-
     const userMessage: Message = {
       id: Date.now().toString(),
       type: 'user',
@@ -1068,16 +1060,11 @@ Please analyze this document and respond to the user's request. If they didn't s
 
     setMessages(prev => [...prev, userMessage])
 
-    // If there's a pending file, process it now and return early
+    // If there's a pending file, process it with the user's prompt
     if (pendingFile) {
       await processPendingFile(pendingFile, inputValue)
-      // Remove the pending file from the previous message
-      setMessages(prev => prev.map(msg => 
-        msg.id === lastMessage.id 
-          ? { ...msg, pendingFile: undefined }
-          : msg
-      ))
-      // Clear the input and return early - don't process through normal AI flow
+      // Clear the pending file and input
+      setPendingFile(null)
       setInputValue('')
       return
     }
@@ -1817,6 +1804,26 @@ Please analyze this document and respond to the user's request. If they didn't s
           <div className="max-w-6xl mx-auto">
             <div className="flex items-end gap-2 sm:gap-3 md:gap-4">
               <div className="flex-1 relative">
+                {/* Pending File Display (ChatGPT style) */}
+                {pendingFile && (
+                  <div className="mb-3 p-3 bg-gray-800 border border-gray-600 rounded-lg flex items-center justify-between">
+                    <div className="flex items-center space-x-3">
+                      <div className="w-8 h-8 bg-red-500 rounded flex items-center justify-center">
+                        <FileText className="w-4 h-4 text-white" />
+                      </div>
+                      <div>
+                        <p className="text-white text-sm font-medium">{pendingFile.name}</p>
+                        <p className="text-gray-400 text-xs">{pendingFile.type.toUpperCase()}</p>
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => setPendingFile(null)}
+                      className="text-gray-400 hover:text-white transition-colors"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  </div>
+                )}
                 
                 <textarea
                   value={inputValue}
@@ -1825,7 +1832,13 @@ Please analyze this document and respond to the user's request. If they didn't s
                     setHasUserInteracted(true)
                   }}
                   onKeyPress={handleKeyPress}
-                  placeholder={isVoiceListening ? "🎤 Voice recording active..." : "Tell me what you need to remember, schedule, or organize..."}
+                  placeholder={
+                    isVoiceListening 
+                      ? "🎤 Voice recording active..." 
+                      : pendingFile 
+                        ? "Ask anything about this document..." 
+                        : "Tell me what you need to remember, schedule, or organize..."
+                  }
                   className={`w-full bg-gray-800 border rounded-xl px-4 sm:px-5 py-3.5 sm:py-4 text-white placeholder-gray-400 focus:outline-none focus:border-electric-500 focus:ring-1 focus:ring-electric-500 transition-all duration-200 resize-none text-sm sm:text-base ${
                     isVoiceListening 
                       ? 'border-electric-500 ring-2 ring-electric-500/30 bg-electric-500/5' 
