@@ -689,7 +689,8 @@ Please analyze this document and respond to the user's request. If they didn't s
         return content
       } catch (error) {
         console.error('PDF processing error:', error)
-        throw new Error(`PDF processing failed: ${error.message}`)
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error'
+        throw new Error(`PDF processing failed: ${errorMessage}`)
       }
     } else {
       // For text files, use FileReader
