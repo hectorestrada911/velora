@@ -630,31 +630,54 @@ Please analyze this document and respond to the user's request. If they didn't s
 
     const file = files[0]
     
-    // Just store the file and let user type a prompt first
+    // Create user message showing file upload
     const fileMessage: Message = {
       id: Date.now().toString(),
       type: 'user',
       content: `I want to upload a file: ${file.name}`,
-      timestamp: new Date(),
-      pendingFile: file // Store the file for later processing
+      timestamp: new Date()
     }
     
-    setMessages(prev => {
-        const newMessages = [...prev, fileMessage]
-        // Messages are now saved directly via firestoreService.addMessageToConversation
-        return newMessages
-      })
+    setMessages(prev => [...prev, fileMessage])
+    
+    // Automatically process the file with a default prompt
+    await processPendingFile(file, `Please analyze this document and provide a summary of its key points.`)
   }
 
-  const readFileContent = (file: File): Promise<string> => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader()
-      reader.onload = (e) => {
-        resolve(e.target?.result as string || '')
+  const readFileContent = async (file: File): Promise<string> => {
+    // Check if it's a PDF file
+    if (file.type === 'application/pdf') {
+      try {
+        // Use the PDF processing API for PDF files
+        const formData = new FormData()
+        formData.append('file', file)
+        
+        const response = await fetch('/api/pdf-analyze', {
+          method: 'POST',
+          body: formData,
+        })
+        
+        if (!response.ok) {
+          throw new Error('PDF processing failed')
+        }
+        
+        const result = await response.json()
+        return result.summary || result.text || 'PDF processed successfully'
+      } catch (error) {
+        console.error('PDF processing error:', error)
+        return `PDF: ${file.name} (processing failed - file uploaded)`
       }
-      reader.onerror = reject
-      reader.readAsText(file)
-    })
+    } else {
+      // For text files, use FileReader
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader()
+        reader.onload = (e) => {
+          resolve(e.target?.result as string || '')
+        }
+        reader.onerror = reject
+        reader.readAsText(file)
+      })
+    }
   }
 
   const searchDocuments = async (query: string) => {
