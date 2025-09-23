@@ -485,6 +485,15 @@ export default function ChatPage() {
     try {
       setIsLoading(true)
       
+      console.log('Starting document analysis for:', file.name)
+      console.log('Content length:', content.length)
+      console.log('User prompt:', userPrompt)
+      
+      // Check if content is empty or too short
+      if (!content || content.trim().length < 10) {
+        throw new Error('Document content is empty or too short to analyze')
+      }
+      
       // Get relevant memories for context
       const relevantMemories = memoryService.getContextualMemories(userPrompt)
       const recallInfo = memoryService.recallInformation(userPrompt)
@@ -520,6 +529,8 @@ ${memoryContext}${calendarContext}${reminderContext}
 
 Please analyze this document and respond to the user's request. If they didn't specify what they want, provide a helpful summary and ask what they'd like to do with the document.`
 
+      console.log('Calling AI API with prompt length:', aiPrompt.length)
+
       // Call the AI API
       const response = await fetch('/api/analyze', {
         method: 'POST',
@@ -536,11 +547,16 @@ Please analyze this document and respond to the user's request. If they didn't s
         }),
       })
 
+      console.log('AI API response status:', response.status)
+
       if (!response.ok) {
-        throw new Error('Failed to analyze document')
+        const errorText = await response.text()
+        console.error('AI API error:', errorText)
+        throw new Error(`AI API failed: ${response.status} - ${errorText}`)
       }
 
       const data = await response.json()
+      console.log('AI API response received:', data)
       
       // Create AI response
       const aiMessage: Message = {
@@ -641,9 +657,12 @@ Please analyze this document and respond to the user's request. If they didn't s
   }
 
   const readFileContent = async (file: File): Promise<string> => {
+    console.log('Reading file content for:', file.name, 'Type:', file.type)
+    
     // Check if it's a PDF file
     if (file.type === 'application/pdf') {
       try {
+        console.log('Processing PDF file...')
         // Use the PDF processing API for PDF files
         const formData = new FormData()
         formData.append('file', file)
@@ -653,24 +672,39 @@ Please analyze this document and respond to the user's request. If they didn't s
           body: formData,
         })
         
+        console.log('PDF API response status:', response.status)
+        
         if (!response.ok) {
-          throw new Error('PDF processing failed')
+          const errorText = await response.text()
+          console.error('PDF API error:', errorText)
+          throw new Error(`PDF processing failed: ${response.status} - ${errorText}`)
         }
         
         const result = await response.json()
-        return result.summary || result.text || 'PDF processed successfully'
+        console.log('PDF processing result:', result)
+        
+        const content = result.summary || result.text || 'PDF processed successfully'
+        console.log('Extracted content length:', content.length)
+        
+        return content
       } catch (error) {
         console.error('PDF processing error:', error)
-        return `PDF: ${file.name} (processing failed - file uploaded)`
+        throw new Error(`PDF processing failed: ${error.message}`)
       }
     } else {
       // For text files, use FileReader
+      console.log('Processing text file...')
       return new Promise((resolve, reject) => {
         const reader = new FileReader()
         reader.onload = (e) => {
-          resolve(e.target?.result as string || '')
+          const content = e.target?.result as string || ''
+          console.log('Text file content length:', content.length)
+          resolve(content)
         }
-        reader.onerror = reject
+        reader.onerror = (error) => {
+          console.error('FileReader error:', error)
+          reject(error)
+        }
         reader.readAsText(file)
       })
     }
