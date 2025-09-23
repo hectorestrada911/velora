@@ -487,15 +487,17 @@ export default function ChatPage() {
       // Get relevant memories for context
       const relevantMemories = memoryService.getContextualMemories(userPrompt)
       const recallInfo = memoryService.recallInformation(userPrompt)
-      const allRelevantMemories = [...relevantMemories, ...recallInfo.memories]
       
       // Get calendar events and reminders for context
       const calendarEvents = calendarService.getStoredEvents()
       const reminders = calendarService.getStoredReminders()
       
-      // Build context for AI
-      const memoryContext = allRelevantMemories.length > 0 ? 
-        `\n\nRELEVANT MEMORIES:\n${allRelevantMemories.map(memory => `- ${memory.content}`).join('\n')}` : ''
+      // Build context for AI - relevantMemories are Memory objects, recallInfo.memories are strings
+      const memoryContext = (relevantMemories.length > 0 || recallInfo.memories.length > 0) ? 
+        `\n\nRELEVANT MEMORIES:\n${[
+          ...relevantMemories.map(memory => `- ${memory.content}`),
+          ...recallInfo.memories.map(memory => `- ${memory}`)
+        ].join('\n')}` : ''
       
       const calendarContext = calendarEvents.length > 0 ? 
         `\n\nCALENDAR EVENTS:\n${calendarEvents.map(event => 
@@ -526,7 +528,7 @@ Please analyze this document and respond to the user's request. If they didn't s
         body: JSON.stringify({
           message: aiPrompt,
           conversationHistory: messages.slice(-10), // Last 10 messages for context
-          memories: allRelevantMemories,
+          memories: [...relevantMemories, ...recallInfo.memories],
           documents: documents,
           calendarEvents: calendarEvents,
           reminders: reminders
@@ -768,7 +770,7 @@ Please analyze this document and respond to the user's request. If they didn't s
       const reminders = calendarService.getStoredReminders()
       
       // Combine general context with specific recall information
-      const allRelevantMemories = [...relevantMemories, ...recallInfo.memories]
+      // Note: relevantMemories are Memory objects, recallInfo.memories are strings
       
       // Add calendar and reminder context
       const calendarContext = calendarEvents.length > 0 ? 
@@ -794,7 +796,7 @@ Please analyze this document and respond to the user's request. If they didn't s
         body: JSON.stringify({ 
           content: transcript + calendarContext + reminderContext,
           conversationHistory: conversationHistory,
-          relevantMemories: allRelevantMemories,
+          relevantMemories: [...relevantMemories, ...recallInfo.memories],
           recallSuggestions: recallInfo.suggestions,
           currentDate: new Date().toISOString()
         }),
@@ -1077,7 +1079,7 @@ Please analyze this document and respond to the user's request. If they didn't s
     const reminders = calendarService.getStoredReminders()
     
     // Combine general context with specific recall information
-    const allRelevantMemories = [...relevantMemories, ...recallInfo.memories]
+    // Note: relevantMemories are Memory objects, recallInfo.memories are strings
     
     // Add calendar and reminder context
     const calendarContext = calendarEvents.length > 0 ? 
@@ -1118,7 +1120,7 @@ Please analyze this document and respond to the user's request. If they didn't s
         body: JSON.stringify({ 
           content: inputValue + calendarContext + reminderContext,
           conversationHistory: conversationHistory,
-          relevantMemories: allRelevantMemories,
+          relevantMemories: [...relevantMemories, ...recallInfo.memories],
           recallSuggestions: recallInfo.suggestions,
           currentDate: new Date().toISOString()
         }),
