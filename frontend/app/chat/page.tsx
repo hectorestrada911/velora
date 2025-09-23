@@ -129,6 +129,24 @@ export default function ChatPage() {
         throw new Error('Google OAuth not configured. Please set up Google Client ID and Secret.')
       }
       
+      // Listen for OAuth success message
+      const handleMessage = (event: MessageEvent) => {
+        if (event.origin !== window.location.origin && !event.origin.includes('velora')) {
+          return; // Security check
+        }
+        
+        if (event.data.type === 'GOOGLE_OAUTH_SUCCESS') {
+          // Store tokens
+          localStorage.setItem('google_workspace_tokens', JSON.stringify(event.data.tokens))
+          setIsGoogleConnected(true)
+          setIsConnectingGoogle(false)
+          toast.success('Google Workspace connected successfully!')
+          window.removeEventListener('message', handleMessage)
+        }
+      }
+      
+      window.addEventListener('message', handleMessage)
+      
       // Open OAuth flow in popup
       const popup = window.open(
         authUrl,
@@ -136,11 +154,16 @@ export default function ChatPage() {
         'width=500,height=600,scrollbars=yes,resizable=yes'
       )
       
+      if (!popup) {
+        throw new Error('Popup blocked. Please allow popups for this site.')
+      }
+      
       // Check if popup was closed
       const checkClosed = setInterval(() => {
         if (popup?.closed) {
           clearInterval(checkClosed)
           setIsConnectingGoogle(false)
+          window.removeEventListener('message', handleMessage)
           checkGoogleConnection() // Check if connection was successful
         }
       }, 1000)
