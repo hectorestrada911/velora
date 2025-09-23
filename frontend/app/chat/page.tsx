@@ -480,31 +480,76 @@ export default function ChatPage() {
     }
   }
 
-  const processPendingFile = async (file: File, userPrompt: string) => {
-    setIsUploading(true)
-    
+  const analyzeDocumentWithAI = async (file: File, content: string, userPrompt: string) => {
     try {
-      // Read file content for analysis
-      const content = await readFileContent(file)
+      setIsLoading(true)
       
-      // Upload to Firebase Storage
-      const storedFile = await storageService.uploadFile(file, content)
+      // Get relevant memories for context
+      const relevantMemories = memoryService.getContextualMemories(userPrompt)
+      const recallInfo = memoryService.recallInformation(userPrompt)
+      const allRelevantMemories = [...relevantMemories, ...recallInfo.memories]
       
-      // Save document metadata to Firestore
-      const documentId = await documentService.saveDocument(storedFile, content)
+      // Get calendar events and reminders for context
+      const calendarEvents = calendarService.getStoredEvents()
+      const reminders = calendarService.getStoredReminders()
       
-      // Reload documents list
-      await loadDocuments()
+      // Build context for AI
+      const memoryContext = allRelevantMemories.length > 0 ? 
+        `\n\nRELEVANT MEMORIES:\n${allRelevantMemories.map(memory => `- ${memory.content}`).join('\n')}` : ''
       
-      // Create AI response about the uploaded file
+      const calendarContext = calendarEvents.length > 0 ? 
+        `\n\nCALENDAR EVENTS:\n${calendarEvents.map(event => 
+          `- ${event.title} on ${new Date(event.startTime).toLocaleDateString()} at ${new Date(event.startTime).toLocaleTimeString()}`
+        ).join('\n')}` : ''
+      
+      const reminderContext = reminders.length > 0 ? 
+        `\n\nREMINDERS:\n${reminders.map(reminder => 
+          `- ${reminder.title} (${reminder.priority} priority)`
+        ).join('\n')}` : ''
+      
+      // Build the AI prompt with document content
+      const aiPrompt = `User uploaded a document: "${file.name}" and said: "${userPrompt}"
+
+DOCUMENT CONTENT:
+${content}
+
+${memoryContext}${calendarContext}${reminderContext}
+
+Please analyze this document and respond to the user's request. If they didn't specify what they want, provide a helpful summary and ask what they'd like to do with the document.`
+
+      // Call the AI API
+      const response = await fetch('/api/analyze', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          message: aiPrompt,
+          conversationHistory: messages.slice(-10), // Last 10 messages for context
+          memories: allRelevantMemories,
+          documents: documents,
+          calendarEvents: calendarEvents,
+          reminders: reminders
+        }),
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to analyze document')
+      }
+
+      const data = await response.json()
+      
+      // Create AI response
       const aiMessage: Message = {
         id: Date.now().toString(),
         type: 'ai',
-        content: `I've saved your file "${file.name}" permanently! I can help you analyze it, search for it later, or answer questions about its content. What would you like me to do with it?`,
+        content: data.response,
         timestamp: new Date(),
         analysis: {
-          type: 'file_upload',
-          priority: 'medium'
+          type: 'document_analysis',
+          priority: 'high',
+          documentName: file.name,
+          summary: data.response.substring(0, 100) + '...'
         }
       }
       
@@ -523,7 +568,42 @@ export default function ChatPage() {
         await firestoreService.addMessageToConversation(currentConversationId, firestoreMessage)
       }
       
-      toast.success(`"${file.name}" uploaded and ready for analysis!`)
+    } catch (error) {
+      console.error('Error analyzing document:', error)
+      
+      const errorMessage: Message = {
+        id: Date.now().toString(),
+        type: 'ai',
+        content: `I was able to save your document "${file.name}" but had trouble analyzing it. The file is stored and I can help you with it later. What would you like to do with it?`,
+        timestamp: new Date()
+      }
+      
+      setMessages(prev => [...prev, errorMessage])
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const processPendingFile = async (file: File, userPrompt: string) => {
+    setIsUploading(true)
+    
+    try {
+      // Read file content for analysis
+      const content = await readFileContent(file)
+      
+      // Upload to Firebase Storage
+      const storedFile = await storageService.uploadFile(file, content)
+      
+      // Save document metadata to Firestore
+      const documentId = await documentService.saveDocument(storedFile, content)
+      
+      // Reload documents list
+      await loadDocuments()
+      
+      // Now analyze the document content with AI
+      await analyzeDocumentWithAI(file, content, userPrompt)
+      
+      toast.success(`"${file.name}" uploaded and analyzed!`)
       
     } catch (error) {
       console.error('Error processing file:', error)
@@ -963,7 +1043,7 @@ export default function ChatPage() {
 
     setMessages(prev => [...prev, userMessage])
 
-    // If there's a pending file, process it now
+    // If there's a pending file, process it now and return early
     if (pendingFile) {
       await processPendingFile(pendingFile, inputValue)
       // Remove the pending file from the previous message
@@ -972,6 +1052,9 @@ export default function ChatPage() {
           ? { ...msg, pendingFile: undefined }
           : msg
       ))
+      // Clear the input and return early - don't process through normal AI flow
+      setInputValue('')
+      return
     }
     
     // Check for "remember" commands and process memories
