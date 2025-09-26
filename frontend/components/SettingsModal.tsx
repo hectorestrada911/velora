@@ -333,14 +333,34 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                 </div>
                 
                 <div className="space-y-4">
-                  <p className="text-gray-300">
-                    Velora is your AI-powered personal assistant that helps you organize, remember, and manage your life.
-                  </p>
+                  <div className="text-center mb-6">
+                    <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-blue-500 rounded-xl flex items-center justify-center mx-auto mb-3">
+                      <span className="text-white font-bold text-2xl">V</span>
+                    </div>
+                    <h4 className="text-lg font-semibold text-white mb-1">Velora AI</h4>
+                    <p className="text-sm text-gray-400">Version 1.0.0</p>
+                  </div>
+                  
+                  <div className="space-y-3">
+                    <p className="text-gray-300 text-sm">
+                      Your AI-powered personal assistant that helps you organize, remember, and manage your life with intelligent automation.
+                    </p>
+                    
+                    <div className="bg-gray-800 rounded-lg p-3">
+                      <h5 className="text-white font-medium text-sm mb-2">Key Features</h5>
+                      <ul className="text-xs text-gray-300 space-y-1">
+                        <li>• Smart document analysis</li>
+                        <li>• Voice commands & reminders</li>
+                        <li>• Calendar integration</li>
+                        <li>• Memory management</li>
+                      </ul>
+                    </div>
+                  </div>
                   
                   <div className="bg-gray-800 rounded-lg p-4">
                     <div className="flex items-center space-x-3 mb-3">
                       <Mail className="w-5 h-5 text-blue-400" />
-                      <span className="text-white font-medium">Contact Us</span>
+                      <span className="text-white font-medium">Contact Aincorp</span>
                     </div>
                     <div className="flex items-center space-x-2">
                       <code className="bg-gray-700 text-blue-400 px-2 py-1 rounded text-sm">
@@ -356,9 +376,14 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                     </div>
                   </div>
                   
-                  <p className="text-sm text-gray-400">
-                    Have questions about Velora? We'd love to hear from you!
-                  </p>
+                  <div className="text-center pt-2 border-t border-gray-700">
+                    <p className="text-xs text-gray-500">
+                      Developed by <span className="text-blue-400 font-medium">Aincorp</span>
+                    </p>
+                    <p className="text-xs text-gray-500 mt-1">
+                      © 2024 Aincorp. All rights reserved.
+                    </p>
+                  </div>
                 </div>
               </div>
             </motion.div>
