@@ -536,6 +536,7 @@ Please analyze this document and respond to the user's request. If they didn't s
       // Call the AI API
       const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://velora-production.up.railway.app'
       const apiUrl = baseUrl.replace('/api/analyze', '') // Remove /api/analyze if present
+      console.log('AI API URL:', `${apiUrl}/api/analyze`)
       const response = await fetch(`${apiUrl}/api/analyze`, {
         method: 'POST',
         headers: {
@@ -847,7 +848,9 @@ Please analyze this document and respond to the user's request. If they didn't s
       const conversationHistory = messages.slice(-50) // Send last 50 messages for context
       
       // Call AI backend
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://velora-production.up.railway.app/api/analyze'
+      const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://velora-production.up.railway.app'
+      const apiUrl = baseUrl.replace('/api/analyze', '') + '/api/analyze'
+      console.log('AI API URL:', apiUrl)
       const response = await fetch(apiUrl, {
         method: 'POST',
         headers: {
@@ -1157,7 +1160,8 @@ Please analyze this document and respond to the user's request. If they didn't s
 
     try {
       // Call real AI backend
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://velora-production.up.railway.app/api/analyze'
+      const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://velora-production.up.railway.app'
+      const apiUrl = baseUrl.replace('/api/analyze', '') + '/api/analyze'
       console.log('API URL being used:', apiUrl)
       console.log('Environment variable:', process.env.NEXT_PUBLIC_API_URL)
       // Prepare conversation history for context
