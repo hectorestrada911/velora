@@ -251,22 +251,45 @@ class NotificationService {
     try {
       const notifications: RealNotification[] = []
 
-      // AI suggestions based on user behavior
-      const aiSuggestions = await this.getAISuggestions()
-      aiSuggestions.forEach(suggestion => {
+      // Simple AI suggestions based on current time and context
+      const now = new Date()
+      const hour = now.getHours()
+      
+      // Morning productivity suggestion
+      if (hour >= 8 && hour <= 10) {
         notifications.push({
-          id: `ai-${suggestion.id}`,
+          id: 'ai-morning-productivity',
           type: 'suggestion',
-          title: suggestion.title,
-          description: suggestion.description,
-          time: suggestion.time,
-          priority: suggestion.priority,
+          title: '🌅 Good Morning!',
+          description: 'Ready to start your day? I can help you organize your tasks and schedule.',
+          time: 'Just now',
+          priority: 'low',
           isRead: false,
           source: 'ai',
-          action: suggestion.action,
-          data: suggestion
+          action: {
+            label: 'Plan My Day',
+            onClick: () => this.planMyDay()
+          }
         })
-      })
+      }
+      
+      // Evening review suggestion
+      if (hour >= 18 && hour <= 20) {
+        notifications.push({
+          id: 'ai-evening-review',
+          type: 'suggestion',
+          title: '🌙 Evening Review',
+          description: 'How was your day? Would you like to review what you accomplished?',
+          time: 'Just now',
+          priority: 'low',
+          isRead: false,
+          source: 'ai',
+          action: {
+            label: 'Review My Day',
+            onClick: () => this.reviewMyDay()
+          }
+        })
+      }
 
       return notifications
     } catch (error) {
@@ -334,6 +357,16 @@ class NotificationService {
 
   private exploreMemoryPatterns() {
     // Navigate to memory analytics
+    window.location.href = '/memory'
+  }
+
+  private planMyDay() {
+    // Navigate to calendar or task planning
+    window.location.href = '/calendar'
+  }
+
+  private reviewMyDay() {
+    // Navigate to memory or review section
     window.location.href = '/memory'
   }
 
