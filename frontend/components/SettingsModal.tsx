@@ -193,12 +193,28 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                     Support
                   </h3>
                   
-                  <button className="w-full flex items-center space-x-3 p-3 text-gray-300 hover:text-white hover:bg-gray-800 rounded-lg transition-colors">
+                  <button 
+                    onClick={() => {
+                      const email = 'aincorphelp@gmail.com';
+                      const subject = 'Velora Support Request';
+                      const body = 'Hello,\n\nI need help with:\n\n';
+                      window.open(`mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`, '_blank');
+                    }}
+                    className="w-full flex items-center space-x-3 p-3 text-gray-300 hover:text-white hover:bg-gray-800 rounded-lg transition-colors"
+                  >
                     <HelpCircle className="w-5 h-5" />
                     <span>Help & Support</span>
                   </button>
                   
-                  <button className="w-full flex items-center space-x-3 p-3 text-gray-300 hover:text-white hover:bg-gray-800 rounded-lg transition-colors">
+                  <button 
+                    onClick={() => {
+                      const email = 'aincorphelp@gmail.com';
+                      const subject = 'About Velora - Questions';
+                      const body = 'Hello,\n\nI have questions about Velora:\n\n';
+                      window.open(`mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`, '_blank');
+                    }}
+                    className="w-full flex items-center space-x-3 p-3 text-gray-300 hover:text-white hover:bg-gray-800 rounded-lg transition-colors"
+                  >
                     <Info className="w-5 h-5" />
                     <span>About Velora</span>
                   </button>
