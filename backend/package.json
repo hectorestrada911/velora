@@ -6,8 +6,7 @@
     "dev": "next dev",
     "build": "next build --debug",
     "start": "next start",
-    "lint": "next lint",
-    "install": "npm install"
+    "lint": "next lint"
   },
   "dependencies": {
     "next": "14.0.4",
