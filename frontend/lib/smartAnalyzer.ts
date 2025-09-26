@@ -65,7 +65,13 @@ const DATE_PATTERNS = {
   specificMonth: /\b(january|february|march|april|may|june|july|august|september|october|november|december)\b/i,
   time: /\b(\d{1,2}(?::\d{2})?\s*(?:am|pm)?)\b/i,
   relative: /\b(in \d+ (?:days?|weeks?|months?|years?))\b/i,
-  recurring: /\b(every|daily|weekly|monthly|yearly|each)\b/i
+  recurring: /\b(every|daily|weekly|monthly|yearly|each)\b/i,
+  // Enhanced patterns for better calendar detection
+  meetingContext: /\b(meeting|appointment|call|conference|interview|presentation|demo|lunch|dinner|breakfast)\b/i,
+  thisWeek: /\b(this friday|this monday|this tuesday|this wednesday|this thursday|this saturday|this sunday)\b/i,
+  nextDay: /\b(next friday|next monday|next tuesday|next wednesday|next thursday|next saturday|next sunday)\b/i,
+  timeWithDay: /\b(friday at|monday at|tuesday at|wednesday at|thursday at|saturday at|sunday at)\b/i,
+  meetingPhrases: /\b(have a|have an|got a|got an|scheduled|planned|booked|set up)\b/i
 }
 
 // Intent classification patterns
@@ -86,9 +92,15 @@ const INTENT_PATTERNS = {
     /\b(innovation|improvement|solution)\b/i
   ],
   meeting: [
-    /\b(meeting|call|conference|discussion|sync|standup)\b/i,
+    /\b(meeting|call|conference|discussion|sync|standup|appointment|interview|presentation|demo)\b/i,
     /\b(present|demo|show|walk through)\b/i,
-    /\b(team|group|collaboration)\b/i
+    /\b(team|group|collaboration)\b/i,
+    // Enhanced meeting detection patterns
+    /\b(have a|have an|got a|got an|scheduled|planned|booked|set up)\b/i,
+    /\b(this friday|this monday|this tuesday|this wednesday|this thursday|this saturday|this sunday)\b/i,
+    /\b(next friday|next monday|next tuesday|next wednesday|next thursday|next saturday|next sunday)\b/i,
+    /\b(friday at|monday at|tuesday at|wednesday at|thursday at|saturday at|sunday at)\b/i,
+    /\b(lunch|dinner|breakfast|coffee|catch up)\b/i
   ],
   contact: [
     /\b(contact|reach out|get in touch|connect with)\b/i,
@@ -275,7 +287,33 @@ function extractDueDate(text: string): Date | undefined {
     return nextWeek
   }
   
-  // Specific day of week
+  // Enhanced: "this friday", "this monday", etc.
+  const thisWeekMatch = text.match(DATE_PATTERNS.thisWeek)
+  if (thisWeekMatch) {
+    const dayNames = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday']
+    const targetDayName = thisWeekMatch[0].replace('this ', '').toLowerCase()
+    const targetDay = dayNames.indexOf(targetDayName)
+    const currentDay = now.getDay()
+    const daysToAdd = (targetDay - currentDay + 7) % 7
+    const targetDate = new Date(now)
+    targetDate.setDate(targetDate.getDate() + daysToAdd)
+    return targetDate
+  }
+  
+  // Enhanced: "next friday", "next monday", etc.
+  const nextDayMatch = text.match(DATE_PATTERNS.nextDay)
+  if (nextDayMatch) {
+    const dayNames = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday']
+    const targetDayName = nextDayMatch[0].replace('next ', '').toLowerCase()
+    const targetDay = dayNames.indexOf(targetDayName)
+    const currentDay = now.getDay()
+    const daysToAdd = (targetDay - currentDay + 7) % 7 + 7 // Add extra week for "next"
+    const targetDate = new Date(now)
+    targetDate.setDate(targetDate.getDate() + daysToAdd)
+    return targetDate
+  }
+  
+  // Specific day of week (fallback)
   const dayMatch = text.match(DATE_PATTERNS.specificDay)
   if (dayMatch) {
     const dayNames = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday']
