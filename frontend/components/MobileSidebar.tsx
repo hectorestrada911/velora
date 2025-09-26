@@ -122,8 +122,8 @@ export default function MobileSidebar({
                 )}
               </div>
 
-              {/* Simple Mobile Navigation */}
-              <div className="mb-6">
+              {/* Mobile Navigation */}
+              <div className="mb-6 space-y-2">
                 <button
                   onClick={() => {
                     onNavigate('/chat')
@@ -133,6 +133,61 @@ export default function MobileSidebar({
                 >
                   <MessageSquare className="w-5 h-5" />
                   <span>Chat</span>
+                </button>
+                
+                <button
+                  onClick={() => {
+                    onNavigate('/documents')
+                    onClose()
+                  }}
+                  className="w-full flex items-center space-x-3 p-3 text-gray-300 hover:text-white hover:bg-gray-800 rounded-lg transition-colors"
+                >
+                  <Plus className="w-5 h-5" />
+                  <span>Documents</span>
+                </button>
+                
+                <button
+                  onClick={() => {
+                    onNavigate('/calendar')
+                    onClose()
+                  }}
+                  className="w-full flex items-center space-x-3 p-3 text-gray-300 hover:text-white hover:bg-gray-800 rounded-lg transition-colors"
+                >
+                  <Calendar className="w-5 h-5" />
+                  <span>Calendar</span>
+                </button>
+                
+                <button
+                  onClick={() => {
+                    onNavigate('/reminders')
+                    onClose()
+                  }}
+                  className="w-full flex items-center space-x-3 p-3 text-gray-300 hover:text-white hover:bg-gray-800 rounded-lg transition-colors"
+                >
+                  <Bell className="w-5 h-5" />
+                  <span>Reminders</span>
+                </button>
+                
+                <button
+                  onClick={() => {
+                    onNavigate('/memory')
+                    onClose()
+                  }}
+                  className="w-full flex items-center space-x-3 p-3 text-gray-300 hover:text-white hover:bg-gray-800 rounded-lg transition-colors"
+                >
+                  <Brain className="w-5 h-5" />
+                  <span>Memory</span>
+                </button>
+                
+                <button
+                  onClick={() => {
+                    onNavigate('/voice')
+                    onClose()
+                  }}
+                  className="w-full flex items-center space-x-3 p-3 text-gray-300 hover:text-white hover:bg-gray-800 rounded-lg transition-colors"
+                >
+                  <Mic className="w-5 h-5" />
+                  <span>Voice</span>
                 </button>
               </div>
 
