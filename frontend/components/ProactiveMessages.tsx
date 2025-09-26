@@ -37,52 +37,22 @@ export default function ProactiveMessages({ onMessageAction }: ProactiveMessages
     const now = Date.now()
     const timeSinceLastVisit = lastVisit ? now - parseInt(lastVisit) : 0
     
-    // Show proactive messages if user hasn't visited in 30+ minutes
-    if (timeSinceLastVisit > 30 * 60 * 1000 || !lastVisit) {
+    // Show ONLY ONE subtle message if user hasn't visited in 2+ hours
+    if (timeSinceLastVisit > 2 * 60 * 60 * 1000 || !lastVisit) {
       const proactiveMessages: ProactiveMessage[] = [
         {
           id: 'welcome-back',
           type: 'welcome',
           title: 'Welcome back! 👋',
-          content: 'I noticed you have 3 pending reminders and a meeting in 2 hours. Would you like me to help you get organized?',
+          content: 'I have some updates for you. Click the bell to see your notifications.',
           actions: {
             primary: {
-              label: 'Show my schedule',
-              onClick: () => handleMessageAction('show-schedule')
-            },
-            secondary: {
-              label: 'Review reminders',
-              onClick: () => handleMessageAction('review-reminders')
+              label: 'View notifications',
+              onClick: () => handleMessageAction('show-notifications')
             }
-          }
-        },
-        {
-          id: 'upcoming-meeting',
-          type: 'reminder',
-          title: '⏰ Upcoming Meeting',
-          content: 'You have a team meeting in 2 hours. Should I set a reminder or help you prepare?',
-          actions: {
-            primary: {
-              label: 'Set reminder',
-              onClick: () => handleMessageAction('set-reminder')
-            },
-            secondary: {
-              label: 'View details',
-              onClick: () => handleMessageAction('view-meeting')
-            }
-          }
-        },
-        {
-          id: 'pending-tasks',
-          type: 'suggestion',
-          title: '📋 Pending Tasks',
-          content: 'You have 3 incomplete reminders from yesterday. Would you like to review or reschedule them?',
-          actions: {
-            primary: {
-              label: 'Review tasks',
-              onClick: () => handleMessageAction('review-tasks')
-            }
-          }
+          },
+          autoHide: true,
+          duration: 5000
         }
       ]
 
@@ -131,7 +101,7 @@ export default function ProactiveMessages({ onMessageAction }: ProactiveMessages
   if (!isVisible || messages.length === 0) return null
 
   return (
-    <div className="fixed top-4 right-4 z-50 space-y-3 max-w-sm">
+    <div className="fixed top-4 right-4 z-50 space-y-2 max-w-xs">
       <AnimatePresence>
         {messages.map((message, index) => (
           <motion.div
@@ -146,39 +116,39 @@ export default function ProactiveMessages({ onMessageAction }: ProactiveMessages
               stiffness: 300,
               damping: 30
             }}
-            className={`p-4 rounded-lg border ${getMessageColor(message.type)} backdrop-blur-sm`}
+            className={`p-3 rounded-md border ${getMessageColor(message.type)} backdrop-blur-sm shadow-lg`}
           >
             <div className="flex items-start space-x-3">
               <div className="flex-shrink-0 mt-1">
                 {getMessageIcon(message.type)}
               </div>
               <div className="flex-1 min-w-0">
-                <div className="flex items-center justify-between mb-2">
-                  <h4 className="text-white font-medium text-sm">
+                <div className="flex items-center justify-between mb-1">
+                  <h4 className="text-white font-medium text-xs">
                     {message.title}
                   </h4>
                   <button
                     onClick={() => dismissMessage(message.id)}
                     className="text-gray-400 hover:text-white transition-colors"
                   >
-                    <X className="w-4 h-4" />
+                    <X className="w-3 h-3" />
                   </button>
                 </div>
-                <p className="text-gray-300 text-sm mb-3">
+                <p className="text-gray-300 text-xs mb-2">
                   {message.content}
                 </p>
                 {message.actions && (
-                  <div className="flex space-x-2">
+                  <div className="flex space-x-1">
                     <button
                       onClick={() => handleMessageAction(message.actions!.primary.label.toLowerCase().replace(' ', '-'))}
-                      className="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white text-xs rounded-md transition-colors"
+                      className="px-2 py-1 bg-blue-600 hover:bg-blue-700 text-white text-xs rounded transition-colors"
                     >
                       {message.actions.primary.label}
                     </button>
                     {message.actions.secondary && (
                       <button
                         onClick={() => handleMessageAction(message.actions!.secondary!.label.toLowerCase().replace(' ', '-'))}
-                        className="px-3 py-1 bg-gray-700 hover:bg-gray-600 text-white text-xs rounded-md transition-colors"
+                        className="px-2 py-1 bg-gray-700 hover:bg-gray-600 text-white text-xs rounded transition-colors"
                       >
                         {message.actions.secondary.label}
                       </button>
@@ -195,7 +165,7 @@ export default function ProactiveMessages({ onMessageAction }: ProactiveMessages
         <div className="text-center">
           <button
             onClick={dismissAll}
-            className="text-xs text-gray-400 hover:text-white transition-colors"
+            className="text-xs text-gray-500 hover:text-gray-300 transition-colors"
           >
             Dismiss all ({messages.length})
           </button>
