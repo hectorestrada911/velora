@@ -667,7 +667,8 @@ Please analyze this document and respond to the user's request. If they didn't s
         const formData = new FormData()
         formData.append('file', file)
         
-        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://velora-production.up.railway.app'
+        const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://velora-production.up.railway.app'
+        const apiUrl = baseUrl.replace('/api/analyze', '') // Remove /api/analyze if present
         const response = await fetch(`${apiUrl}/api/pdf-analyze`, {
           method: 'POST',
           body: formData,
