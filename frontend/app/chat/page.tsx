@@ -532,7 +532,8 @@ Please analyze this document and respond to the user's request. If they didn't s
       console.log('Calling AI API with prompt length:', aiPrompt.length)
 
       // Call the AI API
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://velora-production.up.railway.app'
+      const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://velora-production.up.railway.app'
+      const apiUrl = baseUrl.replace('/api/analyze', '') // Remove /api/analyze if present
       const response = await fetch(`${apiUrl}/api/analyze`, {
         method: 'POST',
         headers: {
