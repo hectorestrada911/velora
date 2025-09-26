@@ -1533,13 +1533,22 @@ Please analyze this document and respond to the user's request. If they didn't s
             <div className="p-4 border-b border-gray-700">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-lg font-semibold text-white">Conversations</h2>
-                <button
-                  onClick={startNewConversation}
-                  className="p-2 bg-electric-600 hover:bg-electric-700 text-white rounded-lg transition-colors duration-200"
-                  title="New Conversation"
-                >
-                  <Plus className="w-4 h-4" />
-                </button>
+                <div className="flex items-center space-x-2">
+                  <button
+                    onClick={startNewConversation}
+                    className="p-2 bg-electric-600 hover:bg-electric-700 text-white rounded-lg transition-colors duration-200"
+                    title="New Conversation"
+                  >
+                    <Plus className="w-4 h-4" />
+                  </button>
+                  <button
+                    onClick={() => setShowConversationHistory(false)}
+                    className="p-2 text-gray-400 hover:text-white hover:bg-gray-800 rounded-lg transition-colors duration-200"
+                    title="Close"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
               </div>
             </div>
             
