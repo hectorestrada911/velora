@@ -201,7 +201,13 @@ export default function NotificationBell({ onNotificationClick }: NotificationBe
             {/* Footer */}
             {notifications.length > 0 && (
               <div className="p-3 border-t border-gray-700">
-                <button className="w-full text-center text-sm text-blue-400 hover:text-blue-300 transition-colors">
+                <button 
+                  onClick={() => {
+                    window.location.href = '/notifications'
+                    setIsOpen(false)
+                  }}
+                  className="w-full text-center text-sm text-blue-400 hover:text-blue-300 transition-colors"
+                >
                   View all notifications
                 </button>
               </div>
