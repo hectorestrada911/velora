@@ -11,7 +11,7 @@ import {
   deleteDoc,
   Timestamp 
 } from 'firebase/firestore'
-import { db } from './firebase'
+import { db, auth } from './firebase'
 import { storageService, StoredFile } from './storageService'
 
 export interface Document {
@@ -48,6 +48,10 @@ export class DocumentService {
   }
 
   private getCurrentUserId(): string {
+    // Get the current authenticated user
+    if (auth && auth.currentUser) {
+      return auth.currentUser.uid
+    }
     return this.currentUserId
   }
 
