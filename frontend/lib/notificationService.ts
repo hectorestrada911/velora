@@ -191,8 +191,16 @@ class NotificationService {
     try {
       const notifications: RealNotification[] = []
 
-      // Check for new memories that might need attention
-      const recentMemories = await memoryService.getRecentMemories(7) // Last 7 days
+      // Get all memories and filter for recent ones
+      const allMemories = memoryService.getAllMemories()
+      const now = new Date()
+      const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000)
+      
+      // Filter for memories created in the last 7 days
+      const recentMemories = allMemories.filter(memory => {
+        const createdAt = new Date(memory.createdAt)
+        return createdAt >= sevenDaysAgo
+      })
       
       // Suggest reviewing memories if there are many new ones
       if (recentMemories.length >= 5) {
@@ -213,7 +221,7 @@ class NotificationService {
       }
 
       // Check for memory patterns that might need attention
-      const memoryPatterns = await this.getMemoryPatterns()
+      const memoryPatterns = this.getMemoryPatterns(allMemories)
       if (memoryPatterns.length > 0) {
         notifications.push({
           id: 'memory-pattern-suggestion',
@@ -265,6 +273,41 @@ class NotificationService {
       console.error('Error getting AI notifications:', error)
       return []
     }
+  }
+
+  // Helper method for memory patterns
+  private getMemoryPatterns(memories: any[]): any[] {
+    // Simple pattern detection - look for common themes
+    const patterns: any[] = []
+    
+    // Check for location patterns
+    const locationMemories = memories.filter(m => 
+      m.content.toLowerCase().includes('address') || 
+      m.content.toLowerCase().includes('location')
+    )
+    if (locationMemories.length >= 3) {
+      patterns.push({
+        type: 'location',
+        count: locationMemories.length,
+        description: 'Multiple location-related memories'
+      })
+    }
+    
+    // Check for work patterns
+    const workMemories = memories.filter(m => 
+      m.content.toLowerCase().includes('work') || 
+      m.content.toLowerCase().includes('meeting') ||
+      m.content.toLowerCase().includes('project')
+    )
+    if (workMemories.length >= 3) {
+      patterns.push({
+        type: 'work',
+        count: workMemories.length,
+        description: 'Multiple work-related memories'
+      })
+    }
+    
+    return patterns
   }
 
   // Action handlers
