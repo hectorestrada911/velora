@@ -19,6 +19,8 @@ import SmartSuggestions from '@/components/SmartSuggestions'
 import MemoryView from '@/components/MemoryView'
 import MobileSidebar from '@/components/MobileSidebar'
 import SettingsModal from '@/components/SettingsModal'
+import NotificationBell from '@/components/NotificationBell'
+import ProactiveMessages from '@/components/ProactiveMessages'
 import { ErrorHandler } from '@/lib/errorHandler'
 
 
@@ -1375,6 +1377,9 @@ Please analyze this document and respond to the user's request. If they didn't s
 
   return (
     <div className="min-h-screen bg-black">
+      {/* Proactive Messages */}
+      <ProactiveMessages onMessageAction={(action) => console.log('Proactive message action:', action)} />
+      
       {/* Header - Mobile Optimized */}
       <header className="bg-gray-900/80 backdrop-blur-sm border-b border-gray-700/50 p-2 sm:p-3 md:p-4">
         <div className="max-w-6xl mx-auto flex items-center justify-between">
@@ -1387,6 +1392,9 @@ Please analyze this document and respond to the user's request. If they didn't s
           </div>
           
           <div className="flex items-center gap-1.5 sm:gap-2 md:gap-4">
+            {/* Notification Bell */}
+            <NotificationBell onNotificationClick={() => console.log('Notification clicked')} />
+            
             {/* Google Workspace Connection Button */}
             {!isGoogleConnected ? (
               <motion.button
