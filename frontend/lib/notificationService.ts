@@ -69,48 +69,52 @@ class NotificationService {
   // Get calendar-based notifications
   private async getCalendarNotifications(): Promise<RealNotification[]> {
     try {
-      const events = await calendarService.getUpcomingEvents(7) // Next 7 days
+      // Get stored events from calendar service
+      const events = calendarService.getStoredEvents()
       const notifications: RealNotification[] = []
+      const now = new Date()
 
       events.forEach(event => {
-        const now = new Date()
         const eventStart = new Date(event.startTime)
         const timeDiff = eventStart.getTime() - now.getTime()
         const hoursUntil = Math.floor(timeDiff / (1000 * 60 * 60))
 
-        // Create notifications based on proximity to event
-        if (hoursUntil <= 1 && hoursUntil > 0) {
-          notifications.push({
-            id: `calendar-${event.id}-urgent`,
-            type: 'urgent',
-            title: `⏰ ${event.title}`,
-            description: `Starts in ${hoursUntil === 0 ? 'less than 1 hour' : `${hoursUntil} hour${hoursUntil > 1 ? 's' : ''}`}`,
-            time: this.getRelativeTime(eventStart),
-            priority: 'urgent',
-            isRead: false,
-            source: 'calendar',
-            action: {
-              label: 'View Details',
-              onClick: () => this.viewCalendarEvent(event.id)
-            },
-            data: event
-          })
-        } else if (hoursUntil <= 24 && hoursUntil > 1) {
-          notifications.push({
-            id: `calendar-${event.id}-upcoming`,
-            type: 'calendar',
-            title: `📅 ${event.title}`,
-            description: `Tomorrow at ${eventStart.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}`,
-            time: this.getRelativeTime(eventStart),
-            priority: 'high',
-            isRead: false,
-            source: 'calendar',
-            action: {
-              label: 'View Details',
-              onClick: () => this.viewCalendarEvent(event.id)
-            },
-            data: event
-          })
+        // Only show notifications for future events
+        if (timeDiff > 0) {
+          // Create notifications based on proximity to event
+          if (hoursUntil <= 1 && hoursUntil > 0) {
+            notifications.push({
+              id: `calendar-${event.id}-urgent`,
+              type: 'urgent',
+              title: `⏰ ${event.title}`,
+              description: `Starts in ${hoursUntil === 0 ? 'less than 1 hour' : `${hoursUntil} hour${hoursUntil > 1 ? 's' : ''}`}`,
+              time: this.getRelativeTime(eventStart),
+              priority: 'urgent',
+              isRead: false,
+              source: 'calendar',
+              action: {
+                label: 'View Details',
+                onClick: () => this.viewCalendarEvent(event.id)
+              },
+              data: event
+            })
+          } else if (hoursUntil <= 24 && hoursUntil > 1) {
+            notifications.push({
+              id: `calendar-${event.id}-upcoming`,
+              type: 'calendar',
+              title: `📅 ${event.title}`,
+              description: `Tomorrow at ${eventStart.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}`,
+              time: this.getRelativeTime(eventStart),
+              priority: 'high',
+              isRead: false,
+              source: 'calendar',
+              action: {
+                label: 'View Details',
+                onClick: () => this.viewCalendarEvent(event.id)
+              },
+              data: event
+            })
+          }
         }
       })
 
@@ -124,48 +128,55 @@ class NotificationService {
   // Get reminder-based notifications
   private async getReminderNotifications(): Promise<RealNotification[]> {
     try {
-      // This would connect to your actual reminder system
-      // For now, we'll simulate based on what we know about your system
+      // Get stored reminders from calendar service
+      const reminders = calendarService.getStoredReminders()
       const notifications: RealNotification[] = []
+      const now = new Date()
 
-      // Check for overdue reminders (this would come from your reminder service)
-      const overdueReminders = await this.getOverdueReminders()
-      overdueReminders.forEach(reminder => {
-        notifications.push({
-          id: `reminder-${reminder.id}-overdue`,
-          type: 'urgent',
-          title: `🚨 ${reminder.title}`,
-          description: `Overdue by ${this.getOverdueTime(reminder.dueDate)}`,
-          time: this.getRelativeTime(new Date(reminder.dueDate)),
-          priority: 'urgent',
-          isRead: false,
-          source: 'reminder',
-          action: {
-            label: 'Mark Complete',
-            onClick: () => this.completeReminder(reminder.id)
-          },
-          data: reminder
-        })
-      })
+      reminders.forEach(reminder => {
+        // Skip completed reminders
+        if (reminder.completed) return
 
-      // Check for due reminders (due today)
-      const dueReminders = await this.getDueReminders()
-      dueReminders.forEach(reminder => {
-        notifications.push({
-          id: `reminder-${reminder.id}-due`,
-          type: 'reminder',
-          title: `⏰ ${reminder.title}`,
-          description: `Due ${this.getDueTime(reminder.dueDate)}`,
-          time: this.getRelativeTime(new Date(reminder.dueDate)),
-          priority: 'high',
-          isRead: false,
-          source: 'reminder',
-          action: {
-            label: 'Mark Complete',
-            onClick: () => this.completeReminder(reminder.id)
-          },
-          data: reminder
-        })
+        const dueDate = new Date(reminder.dueDate)
+        const timeDiff = dueDate.getTime() - now.getTime()
+        const hoursUntil = Math.floor(timeDiff / (1000 * 60 * 60))
+
+        // Check for overdue reminders
+        if (timeDiff < 0) {
+          notifications.push({
+            id: `reminder-${reminder.id}-overdue`,
+            type: 'urgent',
+            title: `🚨 ${reminder.title}`,
+            description: `Overdue by ${this.getOverdueTime(reminder.dueDate)}`,
+            time: this.getRelativeTime(dueDate),
+            priority: 'urgent',
+            isRead: false,
+            source: 'reminder',
+            action: {
+              label: 'Mark Complete',
+              onClick: () => this.completeReminder(reminder.id)
+            },
+            data: reminder
+          })
+        }
+        // Check for due reminders (due today)
+        else if (hoursUntil <= 24 && hoursUntil > 0) {
+          notifications.push({
+            id: `reminder-${reminder.id}-due`,
+            type: 'reminder',
+            title: `⏰ ${reminder.title}`,
+            description: `Due ${this.getDueTime(reminder.dueDate)}`,
+            time: this.getRelativeTime(dueDate),
+            priority: 'high',
+            isRead: false,
+            source: 'reminder',
+            action: {
+              label: 'Mark Complete',
+              onClick: () => this.completeReminder(reminder.id)
+            },
+            data: reminder
+          })
+        }
       })
 
       return notifications
@@ -256,40 +267,21 @@ class NotificationService {
     }
   }
 
-  // Helper methods for data access (these would connect to your actual services)
-  private async getOverdueReminders(): Promise<any[]> {
-    // This would connect to your reminder service
-    // For now, return empty array
-    return []
-  }
-
-  private async getDueReminders(): Promise<any[]> {
-    // This would connect to your reminder service
-    // For now, return empty array
-    return []
-  }
-
-  private async getMemoryPatterns(): Promise<any[]> {
-    // This would analyze memory patterns
-    // For now, return empty array
-    return []
-  }
-
-  private async getAISuggestions(): Promise<any[]> {
-    // This would generate AI suggestions
-    // For now, return empty array
-    return []
-  }
-
   // Action handlers
   private viewCalendarEvent(eventId: string) {
     // Navigate to calendar or show event details
     console.log('View calendar event:', eventId)
+    // TODO: Implement calendar event viewing
   }
 
-  private completeReminder(reminderId: string) {
-    // Mark reminder as complete
-    console.log('Complete reminder:', reminderId)
+  private async completeReminder(reminderId: string) {
+    // Mark reminder as complete using calendar service
+    try {
+      await calendarService.markReminderComplete(reminderId)
+      console.log('Reminder completed:', reminderId)
+    } catch (error) {
+      console.error('Error completing reminder:', error)
+    }
   }
 
   private viewMemories() {
