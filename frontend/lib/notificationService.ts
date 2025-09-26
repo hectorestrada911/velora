@@ -419,6 +419,18 @@ class NotificationService {
     this.notifyListeners()
   }
 
+  // Delete a notification
+  deleteNotification(notificationId: string) {
+    this.notifications = this.notifications.filter(n => n.id !== notificationId)
+    this.notifyListeners()
+  }
+
+  // Delete all notifications
+  deleteAllNotifications() {
+    this.notifications = []
+    this.notifyListeners()
+  }
+
   // Get current notifications
   getNotifications(): RealNotification[] {
     return this.notifications

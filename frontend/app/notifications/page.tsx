@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { ArrowLeft, Bell, Clock, AlertCircle, CheckCircle, Filter, Search, MoreVertical } from 'lucide-react'
+import { ArrowLeft, Bell, Clock, AlertCircle, CheckCircle, Filter, Search, MoreVertical, X, Trash2 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { notificationService, RealNotification } from '@/lib/notificationService'
 
@@ -37,6 +37,16 @@ export default function NotificationsPage() {
 
   const markAllAsRead = () => {
     notificationService.markAllAsRead()
+  }
+
+  const deleteNotification = (id: string) => {
+    notificationService.deleteNotification(id)
+  }
+
+  const deleteAllNotifications = () => {
+    if (confirm('Are you sure you want to delete all notifications? This action cannot be undone.')) {
+      notificationService.deleteAllNotifications()
+    }
   }
 
   const getPriorityColor = (priority: string) => {
@@ -96,12 +106,21 @@ export default function NotificationsPage() {
             </div>
           </div>
           
-          <button
-            onClick={markAllAsRead}
-            className="text-sm text-blue-400 hover:text-blue-300 transition-colors"
-          >
-            Mark all as read
-          </button>
+          <div className="flex items-center space-x-4">
+            <button
+              onClick={markAllAsRead}
+              className="text-sm text-blue-400 hover:text-blue-300 transition-colors"
+            >
+              Mark all as read
+            </button>
+            <button
+              onClick={deleteAllNotifications}
+              className="text-sm text-red-400 hover:text-red-300 transition-colors flex items-center space-x-1"
+            >
+              <Trash2 className="w-4 h-4" />
+              <span>Delete all</span>
+            </button>
+          </div>
         </div>
       </div>
 
@@ -186,19 +205,37 @@ export default function NotificationsPage() {
                         {!notification.isRead && (
                           <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
                         )}
+                        <button
+                          onClick={() => deleteNotification(notification.id)}
+                          className="text-gray-400 hover:text-red-400 transition-colors p-1"
+                          title="Delete notification"
+                        >
+                          <X className="w-4 h-4" />
+                        </button>
                       </div>
                     </div>
                     <p className="text-gray-400 text-sm mt-1">
                       {notification.description}
                     </p>
-                    {notification.action && (
-                      <button
-                        onClick={notification.action.onClick}
-                        className="mt-3 text-sm text-blue-400 hover:text-blue-300 transition-colors"
-                      >
-                        {notification.action.label}
-                      </button>
-                    )}
+                    <div className="flex items-center justify-between mt-3">
+                      {notification.action && (
+                        <button
+                          onClick={notification.action.onClick}
+                          className="text-sm text-blue-400 hover:text-blue-300 transition-colors"
+                        >
+                          {notification.action.label}
+                        </button>
+                      )}
+                      {!notification.isRead && (
+                        <button
+                          onClick={() => handleNotificationAction(notification.id)}
+                          className="text-sm text-green-400 hover:text-green-300 transition-colors flex items-center space-x-1"
+                        >
+                          <CheckCircle className="w-4 h-4" />
+                          <span>Mark as read</span>
+                        </button>
+                      )}
+                    </div>
                   </div>
                 </div>
               </motion.div>
