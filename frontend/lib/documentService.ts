@@ -50,8 +50,10 @@ export class DocumentService {
   private getCurrentUserId(): string {
     // Get the current authenticated user
     if (auth && auth.currentUser) {
+      console.log('DocumentService: Using authenticated user ID:', auth.currentUser.uid)
       return auth.currentUser.uid
     }
+    console.log('DocumentService: No authenticated user, using fallback ID:', this.currentUserId)
     return this.currentUserId
   }
 
