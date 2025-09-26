@@ -262,7 +262,7 @@ Provide a comprehensive analysis following the JSON format above.`
 
   // Call OpenAI API
   const response = await openai.chat.completions.create({
-    model: "gpt-4o",
+    model: "gpt-5",
     messages: [
       { role: "system", content: systemPrompt },
       { role: "user", content: userPrompt }
@@ -366,9 +366,9 @@ SIZE: ${Math.round(file.size / 1024)} KB
 
 Provide a comprehensive analysis following the JSON format above.`
 
-  // Call OpenAI API with image using GPT-4o
+  // Call OpenAI API with image using GPT-5
   const response = await openai.chat.completions.create({
-    model: "gpt-4o",
+    model: "gpt-5",
     messages: [
       { role: "system", content: systemPrompt },
       { 
