@@ -10,11 +10,14 @@ import {
   Moon, 
   Sun, 
   Volume2, 
-  VolumeX,
-  Palette,
-  Shield,
-  HelpCircle,
-  Info
+  VolumeX, 
+  Palette, 
+  Shield, 
+  HelpCircle, 
+  Info,
+  Mail,
+  Copy,
+  Check
 } from 'lucide-react'
 import { useAuth } from '@/components/providers/AuthProvider'
 import GoogleWorkspaceIntegration from './GoogleWorkspaceIntegration'
@@ -26,6 +29,9 @@ interface SettingsModalProps {
 
 export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
   const { user, signOut } = useAuth()
+  const [showSupportModal, setShowSupportModal] = useState(false)
+  const [showAboutModal, setShowAboutModal] = useState(false)
+  const [emailCopied, setEmailCopied] = useState(false)
   const [notifications, setNotifications] = useState(true)
   const [darkMode, setDarkMode] = useState(true)
   const [soundEnabled, setSoundEnabled] = useState(true)
@@ -36,6 +42,16 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
       onClose()
     } catch (error) {
       console.error('Sign out error:', error)
+    }
+  }
+
+  const copyEmail = async () => {
+    try {
+      await navigator.clipboard.writeText('aincorphelp@gmail.com')
+      setEmailCopied(true)
+      setTimeout(() => setEmailCopied(false), 2000)
+    } catch (error) {
+      console.error('Failed to copy email:', error)
     }
   }
 
@@ -194,12 +210,7 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                   </h3>
                   
                   <button 
-                    onClick={() => {
-                      const email = 'aincorphelp@gmail.com';
-                      const subject = 'Velora Support Request';
-                      const body = 'Hello,\n\nI need help with:\n\n';
-                      window.open(`mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`, '_blank');
-                    }}
+                    onClick={() => setShowSupportModal(true)}
                     className="w-full flex items-center space-x-3 p-3 text-gray-300 hover:text-white hover:bg-gray-800 rounded-lg transition-colors"
                   >
                     <HelpCircle className="w-5 h-5" />
@@ -207,12 +218,7 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                   </button>
                   
                   <button 
-                    onClick={() => {
-                      const email = 'aincorphelp@gmail.com';
-                      const subject = 'About Velora - Questions';
-                      const body = 'Hello,\n\nI have questions about Velora:\n\n';
-                      window.open(`mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`, '_blank');
-                    }}
+                    onClick={() => setShowAboutModal(true)}
                     className="w-full flex items-center space-x-3 p-3 text-gray-300 hover:text-white hover:bg-gray-800 rounded-lg transition-colors"
                   >
                     <Info className="w-5 h-5" />
@@ -235,6 +241,130 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
           </motion.div>
         </>
       )}
+
+      {/* Support Modal */}
+      <AnimatePresence>
+        {showSupportModal && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 bg-black/50 z-50"
+              onClick={() => setShowSupportModal(false)}
+            />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              className="fixed inset-0 flex items-center justify-center z-50 p-4"
+            >
+              <div className="bg-gray-900 border border-gray-700 rounded-xl p-6 max-w-md w-full">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-xl font-semibold text-white">Help & Support</h3>
+                  <button
+                    onClick={() => setShowSupportModal(false)}
+                    className="text-gray-400 hover:text-white transition-colors"
+                  >
+                    <X className="w-5 h-5" />
+                  </button>
+                </div>
+                
+                <div className="space-y-4">
+                  <p className="text-gray-300">
+                    Need help? We're here for you! Contact our support team:
+                  </p>
+                  
+                  <div className="bg-gray-800 rounded-lg p-4">
+                    <div className="flex items-center space-x-3 mb-3">
+                      <Mail className="w-5 h-5 text-blue-400" />
+                      <span className="text-white font-medium">Email Support</span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <code className="bg-gray-700 text-blue-400 px-2 py-1 rounded text-sm">
+                        aincorphelp@gmail.com
+                      </code>
+                      <button
+                        onClick={copyEmail}
+                        className="p-1 text-gray-400 hover:text-white transition-colors"
+                        title="Copy email"
+                      >
+                        {emailCopied ? <Check className="w-4 h-4 text-green-400" /> : <Copy className="w-4 h-4" />}
+                      </button>
+                    </div>
+                  </div>
+                  
+                  <p className="text-sm text-gray-400">
+                    We typically respond within 24 hours. Please include as much detail as possible about your issue.
+                  </p>
+                </div>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+
+      {/* About Modal */}
+      <AnimatePresence>
+        {showAboutModal && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 bg-black/50 z-50"
+              onClick={() => setShowAboutModal(false)}
+            />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              className="fixed inset-0 flex items-center justify-center z-50 p-4"
+            >
+              <div className="bg-gray-900 border border-gray-700 rounded-xl p-6 max-w-md w-full">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-xl font-semibold text-white">About Velora</h3>
+                  <button
+                    onClick={() => setShowAboutModal(false)}
+                    className="text-gray-400 hover:text-white transition-colors"
+                  >
+                    <X className="w-5 h-5" />
+                  </button>
+                </div>
+                
+                <div className="space-y-4">
+                  <p className="text-gray-300">
+                    Velora is your AI-powered personal assistant that helps you organize, remember, and manage your life.
+                  </p>
+                  
+                  <div className="bg-gray-800 rounded-lg p-4">
+                    <div className="flex items-center space-x-3 mb-3">
+                      <Mail className="w-5 h-5 text-blue-400" />
+                      <span className="text-white font-medium">Contact Us</span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <code className="bg-gray-700 text-blue-400 px-2 py-1 rounded text-sm">
+                        aincorphelp@gmail.com
+                      </code>
+                      <button
+                        onClick={copyEmail}
+                        className="p-1 text-gray-400 hover:text-white transition-colors"
+                        title="Copy email"
+                      >
+                        {emailCopied ? <Check className="w-4 h-4 text-green-400" /> : <Copy className="w-4 h-4" />}
+                      </button>
+                    </div>
+                  </div>
+                  
+                  <p className="text-sm text-gray-400">
+                    Have questions about Velora? We'd love to hear from you!
+                  </p>
+                </div>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
     </AnimatePresence>
   )
 }
