@@ -3,19 +3,7 @@
 import React, { useState, useEffect } from 'react'
 import { Bell, X, CheckCircle, Clock, AlertCircle } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
-
-interface Notification {
-  id: string
-  type: 'reminder' | 'calendar' | 'urgent' | 'suggestion'
-  title: string
-  description: string
-  time: string
-  priority: 'low' | 'medium' | 'high' | 'urgent'
-  action?: {
-    label: string
-    onClick: () => void
-  }
-}
+import { notificationService, RealNotification } from '@/lib/notificationService'
 
 interface NotificationBellProps {
   onNotificationClick?: () => void
@@ -23,62 +11,38 @@ interface NotificationBellProps {
 
 export default function NotificationBell({ onNotificationClick }: NotificationBellProps) {
   const [isOpen, setIsOpen] = useState(false)
-  const [notifications, setNotifications] = useState<Notification[]>([])
+  const [notifications, setNotifications] = useState<RealNotification[]>([])
   const [unreadCount, setUnreadCount] = useState(0)
 
-  // Mock notifications - in real app, this would come from your backend
+  // Load real notifications from all sources
   useEffect(() => {
-    const mockNotifications: Notification[] = [
-      {
-        id: '1',
-        type: 'reminder',
-        title: 'Call John about Q4 deadline',
-        description: 'Due in 2 hours',
-        time: '2 hours ago',
-        priority: 'high',
-        action: {
-          label: 'Mark Complete',
-          onClick: () => handleNotificationAction('1')
-        }
-      },
-      {
-        id: '2',
-        type: 'calendar',
-        title: 'Team Meeting',
-        description: 'Starts in 30 minutes',
-        time: '30 min ago',
-        priority: 'urgent',
-        action: {
-          label: 'View Details',
-          onClick: () => handleNotificationAction('2')
-        }
-      },
-      {
-        id: '3',
-        type: 'suggestion',
-        title: 'You have 3 pending reminders',
-        description: 'Would you like to review them?',
-        time: '1 hour ago',
-        priority: 'medium',
-        action: {
-          label: 'Review All',
-          onClick: () => handleNotificationAction('3')
-        }
+    const loadNotifications = async () => {
+      try {
+        await notificationService.loadNotifications()
+      } catch (error) {
+        console.error('Error loading notifications:', error)
       }
-    ]
-    
-    setNotifications(mockNotifications)
-    setUnreadCount(mockNotifications.length)
+    }
+
+    loadNotifications()
+
+    // Subscribe to notification updates
+    const unsubscribe = notificationService.onNotificationsUpdate((newNotifications) => {
+      setNotifications(newNotifications)
+      setUnreadCount(notificationService.getUnreadCount())
+    })
+
+    return unsubscribe
   }, [])
 
   const handleNotificationAction = (id: string) => {
-    setNotifications(prev => prev.filter(n => n.id !== id))
-    setUnreadCount(prev => Math.max(0, prev - 1))
+    // Mark as read instead of removing
+    notificationService.markAsRead(id)
     onNotificationClick?.()
   }
 
   const markAllAsRead = () => {
-    setUnreadCount(0)
+    notificationService.markAllAsRead()
   }
 
   const getPriorityColor = (priority: string) => {

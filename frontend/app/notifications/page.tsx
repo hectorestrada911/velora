@@ -4,114 +4,39 @@ import React, { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { ArrowLeft, Bell, Clock, AlertCircle, CheckCircle, Filter, Search, MoreVertical } from 'lucide-react'
 import { useRouter } from 'next/navigation'
-
-interface Notification {
-  id: string
-  type: 'reminder' | 'calendar' | 'urgent' | 'suggestion'
-  title: string
-  description: string
-  time: string
-  priority: 'low' | 'medium' | 'high' | 'urgent'
-  isRead: boolean
-  action?: {
-    label: string
-    onClick: () => void
-  }
-}
+import { notificationService, RealNotification } from '@/lib/notificationService'
 
 export default function NotificationsPage() {
   const router = useRouter()
-  const [notifications, setNotifications] = useState<Notification[]>([])
+  const [notifications, setNotifications] = useState<RealNotification[]>([])
   const [filter, setFilter] = useState<'all' | 'unread' | 'urgent'>('all')
   const [searchQuery, setSearchQuery] = useState('')
 
   useEffect(() => {
-    // Mock notifications - in real app, this would come from your backend
-    const mockNotifications: Notification[] = [
-      {
-        id: '1',
-        type: 'reminder',
-        title: 'Call John about Q4 deadline',
-        description: 'Due in 2 hours',
-        time: '2 hours ago',
-        priority: 'high',
-        isRead: false,
-        action: {
-          label: 'Mark Complete',
-          onClick: () => handleNotificationAction('1')
-        }
-      },
-      {
-        id: '2',
-        type: 'calendar',
-        title: 'Team Meeting',
-        description: 'Starts in 30 minutes',
-        time: '30 min ago',
-        priority: 'urgent',
-        isRead: false,
-        action: {
-          label: 'View Details',
-          onClick: () => handleNotificationAction('2')
-        }
-      },
-      {
-        id: '3',
-        type: 'suggestion',
-        title: 'You have 3 pending reminders',
-        description: 'Would you like to review them?',
-        time: '1 hour ago',
-        priority: 'medium',
-        isRead: true,
-        action: {
-          label: 'Review All',
-          onClick: () => handleNotificationAction('3')
-        }
-      },
-      {
-        id: '4',
-        type: 'reminder',
-        title: 'Submit project proposal',
-        description: 'Due tomorrow at 5 PM',
-        time: '3 hours ago',
-        priority: 'high',
-        isRead: true,
-        action: {
-          label: 'Set Reminder',
-          onClick: () => handleNotificationAction('4')
-        }
-      },
-      {
-        id: '5',
-        type: 'calendar',
-        title: 'Lunch with Sarah',
-        description: 'Tomorrow at 12 PM',
-        time: '5 hours ago',
-        priority: 'low',
-        isRead: true,
-        action: {
-          label: 'View Calendar',
-          onClick: () => handleNotificationAction('5')
-        }
+    const loadNotifications = async () => {
+      try {
+        await notificationService.loadNotifications()
+      } catch (error) {
+        console.error('Error loading notifications:', error)
       }
-    ]
-    
-    setNotifications(mockNotifications)
+    }
+
+    loadNotifications()
+
+    // Subscribe to notification updates
+    const unsubscribe = notificationService.onNotificationsUpdate((newNotifications) => {
+      setNotifications(newNotifications)
+    })
+
+    return unsubscribe
   }, [])
 
   const handleNotificationAction = (id: string) => {
-    setNotifications(prev => 
-      prev.map(n => 
-        n.id === id 
-          ? { ...n, isRead: true }
-          : n
-      )
-    )
+    notificationService.markAsRead(id)
   }
 
   const markAllAsRead = () => {
-    setNotifications(prev => 
-      prev.map(n => ({ ...n, isRead: true }))
-    )
+    notificationService.markAllAsRead()
   }
 
   const getPriorityColor = (priority: string) => {
