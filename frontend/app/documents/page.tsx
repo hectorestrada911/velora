@@ -2,18 +2,29 @@
 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Upload, FileText, Search, Plus } from 'lucide-react';
+import { Upload, FileText, Search, Plus, ArrowLeft } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import PDFManager from '../../components/PDFManager';
 import FileUpload from '../../components/FileUpload';
 
 export default function DocumentsPage() {
   const [activeTab, setActiveTab] = useState<'manager' | 'upload'>('manager');
+  const router = useRouter();
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="mb-8">
+          <div className="flex items-center space-x-4 mb-4">
+            <button
+              onClick={() => router.back()}
+              className="flex items-center space-x-2 text-gray-400 hover:text-white transition-colors"
+            >
+              <ArrowLeft className="w-5 h-5" />
+              <span>Back</span>
+            </button>
+          </div>
           <h1 className="text-4xl font-bold text-white mb-2">Document Intelligence</h1>
           <p className="text-gray-400 text-lg">
             Upload, analyze, and manage your PDF documents with AI-powered insights

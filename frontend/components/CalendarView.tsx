@@ -2,12 +2,14 @@
 
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Calendar, Clock, MapPin, User, Plus, ChevronLeft, ChevronRight, X, Edit, Trash2, Bell, Briefcase, Heart, Dumbbell, Users, Tag } from 'lucide-react'
+import { Calendar, Clock, MapPin, User, Plus, ChevronLeft, ChevronRight, X, Edit, Trash2, Bell, Briefcase, Heart, Dumbbell, Users, Tag, ArrowLeft } from 'lucide-react'
+import { useRouter } from 'next/navigation'
 import { calendarService, CalendarEvent } from '@/lib/calendarService'
 import { toast } from 'react-hot-toast'
 import { ErrorHandler } from '@/lib/errorHandler'
 
 export default function CalendarView() {
+  const router = useRouter()
   const [currentDate, setCurrentDate] = useState(new Date())
   const [events, setEvents] = useState<CalendarEvent[]>([])
   const [selectedDate, setSelectedDate] = useState<Date | null>(null)
@@ -302,6 +304,15 @@ export default function CalendarView() {
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6 md:mb-8 space-y-4 md:space-y-0">
           <div>
+            <div className="flex items-center space-x-4 mb-4">
+              <button
+                onClick={() => router.back()}
+                className="flex items-center space-x-2 text-gray-400 hover:text-white transition-colors"
+              >
+                <ArrowLeft className="w-5 h-5" />
+                <span>Back</span>
+              </button>
+            </div>
             <motion.div
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
