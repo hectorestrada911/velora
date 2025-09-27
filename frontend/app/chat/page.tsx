@@ -1399,32 +1399,32 @@ Please analyze this document and respond to the user's request. If they didn't s
             {/* Notification Bell */}
             <NotificationBell onNotificationClick={() => console.log('Notification clicked')} />
             
-            {/* Google Workspace Connection Button */}
+            {/* Google Workspace Connection Status */}
             {!isGoogleConnected ? (
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={handleConnectGoogle}
                 disabled={isConnectingGoogle}
-                className="hidden sm:flex items-center gap-2 px-3 py-2 bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-400 hover:to-purple-400 disabled:opacity-50 text-white text-sm font-medium rounded-lg transition-all duration-200"
+                className="flex items-center gap-2 px-3 py-2 bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-400 hover:to-purple-400 disabled:opacity-50 text-white text-sm font-medium rounded-lg transition-all duration-200"
                 title="Connect Google Workspace"
               >
                 {isConnectingGoogle ? (
                   <>
                     <div className="w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                    <span className="hidden md:inline">Connecting...</span>
+                    <span className="hidden sm:inline">Connecting...</span>
                   </>
                 ) : (
                   <>
                     <Mail className="w-4 h-4" />
-                    <span className="hidden md:inline">Connect Google</span>
+                    <span className="hidden sm:inline">Connect Google</span>
                   </>
                 )}
               </motion.button>
             ) : (
-              <div className="hidden sm:flex items-center gap-2 px-3 py-2 bg-green-500/20 border border-green-500/30 text-green-400 text-sm font-medium rounded-lg">
+              <div className="flex items-center gap-2 px-3 py-2 bg-green-500/20 border border-green-500/30 text-green-400 text-sm font-medium rounded-lg">
                 <CheckCircle className="w-4 h-4" />
-                <span className="hidden md:inline">Google Connected</span>
+                <span className="hidden sm:inline">Google Connected</span>
               </div>
             )}
 
@@ -1632,88 +1632,6 @@ Please analyze this document and respond to the user's request. If they didn't s
           </motion.div>
         )}
 
-        {/* Google Workspace Status */}
-        {isGoogleConnected ? (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="mb-6"
-          >
-            <div className="bg-gradient-to-r from-green-500/10 to-blue-500/10 border border-green-500/20 rounded-xl p-4">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-3">
-                  <div className="w-8 h-8 bg-green-500 rounded-lg flex items-center justify-center">
-                    <CheckCircle className="w-4 h-4 text-white" />
-                  </div>
-                  <div>
-                    <h4 className="text-white font-medium">Google Workspace Connected</h4>
-                    <p className="text-gray-300 text-sm">Ready to analyze your emails and calendar</p>
-                  </div>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    onClick={handleAnalyzeEmails}
-                    disabled={isAnalyzingEmails}
-                    className="bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-400 hover:to-blue-400 disabled:opacity-50 text-white font-medium py-2 px-4 rounded-lg transition-all duration-200 flex items-center space-x-2 text-sm"
-                  >
-                    {isAnalyzingEmails ? (
-                      <>
-                        <div className="w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                        <span>Analyzing...</span>
-                      </>
-                    ) : (
-                      <>
-                        <Mail className="w-3 h-3" />
-                        <span>Analyze Emails</span>
-                      </>
-                    )}
-                  </motion.button>
-                  
-                  <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    onClick={() => window.open('https://calendar.google.com', '_blank')}
-                    className="bg-gray-700 hover:bg-gray-600 text-white font-medium py-2 px-4 rounded-lg transition-all duration-200 flex items-center space-x-2 text-sm"
-                  >
-                    <Calendar className="w-3 h-3" />
-                    <span>Calendar</span>
-                  </motion.button>
-                </div>
-              </div>
-            </div>
-          </motion.div>
-        ) : (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="mb-6"
-          >
-            <div className="bg-gradient-to-r from-red-500/10 to-orange-500/10 border border-red-500/20 rounded-xl p-4">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-3">
-                  <div className="w-8 h-8 bg-red-500 rounded-lg flex items-center justify-center">
-                    <X className="w-4 h-4 text-white" />
-                  </div>
-                  <div>
-                    <h4 className="text-white font-medium">Google Workspace Not Connected</h4>
-                    <p className="text-gray-300 text-sm">Connect to analyze your emails and calendar</p>
-                  </div>
-                </div>
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={handleConnectGoogle}
-                  className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-400 hover:to-purple-400 text-white font-medium py-2 px-4 rounded-lg transition-all duration-200 flex items-center space-x-2 text-sm"
-                >
-                  <ExternalLink className="w-3 h-3" />
-                  <span>Connect Google</span>
-                </motion.button>
-              </div>
-            </div>
-          </motion.div>
-        )}
 
         {/* Quick Suggestions */}
         {showSuggestions && messages.length === 0 && !showVoiceCommands && (

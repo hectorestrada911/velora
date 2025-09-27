@@ -202,6 +202,37 @@ export default function MobileSidebar({
                 </button>
               </div>
 
+              {/* Google Workspace Connection */}
+              <div className="mb-6">
+                {!isGoogleConnected ? (
+                  <button
+                    onClick={() => {
+                      onConnectGoogle?.()
+                      onClose()
+                    }}
+                    disabled={isConnectingGoogle}
+                    className="w-full flex items-center space-x-3 p-3 bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-400 hover:to-purple-400 disabled:opacity-50 text-white rounded-lg transition-colors"
+                  >
+                    {isConnectingGoogle ? (
+                      <>
+                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                        <span>Connecting...</span>
+                      </>
+                    ) : (
+                      <>
+                        <Mail className="w-5 h-5" />
+                        <span>Connect Google</span>
+                      </>
+                    )}
+                  </button>
+                ) : (
+                  <div className="w-full flex items-center space-x-3 p-3 bg-green-500/20 border border-green-500/30 text-green-400 rounded-lg">
+                    <CheckCircle className="w-5 h-5" />
+                    <span>Google Connected</span>
+                  </div>
+                )}
+              </div>
+
 
 
 
