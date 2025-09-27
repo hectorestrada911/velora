@@ -376,8 +376,11 @@ export default function AuthPage() {
               <h2 className="text-5xl xl:text-6xl font-bold text-white mb-6 leading-tight">
                 Never lose a <span className="text-transparent bg-clip-text bg-gradient-to-r from-electric-500 to-purple-500">thought</span> with <span className="text-transparent bg-clip-text bg-gradient-to-r from-electric-500 to-purple-500">Velora AI</span>
               </h2>
-              <p className="text-xl text-gray-300 mb-8 leading-relaxed">
-                Stop drowning in information. <span className="text-electric-400">Velora AI</span> remembers everything so you can focus on what matters most.
+              <p className="text-xl text-gray-300 mb-4 leading-relaxed">
+                Your AI-powered personal assistant that remembers everything, organizes your life, and helps you find information instantly.
+              </p>
+              <p className="text-lg text-gray-400 mb-8 leading-relaxed">
+                Stop drowning in information. <span className="text-electric-400">Velora AI</span> connects your emails, documents, and calendar to create your personal knowledge base.
               </p>
               
               {/* Call-to-Action Button - Desktop - Simplified to just Sign In */}
@@ -389,6 +392,10 @@ export default function AuthPage() {
                   <span>Sign In</span>
                   <ArrowRight className="w-5 h-5" />
                 </button>
+                <div className="flex items-center space-x-2 text-sm text-gray-400">
+                  <CheckCircle className="w-4 h-4 text-green-400" />
+                  <span>Free to try</span>
+                </div>
               </div>
             </div>
             
@@ -610,9 +617,17 @@ export default function AuthPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.6 }}
-              className="text-gray-300 text-base md:text-lg leading-relaxed mb-8"
+              className="text-gray-300 text-base md:text-lg leading-relaxed mb-4"
             >
-              Stop drowning in information. <span className="text-electric-400">Velora AI</span> remembers everything so you can focus on what matters most.
+              Your AI-powered personal assistant that remembers everything, organizes your life, and helps you find information instantly.
+            </motion.p>
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.7 }}
+              className="text-gray-400 text-sm md:text-base leading-relaxed mb-8"
+            >
+              Stop drowning in information. <span className="text-electric-400">Velora AI</span> connects your emails, documents, and calendar to create your personal knowledge base.
             </motion.p>
 
             {/* CTA Buttons - Simplified to just Sign In */}
@@ -629,10 +644,193 @@ export default function AuthPage() {
                 <span>Sign In</span>
                 <ArrowRight className="w-4 h-4" />
               </button>
+              <div className="flex items-center justify-center space-x-2 text-sm text-gray-400">
+                <CheckCircle className="w-4 h-4 text-green-400" />
+                <span>Free to try • Secure & Private</span>
+              </div>
             </motion.div>
           </div>
         </motion.div>
         </div>
+
+        {/* How It Works Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          viewport={{ once: true }}
+          className="mb-20 w-full"
+        >
+          <div className="max-w-6xl mx-auto px-4">
+            <div className="text-center mb-16">
+              <h3 className="text-4xl font-bold text-white mb-6">
+                How <span className="text-transparent bg-clip-text bg-gradient-to-r from-electric-500 to-purple-500">Velora</span> Works
+              </h3>
+              <p className="text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
+                Get started in 3 simple steps and transform how you manage information
+              </p>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              <motion.div
+                whileHover={{ scale: 1.05, y: -5 }}
+                className="bg-gradient-to-br from-gray-900/60 to-gray-800/40 rounded-2xl p-8 border border-electric-500/20 hover:border-electric-500/50 transition-all duration-300 backdrop-blur-sm text-center"
+              >
+                <motion.div
+                  animate={{ 
+                    scale: [1, 1.1, 1],
+                    rotate: [0, 5, -5, 0]
+                  }}
+                  transition={{ duration: 3, repeat: Infinity }}
+                  className="w-16 h-16 bg-gradient-to-br from-electric-500/30 to-blue-500/30 rounded-2xl flex items-center justify-center mb-6 mx-auto"
+                >
+                  <span className="text-2xl font-bold text-electric-400">1</span>
+                </motion.div>
+                <h4 className="text-xl font-bold text-white mb-4">
+                  Connect & Upload
+                </h4>
+                <p className="text-gray-300 text-base leading-relaxed">
+                  Connect your Google account and upload documents. Velora automatically organizes everything into your personal knowledge base.
+                </p>
+              </motion.div>
+              
+              <motion.div
+                whileHover={{ scale: 1.05, y: -5 }}
+                className="bg-gradient-to-br from-gray-900/60 to-gray-800/40 rounded-2xl p-8 border border-purple-500/20 hover:border-purple-500/50 transition-all duration-300 backdrop-blur-sm text-center"
+              >
+                <motion.div
+                  animate={{ 
+                    scale: [1, 1.1, 1],
+                    rotate: [0, -5, 5, 0]
+                  }}
+                  transition={{ duration: 3, repeat: Infinity, delay: 0.5 }}
+                  className="w-16 h-16 bg-gradient-to-br from-purple-500/30 to-pink-500/30 rounded-2xl flex items-center justify-center mb-6 mx-auto"
+                >
+                  <span className="text-2xl font-bold text-purple-400">2</span>
+                </motion.div>
+                <h4 className="text-xl font-bold text-white mb-4">
+                  Ask & Discover
+                </h4>
+                <p className="text-gray-300 text-base leading-relaxed">
+                  Chat with Velora naturally. Ask questions about your documents, schedule meetings, or get reminders. It understands context and provides instant answers.
+                </p>
+              </motion.div>
+              
+              <motion.div
+                whileHover={{ scale: 1.05, y: -5 }}
+                className="bg-gradient-to-br from-gray-900/60 to-gray-800/40 rounded-2xl p-8 border border-green-500/20 hover:border-green-500/50 transition-all duration-300 backdrop-blur-sm text-center"
+              >
+                <motion.div
+                  animate={{ 
+                    scale: [1, 1.1, 1],
+                    rotate: [0, 10, -10, 0]
+                  }}
+                  transition={{ duration: 3, repeat: Infinity, delay: 1 }}
+                  className="w-16 h-16 bg-gradient-to-br from-green-500/30 to-emerald-500/30 rounded-2xl flex items-center justify-center mb-6 mx-auto"
+                >
+                  <span className="text-2xl font-bold text-green-400">3</span>
+                </motion.div>
+                <h4 className="text-xl font-bold text-white mb-4">
+                  Organize & Remember
+                </h4>
+                <p className="text-gray-300 text-base leading-relaxed">
+                  Velora automatically creates calendar events, sets reminders, and organizes your information. Never lose important details again.
+                </p>
+              </motion.div>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* User Testimonials Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          viewport={{ once: true }}
+          className="mb-20 w-full"
+        >
+          <div className="max-w-6xl mx-auto px-4">
+            <div className="text-center mb-16">
+              <h3 className="text-4xl font-bold text-white mb-6">
+                Trusted by <span className="text-transparent bg-clip-text bg-gradient-to-r from-electric-500 to-purple-500">10,000+</span> Users
+              </h3>
+              <p className="text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
+                See how Velora is transforming how people manage their information
+              </p>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              <motion.div
+                whileHover={{ scale: 1.05, y: -5 }}
+                className="bg-gradient-to-br from-gray-900/60 to-gray-800/40 rounded-2xl p-8 border border-blue-500/20 hover:border-blue-500/50 transition-all duration-300 backdrop-blur-sm"
+              >
+                <div className="flex items-center mb-4">
+                  <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center mr-4">
+                    <span className="text-white font-bold text-lg">SC</span>
+                  </div>
+                  <div>
+                    <h4 className="text-white font-semibold">Sarah Chen</h4>
+                    <p className="text-gray-400 text-sm">Marketing Manager</p>
+                  </div>
+                </div>
+                <p className="text-gray-300 text-base leading-relaxed italic mb-4">
+                  "Velora saved me 2 hours daily by organizing my emails and documents automatically. I can finally focus on what matters most."
+                </p>
+                <div className="flex text-yellow-400">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="w-4 h-4 fill-current" />
+                  ))}
+                </div>
+              </motion.div>
+              
+              <motion.div
+                whileHover={{ scale: 1.05, y: -5 }}
+                className="bg-gradient-to-br from-gray-900/60 to-gray-800/40 rounded-2xl p-8 border border-purple-500/20 hover:border-purple-500/50 transition-all duration-300 backdrop-blur-sm"
+              >
+                <div className="flex items-center mb-4">
+                  <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center mr-4">
+                    <span className="text-white font-bold text-lg">MR</span>
+                  </div>
+                  <div>
+                    <h4 className="text-white font-semibold">Mike Rodriguez</h4>
+                    <p className="text-gray-400 text-sm">Software Engineer</p>
+                  </div>
+                </div>
+                <p className="text-gray-300 text-base leading-relaxed italic mb-4">
+                  "I never lose important information anymore. Velora is like having a personal assistant that remembers everything."
+                </p>
+                <div className="flex text-yellow-400">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="w-4 h-4 fill-current" />
+                  ))}
+                </div>
+              </motion.div>
+              
+              <motion.div
+                whileHover={{ scale: 1.05, y: -5 }}
+                className="bg-gradient-to-br from-gray-900/60 to-gray-800/40 rounded-2xl p-8 border border-green-500/20 hover:border-green-500/50 transition-all duration-300 backdrop-blur-sm"
+              >
+                <div className="flex items-center mb-4">
+                  <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full flex items-center justify-center mr-4">
+                    <span className="text-white font-bold text-lg">AL</span>
+                  </div>
+                  <div>
+                    <h4 className="text-white font-semibold">Alex Liu</h4>
+                    <p className="text-gray-400 text-sm">Product Manager</p>
+                  </div>
+                </div>
+                <p className="text-gray-300 text-base leading-relaxed italic mb-4">
+                  "The AI understands context perfectly. I can ask 'What did we decide in last week's meeting?' and get instant answers."
+                </p>
+                <div className="flex text-yellow-400">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="w-4 h-4 fill-current" />
+                  ))}
+                </div>
+              </motion.div>
+            </div>
+          </div>
+        </motion.div>
 
         {/* Feature Showcase Sections - Only visible on scroll */}
 
