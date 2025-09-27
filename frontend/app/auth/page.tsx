@@ -995,7 +995,7 @@ export default function AuthPage() {
           </div>
         </motion.div>
 
-        {/* Social Proof & Urgency Section */}
+        {/* MVP Value Proposition Section */}
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -1024,7 +1024,7 @@ export default function AuthPage() {
           </div>
 
           <div className="max-w-7xl mx-auto px-4 relative z-10">
-            {/* Urgency Header */}
+            {/* MVP Header */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -1038,24 +1038,24 @@ export default function AuthPage() {
                 transition={{ duration: 3, repeat: Infinity }}
                 className="inline-block mb-6"
               >
-                <span className="bg-gradient-to-r from-red-500 to-orange-500 text-white px-4 py-2 rounded-full text-sm font-semibold uppercase tracking-wide">
-                  ⚡ Limited Time: Free Forever Plan
+                <span className="bg-gradient-to-r from-green-500 to-emerald-500 text-white px-4 py-2 rounded-full text-sm font-semibold uppercase tracking-wide">
+                  🚀 Now in Beta - Free Access
                 </span>
               </motion.div>
               
               <h3 className="text-6xl font-bold text-white mb-6">
-                Join <motion.span 
+                Be Among the <motion.span 
                   animate={{
                     backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
                   }}
                   transition={{ duration: 4, repeat: Infinity }}
                   className="text-transparent bg-clip-text bg-gradient-to-r from-electric-500 via-purple-500 to-electric-500 bg-[length:200%_100%]"
                 >
-                  50,000+
-                </motion.span> Smart Users
+                  First
+                </motion.span> to Experience the Future
               </h3>
               <p className="text-2xl text-gray-300 max-w-4xl mx-auto leading-relaxed mb-8">
-                Students, professionals, and entrepreneurs are saving <span className="text-electric-400 font-semibold">10+ hours per week</span> with Velora
+                Join our beta and help shape the next generation of AI-powered productivity tools
               </p>
               
               <motion.div
@@ -1066,35 +1066,34 @@ export default function AuthPage() {
               >
                 <div className="flex items-center space-x-2">
                   <CheckCircle className="w-5 h-5 text-green-400" />
-                  <span>No credit card required</span>
+                  <span>Free during beta</span>
                 </div>
                 <div className="flex items-center space-x-2">
                   <CheckCircle className="w-5 h-5 text-green-400" />
-                  <span>Setup in 30 seconds</span>
+                  <span>Direct feedback to developers</span>
                 </div>
                 <div className="flex items-center space-x-2">
                   <CheckCircle className="w-5 h-5 text-green-400" />
-                  <span>Cancel anytime</span>
+                  <span>Early access to new features</span>
                 </div>
               </motion.div>
             </motion.div>
             
-            {/* Real User Stories */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-16">
-              {/* Student Success Story */}
+            {/* Problem & Solution Cards */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
+              {/* Problem Card */}
               <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
+                initial={{ opacity: 0, x: -50 }}
+                whileInView={{ opacity: 1, x: 0 }}
                 whileHover={{ 
-                  scale: 1.03, 
-                  y: -8,
-                  rotateY: 5,
+                  scale: 1.02, 
+                  y: -5,
                   transition: { duration: 0.3 }
                 }}
                 transition={{ duration: 0.6, delay: 0.1 }}
-                className="group relative bg-gradient-to-br from-gray-900/80 to-gray-800/60 rounded-3xl p-8 border border-blue-500/30 hover:border-blue-500/60 transition-all duration-500 backdrop-blur-sm overflow-hidden"
+                className="group relative bg-gradient-to-br from-red-900/20 to-red-800/10 rounded-3xl p-8 border border-red-500/30 hover:border-red-500/60 transition-all duration-500 backdrop-blur-sm overflow-hidden"
               >
-                <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-blue-500/10 via-purple-500/10 to-blue-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-sm" />
+                <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-red-500/5 via-orange-500/5 to-red-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-sm" />
                 <div className="absolute inset-[1px] rounded-3xl bg-gradient-to-br from-gray-900/80 to-gray-800/60" />
                 
                 <div className="relative z-10">
@@ -1102,123 +1101,73 @@ export default function AuthPage() {
                     <motion.div
                       whileHover={{ rotate: 360 }}
                       transition={{ duration: 0.6 }}
-                      className="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center mr-4 shadow-2xl"
+                      className="w-16 h-16 bg-gradient-to-r from-red-500 to-orange-500 rounded-full flex items-center justify-center mr-4 shadow-2xl"
                     >
-                      <span className="text-white font-bold text-xl">EM</span>
+                      <Target className="w-8 h-8 text-white" />
                     </motion.div>
                     <div>
-                      <h4 className="text-white font-bold text-lg">Emma Martinez</h4>
-                      <p className="text-gray-400 text-sm">Medical Student, Harvard</p>
-                      <div className="flex items-center mt-1">
-                        <TrendingUp className="w-4 h-4 text-green-400 mr-1" />
-                        <span className="text-green-400 text-sm font-semibold">+40% GPA Improvement</span>
-                      </div>
+                      <h4 className="text-white font-bold text-xl">The Problem</h4>
+                      <p className="text-gray-400 text-sm">Information Overload</p>
                     </div>
                   </div>
                   
-                  <motion.blockquote 
-                    whileHover={{ x: 5 }}
-                    className="text-gray-300 text-base leading-relaxed italic mb-6 relative"
-                  >
-                    <span className="text-4xl text-blue-400 absolute -top-2 -left-2">"</span>
-                    "I was drowning in 200+ pages of research papers. Velora helped me organize everything and find answers instantly. My grades went from B's to A's in one semester. It's like having a personal research assistant that never sleeps."
-                    <span className="text-4xl text-blue-400 absolute -bottom-4 -right-2">"</span>
-                  </motion.blockquote>
-                  
-                  <div className="flex items-center justify-between">
-                    <div className="flex text-yellow-400">
-                      {[...Array(5)].map((_, i) => (
-                        <motion.div
-                          key={i}
-                          initial={{ opacity: 0, scale: 0 }}
-                          whileInView={{ opacity: 1, scale: 1 }}
-                          transition={{ duration: 0.3, delay: 0.1 * i }}
-                        >
-                          <Star className="w-5 h-5 fill-current" />
-                        </motion.div>
-                      ))}
-                    </div>
-                    <span className="text-xs text-gray-500">Verified Student</span>
+                  <div className="space-y-4">
+                    <motion.div
+                      whileHover={{ x: 5 }}
+                      className="flex items-start space-x-3"
+                    >
+                      <div className="w-2 h-2 bg-red-400 rounded-full mt-2 flex-shrink-0" />
+                      <p className="text-gray-300 text-base leading-relaxed">
+                        <span className="text-red-400 font-semibold">Drowning in documents:</span> Research papers, meeting notes, emails scattered everywhere
+                      </p>
+                    </motion.div>
+                    
+                    <motion.div
+                      whileHover={{ x: 5 }}
+                      className="flex items-start space-x-3"
+                    >
+                      <div className="w-2 h-2 bg-red-400 rounded-full mt-2 flex-shrink-0" />
+                      <p className="text-gray-300 text-base leading-relaxed">
+                        <span className="text-red-400 font-semibold">Wasting time searching:</span> Hours spent looking for that one important detail
+                      </p>
+                    </motion.div>
+                    
+                    <motion.div
+                      whileHover={{ x: 5 }}
+                      className="flex items-start space-x-3"
+                    >
+                      <div className="w-2 h-2 bg-red-400 rounded-full mt-2 flex-shrink-0" />
+                      <p className="text-gray-300 text-base leading-relaxed">
+                        <span className="text-red-400 font-semibold">Missing deadlines:</span> Important tasks buried in the chaos of information
+                      </p>
+                    </motion.div>
+                    
+                    <motion.div
+                      whileHover={{ x: 5 }}
+                      className="flex items-start space-x-3"
+                    >
+                      <div className="w-2 h-2 bg-red-400 rounded-full mt-2 flex-shrink-0" />
+                      <p className="text-gray-300 text-base leading-relaxed">
+                        <span className="text-red-400 font-semibold">Mental fatigue:</span> Constantly switching between tools and contexts
+                      </p>
+                    </motion.div>
                   </div>
                 </div>
               </motion.div>
               
-              {/* Professional Success Story */}
+              {/* Solution Card */}
               <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
+                initial={{ opacity: 0, x: 50 }}
+                whileInView={{ opacity: 1, x: 0 }}
                 whileHover={{ 
-                  scale: 1.03, 
-                  y: -8,
-                  rotateY: -5,
+                  scale: 1.02, 
+                  y: -5,
                   transition: { duration: 0.3 }
                 }}
                 transition={{ duration: 0.6, delay: 0.2 }}
-                className="group relative bg-gradient-to-br from-gray-900/80 to-gray-800/60 rounded-3xl p-8 border border-purple-500/30 hover:border-purple-500/60 transition-all duration-500 backdrop-blur-sm overflow-hidden"
+                className="group relative bg-gradient-to-br from-green-900/20 to-emerald-800/10 rounded-3xl p-8 border border-green-500/30 hover:border-green-500/60 transition-all duration-500 backdrop-blur-sm overflow-hidden"
               >
-                <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-purple-500/10 via-pink-500/10 to-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-sm" />
-                <div className="absolute inset-[1px] rounded-3xl bg-gradient-to-br from-gray-900/80 to-gray-800/60" />
-                
-                <div className="relative z-10">
-                  <div className="flex items-center mb-6">
-                    <motion.div
-                      whileHover={{ rotate: 360 }}
-                      transition={{ duration: 0.6 }}
-                      className="w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center mr-4 shadow-2xl"
-                    >
-                      <span className="text-white font-bold text-xl">DR</span>
-                    </motion.div>
-                    <div>
-                      <h4 className="text-white font-bold text-lg">David Rodriguez</h4>
-                      <p className="text-gray-400 text-sm">Senior Consultant, McKinsey</p>
-                      <div className="flex items-center mt-1">
-                        <TrendingUp className="w-4 h-4 text-green-400 mr-1" />
-                        <span className="text-green-400 text-sm font-semibold">$50K+ Saved Annually</span>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <motion.blockquote 
-                    whileHover={{ x: 5 }}
-                    className="text-gray-300 text-base leading-relaxed italic mb-6 relative"
-                  >
-                    <span className="text-4xl text-purple-400 absolute -top-2 -left-2">"</span>
-                    "I was spending 15+ hours weekly just organizing client documents and meeting notes. Velora cut that to 2 hours. My productivity skyrocketed, and I landed 3 major clients this quarter. It's not just a tool—it's a competitive advantage."
-                    <span className="text-4xl text-purple-400 absolute -bottom-4 -right-2">"</span>
-                  </motion.blockquote>
-                  
-                  <div className="flex items-center justify-between">
-                    <div className="flex text-yellow-400">
-                      {[...Array(5)].map((_, i) => (
-                        <motion.div
-                          key={i}
-                          initial={{ opacity: 0, scale: 0 }}
-                          whileInView={{ opacity: 1, scale: 1 }}
-                          transition={{ duration: 0.3, delay: 0.1 * i }}
-                        >
-                          <Star className="w-5 h-5 fill-current" />
-                        </motion.div>
-                      ))}
-                    </div>
-                    <span className="text-xs text-gray-500">Verified Professional</span>
-                  </div>
-                </div>
-              </motion.div>
-              
-              {/* Entrepreneur Success Story */}
-              <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                whileHover={{ 
-                  scale: 1.03, 
-                  y: -8,
-                  rotateY: 5,
-                  transition: { duration: 0.3 }
-                }}
-                transition={{ duration: 0.6, delay: 0.3 }}
-                className="group relative bg-gradient-to-br from-gray-900/80 to-gray-800/60 rounded-3xl p-8 border border-green-500/30 hover:border-green-500/60 transition-all duration-500 backdrop-blur-sm overflow-hidden"
-              >
-                <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-green-500/10 via-emerald-500/10 to-green-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-sm" />
+                <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-green-500/5 via-emerald-500/5 to-green-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-sm" />
                 <div className="absolute inset-[1px] rounded-3xl bg-gradient-to-br from-gray-900/80 to-gray-800/60" />
                 
                 <div className="relative z-10">
@@ -1228,107 +1177,115 @@ export default function AuthPage() {
                       transition={{ duration: 0.6 }}
                       className="w-16 h-16 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full flex items-center justify-center mr-4 shadow-2xl"
                     >
-                      <span className="text-white font-bold text-xl">AL</span>
+                      <Lightbulb className="w-8 h-8 text-white" />
                     </motion.div>
                     <div>
-                      <h4 className="text-white font-bold text-lg">Alex Liu</h4>
-                      <p className="text-gray-400 text-sm">Startup Founder, Y Combinator</p>
-                      <div className="flex items-center mt-1">
-                        <TrendingUp className="w-4 h-4 text-green-400 mr-1" />
-                        <span className="text-green-400 text-sm font-semibold">$2M+ Series A Raised</span>
-                      </div>
+                      <h4 className="text-white font-bold text-xl">The Solution</h4>
+                      <p className="text-gray-400 text-sm">Velora AI</p>
                     </div>
                   </div>
                   
-                  <motion.blockquote 
-                    whileHover={{ x: 5 }}
-                    className="text-gray-300 text-base leading-relaxed italic mb-6 relative"
-                  >
-                    <span className="text-4xl text-green-400 absolute -top-2 -left-2">"</span>
-                    "As a solo founder, I was overwhelmed with investor decks, legal docs, and market research. Velora helped me organize everything and answer investor questions instantly. We closed our Series A in record time. This tool is a game-changer for entrepreneurs."
-                    <span className="text-4xl text-green-400 absolute -bottom-4 -right-2">"</span>
-                  </motion.blockquote>
-                  
-                  <div className="flex items-center justify-between">
-                    <div className="flex text-yellow-400">
-                      {[...Array(5)].map((_, i) => (
-                        <motion.div
-                          key={i}
-                          initial={{ opacity: 0, scale: 0 }}
-                          whileInView={{ opacity: 1, scale: 1 }}
-                          transition={{ duration: 0.3, delay: 0.1 * i }}
-                        >
-                          <Star className="w-5 h-5 fill-current" />
-                        </motion.div>
-                      ))}
-                    </div>
-                    <span className="text-xs text-gray-500">Verified Founder</span>
+                  <div className="space-y-4">
+                    <motion.div
+                      whileHover={{ x: 5 }}
+                      className="flex items-start space-x-3"
+                    >
+                      <div className="w-2 h-2 bg-green-400 rounded-full mt-2 flex-shrink-0" />
+                      <p className="text-gray-300 text-base leading-relaxed">
+                        <span className="text-green-400 font-semibold">Unified knowledge base:</span> All your documents, emails, and notes in one intelligent system
+                      </p>
+                    </motion.div>
+                    
+                    <motion.div
+                      whileHover={{ x: 5 }}
+                      className="flex items-start space-x-3"
+                    >
+                      <div className="w-2 h-2 bg-green-400 rounded-full mt-2 flex-shrink-0" />
+                      <p className="text-gray-300 text-base leading-relaxed">
+                        <span className="text-green-400 font-semibold">Instant answers:</span> Ask questions in natural language and get precise results
+                      </p>
+                    </motion.div>
+                    
+                    <motion.div
+                      whileHover={{ x: 5 }}
+                      className="flex items-start space-x-3"
+                    >
+                      <div className="w-2 h-2 bg-green-400 rounded-full mt-2 flex-shrink-0" />
+                      <p className="text-gray-300 text-base leading-relaxed">
+                        <span className="text-green-400 font-semibold">Smart automation:</span> Calendar events, reminders, and tasks created automatically
+                      </p>
+                    </motion.div>
+                    
+                    <motion.div
+                      whileHover={{ x: 5 }}
+                      className="flex items-start space-x-3"
+                    >
+                      <div className="w-2 h-2 bg-green-400 rounded-full mt-2 flex-shrink-0" />
+                      <p className="text-gray-300 text-base leading-relaxed">
+                        <span className="text-green-400 font-semibold">Context awareness:</span> Understands your work patterns and adapts to your needs
+                      </p>
+                    </motion.div>
                   </div>
                 </div>
               </motion.div>
             </div>
 
-            {/* Social Proof Stats */}
+            {/* Beta Benefits */}
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.4 }}
-              className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center"
+              className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center mb-16"
             >
               <motion.div
                 whileHover={{ scale: 1.05 }}
-                className="bg-gradient-to-br from-gray-900/60 to-gray-800/40 rounded-2xl p-6 border border-electric-500/20 hover:border-electric-500/50 transition-all duration-300"
+                className="bg-gradient-to-br from-gray-900/60 to-gray-800/40 rounded-2xl p-8 border border-electric-500/20 hover:border-electric-500/50 transition-all duration-300"
               >
                 <motion.div
                   animate={{ scale: [1, 1.1, 1] }}
                   transition={{ duration: 2, repeat: Infinity }}
-                  className="text-3xl font-bold text-electric-400 mb-2"
+                  className="w-16 h-16 bg-gradient-to-r from-electric-500 to-blue-500 rounded-full flex items-center justify-center mx-auto mb-4"
                 >
-                  50K+
+                  <Rocket className="w-8 h-8 text-white" />
                 </motion.div>
-                <p className="text-gray-300 text-sm">Active Users</p>
+                <h4 className="text-white font-bold text-lg mb-3">Early Access</h4>
+                <p className="text-gray-300 text-sm leading-relaxed">
+                  Be among the first to experience cutting-edge AI technology before it goes mainstream
+                </p>
               </motion.div>
               
               <motion.div
                 whileHover={{ scale: 1.05 }}
-                className="bg-gradient-to-br from-gray-900/60 to-gray-800/40 rounded-2xl p-6 border border-purple-500/20 hover:border-purple-500/50 transition-all duration-300"
+                className="bg-gradient-to-br from-gray-900/60 to-gray-800/40 rounded-2xl p-8 border border-purple-500/20 hover:border-purple-500/50 transition-all duration-300"
               >
                 <motion.div
                   animate={{ scale: [1, 1.1, 1] }}
                   transition={{ duration: 2, repeat: Infinity, delay: 0.5 }}
-                  className="text-3xl font-bold text-purple-400 mb-2"
+                  className="w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center mx-auto mb-4"
                 >
-                  10M+
+                  <Users className="w-8 h-8 text-white" />
                 </motion.div>
-                <p className="text-gray-300 text-sm">Documents Processed</p>
+                <h4 className="text-white font-bold text-lg mb-3">Shape the Product</h4>
+                <p className="text-gray-300 text-sm leading-relaxed">
+                  Your feedback directly influences new features and improvements. Help us build the perfect tool for you
+                </p>
               </motion.div>
               
               <motion.div
                 whileHover={{ scale: 1.05 }}
-                className="bg-gradient-to-br from-gray-900/60 to-gray-800/40 rounded-2xl p-6 border border-green-500/20 hover:border-green-500/50 transition-all duration-300"
+                className="bg-gradient-to-br from-gray-900/60 to-gray-800/40 rounded-2xl p-8 border border-green-500/20 hover:border-green-500/50 transition-all duration-300"
               >
                 <motion.div
                   animate={{ scale: [1, 1.1, 1] }}
                   transition={{ duration: 2, repeat: Infinity, delay: 1 }}
-                  className="text-3xl font-bold text-green-400 mb-2"
+                  className="w-16 h-16 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full flex items-center justify-center mx-auto mb-4"
                 >
-                  4.9★
+                  <Crown className="w-8 h-8 text-white" />
                 </motion.div>
-                <p className="text-gray-300 text-sm">User Rating</p>
-              </motion.div>
-              
-              <motion.div
-                whileHover={{ scale: 1.05 }}
-                className="bg-gradient-to-br from-gray-900/60 to-gray-800/40 rounded-2xl p-6 border border-yellow-500/20 hover:border-yellow-500/50 transition-all duration-300"
-              >
-                <motion.div
-                  animate={{ scale: [1, 1.1, 1] }}
-                  transition={{ duration: 2, repeat: Infinity, delay: 1.5 }}
-                  className="text-3xl font-bold text-yellow-400 mb-2"
-                >
-                  15hrs
-                </motion.div>
-                <p className="text-gray-300 text-sm">Saved Weekly</p>
+                <h4 className="text-white font-bold text-lg mb-3">Beta Perks</h4>
+                <p className="text-gray-300 text-sm leading-relaxed">
+                  Free access during beta, priority support, and special pricing when we launch publicly
+                </p>
               </motion.div>
             </motion.div>
 
@@ -1337,13 +1294,13 @@ export default function AuthPage() {
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.6 }}
-              className="text-center mt-16"
+              className="text-center"
             >
               <motion.p
                 whileHover={{ scale: 1.02 }}
                 className="text-xl text-gray-300 mb-8"
               >
-                Don't let information overwhelm you. Join thousands who've already transformed their productivity.
+                Ready to revolutionize how you manage information? Join our beta and be part of the future.
               </motion.p>
               
               <motion.div
@@ -1366,7 +1323,7 @@ export default function AuthPage() {
                     transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
                     className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
                   />
-                  <span className="relative z-10">Start Your Transformation</span>
+                  <span className="relative z-10">Join Beta Now</span>
                   <motion.div
                     whileHover={{ x: 5 }}
                     className="relative z-10"
@@ -1377,7 +1334,7 @@ export default function AuthPage() {
               </motion.div>
               
               <p className="text-sm text-gray-500 mt-4">
-                ⚡ Setup takes 30 seconds • No credit card required • Cancel anytime
+                🚀 Free during beta • Direct developer access • Help shape the future
               </p>
             </motion.div>
           </div>
