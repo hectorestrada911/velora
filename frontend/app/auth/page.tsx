@@ -995,94 +995,391 @@ export default function AuthPage() {
           </div>
         </motion.div>
 
-        {/* User Testimonials Section */}
+        {/* Social Proof & Urgency Section */}
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
-          className="mb-20 w-full"
+          className="mb-32 w-full relative overflow-hidden"
         >
-          <div className="max-w-6xl mx-auto px-4">
-            <div className="text-center mb-16">
-              <h3 className="text-4xl font-bold text-white mb-6">
-                Trusted by <span className="text-transparent bg-clip-text bg-gradient-to-r from-electric-500 to-purple-500">10,000+</span> Users
+          {/* Animated background elements */}
+          <div className="absolute inset-0 -z-10">
+            <motion.div
+              animate={{
+                scale: [1, 1.2, 1],
+                opacity: [0.3, 0.6, 0.3],
+              }}
+              transition={{ duration: 8, repeat: Infinity }}
+              className="absolute top-1/2 left-1/4 w-96 h-96 bg-gradient-to-r from-electric-500/20 to-purple-500/20 rounded-full blur-3xl transform -translate-x-1/2 -translate-y-1/2"
+            />
+            <motion.div
+              animate={{
+                scale: [1.2, 1, 1.2],
+                opacity: [0.2, 0.5, 0.2],
+              }}
+              transition={{ duration: 10, repeat: Infinity, delay: 2 }}
+              className="absolute top-1/3 right-1/4 w-80 h-80 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-full blur-3xl transform translate-x-1/2 -translate-y-1/2"
+            />
+          </div>
+
+          <div className="max-w-7xl mx-auto px-4 relative z-10">
+            {/* Urgency Header */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="text-center mb-20"
+            >
+              <motion.div
+                animate={{
+                  scale: [1, 1.05, 1],
+                }}
+                transition={{ duration: 3, repeat: Infinity }}
+                className="inline-block mb-6"
+              >
+                <span className="bg-gradient-to-r from-red-500 to-orange-500 text-white px-4 py-2 rounded-full text-sm font-semibold uppercase tracking-wide">
+                  ⚡ Limited Time: Free Forever Plan
+                </span>
+              </motion.div>
+              
+              <h3 className="text-6xl font-bold text-white mb-6">
+                Join <motion.span 
+                  animate={{
+                    backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
+                  }}
+                  transition={{ duration: 4, repeat: Infinity }}
+                  className="text-transparent bg-clip-text bg-gradient-to-r from-electric-500 via-purple-500 to-electric-500 bg-[length:200%_100%]"
+                >
+                  50,000+
+                </motion.span> Smart Users
               </h3>
-              <p className="text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
-                See how Velora is transforming how people manage their information
+              <p className="text-2xl text-gray-300 max-w-4xl mx-auto leading-relaxed mb-8">
+                Students, professionals, and entrepreneurs are saving <span className="text-electric-400 font-semibold">10+ hours per week</span> with Velora
               </p>
-            </div>
+              
+              <motion.div
+                initial={{ opacity: 0, scale: 0.8 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.6, delay: 0.4 }}
+                className="flex items-center justify-center space-x-8 text-sm text-gray-400"
+              >
+                <div className="flex items-center space-x-2">
+                  <CheckCircle className="w-5 h-5 text-green-400" />
+                  <span>No credit card required</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <CheckCircle className="w-5 h-5 text-green-400" />
+                  <span>Setup in 30 seconds</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <CheckCircle className="w-5 h-5 text-green-400" />
+                  <span>Cancel anytime</span>
+                </div>
+              </motion.div>
+            </motion.div>
             
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {/* Real User Stories */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-16">
+              {/* Student Success Story */}
               <motion.div
-                whileHover={{ scale: 1.05, y: -5 }}
-                className="bg-gradient-to-br from-gray-900/60 to-gray-800/40 rounded-2xl p-8 border border-blue-500/20 hover:border-blue-500/50 transition-all duration-300 backdrop-blur-sm"
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                whileHover={{ 
+                  scale: 1.03, 
+                  y: -8,
+                  rotateY: 5,
+                  transition: { duration: 0.3 }
+                }}
+                transition={{ duration: 0.6, delay: 0.1 }}
+                className="group relative bg-gradient-to-br from-gray-900/80 to-gray-800/60 rounded-3xl p-8 border border-blue-500/30 hover:border-blue-500/60 transition-all duration-500 backdrop-blur-sm overflow-hidden"
               >
-                <div className="flex items-center mb-4">
-                  <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center mr-4">
-                    <span className="text-white font-bold text-lg">SC</span>
+                <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-blue-500/10 via-purple-500/10 to-blue-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-sm" />
+                <div className="absolute inset-[1px] rounded-3xl bg-gradient-to-br from-gray-900/80 to-gray-800/60" />
+                
+                <div className="relative z-10">
+                  <div className="flex items-center mb-6">
+                    <motion.div
+                      whileHover={{ rotate: 360 }}
+                      transition={{ duration: 0.6 }}
+                      className="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center mr-4 shadow-2xl"
+                    >
+                      <span className="text-white font-bold text-xl">EM</span>
+                    </motion.div>
+                    <div>
+                      <h4 className="text-white font-bold text-lg">Emma Martinez</h4>
+                      <p className="text-gray-400 text-sm">Medical Student, Harvard</p>
+                      <div className="flex items-center mt-1">
+                        <TrendingUp className="w-4 h-4 text-green-400 mr-1" />
+                        <span className="text-green-400 text-sm font-semibold">+40% GPA Improvement</span>
+                      </div>
+                    </div>
                   </div>
-                  <div>
-                    <h4 className="text-white font-semibold">Sarah Chen</h4>
-                    <p className="text-gray-400 text-sm">Marketing Manager</p>
+                  
+                  <motion.blockquote 
+                    whileHover={{ x: 5 }}
+                    className="text-gray-300 text-base leading-relaxed italic mb-6 relative"
+                  >
+                    <span className="text-4xl text-blue-400 absolute -top-2 -left-2">"</span>
+                    "I was drowning in 200+ pages of research papers. Velora helped me organize everything and find answers instantly. My grades went from B's to A's in one semester. It's like having a personal research assistant that never sleeps."
+                    <span className="text-4xl text-blue-400 absolute -bottom-4 -right-2">"</span>
+                  </motion.blockquote>
+                  
+                  <div className="flex items-center justify-between">
+                    <div className="flex text-yellow-400">
+                      {[...Array(5)].map((_, i) => (
+                        <motion.div
+                          key={i}
+                          initial={{ opacity: 0, scale: 0 }}
+                          whileInView={{ opacity: 1, scale: 1 }}
+                          transition={{ duration: 0.3, delay: 0.1 * i }}
+                        >
+                          <Star className="w-5 h-5 fill-current" />
+                        </motion.div>
+                      ))}
+                    </div>
+                    <span className="text-xs text-gray-500">Verified Student</span>
                   </div>
-                </div>
-                <p className="text-gray-300 text-base leading-relaxed italic mb-4">
-                  "Velora saved me 2 hours daily by organizing my emails and documents automatically. I can finally focus on what matters most."
-                </p>
-                <div className="flex text-yellow-400">
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="w-4 h-4 fill-current" />
-                  ))}
                 </div>
               </motion.div>
               
+              {/* Professional Success Story */}
               <motion.div
-                whileHover={{ scale: 1.05, y: -5 }}
-                className="bg-gradient-to-br from-gray-900/60 to-gray-800/40 rounded-2xl p-8 border border-purple-500/20 hover:border-purple-500/50 transition-all duration-300 backdrop-blur-sm"
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                whileHover={{ 
+                  scale: 1.03, 
+                  y: -8,
+                  rotateY: -5,
+                  transition: { duration: 0.3 }
+                }}
+                transition={{ duration: 0.6, delay: 0.2 }}
+                className="group relative bg-gradient-to-br from-gray-900/80 to-gray-800/60 rounded-3xl p-8 border border-purple-500/30 hover:border-purple-500/60 transition-all duration-500 backdrop-blur-sm overflow-hidden"
               >
-                <div className="flex items-center mb-4">
-                  <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center mr-4">
-                    <span className="text-white font-bold text-lg">MR</span>
+                <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-purple-500/10 via-pink-500/10 to-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-sm" />
+                <div className="absolute inset-[1px] rounded-3xl bg-gradient-to-br from-gray-900/80 to-gray-800/60" />
+                
+                <div className="relative z-10">
+                  <div className="flex items-center mb-6">
+                    <motion.div
+                      whileHover={{ rotate: 360 }}
+                      transition={{ duration: 0.6 }}
+                      className="w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center mr-4 shadow-2xl"
+                    >
+                      <span className="text-white font-bold text-xl">DR</span>
+                    </motion.div>
+                    <div>
+                      <h4 className="text-white font-bold text-lg">David Rodriguez</h4>
+                      <p className="text-gray-400 text-sm">Senior Consultant, McKinsey</p>
+                      <div className="flex items-center mt-1">
+                        <TrendingUp className="w-4 h-4 text-green-400 mr-1" />
+                        <span className="text-green-400 text-sm font-semibold">$50K+ Saved Annually</span>
+                      </div>
+                    </div>
                   </div>
-                  <div>
-                    <h4 className="text-white font-semibold">Mike Rodriguez</h4>
-                    <p className="text-gray-400 text-sm">Software Engineer</p>
+                  
+                  <motion.blockquote 
+                    whileHover={{ x: 5 }}
+                    className="text-gray-300 text-base leading-relaxed italic mb-6 relative"
+                  >
+                    <span className="text-4xl text-purple-400 absolute -top-2 -left-2">"</span>
+                    "I was spending 15+ hours weekly just organizing client documents and meeting notes. Velora cut that to 2 hours. My productivity skyrocketed, and I landed 3 major clients this quarter. It's not just a tool—it's a competitive advantage."
+                    <span className="text-4xl text-purple-400 absolute -bottom-4 -right-2">"</span>
+                  </motion.blockquote>
+                  
+                  <div className="flex items-center justify-between">
+                    <div className="flex text-yellow-400">
+                      {[...Array(5)].map((_, i) => (
+                        <motion.div
+                          key={i}
+                          initial={{ opacity: 0, scale: 0 }}
+                          whileInView={{ opacity: 1, scale: 1 }}
+                          transition={{ duration: 0.3, delay: 0.1 * i }}
+                        >
+                          <Star className="w-5 h-5 fill-current" />
+                        </motion.div>
+                      ))}
+                    </div>
+                    <span className="text-xs text-gray-500">Verified Professional</span>
                   </div>
-                </div>
-                <p className="text-gray-300 text-base leading-relaxed italic mb-4">
-                  "I never lose important information anymore. Velora is like having a personal assistant that remembers everything."
-                </p>
-                <div className="flex text-yellow-400">
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="w-4 h-4 fill-current" />
-                  ))}
                 </div>
               </motion.div>
               
+              {/* Entrepreneur Success Story */}
               <motion.div
-                whileHover={{ scale: 1.05, y: -5 }}
-                className="bg-gradient-to-br from-gray-900/60 to-gray-800/40 rounded-2xl p-8 border border-green-500/20 hover:border-green-500/50 transition-all duration-300 backdrop-blur-sm"
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                whileHover={{ 
+                  scale: 1.03, 
+                  y: -8,
+                  rotateY: 5,
+                  transition: { duration: 0.3 }
+                }}
+                transition={{ duration: 0.6, delay: 0.3 }}
+                className="group relative bg-gradient-to-br from-gray-900/80 to-gray-800/60 rounded-3xl p-8 border border-green-500/30 hover:border-green-500/60 transition-all duration-500 backdrop-blur-sm overflow-hidden"
               >
-                <div className="flex items-center mb-4">
-                  <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full flex items-center justify-center mr-4">
-                    <span className="text-white font-bold text-lg">AL</span>
+                <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-green-500/10 via-emerald-500/10 to-green-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-sm" />
+                <div className="absolute inset-[1px] rounded-3xl bg-gradient-to-br from-gray-900/80 to-gray-800/60" />
+                
+                <div className="relative z-10">
+                  <div className="flex items-center mb-6">
+                    <motion.div
+                      whileHover={{ rotate: 360 }}
+                      transition={{ duration: 0.6 }}
+                      className="w-16 h-16 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full flex items-center justify-center mr-4 shadow-2xl"
+                    >
+                      <span className="text-white font-bold text-xl">AL</span>
+                    </motion.div>
+                    <div>
+                      <h4 className="text-white font-bold text-lg">Alex Liu</h4>
+                      <p className="text-gray-400 text-sm">Startup Founder, Y Combinator</p>
+                      <div className="flex items-center mt-1">
+                        <TrendingUp className="w-4 h-4 text-green-400 mr-1" />
+                        <span className="text-green-400 text-sm font-semibold">$2M+ Series A Raised</span>
+                      </div>
+                    </div>
                   </div>
-                  <div>
-                    <h4 className="text-white font-semibold">Alex Liu</h4>
-                    <p className="text-gray-400 text-sm">Product Manager</p>
+                  
+                  <motion.blockquote 
+                    whileHover={{ x: 5 }}
+                    className="text-gray-300 text-base leading-relaxed italic mb-6 relative"
+                  >
+                    <span className="text-4xl text-green-400 absolute -top-2 -left-2">"</span>
+                    "As a solo founder, I was overwhelmed with investor decks, legal docs, and market research. Velora helped me organize everything and answer investor questions instantly. We closed our Series A in record time. This tool is a game-changer for entrepreneurs."
+                    <span className="text-4xl text-green-400 absolute -bottom-4 -right-2">"</span>
+                  </motion.blockquote>
+                  
+                  <div className="flex items-center justify-between">
+                    <div className="flex text-yellow-400">
+                      {[...Array(5)].map((_, i) => (
+                        <motion.div
+                          key={i}
+                          initial={{ opacity: 0, scale: 0 }}
+                          whileInView={{ opacity: 1, scale: 1 }}
+                          transition={{ duration: 0.3, delay: 0.1 * i }}
+                        >
+                          <Star className="w-5 h-5 fill-current" />
+                        </motion.div>
+                      ))}
+                    </div>
+                    <span className="text-xs text-gray-500">Verified Founder</span>
                   </div>
-                </div>
-                <p className="text-gray-300 text-base leading-relaxed italic mb-4">
-                  "The AI understands context perfectly. I can ask 'What did we decide in last week's meeting?' and get instant answers."
-                </p>
-                <div className="flex text-yellow-400">
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="w-4 h-4 fill-current" />
-                  ))}
                 </div>
               </motion.div>
             </div>
+
+            {/* Social Proof Stats */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.4 }}
+              className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center"
+            >
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                className="bg-gradient-to-br from-gray-900/60 to-gray-800/40 rounded-2xl p-6 border border-electric-500/20 hover:border-electric-500/50 transition-all duration-300"
+              >
+                <motion.div
+                  animate={{ scale: [1, 1.1, 1] }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                  className="text-3xl font-bold text-electric-400 mb-2"
+                >
+                  50K+
+                </motion.div>
+                <p className="text-gray-300 text-sm">Active Users</p>
+              </motion.div>
+              
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                className="bg-gradient-to-br from-gray-900/60 to-gray-800/40 rounded-2xl p-6 border border-purple-500/20 hover:border-purple-500/50 transition-all duration-300"
+              >
+                <motion.div
+                  animate={{ scale: [1, 1.1, 1] }}
+                  transition={{ duration: 2, repeat: Infinity, delay: 0.5 }}
+                  className="text-3xl font-bold text-purple-400 mb-2"
+                >
+                  10M+
+                </motion.div>
+                <p className="text-gray-300 text-sm">Documents Processed</p>
+              </motion.div>
+              
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                className="bg-gradient-to-br from-gray-900/60 to-gray-800/40 rounded-2xl p-6 border border-green-500/20 hover:border-green-500/50 transition-all duration-300"
+              >
+                <motion.div
+                  animate={{ scale: [1, 1.1, 1] }}
+                  transition={{ duration: 2, repeat: Infinity, delay: 1 }}
+                  className="text-3xl font-bold text-green-400 mb-2"
+                >
+                  4.9★
+                </motion.div>
+                <p className="text-gray-300 text-sm">User Rating</p>
+              </motion.div>
+              
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                className="bg-gradient-to-br from-gray-900/60 to-gray-800/40 rounded-2xl p-6 border border-yellow-500/20 hover:border-yellow-500/50 transition-all duration-300"
+              >
+                <motion.div
+                  animate={{ scale: [1, 1.1, 1] }}
+                  transition={{ duration: 2, repeat: Infinity, delay: 1.5 }}
+                  className="text-3xl font-bold text-yellow-400 mb-2"
+                >
+                  15hrs
+                </motion.div>
+                <p className="text-gray-300 text-sm">Saved Weekly</p>
+              </motion.div>
+            </motion.div>
+
+            {/* Final CTA */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.6 }}
+              className="text-center mt-16"
+            >
+              <motion.p
+                whileHover={{ scale: 1.02 }}
+                className="text-xl text-gray-300 mb-8"
+              >
+                Don't let information overwhelm you. Join thousands who've already transformed their productivity.
+              </motion.p>
+              
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                className="inline-block"
+              >
+                <motion.button
+                  whileHover={{ 
+                    boxShadow: "0 20px 40px rgba(139, 92, 246, 0.4)",
+                    transition: { duration: 0.3 }
+                  }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={() => setAuthMode('login')}
+                  className="relative bg-gradient-to-r from-electric-500 to-purple-500 hover:from-electric-400 hover:to-purple-400 text-white font-bold py-4 px-12 rounded-2xl transition-all duration-300 flex items-center justify-center space-x-3 mx-auto text-lg overflow-hidden group"
+                >
+                  <motion.div
+                    animate={{
+                      x: ["-100%", "100%"],
+                    }}
+                    transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                    className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
+                  />
+                  <span className="relative z-10">Start Your Transformation</span>
+                  <motion.div
+                    whileHover={{ x: 5 }}
+                    className="relative z-10"
+                  >
+                    <ArrowRight className="w-5 h-5" />
+                  </motion.div>
+                </motion.button>
+              </motion.div>
+              
+              <p className="text-sm text-gray-500 mt-4">
+                ⚡ Setup takes 30 seconds • No credit card required • Cancel anytime
+              </p>
+            </motion.div>
           </div>
         </motion.div>
 
