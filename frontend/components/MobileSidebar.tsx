@@ -189,6 +189,17 @@ export default function MobileSidebar({
                   <Mic className="w-5 h-5" />
                   <span>Voice</span>
                 </button>
+                
+                <button
+                  onClick={() => {
+                    onToggleConversationHistory()
+                    onClose()
+                  }}
+                  className="w-full flex items-center space-x-3 p-3 text-gray-300 hover:text-white hover:bg-gray-800 rounded-lg transition-colors"
+                >
+                  <History className="w-5 h-5" />
+                  <span>History</span>
+                </button>
               </div>
 
 
