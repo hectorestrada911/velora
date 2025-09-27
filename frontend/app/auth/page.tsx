@@ -1137,7 +1137,7 @@ export default function AuthPage() {
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.4 }}
-              className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 lg:gap-12 mb-12 md:mb-20 px-4"
+              className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8 lg:gap-12 mb-8 md:mb-20 px-4"
             >
               {/* Card 1: Wasting Time */}
               <motion.div
@@ -1170,33 +1170,33 @@ export default function AuthPage() {
                   <div className="w-full h-full bg-gray-900 rounded-3xl" />
                 </motion.div>
                 
-                <div className="relative z-10 p-6 md:p-8 lg:p-10 text-center">
+                <div className="relative z-10 p-4 md:p-8 lg:p-10 text-center">
                   <motion.div
                     animate={{ 
                       rotate: [0, 15, -15, 0],
                       scale: [1, 1.1, 1]
                     }}
                     transition={{ duration: 4, repeat: Infinity }}
-                    className="w-16 h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 bg-gradient-to-r from-red-500 via-orange-500 to-red-500 rounded-full flex items-center justify-center mx-auto mb-4 md:mb-6 lg:mb-8 shadow-2xl relative"
+                    className="w-12 h-12 md:w-20 md:h-20 lg:w-24 lg:h-24 bg-gradient-to-r from-red-500 via-orange-500 to-red-500 rounded-full flex items-center justify-center mx-auto mb-3 md:mb-6 lg:mb-8 shadow-2xl relative"
                   >
                     <motion.div
                       animate={{ rotate: [0, 360] }}
                       transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
                       className="absolute inset-0 rounded-full bg-gradient-to-r from-red-500/50 to-orange-500/50 blur-md"
                     />
-                    <Clock className="w-8 h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 text-white relative z-10" />
+                    <Clock className="w-6 h-6 md:w-10 md:h-10 lg:w-12 lg:h-12 text-white relative z-10" />
                   </motion.div>
                   
                   <motion.h4 
                     whileHover={{ scale: 1.05, x: 5 }}
-                    className="text-white font-black text-lg md:text-xl lg:text-2xl mb-3 md:mb-4 lg:mb-6"
+                    className="text-white font-black text-base md:text-xl lg:text-2xl mb-2 md:mb-4 lg:mb-6"
                   >
                     Wasting 2+ Hours Daily
                   </motion.h4>
                   
                   <motion.p 
                     whileHover={{ scale: 1.02 }}
-                    className="text-gray-300 text-sm md:text-base lg:text-lg leading-relaxed"
+                    className="text-gray-300 text-xs md:text-base lg:text-lg leading-relaxed"
                   >
                     Searching through scattered documents, emails, and notes. That's <motion.span 
                       animate={{
@@ -1246,33 +1246,33 @@ export default function AuthPage() {
                   <div className="w-full h-full bg-gray-900 rounded-3xl" />
                 </motion.div>
                 
-                <div className="relative z-10 p-6 md:p-8 lg:p-10 text-center">
+                <div className="relative z-10 p-4 md:p-8 lg:p-10 text-center">
                   <motion.div
                     animate={{ 
                       scale: [1, 1.2, 1],
                       rotate: [0, 5, -5, 0]
                     }}
                     transition={{ duration: 3, repeat: Infinity }}
-                    className="w-16 h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 bg-gradient-to-r from-orange-500 via-yellow-500 to-orange-500 rounded-full flex items-center justify-center mx-auto mb-4 md:mb-6 lg:mb-8 shadow-2xl relative"
+                    className="w-12 h-12 md:w-20 md:h-20 lg:w-24 lg:h-24 bg-gradient-to-r from-orange-500 via-yellow-500 to-orange-500 rounded-full flex items-center justify-center mx-auto mb-3 md:mb-6 lg:mb-8 shadow-2xl relative"
                   >
                     <motion.div
                       animate={{ scale: [1, 1.3, 1] }}
                       transition={{ duration: 2, repeat: Infinity }}
                       className="absolute inset-0 rounded-full bg-gradient-to-r from-orange-500/50 to-yellow-500/50 blur-md"
                     />
-                    <Target className="w-8 h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 text-white relative z-10" />
+                    <Target className="w-6 h-6 md:w-10 md:h-10 lg:w-12 lg:h-12 text-white relative z-10" />
                   </motion.div>
                   
                   <motion.h4 
                     whileHover={{ scale: 1.05, x: 5 }}
-                    className="text-white font-black text-lg md:text-xl lg:text-2xl mb-3 md:mb-4 lg:mb-6"
+                    className="text-white font-black text-base md:text-xl lg:text-2xl mb-2 md:mb-4 lg:mb-6"
                   >
                     Missing Critical Deadlines
                   </motion.h4>
                   
                   <motion.p 
                     whileHover={{ scale: 1.02 }}
-                    className="text-gray-300 text-sm md:text-base lg:text-lg leading-relaxed"
+                    className="text-gray-300 text-xs md:text-base lg:text-lg leading-relaxed"
                   >
                     Important tasks buried in information chaos. <motion.span 
                       animate={{
@@ -1322,33 +1322,33 @@ export default function AuthPage() {
                   <div className="w-full h-full bg-gray-900 rounded-3xl" />
                 </motion.div>
                 
-                <div className="relative z-10 p-6 md:p-8 lg:p-10 text-center">
+                <div className="relative z-10 p-4 md:p-8 lg:p-10 text-center">
                   <motion.div
                     animate={{ 
                       opacity: [0.7, 1, 0.7],
                       scale: [1, 1.1, 1]
                     }}
                     transition={{ duration: 2, repeat: Infinity }}
-                    className="w-16 h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 bg-gradient-to-r from-purple-500 via-pink-500 to-purple-500 rounded-full flex items-center justify-center mx-auto mb-4 md:mb-6 lg:mb-8 shadow-2xl relative"
+                    className="w-12 h-12 md:w-20 md:h-20 lg:w-24 lg:h-24 bg-gradient-to-r from-purple-500 via-pink-500 to-purple-500 rounded-full flex items-center justify-center mx-auto mb-3 md:mb-6 lg:mb-8 shadow-2xl relative"
                   >
                     <motion.div
                       animate={{ opacity: [0.3, 0.7, 0.3] }}
                       transition={{ duration: 3, repeat: Infinity }}
                       className="absolute inset-0 rounded-full bg-gradient-to-r from-purple-500/50 to-pink-500/50 blur-md"
                     />
-                    <Brain className="w-8 h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 text-white relative z-10" />
+                    <Brain className="w-6 h-6 md:w-10 md:h-10 lg:w-12 lg:h-12 text-white relative z-10" />
                   </motion.div>
                   
                   <motion.h4 
                     whileHover={{ scale: 1.05, x: 5 }}
-                    className="text-white font-black text-lg md:text-xl lg:text-2xl mb-3 md:mb-4 lg:mb-6"
+                    className="text-white font-black text-base md:text-xl lg:text-2xl mb-2 md:mb-4 lg:mb-6"
                   >
                     Mental Exhaustion
                   </motion.h4>
                   
                   <motion.p 
                     whileHover={{ scale: 1.02 }}
-                    className="text-gray-300 text-sm md:text-base lg:text-lg leading-relaxed"
+                    className="text-gray-300 text-xs md:text-base lg:text-lg leading-relaxed"
                   >
                     Constantly switching between tools and contexts. <motion.span 
                       animate={{
@@ -1423,7 +1423,7 @@ export default function AuthPage() {
               </motion.p>
               
               {/* Mobile-Optimized Visual Benefits */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 lg:gap-12 max-w-6xl mx-auto">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8 lg:gap-12 max-w-6xl mx-auto">
                 <motion.div
                   whileHover={{ 
                     scale: 1.1, 
@@ -1435,16 +1435,16 @@ export default function AuthPage() {
                   className="group relative"
                 >
                   <div className="absolute inset-0 bg-gradient-to-r from-electric-500/20 to-purple-500/20 rounded-3xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                  <div className="relative bg-gradient-to-br from-gray-900/40 to-gray-800/20 rounded-3xl p-6 md:p-8 border border-electric-500/30 backdrop-blur-sm">
+                  <div className="relative bg-gradient-to-br from-gray-900/40 to-gray-800/20 rounded-3xl p-4 md:p-8 border border-electric-500/30 backdrop-blur-sm">
                     <motion.div
                       animate={{ rotate: [0, 360] }}
                       transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
-                      className="w-16 h-16 md:w-20 md:h-20 bg-gradient-to-r from-electric-500 to-purple-500 rounded-full flex items-center justify-center mx-auto mb-4 md:mb-6 shadow-2xl"
+                      className="w-12 h-12 md:w-20 md:h-20 bg-gradient-to-r from-electric-500 to-purple-500 rounded-full flex items-center justify-center mx-auto mb-3 md:mb-6 shadow-2xl"
                     >
-                      <MessageSquare className="w-8 h-8 md:w-10 md:h-10 text-white" />
+                      <MessageSquare className="w-6 h-6 md:w-10 md:h-10 text-white" />
                     </motion.div>
-                    <h5 className="text-white font-bold text-lg md:text-xl mb-2 md:mb-3">Ask Anything</h5>
-                    <p className="text-gray-400 text-sm md:text-base">Get instant answers</p>
+                    <h5 className="text-white font-bold text-base md:text-xl mb-2 md:mb-3">Ask Anything</h5>
+                    <p className="text-gray-400 text-xs md:text-base">Get instant answers</p>
                   </div>
                 </motion.div>
                 
@@ -1459,16 +1459,16 @@ export default function AuthPage() {
                   className="group relative"
                 >
                   <div className="absolute inset-0 bg-gradient-to-r from-purple-500/20 to-cyan-500/20 rounded-3xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                  <div className="relative bg-gradient-to-br from-gray-900/40 to-gray-800/20 rounded-3xl p-6 md:p-8 border border-purple-500/30 backdrop-blur-sm">
+                  <div className="relative bg-gradient-to-br from-gray-900/40 to-gray-800/20 rounded-3xl p-4 md:p-8 border border-purple-500/30 backdrop-blur-sm">
                     <motion.div
                       animate={{ scale: [1, 1.2, 1] }}
                       transition={{ duration: 2, repeat: Infinity }}
-                      className="w-16 h-16 md:w-20 md:h-20 bg-gradient-to-r from-purple-500 to-cyan-500 rounded-full flex items-center justify-center mx-auto mb-4 md:mb-6 shadow-2xl"
+                      className="w-12 h-12 md:w-20 md:h-20 bg-gradient-to-r from-purple-500 to-cyan-500 rounded-full flex items-center justify-center mx-auto mb-3 md:mb-6 shadow-2xl"
                     >
-                      <Calendar className="w-8 h-8 md:w-10 md:h-10 text-white" />
+                      <Calendar className="w-6 h-6 md:w-10 md:h-10 text-white" />
                     </motion.div>
-                    <h5 className="text-white font-bold text-lg md:text-xl mb-2 md:mb-3">Never Miss Deadlines</h5>
-                    <p className="text-gray-400 text-sm md:text-base">Smart automation</p>
+                    <h5 className="text-white font-bold text-base md:text-xl mb-2 md:mb-3">Never Miss Deadlines</h5>
+                    <p className="text-gray-400 text-xs md:text-base">Smart automation</p>
                   </div>
                 </motion.div>
                 
@@ -1483,16 +1483,16 @@ export default function AuthPage() {
                   className="group relative"
                 >
                   <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/20 to-emerald-500/20 rounded-3xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                  <div className="relative bg-gradient-to-br from-gray-900/40 to-gray-800/20 rounded-3xl p-6 md:p-8 border border-cyan-500/30 backdrop-blur-sm">
+                  <div className="relative bg-gradient-to-br from-gray-900/40 to-gray-800/20 rounded-3xl p-4 md:p-8 border border-cyan-500/30 backdrop-blur-sm">
                     <motion.div
                       animate={{ opacity: [0.7, 1, 0.7] }}
                       transition={{ duration: 3, repeat: Infinity }}
-                      className="w-16 h-16 md:w-20 md:h-20 bg-gradient-to-r from-cyan-500 to-emerald-500 rounded-full flex items-center justify-center mx-auto mb-4 md:mb-6 shadow-2xl"
+                      className="w-12 h-12 md:w-20 md:h-20 bg-gradient-to-r from-cyan-500 to-emerald-500 rounded-full flex items-center justify-center mx-auto mb-3 md:mb-6 shadow-2xl"
                     >
-                      <Brain className="w-8 h-8 md:w-10 md:h-10 text-white" />
+                      <Brain className="w-6 h-6 md:w-10 md:h-10 text-white" />
                     </motion.div>
-                    <h5 className="text-white font-bold text-lg md:text-xl mb-2 md:mb-3">Learns Your Patterns</h5>
-                    <p className="text-gray-400 text-sm md:text-base">Adapts to you</p>
+                    <h5 className="text-white font-bold text-base md:text-xl mb-2 md:mb-3">Learns Your Patterns</h5>
+                    <p className="text-gray-400 text-xs md:text-base">Adapts to you</p>
                   </div>
                 </motion.div>
               </div>
