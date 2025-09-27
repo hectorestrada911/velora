@@ -659,137 +659,339 @@ export default function AuthPage() {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
-          className="mb-32 w-full"
+          className="mb-32 w-full relative overflow-hidden"
         >
-          <div className="max-w-7xl mx-auto px-4">
+          {/* Animated background elements */}
+          <div className="absolute inset-0 -z-10">
+            <motion.div
+              animate={{
+                x: [0, 100, 0],
+                y: [0, -50, 0],
+                rotate: [0, 180, 360],
+              }}
+              transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+              className="absolute top-20 left-10 w-72 h-72 bg-gradient-to-r from-electric-500/10 to-purple-500/10 rounded-full blur-3xl"
+            />
+            <motion.div
+              animate={{
+                x: [0, -100, 0],
+                y: [0, 50, 0],
+                rotate: [360, 180, 0],
+              }}
+              transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
+              className="absolute bottom-20 right-10 w-96 h-96 bg-gradient-to-r from-purple-500/10 to-pink-500/10 rounded-full blur-3xl"
+            />
+          </div>
+
+          <div className="max-w-7xl mx-auto px-4 relative z-10">
             <div className="text-center mb-20">
-              <h3 className="text-5xl font-bold text-white mb-8">
-                Just <span className="text-transparent bg-clip-text bg-gradient-to-r from-electric-500 to-purple-500">talk</span> to Velora
-              </h3>
-              <p className="text-2xl text-gray-300 max-w-4xl mx-auto leading-relaxed">
+              <motion.h3 
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.2 }}
+                className="text-6xl font-bold text-white mb-8"
+              >
+                Just <motion.span 
+                  animate={{
+                    backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
+                  }}
+                  transition={{ duration: 3, repeat: Infinity }}
+                  className="text-transparent bg-clip-text bg-gradient-to-r from-electric-500 via-purple-500 to-electric-500 bg-[length:200%_100%]"
+                >
+                  talk
+                </motion.span> to Velora
+              </motion.h3>
+              <motion.p 
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.4 }}
+                className="text-2xl text-gray-300 max-w-4xl mx-auto leading-relaxed"
+              >
                 No learning curve. No complex setup. Just natural conversation.
-              </p>
+              </motion.p>
             </div>
             
-            <div className="space-y-16">
+            <div className="space-y-20">
               <motion.div
-                whileHover={{ scale: 1.02, y: -5 }}
-                className="bg-gradient-to-br from-gray-900/60 to-gray-800/40 rounded-3xl p-12 border border-electric-500/20 hover:border-electric-500/50 transition-all duration-300 backdrop-blur-sm max-w-5xl mx-auto"
+                initial={{ opacity: 0, x: -50 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                whileHover={{ 
+                  scale: 1.02, 
+                  y: -8,
+                  rotateY: 5,
+                  transition: { duration: 0.3 }
+                }}
+                transition={{ duration: 0.6, delay: 0.1 }}
+                className="group relative bg-gradient-to-br from-gray-900/80 to-gray-800/60 rounded-3xl p-12 border border-electric-500/30 hover:border-electric-500/60 transition-all duration-500 backdrop-blur-sm max-w-5xl mx-auto overflow-hidden"
               >
-                <div className="flex items-center space-x-8">
+                {/* Animated border gradient */}
+                <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-electric-500/20 via-blue-500/20 to-electric-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-sm" />
+                <div className="absolute inset-[1px] rounded-3xl bg-gradient-to-br from-gray-900/80 to-gray-800/60" />
+                
+                <div className="relative z-10 flex items-center space-x-8">
                   <motion.div
-                    animate={{ 
-                      scale: [1, 1.1, 1],
+                    whileHover={{ 
+                      scale: 1.1,
+                      rotate: [0, -10, 10, 0],
+                      transition: { duration: 0.5 }
                     }}
-                    transition={{ duration: 3, repeat: Infinity }}
-                    className="w-20 h-20 bg-gradient-to-br from-electric-500/30 to-blue-500/30 rounded-2xl flex items-center justify-center flex-shrink-0"
+                    className="relative w-24 h-24 bg-gradient-to-br from-electric-500/40 to-blue-500/40 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-2xl"
                   >
-                    <MessageSquare className="w-10 h-10 text-electric-400" />
+                    <motion.div
+                      animate={{ 
+                        scale: [1, 1.2, 1],
+                        opacity: [0.7, 1, 0.7],
+                      }}
+                      transition={{ duration: 2, repeat: Infinity }}
+                      className="absolute inset-0 bg-gradient-to-br from-electric-500/30 to-blue-500/30 rounded-2xl blur-md"
+                    />
+                    <MessageSquare className="w-12 h-12 text-electric-400 relative z-10" />
                   </motion.div>
                   <div className="flex-1">
-                    <h4 className="text-2xl font-bold text-white mb-4">
-                      You say: <span className="text-electric-400">"I have a meeting with John next Tuesday"</span>
-                    </h4>
-                    <p className="text-gray-300 text-lg leading-relaxed">
+                    <motion.h4 
+                      whileHover={{ x: 5 }}
+                      className="text-2xl font-bold text-white mb-4"
+                    >
+                      You say: <motion.span 
+                        whileHover={{ scale: 1.05 }}
+                        className="text-electric-400 bg-gradient-to-r from-electric-400 to-blue-400 bg-clip-text text-transparent"
+                      >
+                        "I have a meeting with John next Tuesday"
+                      </motion.span>
+                    </motion.h4>
+                    <motion.p 
+                      whileHover={{ x: 5 }}
+                      className="text-gray-300 text-lg leading-relaxed"
+                    >
                       Velora creates the calendar event and sets a reminder automatically.
-                    </p>
+                    </motion.p>
                   </div>
                 </div>
               </motion.div>
               
               <motion.div
-                whileHover={{ scale: 1.02, y: -5 }}
-                className="bg-gradient-to-br from-gray-900/60 to-gray-800/40 rounded-3xl p-12 border border-purple-500/20 hover:border-purple-500/50 transition-all duration-300 backdrop-blur-sm max-w-5xl mx-auto"
+                initial={{ opacity: 0, x: 50 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                whileHover={{ 
+                  scale: 1.02, 
+                  y: -8,
+                  rotateY: -5,
+                  transition: { duration: 0.3 }
+                }}
+                transition={{ duration: 0.6, delay: 0.2 }}
+                className="group relative bg-gradient-to-br from-gray-900/80 to-gray-800/60 rounded-3xl p-12 border border-purple-500/30 hover:border-purple-500/60 transition-all duration-500 backdrop-blur-sm max-w-5xl mx-auto overflow-hidden"
               >
-                <div className="flex items-center space-x-8">
+                <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-purple-500/20 via-pink-500/20 to-purple-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-sm" />
+                <div className="absolute inset-[1px] rounded-3xl bg-gradient-to-br from-gray-900/80 to-gray-800/60" />
+                
+                <div className="relative z-10 flex items-center space-x-8">
                   <motion.div
-                    animate={{ 
-                      scale: [1, 1.1, 1],
+                    whileHover={{ 
+                      scale: 1.1,
+                      rotate: [0, 10, -10, 0],
+                      transition: { duration: 0.5 }
                     }}
-                    transition={{ duration: 3, repeat: Infinity, delay: 0.5 }}
-                    className="w-20 h-20 bg-gradient-to-br from-purple-500/30 to-pink-500/30 rounded-2xl flex items-center justify-center flex-shrink-0"
+                    className="relative w-24 h-24 bg-gradient-to-br from-purple-500/40 to-pink-500/40 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-2xl"
                   >
-                    <Brain className="w-10 h-10 text-purple-400" />
+                    <motion.div
+                      animate={{ 
+                        scale: [1, 1.2, 1],
+                        opacity: [0.7, 1, 0.7],
+                      }}
+                      transition={{ duration: 2, repeat: Infinity, delay: 0.5 }}
+                      className="absolute inset-0 bg-gradient-to-br from-purple-500/30 to-pink-500/30 rounded-2xl blur-md"
+                    />
+                    <Brain className="w-12 h-12 text-purple-400 relative z-10" />
                   </motion.div>
                   <div className="flex-1">
-                    <h4 className="text-2xl font-bold text-white mb-4">
-                      You ask: <span className="text-purple-400">"What did we decide in last week's meeting?"</span>
-                    </h4>
-                    <p className="text-gray-300 text-lg leading-relaxed">
+                    <motion.h4 
+                      whileHover={{ x: 5 }}
+                      className="text-2xl font-bold text-white mb-4"
+                    >
+                      You ask: <motion.span 
+                        whileHover={{ scale: 1.05 }}
+                        className="text-purple-400 bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent"
+                      >
+                        "What did we decide in last week's meeting?"
+                      </motion.span>
+                    </motion.h4>
+                    <motion.p 
+                      whileHover={{ x: 5 }}
+                      className="text-gray-300 text-lg leading-relaxed"
+                    >
                       Velora searches your documents and emails to find the answer instantly.
-                    </p>
+                    </motion.p>
                   </div>
                 </div>
               </motion.div>
               
               <motion.div
-                whileHover={{ scale: 1.02, y: -5 }}
-                className="bg-gradient-to-br from-gray-900/60 to-gray-800/40 rounded-3xl p-12 border border-green-500/20 hover:border-green-500/50 transition-all duration-300 backdrop-blur-sm max-w-5xl mx-auto"
+                initial={{ opacity: 0, x: -50 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                whileHover={{ 
+                  scale: 1.02, 
+                  y: -8,
+                  rotateY: 5,
+                  transition: { duration: 0.3 }
+                }}
+                transition={{ duration: 0.6, delay: 0.3 }}
+                className="group relative bg-gradient-to-br from-gray-900/80 to-gray-800/60 rounded-3xl p-12 border border-green-500/30 hover:border-green-500/60 transition-all duration-500 backdrop-blur-sm max-w-5xl mx-auto overflow-hidden"
               >
-                <div className="flex items-center space-x-8">
+                <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-green-500/20 via-emerald-500/20 to-green-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-sm" />
+                <div className="absolute inset-[1px] rounded-3xl bg-gradient-to-br from-gray-900/80 to-gray-800/60" />
+                
+                <div className="relative z-10 flex items-center space-x-8">
                   <motion.div
-                    animate={{ 
-                      scale: [1, 1.1, 1],
+                    whileHover={{ 
+                      scale: 1.1,
+                      rotate: [0, -10, 10, 0],
+                      transition: { duration: 0.5 }
                     }}
-                    transition={{ duration: 3, repeat: Infinity, delay: 1 }}
-                    className="w-20 h-20 bg-gradient-to-br from-green-500/30 to-emerald-500/30 rounded-2xl flex items-center justify-center flex-shrink-0"
+                    className="relative w-24 h-24 bg-gradient-to-br from-green-500/40 to-emerald-500/40 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-2xl"
                   >
-                    <Bell className="w-10 h-10 text-green-400" />
+                    <motion.div
+                      animate={{ 
+                        scale: [1, 1.2, 1],
+                        opacity: [0.7, 1, 0.7],
+                      }}
+                      transition={{ duration: 2, repeat: Infinity, delay: 1 }}
+                      className="absolute inset-0 bg-gradient-to-br from-green-500/30 to-emerald-500/30 rounded-2xl blur-md"
+                    />
+                    <Bell className="w-12 h-12 text-green-400 relative z-10" />
                   </motion.div>
                   <div className="flex-1">
-                    <h4 className="text-2xl font-bold text-white mb-4">
-                      You tell: <span className="text-green-400">"Remind me to call the client tomorrow"</span>
-                    </h4>
-                    <p className="text-gray-300 text-lg leading-relaxed">
+                    <motion.h4 
+                      whileHover={{ x: 5 }}
+                      className="text-2xl font-bold text-white mb-4"
+                    >
+                      You tell: <motion.span 
+                        whileHover={{ scale: 1.05 }}
+                        className="text-green-400 bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent"
+                      >
+                        "Remind me to call the client tomorrow"
+                      </motion.span>
+                    </motion.h4>
+                    <motion.p 
+                      whileHover={{ x: 5 }}
+                      className="text-gray-300 text-lg leading-relaxed"
+                    >
                       Velora sets a smart reminder that knows when you actually need it.
-                    </p>
+                    </motion.p>
                   </div>
                 </div>
               </motion.div>
               
               <motion.div
-                whileHover={{ scale: 1.02, y: -5 }}
-                className="bg-gradient-to-br from-gray-900/60 to-gray-800/40 rounded-3xl p-12 border border-yellow-500/20 hover:border-yellow-500/50 transition-all duration-300 backdrop-blur-sm max-w-5xl mx-auto"
+                initial={{ opacity: 0, x: 50 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                whileHover={{ 
+                  scale: 1.02, 
+                  y: -8,
+                  rotateY: -5,
+                  transition: { duration: 0.3 }
+                }}
+                transition={{ duration: 0.6, delay: 0.4 }}
+                className="group relative bg-gradient-to-br from-gray-900/80 to-gray-800/60 rounded-3xl p-12 border border-yellow-500/30 hover:border-yellow-500/60 transition-all duration-500 backdrop-blur-sm max-w-5xl mx-auto overflow-hidden"
               >
-                <div className="flex items-center space-x-8">
+                <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-yellow-500/20 via-orange-500/20 to-yellow-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-sm" />
+                <div className="absolute inset-[1px] rounded-3xl bg-gradient-to-br from-gray-900/80 to-gray-800/60" />
+                
+                <div className="relative z-10 flex items-center space-x-8">
                   <motion.div
-                    animate={{ 
-                      scale: [1, 1.1, 1],
+                    whileHover={{ 
+                      scale: 1.1,
+                      rotate: [0, 10, -10, 0],
+                      transition: { duration: 0.5 }
                     }}
-                    transition={{ duration: 3, repeat: Infinity, delay: 1.5 }}
-                    className="w-20 h-20 bg-gradient-to-br from-yellow-500/30 to-orange-500/30 rounded-2xl flex items-center justify-center flex-shrink-0"
+                    className="relative w-24 h-24 bg-gradient-to-br from-yellow-500/40 to-orange-500/40 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-2xl"
                   >
-                    <FileText className="w-10 h-10 text-yellow-400" />
+                    <motion.div
+                      animate={{ 
+                        scale: [1, 1.2, 1],
+                        opacity: [0.7, 1, 0.7],
+                      }}
+                      transition={{ duration: 2, repeat: Infinity, delay: 1.5 }}
+                      className="absolute inset-0 bg-gradient-to-br from-yellow-500/30 to-orange-500/30 rounded-2xl blur-md"
+                    />
+                    <FileText className="w-12 h-12 text-yellow-400 relative z-10" />
                   </motion.div>
                   <div className="flex-1">
-                    <h4 className="text-2xl font-bold text-white mb-4">
-                      You upload: <span className="text-yellow-400">A 50-page research paper</span>
-                    </h4>
-                    <p className="text-gray-300 text-lg leading-relaxed">
+                    <motion.h4 
+                      whileHover={{ x: 5 }}
+                      className="text-2xl font-bold text-white mb-4"
+                    >
+                      You upload: <motion.span 
+                        whileHover={{ scale: 1.05 }}
+                        className="text-yellow-400 bg-gradient-to-r from-yellow-400 to-orange-400 bg-clip-text text-transparent"
+                      >
+                        A 50-page research paper
+                      </motion.span>
+                    </motion.h4>
+                    <motion.p 
+                      whileHover={{ x: 5 }}
+                      className="text-gray-300 text-lg leading-relaxed"
+                    >
                       Velora reads, understands, and organizes it. Ask questions anytime.
-                    </p>
+                    </motion.p>
                   </div>
                 </div>
               </motion.div>
             </div>
             
-            <div className="text-center mt-20">
-              <p className="text-2xl text-gray-300 mb-10">
-                That's it. No steps. No complexity. Just <span className="text-electric-400">natural conversation</span>.
-              </p>
+            <motion.div 
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.6 }}
+              className="text-center mt-24"
+            >
+              <motion.p 
+                whileHover={{ scale: 1.02 }}
+                className="text-2xl text-gray-300 mb-12"
+              >
+                That's it. No steps. No complexity. Just <motion.span 
+                  animate={{
+                    backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
+                  }}
+                  transition={{ duration: 3, repeat: Infinity }}
+                  className="text-transparent bg-clip-text bg-gradient-to-r from-electric-400 via-purple-400 to-electric-400 bg-[length:200%_100%] font-semibold"
+                >
+                  natural conversation
+                </motion.span>.
+              </motion.p>
               <motion.div
-                whileHover={{ scale: 1.05 }}
+                whileHover={{ 
+                  scale: 1.05,
+                  rotateX: 5,
+                  transition: { duration: 0.3 }
+                }}
                 className="inline-block"
               >
-                <button
+                <motion.button
+                  whileHover={{ 
+                    boxShadow: "0 20px 40px rgba(139, 92, 246, 0.3)",
+                    transition: { duration: 0.3 }
+                  }}
+                  whileTap={{ scale: 0.98 }}
                   onClick={() => setAuthMode('login')}
-                  className="bg-gradient-to-r from-electric-500 to-purple-500 hover:from-electric-400 hover:to-purple-400 text-white font-semibold py-4 px-12 rounded-xl transition-all duration-200 hover:scale-105 flex items-center justify-center space-x-3 mx-auto text-lg"
+                  className="relative bg-gradient-to-r from-electric-500 to-purple-500 hover:from-electric-400 hover:to-purple-400 text-white font-semibold py-5 px-16 rounded-2xl transition-all duration-300 flex items-center justify-center space-x-4 mx-auto text-xl overflow-hidden group"
                 >
-                  <span>Start Talking to Velora</span>
-                  <ArrowRight className="w-6 h-6" />
-                </button>
+                  <motion.div
+                    animate={{
+                      x: ["-100%", "100%"],
+                    }}
+                    transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                    className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
+                  />
+                  <span className="relative z-10">Start Talking to Velora</span>
+                  <motion.div
+                    whileHover={{ x: 5 }}
+                    className="relative z-10"
+                  >
+                    <ArrowRight className="w-6 h-6" />
+                  </motion.div>
+                </motion.button>
               </motion.div>
-            </div>
+            </motion.div>
           </div>
         </motion.div>
 
