@@ -248,7 +248,8 @@ export default function FileUpload({ onContentAnalyzed }: FileUploadProps) {
   const analyzeWithAI = async (content: string) => {
     try {
       // Use environment variable for API URL, fallback to relative path
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || '/api/analyze';
+      const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://velora-production.up.railway.app'
+      const apiUrl = baseUrl.replace('/api/analyze', '') + '/api/analyze';
       const response = await fetch(apiUrl, {
         method: 'POST',
         headers: {

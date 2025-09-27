@@ -25,10 +25,23 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   try {
+    console.log('API Request received:', {
+      method: req.method,
+      bodyKeys: Object.keys(req.body || {}),
+      contentLength: req.body?.content?.length || 0,
+      hasOpenAIKey: !!process.env.OPENAI_API_KEY
+    })
+
     const { content, conversationHistory, relevantMemories, recallSuggestions, currentDate: clientCurrentDate } = req.body
 
     if (!content) {
+      console.log('Missing content in request')
       return res.status(400).json({ error: 'Content is required' })
+    }
+
+    if (!process.env.OPENAI_API_KEY) {
+      console.error('Missing OPENAI_API_KEY environment variable')
+      return res.status(500).json({ error: 'OpenAI API key not configured' })
     }
 
     // Get current date/time for time-aware responses
@@ -101,6 +114,7 @@ ${content}
 Return JSON with type, priority, summary, tags, extractedData, calendarEvent, reminder, aiResponse, followUpQuestions, featureSuggestions.`
 
     // Use GPT-4o-mini for faster responses
+    console.log('Calling OpenAI API...')
     const completion = await openai.chat.completions.create({
       model: "gpt-4o-mini",
       messages: [
@@ -111,7 +125,14 @@ Return JSON with type, priority, summary, tags, extractedData, calendarEvent, re
       max_tokens: 1000, // Reduced for faster responses
     })
 
+    console.log('OpenAI response received:', {
+      hasChoices: !!completion.choices,
+      choicesLength: completion.choices?.length || 0,
+      hasContent: !!completion.choices?.[0]?.message?.content
+    })
+
     const analysis = JSON.parse(completion.choices[0].message.content || '{}')
+    console.log('Analysis parsed successfully:', { type: analysis.type, priority: analysis.priority })
 
     // Return optimized response
     return res.status(200).json({
@@ -136,10 +157,16 @@ Return JSON with type, priority, summary, tags, extractedData, calendarEvent, re
     })
 
   } catch (error) {
-    console.error('Analysis error:', error)
+    console.error('Analysis error:', {
+      message: error instanceof Error ? error.message : 'Unknown error',
+      stack: error instanceof Error ? error.stack : undefined,
+      name: error instanceof Error ? error.name : undefined,
+      timestamp: new Date().toISOString()
+    })
     return res.status(500).json({ 
       error: 'Failed to analyze content',
-      details: error instanceof Error ? error.message : 'Unknown error'
+      details: error instanceof Error ? error.message : 'Unknown error',
+      timestamp: new Date().toISOString()
     })
   }
 }
