@@ -1020,7 +1020,7 @@ export default function AuthPage() {
           </div>
         </motion.div>
 
-        {/* Psychological Conversion Section - Enhanced UI/UX */}
+        {/* Revolutionary UI/UX Section */}
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -1028,248 +1028,73 @@ export default function AuthPage() {
           viewport={{ once: true }}
           className="mb-32 w-full relative overflow-hidden"
         >
-          {/* Subtle Background Effects */}
+          {/* Advanced Background Effects */}
           <div className="absolute inset-0 -z-10">
+            {/* Floating geometric shapes */}
             <motion.div
               animate={{
-                scale: [1, 1.1, 1],
-                opacity: [0.1, 0.2, 0.1],
+                rotate: [0, 360],
+                scale: [1, 1.2, 1],
+                opacity: [0.1, 0.3, 0.1],
               }}
-              transition={{ duration: 8, repeat: Infinity }}
-              className="absolute top-1/2 left-1/4 w-96 h-96 bg-gradient-to-r from-electric-500/10 to-purple-500/10 rounded-full blur-3xl"
+              transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+              className="absolute top-1/4 left-1/4 w-32 h-32 border-2 border-electric-400/30 rounded-full"
             />
             <motion.div
               animate={{
-                scale: [1.1, 1, 1.1],
-                opacity: [0.1, 0.2, 0.1],
+                rotate: [360, 0],
+                scale: [1.2, 1, 1.2],
+                opacity: [0.1, 0.3, 0.1],
               }}
-              transition={{ duration: 10, repeat: Infinity, delay: 2 }}
-              className="absolute top-1/3 right-1/4 w-80 h-80 bg-gradient-to-r from-purple-500/10 to-pink-500/10 rounded-full blur-3xl"
+              transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
+              className="absolute bottom-1/4 right-1/4 w-24 h-24 border-2 border-purple-400/30 transform rotate-45"
             />
+            <motion.div
+              animate={{
+                y: [-20, 20, -20],
+                x: [-10, 10, -10],
+                rotate: [0, 180, 360],
+              }}
+              transition={{ duration: 12, repeat: Infinity }}
+              className="absolute top-1/2 right-1/3 w-16 h-16 bg-gradient-to-r from-electric-500/20 to-purple-500/20 rounded-full blur-xl"
+            />
+            
+            {/* Animated grid pattern */}
+            <svg className="absolute inset-0 w-full h-full opacity-5" viewBox="0 0 100 100">
+              <defs>
+                <pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse">
+                  <path d="M 10 0 L 0 0 0 10" fill="none" stroke="url(#gridGradient)" strokeWidth="0.5"/>
+                </pattern>
+                <linearGradient id="gridGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#8B5CF6" />
+                  <stop offset="100%" stopColor="#06B6D4" />
+                </linearGradient>
+              </defs>
+              <rect width="100%" height="100%" fill="url(#grid)" />
+            </svg>
           </div>
 
           <div className="max-w-6xl mx-auto px-4 relative z-10">
-            {/* Urgency & Scarcity Header */}
+            {/* Revolutionary Header */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
-              className="text-center mb-16"
+              className="text-center mb-20"
             >
               <motion.div
                 animate={{
                   scale: [1, 1.05, 1],
+                  boxShadow: [
+                    "0 0 20px rgba(239, 68, 68, 0.3)",
+                    "0 0 40px rgba(239, 68, 68, 0.6)",
+                    "0 0 20px rgba(239, 68, 68, 0.3)"
+                  ]
                 }}
                 transition={{ duration: 3, repeat: Infinity }}
-                className="inline-block mb-6"
+                className="inline-block mb-8"
               >
-                <span className="bg-gradient-to-r from-red-500 to-orange-500 text-white px-4 py-2 rounded-full text-sm font-semibold uppercase tracking-wide">
-                  ⚡ Only 100 Beta Spots Left
-                </span>
-              </motion.div>
-              
-              <h3 className="text-3xl md:text-5xl lg:text-6xl font-bold text-white mb-6 px-4">
-                Stop <motion.span 
-                  animate={{
-                    backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
-                  }}
-                  transition={{ duration: 4, repeat: Infinity }}
-                  className="text-transparent bg-clip-text bg-gradient-to-r from-red-500 via-orange-500 to-red-500 bg-[length:200%_100%]"
-                >
-                  Losing
-                </motion.span> Important Information
-              </h3>
-              <p className="text-lg md:text-xl lg:text-2xl text-gray-300 max-w-4xl mx-auto leading-relaxed mb-8 px-4">
-                Every day you wait, you're losing hours searching for documents, missing deadlines, and feeling overwhelmed by information chaos.
-              </p>
-            </motion.div>
-
-            {/* Pain Points with Enhanced UI */}
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.4 }}
-              className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16 px-4"
-            >
-              <motion.div
-                whileHover={{ scale: 1.05, y: -5 }}
-                className="bg-gradient-to-br from-red-900/30 to-red-800/20 rounded-2xl p-6 border border-red-500/40 hover:border-red-500/70 transition-all duration-300 text-center"
-              >
-                <motion.div
-                  animate={{ rotate: [0, 10, -10, 0] }}
-                  transition={{ duration: 4, repeat: Infinity }}
-                  className="w-16 h-16 bg-gradient-to-r from-red-500 to-orange-500 rounded-full flex items-center justify-center mx-auto mb-4"
-                >
-                  <Clock className="w-8 h-8 text-white" />
-                </motion.div>
-                <h4 className="text-white font-bold text-lg mb-3">Wasting 2+ Hours Daily</h4>
-                <p className="text-gray-300 text-sm leading-relaxed">
-                  Searching through scattered documents, emails, and notes. That's <span className="text-red-400 font-semibold">730 hours per year</span> you'll never get back.
-                </p>
-              </motion.div>
-              
-              <motion.div
-                whileHover={{ scale: 1.05, y: -5 }}
-                className="bg-gradient-to-br from-orange-900/30 to-orange-800/20 rounded-2xl p-6 border border-orange-500/40 hover:border-orange-500/70 transition-all duration-300 text-center"
-              >
-                <motion.div
-                  animate={{ scale: [1, 1.1, 1] }}
-                  transition={{ duration: 3, repeat: Infinity }}
-                  className="w-16 h-16 bg-gradient-to-r from-orange-500 to-yellow-500 rounded-full flex items-center justify-center mx-auto mb-4"
-                >
-                  <Target className="w-8 h-8 text-white" />
-                </motion.div>
-                <h4 className="text-white font-bold text-lg mb-3">Missing Critical Deadlines</h4>
-                <p className="text-gray-300 text-sm leading-relaxed">
-                  Important tasks buried in information chaos. <span className="text-orange-400 font-semibold">Lost opportunities</span> because you couldn't find what you needed in time.
-                </p>
-              </motion.div>
-              
-              <motion.div
-                whileHover={{ scale: 1.05, y: -5 }}
-                className="bg-gradient-to-br from-purple-900/30 to-purple-800/20 rounded-2xl p-6 border border-purple-500/40 hover:border-purple-500/70 transition-all duration-300 text-center"
-              >
-                <motion.div
-                  animate={{ opacity: [0.7, 1, 0.7] }}
-                  transition={{ duration: 2, repeat: Infinity }}
-                  className="w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center mx-auto mb-4"
-                >
-                  <Brain className="w-8 h-8 text-white" />
-                </motion.div>
-                <h4 className="text-white font-bold text-lg mb-3">Mental Exhaustion</h4>
-                <p className="text-gray-300 text-sm leading-relaxed">
-                  Constantly switching between tools and contexts. <span className="text-purple-400 font-semibold">Cognitive overload</span> that kills your productivity and creativity.
-                </p>
-              </motion.div>
-            </motion.div>
-
-            {/* Solution with Visual Impact */}
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.6 }}
-              className="text-center mb-16 px-4"
-            >
-              <motion.div
-                animate={{ scale: [1, 1.1, 1] }}
-                transition={{ duration: 3, repeat: Infinity }}
-                className="w-24 h-24 bg-gradient-to-r from-electric-500 to-purple-500 rounded-full flex items-center justify-center mx-auto mb-8"
-              >
-                <Lightbulb className="w-12 h-12 text-white" />
-              </motion.div>
-              
-              <h4 className="text-white font-bold text-3xl lg:text-4xl mb-6">
-                Transform Your Information Chaos Into <span className="text-transparent bg-clip-text bg-gradient-to-r from-electric-500 to-purple-500">Instant Answers</span>
-              </h4>
-              
-              <p className="text-gray-300 text-xl leading-relaxed max-w-4xl mx-auto mb-12">
-                Velora AI doesn't just organize your information—it understands it, remembers it, and gives you instant answers to any question you have.
-              </p>
-              
-              {/* Visual Benefits - Minimal Text */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
-                <motion.div
-                  whileHover={{ scale: 1.05, y: -5 }}
-                  className="text-center"
-                >
-                  <motion.div
-                    animate={{ rotate: [0, 360] }}
-                    transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
-                    className="w-16 h-16 bg-gradient-to-r from-electric-500 to-purple-500 rounded-full flex items-center justify-center mx-auto mb-4"
-                  >
-                    <MessageSquare className="w-8 h-8 text-white" />
-                  </motion.div>
-                  <h5 className="text-white font-semibold text-lg mb-2">Ask Anything</h5>
-                  <p className="text-gray-400 text-sm">Get instant answers</p>
-                </motion.div>
-                
-                <motion.div
-                  whileHover={{ scale: 1.05, y: -5 }}
-                  className="text-center"
-                >
-                  <motion.div
-                    animate={{ scale: [1, 1.1, 1] }}
-                    transition={{ duration: 2, repeat: Infinity }}
-                    className="w-16 h-16 bg-gradient-to-r from-electric-500 to-purple-500 rounded-full flex items-center justify-center mx-auto mb-4"
-                  >
-                    <Calendar className="w-8 h-8 text-white" />
-                  </motion.div>
-                  <h5 className="text-white font-semibold text-lg mb-2">Never Miss Deadlines</h5>
-                  <p className="text-gray-400 text-sm">Smart automation</p>
-                </motion.div>
-                
-                <motion.div
-                  whileHover={{ scale: 1.05, y: -5 }}
-                  className="text-center"
-                >
-                  <motion.div
-                    animate={{ opacity: [0.7, 1, 0.7] }}
-                    transition={{ duration: 3, repeat: Infinity }}
-                    className="w-16 h-16 bg-gradient-to-r from-electric-500 to-purple-500 rounded-full flex items-center justify-center mx-auto mb-4"
-                  >
-                    <Brain className="w-8 h-8 text-white" />
-                  </motion.div>
-                  <h5 className="text-white font-semibold text-lg mb-2">Learns Your Patterns</h5>
-                  <p className="text-gray-400 text-sm">Adapts to you</p>
-                </motion.div>
-              </div>
-            </motion.div>
-
-            {/* Social Proof & Urgency */}
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.8 }}
-              className="text-center mb-12 px-4"
-            >
-              <div className="bg-gradient-to-r from-gray-900/60 to-gray-800/40 rounded-2xl p-6 border border-gray-700/50 mb-8">
-                <p className="text-gray-300 text-lg mb-4">
-                  <span className="text-green-400 font-semibold">87% of beta users</span> report saving 2+ hours daily within the first week
-                </p>
-                <div className="flex items-center justify-center space-x-8 text-sm text-gray-400">
-                  <div className="flex items-center space-x-2">
-                    <CheckCircle className="w-4 h-4 text-green-400" />
-                    <span>Setup in 30 seconds</span>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <CheckCircle className="w-4 h-4 text-green-400" />
-                    <span>Free during beta</span>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <CheckCircle className="w-4 h-4 text-green-400" />
-                    <span>Cancel anytime</span>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-
-            {/* Final CTA with Enhanced UI */}
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 1.0 }}
-              className="text-center px-4"
-            >
-              <motion.p
-                whileHover={{ scale: 1.02 }}
-                className="text-lg md:text-xl text-gray-300 mb-8"
-              >
-                Don't let another day pass losing important information. Join the beta and transform your productivity today.
-              </motion.p>
-              
-              <motion.div
-                whileHover={{ scale: 1.05 }}
-                className="inline-block"
-              >
-                <motion.button
-                  whileHover={{ 
-                    boxShadow: "0 20px 40px rgba(34, 197, 94, 0.4)",
-                    transition: { duration: 0.3 }
-                  }}
-                  whileTap={{ scale: 0.98 }}
-                  onClick={() => setAuthMode('login')}
-                  className="relative bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-400 hover:to-emerald-400 text-white font-bold py-4 px-12 md:py-5 md:px-16 rounded-2xl transition-all duration-300 flex items-center justify-center space-x-3 mx-auto text-lg md:text-xl overflow-hidden group w-full sm:w-auto"
-                >
+                <span className="relative bg-gradient-to-r from-red-500 to-orange-500 text-white px-6 py-3 rounded-full text-sm font-semibold uppercase tracking-wide overflow-hidden">
                   <motion.div
                     animate={{
                       x: ["-100%", "100%"],
@@ -1277,19 +1102,404 @@ export default function AuthPage() {
                     transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
                     className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
                   />
-                  <span className="relative z-10">Claim My Beta Spot</span>
-                  <motion.div
-                    whileHover={{ x: 5 }}
-                    className="relative z-10"
-                  >
-                    <ArrowRight className="w-5 h-5 md:w-6 md:h-6" />
-                  </motion.div>
-                </motion.button>
+                  <span className="relative z-10">⚡ Only 100 Beta Spots Left</span>
+                </span>
               </motion.div>
               
-              <p className="text-xs md:text-sm text-gray-500 mt-4">
-                ⚡ Only 100 spots left • Free during beta • Setup in 30 seconds
-              </p>
+              <h3 className="text-4xl md:text-6xl lg:text-7xl font-black text-white mb-8 px-4 leading-tight">
+                Stop <motion.span 
+                  animate={{
+                    backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
+                    textShadow: [
+                      "0 0 20px rgba(239, 68, 68, 0.5)",
+                      "0 0 40px rgba(245, 158, 11, 0.5)",
+                      "0 0 20px rgba(239, 68, 68, 0.5)"
+                    ]
+                  }}
+                  transition={{ duration: 4, repeat: Infinity }}
+                  className="text-transparent bg-clip-text bg-gradient-to-r from-red-500 via-orange-500 to-red-500 bg-[length:200%_100%] font-black"
+                >
+                  Losing
+                </motion.span> Important Information
+              </h3>
+              <motion.p
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4 }}
+                className="text-xl md:text-2xl lg:text-3xl text-gray-300 max-w-5xl mx-auto leading-relaxed mb-12 px-4 font-light"
+              >
+                Every day you wait, you're losing hours searching for documents, missing deadlines, and feeling overwhelmed by information chaos.
+              </motion.p>
+            </motion.div>
+
+            {/* Revolutionary Pain Points */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.4 }}
+              className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-20 px-4"
+            >
+              <motion.div
+                whileHover={{ 
+                  scale: 1.05, 
+                  y: -10,
+                  rotateX: 5,
+                  rotateY: 5,
+                  boxShadow: "0 25px 50px rgba(239, 68, 68, 0.3)"
+                }}
+                className="group relative bg-gradient-to-br from-red-900/20 to-red-800/10 rounded-3xl p-8 border border-red-500/30 hover:border-red-500/60 transition-all duration-500 backdrop-blur-sm overflow-hidden"
+              >
+                <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-red-500/5 via-orange-500/5 to-red-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-sm" />
+                <div className="absolute inset-[1px] rounded-3xl bg-gradient-to-br from-gray-900/80 to-gray-800/60" />
+                
+                <div className="relative z-10 text-center">
+                  <motion.div
+                    animate={{ rotate: [0, 10, -10, 0] }}
+                    transition={{ duration: 4, repeat: Infinity }}
+                    className="w-20 h-20 bg-gradient-to-r from-red-500 to-orange-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-2xl"
+                  >
+                    <Clock className="w-10 h-10 text-white" />
+                  </motion.div>
+                  <h4 className="text-white font-bold text-xl mb-4">Wasting 2+ Hours Daily</h4>
+                  <p className="text-gray-300 text-base leading-relaxed">
+                    Searching through scattered documents, emails, and notes. That's <span className="text-red-400 font-semibold">730 hours per year</span> you'll never get back.
+                  </p>
+                </div>
+              </motion.div>
+              
+              <motion.div
+                whileHover={{ 
+                  scale: 1.05, 
+                  y: -10,
+                  rotateX: 5,
+                  rotateY: 5,
+                  boxShadow: "0 25px 50px rgba(245, 158, 11, 0.3)"
+                }}
+                className="group relative bg-gradient-to-br from-orange-900/20 to-orange-800/10 rounded-3xl p-8 border border-orange-500/30 hover:border-orange-500/60 transition-all duration-500 backdrop-blur-sm overflow-hidden"
+              >
+                <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-orange-500/5 via-yellow-500/5 to-orange-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-sm" />
+                <div className="absolute inset-[1px] rounded-3xl bg-gradient-to-br from-gray-900/80 to-gray-800/60" />
+                
+                <div className="relative z-10 text-center">
+                  <motion.div
+                    animate={{ scale: [1, 1.1, 1] }}
+                    transition={{ duration: 3, repeat: Infinity }}
+                    className="w-20 h-20 bg-gradient-to-r from-orange-500 to-yellow-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-2xl"
+                  >
+                    <Target className="w-10 h-10 text-white" />
+                  </motion.div>
+                  <h4 className="text-white font-bold text-xl mb-4">Missing Critical Deadlines</h4>
+                  <p className="text-gray-300 text-base leading-relaxed">
+                    Important tasks buried in information chaos. <span className="text-orange-400 font-semibold">Lost opportunities</span> because you couldn't find what you needed in time.
+                  </p>
+                </div>
+              </motion.div>
+              
+              <motion.div
+                whileHover={{ 
+                  scale: 1.05, 
+                  y: -10,
+                  rotateX: 5,
+                  rotateY: 5,
+                  boxShadow: "0 25px 50px rgba(139, 92, 246, 0.3)"
+                }}
+                className="group relative bg-gradient-to-br from-purple-900/20 to-purple-800/10 rounded-3xl p-8 border border-purple-500/30 hover:border-purple-500/60 transition-all duration-500 backdrop-blur-sm overflow-hidden"
+              >
+                <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-purple-500/5 via-pink-500/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-sm" />
+                <div className="absolute inset-[1px] rounded-3xl bg-gradient-to-br from-gray-900/80 to-gray-800/60" />
+                
+                <div className="relative z-10 text-center">
+                  <motion.div
+                    animate={{ opacity: [0.7, 1, 0.7] }}
+                    transition={{ duration: 2, repeat: Infinity }}
+                    className="w-20 h-20 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-2xl"
+                  >
+                    <Brain className="w-10 h-10 text-white" />
+                  </motion.div>
+                  <h4 className="text-white font-bold text-xl mb-4">Mental Exhaustion</h4>
+                  <p className="text-gray-300 text-base leading-relaxed">
+                    Constantly switching between tools and contexts. <span className="text-purple-400 font-semibold">Cognitive overload</span> that kills your productivity and creativity.
+                  </p>
+                </div>
+              </motion.div>
+            </motion.div>
+
+            {/* Revolutionary Solution Section */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.6 }}
+              className="text-center mb-20 px-4"
+            >
+              <motion.div
+                animate={{ 
+                  scale: [1, 1.1, 1],
+                  rotate: [0, 5, -5, 0],
+                  boxShadow: [
+                    "0 0 30px rgba(139, 92, 246, 0.3)",
+                    "0 0 60px rgba(6, 182, 212, 0.3)",
+                    "0 0 30px rgba(139, 92, 246, 0.3)"
+                  ]
+                }}
+                transition={{ duration: 4, repeat: Infinity }}
+                className="w-32 h-32 bg-gradient-to-r from-electric-500 via-purple-500 to-cyan-500 rounded-full flex items-center justify-center mx-auto mb-12 shadow-2xl"
+              >
+                <motion.div
+                  animate={{ rotate: [0, 360] }}
+                  transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+                >
+                  <Lightbulb className="w-16 h-16 text-white" />
+                </motion.div>
+              </motion.div>
+              
+              <h4 className="text-white font-black text-4xl lg:text-6xl mb-8 leading-tight">
+                Transform Your Information Chaos Into <motion.span 
+                  animate={{
+                    backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
+                    textShadow: [
+                      "0 0 20px rgba(139, 92, 246, 0.5)",
+                      "0 0 40px rgba(6, 182, 212, 0.5)",
+                      "0 0 20px rgba(139, 92, 246, 0.5)"
+                    ]
+                  }}
+                  transition={{ duration: 3, repeat: Infinity }}
+                  className="text-transparent bg-clip-text bg-gradient-to-r from-electric-500 via-purple-500 to-cyan-500 bg-[length:200%_100%] font-black"
+                >
+                  Instant Answers
+                </motion.span>
+              </h4>
+              
+              <motion.p
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.8 }}
+                className="text-gray-300 text-2xl leading-relaxed max-w-5xl mx-auto mb-16 font-light"
+              >
+                Velora AI doesn't just organize your information—it understands it, remembers it, and gives you instant answers to any question you have.
+              </motion.p>
+              
+              {/* Revolutionary Visual Benefits */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-12 max-w-6xl mx-auto">
+                <motion.div
+                  whileHover={{ 
+                    scale: 1.1, 
+                    y: -15,
+                    rotateX: 10,
+                    rotateY: 10,
+                    boxShadow: "0 30px 60px rgba(139, 92, 246, 0.4)"
+                  }}
+                  className="group relative"
+                >
+                  <div className="absolute inset-0 bg-gradient-to-r from-electric-500/20 to-purple-500/20 rounded-3xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                  <div className="relative bg-gradient-to-br from-gray-900/40 to-gray-800/20 rounded-3xl p-8 border border-electric-500/30 backdrop-blur-sm">
+                    <motion.div
+                      animate={{ rotate: [0, 360] }}
+                      transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+                      className="w-20 h-20 bg-gradient-to-r from-electric-500 to-purple-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-2xl"
+                    >
+                      <MessageSquare className="w-10 h-10 text-white" />
+                    </motion.div>
+                    <h5 className="text-white font-bold text-xl mb-3">Ask Anything</h5>
+                    <p className="text-gray-400 text-base">Get instant answers</p>
+                  </div>
+                </motion.div>
+                
+                <motion.div
+                  whileHover={{ 
+                    scale: 1.1, 
+                    y: -15,
+                    rotateX: 10,
+                    rotateY: 10,
+                    boxShadow: "0 30px 60px rgba(6, 182, 212, 0.4)"
+                  }}
+                  className="group relative"
+                >
+                  <div className="absolute inset-0 bg-gradient-to-r from-purple-500/20 to-cyan-500/20 rounded-3xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                  <div className="relative bg-gradient-to-br from-gray-900/40 to-gray-800/20 rounded-3xl p-8 border border-purple-500/30 backdrop-blur-sm">
+                    <motion.div
+                      animate={{ scale: [1, 1.2, 1] }}
+                      transition={{ duration: 2, repeat: Infinity }}
+                      className="w-20 h-20 bg-gradient-to-r from-purple-500 to-cyan-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-2xl"
+                    >
+                      <Calendar className="w-10 h-10 text-white" />
+                    </motion.div>
+                    <h5 className="text-white font-bold text-xl mb-3">Never Miss Deadlines</h5>
+                    <p className="text-gray-400 text-base">Smart automation</p>
+                  </div>
+                </motion.div>
+                
+                <motion.div
+                  whileHover={{ 
+                    scale: 1.1, 
+                    y: -15,
+                    rotateX: 10,
+                    rotateY: 10,
+                    boxShadow: "0 30px 60px rgba(16, 185, 129, 0.4)"
+                  }}
+                  className="group relative"
+                >
+                  <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/20 to-emerald-500/20 rounded-3xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                  <div className="relative bg-gradient-to-br from-gray-900/40 to-gray-800/20 rounded-3xl p-8 border border-cyan-500/30 backdrop-blur-sm">
+                    <motion.div
+                      animate={{ opacity: [0.7, 1, 0.7] }}
+                      transition={{ duration: 3, repeat: Infinity }}
+                      className="w-20 h-20 bg-gradient-to-r from-cyan-500 to-emerald-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-2xl"
+                    >
+                      <Brain className="w-10 h-10 text-white" />
+                    </motion.div>
+                    <h5 className="text-white font-bold text-xl mb-3">Learns Your Patterns</h5>
+                    <p className="text-gray-400 text-base">Adapts to you</p>
+                  </div>
+                </motion.div>
+              </div>
+            </motion.div>
+
+            {/* Revolutionary Social Proof & Urgency */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.8 }}
+              className="text-center mb-20 px-4"
+            >
+              <motion.div
+                whileHover={{ 
+                  scale: 1.02,
+                  boxShadow: "0 25px 50px rgba(34, 197, 94, 0.2)"
+                }}
+                className="relative bg-gradient-to-r from-green-900/40 to-emerald-800/30 rounded-3xl p-12 border border-green-500/50 backdrop-blur-sm overflow-hidden"
+              >
+                <div className="absolute inset-0 bg-gradient-to-r from-green-500/5 via-emerald-500/5 to-green-500/5 opacity-50" />
+                <div className="relative z-10">
+                  <motion.p
+                    animate={{
+                      textShadow: [
+                        "0 0 20px rgba(34, 197, 94, 0.3)",
+                        "0 0 40px rgba(16, 185, 129, 0.3)",
+                        "0 0 20px rgba(34, 197, 94, 0.3)"
+                      ]
+                    }}
+                    transition={{ duration: 3, repeat: Infinity }}
+                    className="text-green-400 font-bold text-2xl mb-8"
+                  >
+                    87% of beta users report saving 2+ hours daily within the first week.
+                  </motion.p>
+                  <div className="flex flex-col sm:flex-row items-center justify-center gap-8 text-base text-gray-300">
+                    <motion.span
+                      whileHover={{ scale: 1.1, color: "#10B981" }}
+                      className="flex items-center gap-2"
+                    >
+                      <motion.div
+                        animate={{ rotate: [0, 360] }}
+                        transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                        className="w-5 h-5"
+                      >
+                        ✅
+                      </motion.div>
+                      Setup in 30 seconds
+                    </motion.span>
+                    <motion.span
+                      whileHover={{ scale: 1.1, color: "#10B981" }}
+                      className="flex items-center gap-2"
+                    >
+                      <motion.div
+                        animate={{ scale: [1, 1.2, 1] }}
+                        transition={{ duration: 2, repeat: Infinity }}
+                        className="w-5 h-5"
+                      >
+                        ✅
+                      </motion.div>
+                      Free during beta
+                    </motion.span>
+                    <motion.span
+                      whileHover={{ scale: 1.1, color: "#10B981" }}
+                      className="flex items-center gap-2"
+                    >
+                      <motion.div
+                        animate={{ opacity: [0.7, 1, 0.7] }}
+                        transition={{ duration: 2, repeat: Infinity }}
+                        className="w-5 h-5"
+                      >
+                        ✅
+                      </motion.div>
+                      Cancel anytime
+                    </motion.span>
+                  </div>
+                </div>
+              </motion.div>
+            </motion.div>
+
+            {/* Revolutionary Final CTA */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 1.0 }}
+              className="text-center px-4"
+            >
+              <motion.p
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ delay: 1.2 }}
+                className="text-gray-300 text-2xl mb-12 font-light leading-relaxed"
+              >
+                Don't let another day pass losing important information. Join the beta and transform your productivity today.
+              </motion.p>
+              
+              <motion.button
+                whileHover={{ 
+                  scale: 1.1, 
+                  y: -10,
+                  rotateX: 5,
+                  rotateY: 5,
+                  boxShadow: "0 30px 60px rgba(34, 197, 94, 0.4)"
+                }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => setAuthMode('login')}
+                className="group relative bg-gradient-to-r from-green-500 via-emerald-500 to-green-500 hover:from-green-400 hover:via-emerald-400 hover:to-green-400 text-white font-black py-6 px-16 rounded-full text-xl transition-all duration-500 shadow-2xl overflow-hidden"
+              >
+                <motion.div
+                  animate={{
+                    x: ["-100%", "100%"],
+                  }}
+                  transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                  className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
+                />
+                <span className="relative z-10 flex items-center gap-4">
+                  <motion.span
+                    animate={{ rotate: [0, 360] }}
+                    transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                    className="text-2xl"
+                  >
+                    ⚡
+                  </motion.span>
+                  Claim My Beta Spot
+                  <motion.span
+                    animate={{ x: [0, 5, 0] }}
+                    transition={{ duration: 1, repeat: Infinity }}
+                    className="text-2xl"
+                  >
+                    →
+                  </motion.span>
+                </span>
+              </motion.button>
+              
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ delay: 1.4 }}
+                className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-8 text-sm text-gray-500"
+              >
+                <motion.span
+                  animate={{ opacity: [0.5, 1, 0.5] }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                  className="flex items-center gap-1"
+                >
+                  ⚡ Only 100 spots left
+                </motion.span>
+                <span>•</span>
+                <span>Free during beta</span>
+                <span>•</span>
+                <span>Setup in 30 seconds</span>
+              </motion.div>
             </motion.div>
           </div>
         </motion.div>
