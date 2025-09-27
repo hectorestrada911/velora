@@ -1097,7 +1097,7 @@ export default function AuthPage() {
                 <div className="absolute inset-[1px] rounded-3xl bg-gradient-to-br from-gray-900/80 to-gray-800/60" />
                 
                 <div className="relative z-10">
-                  <div className="flex items-center mb-6">
+                  <div className="flex items-center mb-8">
                     <motion.div
                       whileHover={{ rotate: 360 }}
                       transition={{ duration: 0.6 }}
@@ -1106,50 +1106,40 @@ export default function AuthPage() {
                       <Target className="w-8 h-8 text-white" />
                     </motion.div>
                     <div>
-                      <h4 className="text-white font-bold text-xl">The Problem</h4>
+                      <h4 className="text-white font-bold text-2xl">The Problem</h4>
                       <p className="text-gray-400 text-sm">Information Overload</p>
                     </div>
                   </div>
                   
-                  <div className="space-y-4">
+                  <div className="space-y-6">
                     <motion.div
                       whileHover={{ x: 5 }}
-                      className="flex items-start space-x-3"
+                      className="text-center"
                     >
-                      <div className="w-2 h-2 bg-red-400 rounded-full mt-2 flex-shrink-0" />
-                      <p className="text-gray-300 text-base leading-relaxed">
-                        <span className="text-red-400 font-semibold">Drowning in documents:</span> Research papers, meeting notes, emails scattered everywhere
+                      <p className="text-gray-300 text-lg leading-relaxed">
+                        <span className="text-red-400 font-semibold">Drowning in documents</span>
                       </p>
+                      <p className="text-gray-400 text-sm mt-2">Scattered everywhere</p>
                     </motion.div>
                     
                     <motion.div
                       whileHover={{ x: 5 }}
-                      className="flex items-start space-x-3"
+                      className="text-center"
                     >
-                      <div className="w-2 h-2 bg-red-400 rounded-full mt-2 flex-shrink-0" />
-                      <p className="text-gray-300 text-base leading-relaxed">
-                        <span className="text-red-400 font-semibold">Wasting time searching:</span> Hours spent looking for that one important detail
+                      <p className="text-gray-300 text-lg leading-relaxed">
+                        <span className="text-red-400 font-semibold">Wasting time searching</span>
                       </p>
+                      <p className="text-gray-400 text-sm mt-2">Hours looking for details</p>
                     </motion.div>
                     
                     <motion.div
                       whileHover={{ x: 5 }}
-                      className="flex items-start space-x-3"
+                      className="text-center"
                     >
-                      <div className="w-2 h-2 bg-red-400 rounded-full mt-2 flex-shrink-0" />
-                      <p className="text-gray-300 text-base leading-relaxed">
-                        <span className="text-red-400 font-semibold">Missing deadlines:</span> Important tasks buried in the chaos of information
+                      <p className="text-gray-300 text-lg leading-relaxed">
+                        <span className="text-red-400 font-semibold">Missing deadlines</span>
                       </p>
-                    </motion.div>
-                    
-                    <motion.div
-                      whileHover={{ x: 5 }}
-                      className="flex items-start space-x-3"
-                    >
-                      <div className="w-2 h-2 bg-red-400 rounded-full mt-2 flex-shrink-0" />
-                      <p className="text-gray-300 text-base leading-relaxed">
-                        <span className="text-red-400 font-semibold">Mental fatigue:</span> Constantly switching between tools and contexts
-                      </p>
+                      <p className="text-gray-400 text-sm mt-2">Tasks buried in chaos</p>
                     </motion.div>
                   </div>
                 </div>
@@ -1171,7 +1161,7 @@ export default function AuthPage() {
                 <div className="absolute inset-[1px] rounded-3xl bg-gradient-to-br from-gray-900/80 to-gray-800/60" />
                 
                 <div className="relative z-10">
-                  <div className="flex items-center mb-6">
+                  <div className="flex items-center mb-8">
                     <motion.div
                       whileHover={{ rotate: 360 }}
                       transition={{ duration: 0.6 }}
@@ -1180,50 +1170,40 @@ export default function AuthPage() {
                       <Lightbulb className="w-8 h-8 text-white" />
                     </motion.div>
                     <div>
-                      <h4 className="text-white font-bold text-xl">The Solution</h4>
+                      <h4 className="text-white font-bold text-2xl">The Solution</h4>
                       <p className="text-gray-400 text-sm">Velora AI</p>
                     </div>
                   </div>
                   
-                  <div className="space-y-4">
+                  <div className="space-y-6">
                     <motion.div
                       whileHover={{ x: 5 }}
-                      className="flex items-start space-x-3"
+                      className="text-center"
                     >
-                      <div className="w-2 h-2 bg-green-400 rounded-full mt-2 flex-shrink-0" />
-                      <p className="text-gray-300 text-base leading-relaxed">
-                        <span className="text-green-400 font-semibold">Unified knowledge base:</span> All your documents, emails, and notes in one intelligent system
+                      <p className="text-gray-300 text-lg leading-relaxed">
+                        <span className="text-green-400 font-semibold">Unified knowledge base</span>
                       </p>
+                      <p className="text-gray-400 text-sm mt-2">Everything in one place</p>
                     </motion.div>
                     
                     <motion.div
                       whileHover={{ x: 5 }}
-                      className="flex items-start space-x-3"
+                      className="text-center"
                     >
-                      <div className="w-2 h-2 bg-green-400 rounded-full mt-2 flex-shrink-0" />
-                      <p className="text-gray-300 text-base leading-relaxed">
-                        <span className="text-green-400 font-semibold">Instant answers:</span> Ask questions in natural language and get precise results
+                      <p className="text-gray-300 text-lg leading-relaxed">
+                        <span className="text-green-400 font-semibold">Instant answers</span>
                       </p>
+                      <p className="text-gray-400 text-sm mt-2">Ask, get results</p>
                     </motion.div>
                     
                     <motion.div
                       whileHover={{ x: 5 }}
-                      className="flex items-start space-x-3"
+                      className="text-center"
                     >
-                      <div className="w-2 h-2 bg-green-400 rounded-full mt-2 flex-shrink-0" />
-                      <p className="text-gray-300 text-base leading-relaxed">
-                        <span className="text-green-400 font-semibold">Smart automation:</span> Calendar events, reminders, and tasks created automatically
+                      <p className="text-gray-300 text-lg leading-relaxed">
+                        <span className="text-green-400 font-semibold">Smart automation</span>
                       </p>
-                    </motion.div>
-                    
-                    <motion.div
-                      whileHover={{ x: 5 }}
-                      className="flex items-start space-x-3"
-                    >
-                      <div className="w-2 h-2 bg-green-400 rounded-full mt-2 flex-shrink-0" />
-                      <p className="text-gray-300 text-base leading-relaxed">
-                        <span className="text-green-400 font-semibold">Context awareness:</span> Understands your work patterns and adapts to your needs
-                      </p>
+                      <p className="text-gray-400 text-sm mt-2">Tasks created automatically</p>
                     </motion.div>
                   </div>
                 </div>
