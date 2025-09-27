@@ -4,7 +4,7 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { motion as motion2 } from 'framer-motion'
-import { User, Lock, Mail, ArrowRight, Sparkles, Brain, Calendar, Bell, CheckCircle, Clock, Mic, Zap, Target, Lightbulb, MessageSquare, Database, Shield, Rocket, Star, TrendingUp, Users, Globe, Smartphone, Laptop, Crown } from 'lucide-react'
+import { User, Lock, Mail, ArrowRight, Sparkles, Brain, Calendar, Bell, CheckCircle, Clock, Mic, Zap, Target, Lightbulb, MessageSquare, Database, Shield, Rocket, Star, TrendingUp, Users, Globe, Smartphone, Laptop, Crown, FileText } from 'lucide-react'
 import Link from 'next/link'
 import { toast } from 'react-hot-toast'
 import { useAuth } from '@/components/providers/AuthProvider'
