@@ -1075,12 +1075,12 @@ export default function AuthPage() {
           </div>
 
           <div className="max-w-6xl mx-auto px-4 relative z-10">
-            {/* Revolutionary Header */}
+            {/* Mobile-Optimized Header */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
-              className="text-center mb-20"
+              className="text-center mb-12 md:mb-20 px-4"
             >
               <motion.div
                 animate={{
@@ -1092,9 +1092,9 @@ export default function AuthPage() {
                   ]
                 }}
                 transition={{ duration: 3, repeat: Infinity }}
-                className="inline-block mb-8"
+                className="inline-block mb-6 md:mb-8"
               >
-                <span className="relative bg-gradient-to-r from-red-500 to-orange-500 text-white px-6 py-3 rounded-full text-sm font-semibold uppercase tracking-wide overflow-hidden">
+                <span className="relative bg-gradient-to-r from-red-500 to-orange-500 text-white px-4 py-2 md:px-6 md:py-3 rounded-full text-xs md:text-sm font-semibold uppercase tracking-wide overflow-hidden">
                   <motion.div
                     animate={{
                       x: ["-100%", "100%"],
@@ -1106,7 +1106,7 @@ export default function AuthPage() {
                 </span>
               </motion.div>
               
-              <h3 className="text-4xl md:text-6xl lg:text-7xl font-black text-white mb-8 px-4 leading-tight">
+              <h3 className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl xl:text-7xl font-black text-white mb-6 md:mb-8 px-2 leading-tight">
                 Stop <motion.span 
                   animate={{
                     backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
@@ -1126,18 +1126,18 @@ export default function AuthPage() {
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4 }}
-                className="text-xl md:text-2xl lg:text-3xl text-gray-300 max-w-5xl mx-auto leading-relaxed mb-12 px-4 font-light"
+                className="text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl text-gray-300 max-w-4xl mx-auto leading-relaxed mb-8 md:mb-12 px-2 font-light"
               >
                 Every day you wait, you're losing hours searching for documents, missing deadlines, and feeling overwhelmed by information chaos.
               </motion.p>
             </motion.div>
 
-            {/* Revolutionary Pain Points with Advanced UI/UX */}
+            {/* Mobile-Optimized Pain Points */}
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.4 }}
-              className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-20 px-4"
+              className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 lg:gap-12 mb-12 md:mb-20 px-4"
             >
               {/* Card 1: Wasting Time */}
               <motion.div
@@ -1170,33 +1170,33 @@ export default function AuthPage() {
                   <div className="w-full h-full bg-gray-900 rounded-3xl" />
                 </motion.div>
                 
-                <div className="relative z-10 p-10 text-center">
+                <div className="relative z-10 p-6 md:p-8 lg:p-10 text-center">
                   <motion.div
                     animate={{ 
                       rotate: [0, 15, -15, 0],
                       scale: [1, 1.1, 1]
                     }}
                     transition={{ duration: 4, repeat: Infinity }}
-                    className="w-24 h-24 bg-gradient-to-r from-red-500 via-orange-500 to-red-500 rounded-full flex items-center justify-center mx-auto mb-8 shadow-2xl relative"
+                    className="w-16 h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 bg-gradient-to-r from-red-500 via-orange-500 to-red-500 rounded-full flex items-center justify-center mx-auto mb-4 md:mb-6 lg:mb-8 shadow-2xl relative"
                   >
                     <motion.div
                       animate={{ rotate: [0, 360] }}
                       transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
                       className="absolute inset-0 rounded-full bg-gradient-to-r from-red-500/50 to-orange-500/50 blur-md"
                     />
-                    <Clock className="w-12 h-12 text-white relative z-10" />
+                    <Clock className="w-8 h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 text-white relative z-10" />
                   </motion.div>
                   
                   <motion.h4 
                     whileHover={{ scale: 1.05, x: 5 }}
-                    className="text-white font-black text-2xl mb-6"
+                    className="text-white font-black text-lg md:text-xl lg:text-2xl mb-3 md:mb-4 lg:mb-6"
                   >
                     Wasting 2+ Hours Daily
                   </motion.h4>
                   
                   <motion.p 
                     whileHover={{ scale: 1.02 }}
-                    className="text-gray-300 text-lg leading-relaxed"
+                    className="text-gray-300 text-sm md:text-base lg:text-lg leading-relaxed"
                   >
                     Searching through scattered documents, emails, and notes. That's <motion.span 
                       animate={{
@@ -1246,33 +1246,33 @@ export default function AuthPage() {
                   <div className="w-full h-full bg-gray-900 rounded-3xl" />
                 </motion.div>
                 
-                <div className="relative z-10 p-10 text-center">
+                <div className="relative z-10 p-6 md:p-8 lg:p-10 text-center">
                   <motion.div
                     animate={{ 
                       scale: [1, 1.2, 1],
                       rotate: [0, 5, -5, 0]
                     }}
                     transition={{ duration: 3, repeat: Infinity }}
-                    className="w-24 h-24 bg-gradient-to-r from-orange-500 via-yellow-500 to-orange-500 rounded-full flex items-center justify-center mx-auto mb-8 shadow-2xl relative"
+                    className="w-16 h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 bg-gradient-to-r from-orange-500 via-yellow-500 to-orange-500 rounded-full flex items-center justify-center mx-auto mb-4 md:mb-6 lg:mb-8 shadow-2xl relative"
                   >
                     <motion.div
                       animate={{ scale: [1, 1.3, 1] }}
                       transition={{ duration: 2, repeat: Infinity }}
                       className="absolute inset-0 rounded-full bg-gradient-to-r from-orange-500/50 to-yellow-500/50 blur-md"
                     />
-                    <Target className="w-12 h-12 text-white relative z-10" />
+                    <Target className="w-8 h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 text-white relative z-10" />
                   </motion.div>
                   
                   <motion.h4 
                     whileHover={{ scale: 1.05, x: 5 }}
-                    className="text-white font-black text-2xl mb-6"
+                    className="text-white font-black text-lg md:text-xl lg:text-2xl mb-3 md:mb-4 lg:mb-6"
                   >
                     Missing Critical Deadlines
                   </motion.h4>
                   
                   <motion.p 
                     whileHover={{ scale: 1.02 }}
-                    className="text-gray-300 text-lg leading-relaxed"
+                    className="text-gray-300 text-sm md:text-base lg:text-lg leading-relaxed"
                   >
                     Important tasks buried in information chaos. <motion.span 
                       animate={{
@@ -1322,33 +1322,33 @@ export default function AuthPage() {
                   <div className="w-full h-full bg-gray-900 rounded-3xl" />
                 </motion.div>
                 
-                <div className="relative z-10 p-10 text-center">
+                <div className="relative z-10 p-6 md:p-8 lg:p-10 text-center">
                   <motion.div
                     animate={{ 
                       opacity: [0.7, 1, 0.7],
                       scale: [1, 1.1, 1]
                     }}
                     transition={{ duration: 2, repeat: Infinity }}
-                    className="w-24 h-24 bg-gradient-to-r from-purple-500 via-pink-500 to-purple-500 rounded-full flex items-center justify-center mx-auto mb-8 shadow-2xl relative"
+                    className="w-16 h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 bg-gradient-to-r from-purple-500 via-pink-500 to-purple-500 rounded-full flex items-center justify-center mx-auto mb-4 md:mb-6 lg:mb-8 shadow-2xl relative"
                   >
                     <motion.div
                       animate={{ opacity: [0.3, 0.7, 0.3] }}
                       transition={{ duration: 3, repeat: Infinity }}
                       className="absolute inset-0 rounded-full bg-gradient-to-r from-purple-500/50 to-pink-500/50 blur-md"
                     />
-                    <Brain className="w-12 h-12 text-white relative z-10" />
+                    <Brain className="w-8 h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 text-white relative z-10" />
                   </motion.div>
                   
                   <motion.h4 
                     whileHover={{ scale: 1.05, x: 5 }}
-                    className="text-white font-black text-2xl mb-6"
+                    className="text-white font-black text-lg md:text-xl lg:text-2xl mb-3 md:mb-4 lg:mb-6"
                   >
                     Mental Exhaustion
                   </motion.h4>
                   
                   <motion.p 
                     whileHover={{ scale: 1.02 }}
-                    className="text-gray-300 text-lg leading-relaxed"
+                    className="text-gray-300 text-sm md:text-base lg:text-lg leading-relaxed"
                   >
                     Constantly switching between tools and contexts. <motion.span 
                       animate={{
@@ -1368,12 +1368,12 @@ export default function AuthPage() {
               </motion.div>
             </motion.div>
 
-            {/* Revolutionary Solution Section */}
+            {/* Mobile-Optimized Solution Section */}
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.6 }}
-              className="text-center mb-20 px-4"
+              className="text-center mb-12 md:mb-20 px-4"
             >
               <motion.div
                 animate={{ 
@@ -1386,17 +1386,17 @@ export default function AuthPage() {
                   ]
                 }}
                 transition={{ duration: 4, repeat: Infinity }}
-                className="w-32 h-32 bg-gradient-to-r from-electric-500 via-purple-500 to-cyan-500 rounded-full flex items-center justify-center mx-auto mb-12 shadow-2xl"
+                className="w-20 h-20 md:w-24 md:h-24 lg:w-32 lg:h-32 bg-gradient-to-r from-electric-500 via-purple-500 to-cyan-500 rounded-full flex items-center justify-center mx-auto mb-6 md:mb-8 lg:mb-12 shadow-2xl"
               >
                 <motion.div
                   animate={{ rotate: [0, 360] }}
                   transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
                 >
-                  <Lightbulb className="w-16 h-16 text-white" />
+                  <Lightbulb className="w-10 h-10 md:w-12 md:h-12 lg:w-16 lg:h-16 text-white" />
                 </motion.div>
               </motion.div>
               
-              <h4 className="text-white font-black text-4xl lg:text-6xl mb-8 leading-tight">
+              <h4 className="text-white font-black text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl mb-4 md:mb-6 lg:mb-8 leading-tight px-2">
                 Transform Your Information Chaos Into <motion.span 
                   animate={{
                     backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
@@ -1417,13 +1417,13 @@ export default function AuthPage() {
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.8 }}
-                className="text-gray-300 text-2xl leading-relaxed max-w-5xl mx-auto mb-16 font-light"
+                className="text-gray-300 text-base sm:text-lg md:text-xl lg:text-2xl leading-relaxed max-w-4xl mx-auto mb-8 md:mb-12 lg:mb-16 font-light px-2"
               >
                 Velora AI doesn't just organize your information—it understands it, remembers it, and gives you instant answers to any question you have.
               </motion.p>
               
-              {/* Revolutionary Visual Benefits */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-12 max-w-6xl mx-auto">
+              {/* Mobile-Optimized Visual Benefits */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 lg:gap-12 max-w-6xl mx-auto">
                 <motion.div
                   whileHover={{ 
                     scale: 1.1, 
@@ -1435,16 +1435,16 @@ export default function AuthPage() {
                   className="group relative"
                 >
                   <div className="absolute inset-0 bg-gradient-to-r from-electric-500/20 to-purple-500/20 rounded-3xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                  <div className="relative bg-gradient-to-br from-gray-900/40 to-gray-800/20 rounded-3xl p-8 border border-electric-500/30 backdrop-blur-sm">
+                  <div className="relative bg-gradient-to-br from-gray-900/40 to-gray-800/20 rounded-3xl p-6 md:p-8 border border-electric-500/30 backdrop-blur-sm">
                     <motion.div
                       animate={{ rotate: [0, 360] }}
                       transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
-                      className="w-20 h-20 bg-gradient-to-r from-electric-500 to-purple-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-2xl"
+                      className="w-16 h-16 md:w-20 md:h-20 bg-gradient-to-r from-electric-500 to-purple-500 rounded-full flex items-center justify-center mx-auto mb-4 md:mb-6 shadow-2xl"
                     >
-                      <MessageSquare className="w-10 h-10 text-white" />
+                      <MessageSquare className="w-8 h-8 md:w-10 md:h-10 text-white" />
                     </motion.div>
-                    <h5 className="text-white font-bold text-xl mb-3">Ask Anything</h5>
-                    <p className="text-gray-400 text-base">Get instant answers</p>
+                    <h5 className="text-white font-bold text-lg md:text-xl mb-2 md:mb-3">Ask Anything</h5>
+                    <p className="text-gray-400 text-sm md:text-base">Get instant answers</p>
                   </div>
                 </motion.div>
                 
@@ -1459,16 +1459,16 @@ export default function AuthPage() {
                   className="group relative"
                 >
                   <div className="absolute inset-0 bg-gradient-to-r from-purple-500/20 to-cyan-500/20 rounded-3xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                  <div className="relative bg-gradient-to-br from-gray-900/40 to-gray-800/20 rounded-3xl p-8 border border-purple-500/30 backdrop-blur-sm">
+                  <div className="relative bg-gradient-to-br from-gray-900/40 to-gray-800/20 rounded-3xl p-6 md:p-8 border border-purple-500/30 backdrop-blur-sm">
                     <motion.div
                       animate={{ scale: [1, 1.2, 1] }}
                       transition={{ duration: 2, repeat: Infinity }}
-                      className="w-20 h-20 bg-gradient-to-r from-purple-500 to-cyan-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-2xl"
+                      className="w-16 h-16 md:w-20 md:h-20 bg-gradient-to-r from-purple-500 to-cyan-500 rounded-full flex items-center justify-center mx-auto mb-4 md:mb-6 shadow-2xl"
                     >
-                      <Calendar className="w-10 h-10 text-white" />
+                      <Calendar className="w-8 h-8 md:w-10 md:h-10 text-white" />
                     </motion.div>
-                    <h5 className="text-white font-bold text-xl mb-3">Never Miss Deadlines</h5>
-                    <p className="text-gray-400 text-base">Smart automation</p>
+                    <h5 className="text-white font-bold text-lg md:text-xl mb-2 md:mb-3">Never Miss Deadlines</h5>
+                    <p className="text-gray-400 text-sm md:text-base">Smart automation</p>
                   </div>
                 </motion.div>
                 
@@ -1483,34 +1483,34 @@ export default function AuthPage() {
                   className="group relative"
                 >
                   <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/20 to-emerald-500/20 rounded-3xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                  <div className="relative bg-gradient-to-br from-gray-900/40 to-gray-800/20 rounded-3xl p-8 border border-cyan-500/30 backdrop-blur-sm">
+                  <div className="relative bg-gradient-to-br from-gray-900/40 to-gray-800/20 rounded-3xl p-6 md:p-8 border border-cyan-500/30 backdrop-blur-sm">
                     <motion.div
                       animate={{ opacity: [0.7, 1, 0.7] }}
                       transition={{ duration: 3, repeat: Infinity }}
-                      className="w-20 h-20 bg-gradient-to-r from-cyan-500 to-emerald-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-2xl"
+                      className="w-16 h-16 md:w-20 md:h-20 bg-gradient-to-r from-cyan-500 to-emerald-500 rounded-full flex items-center justify-center mx-auto mb-4 md:mb-6 shadow-2xl"
                     >
-                      <Brain className="w-10 h-10 text-white" />
+                      <Brain className="w-8 h-8 md:w-10 md:h-10 text-white" />
                     </motion.div>
-                    <h5 className="text-white font-bold text-xl mb-3">Learns Your Patterns</h5>
-                    <p className="text-gray-400 text-base">Adapts to you</p>
+                    <h5 className="text-white font-bold text-lg md:text-xl mb-2 md:mb-3">Learns Your Patterns</h5>
+                    <p className="text-gray-400 text-sm md:text-base">Adapts to you</p>
                   </div>
                 </motion.div>
               </div>
             </motion.div>
 
-            {/* Revolutionary Social Proof & Urgency */}
+            {/* Mobile-Optimized Social Proof & Urgency */}
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.8 }}
-              className="text-center mb-20 px-4"
+              className="text-center mb-12 md:mb-20 px-4"
             >
               <motion.div
                 whileHover={{ 
                   scale: 1.02,
                   boxShadow: "0 25px 50px rgba(34, 197, 94, 0.2)"
                 }}
-                className="relative bg-gradient-to-r from-green-900/40 to-emerald-800/30 rounded-3xl p-12 border border-green-500/50 backdrop-blur-sm overflow-hidden"
+                className="relative bg-gradient-to-r from-green-900/40 to-emerald-800/30 rounded-3xl p-6 md:p-8 lg:p-12 border border-green-500/50 backdrop-blur-sm overflow-hidden"
               >
                 <div className="absolute inset-0 bg-gradient-to-r from-green-500/5 via-emerald-500/5 to-green-500/5 opacity-50" />
                 <div className="relative z-10">
@@ -1523,11 +1523,11 @@ export default function AuthPage() {
                       ]
                     }}
                     transition={{ duration: 3, repeat: Infinity }}
-                    className="text-green-400 font-bold text-2xl mb-8"
+                    className="text-green-400 font-bold text-lg md:text-xl lg:text-2xl mb-4 md:mb-6 lg:mb-8"
                   >
                     87% of beta users report saving 2+ hours daily within the first week.
                   </motion.p>
-                  <div className="flex flex-col sm:flex-row items-center justify-center gap-8 text-base text-gray-300">
+                  <div className="flex flex-col sm:flex-row items-center justify-center gap-4 md:gap-6 lg:gap-8 text-sm md:text-base text-gray-300">
                     <motion.span
                       whileHover={{ scale: 1.1, color: "#10B981" }}
                       className="flex items-center gap-2"
@@ -1535,7 +1535,7 @@ export default function AuthPage() {
                       <motion.div
                         animate={{ rotate: [0, 360] }}
                         transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-                        className="w-5 h-5"
+                        className="w-4 h-4 md:w-5 md:h-5"
                       >
                         ✅
                       </motion.div>
@@ -1548,7 +1548,7 @@ export default function AuthPage() {
                       <motion.div
                         animate={{ scale: [1, 1.2, 1] }}
                         transition={{ duration: 2, repeat: Infinity }}
-                        className="w-5 h-5"
+                        className="w-4 h-4 md:w-5 md:h-5"
                       >
                         ✅
                       </motion.div>
@@ -1561,7 +1561,7 @@ export default function AuthPage() {
                       <motion.div
                         animate={{ opacity: [0.7, 1, 0.7] }}
                         transition={{ duration: 2, repeat: Infinity }}
-                        className="w-5 h-5"
+                        className="w-4 h-4 md:w-5 md:h-5"
                       >
                         ✅
                       </motion.div>
@@ -1572,7 +1572,7 @@ export default function AuthPage() {
               </motion.div>
             </motion.div>
 
-            {/* Revolutionary Final CTA */}
+            {/* Mobile-Optimized Final CTA */}
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -1583,7 +1583,7 @@ export default function AuthPage() {
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ delay: 1.2 }}
-                className="text-gray-300 text-2xl mb-12 font-light leading-relaxed"
+                className="text-gray-300 text-base sm:text-lg md:text-xl lg:text-2xl mb-6 md:mb-8 lg:mb-12 font-light leading-relaxed px-2"
               >
                 Don't let another day pass losing important information. Join the beta and transform your productivity today.
               </motion.p>
@@ -1598,7 +1598,7 @@ export default function AuthPage() {
                 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => setAuthMode('login')}
-                className="group relative bg-gradient-to-r from-green-500 via-emerald-500 to-green-500 hover:from-green-400 hover:via-emerald-400 hover:to-green-400 text-white font-black py-6 px-16 rounded-full text-xl transition-all duration-500 shadow-2xl overflow-hidden"
+                className="group relative bg-gradient-to-r from-green-500 via-emerald-500 to-green-500 hover:from-green-400 hover:via-emerald-400 hover:to-green-400 text-white font-black py-4 px-8 md:py-5 md:px-12 lg:py-6 lg:px-16 rounded-full text-lg md:text-xl transition-all duration-500 shadow-2xl overflow-hidden w-full sm:w-auto"
               >
                 <motion.div
                   animate={{
@@ -1607,11 +1607,11 @@ export default function AuthPage() {
                   transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
                   className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
                 />
-                <span className="relative z-10 flex items-center gap-4">
+                <span className="relative z-10 flex items-center justify-center gap-2 md:gap-3 lg:gap-4">
                   <motion.span
                     animate={{ rotate: [0, 360] }}
                     transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-                    className="text-2xl"
+                    className="text-lg md:text-xl lg:text-2xl"
                   >
                     ⚡
                   </motion.span>
@@ -1619,7 +1619,7 @@ export default function AuthPage() {
                   <motion.span
                     animate={{ x: [0, 5, 0] }}
                     transition={{ duration: 1, repeat: Infinity }}
-                    className="text-2xl"
+                    className="text-lg md:text-xl lg:text-2xl"
                   >
                     →
                   </motion.span>
@@ -1630,7 +1630,7 @@ export default function AuthPage() {
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ delay: 1.4 }}
-                className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-8 text-sm text-gray-500"
+                className="flex flex-col sm:flex-row items-center justify-center gap-2 md:gap-3 lg:gap-4 mt-4 md:mt-6 lg:mt-8 text-xs md:text-sm text-gray-500"
               >
                 <motion.span
                   animate={{ opacity: [0.5, 1, 0.5] }}
@@ -1639,9 +1639,9 @@ export default function AuthPage() {
                 >
                   ⚡ Only 100 spots left
                 </motion.span>
-                <span>•</span>
+                <span className="hidden sm:inline">•</span>
                 <span>Free during beta</span>
-                <span>•</span>
+                <span className="hidden sm:inline">•</span>
                 <span>Setup in 30 seconds</span>
               </motion.div>
             </motion.div>
