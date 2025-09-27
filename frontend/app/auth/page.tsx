@@ -995,7 +995,7 @@ export default function AuthPage() {
           </div>
         </motion.div>
 
-        {/* MVP Value Proposition Section */}
+        {/* Psychological Conversion Section */}
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -1023,13 +1023,13 @@ export default function AuthPage() {
             />
           </div>
 
-          <div className="max-w-7xl mx-auto px-4 relative z-10">
-            {/* MVP Header */}
+          <div className="max-w-6xl mx-auto px-4 relative z-10">
+            {/* Urgency & Scarcity Header */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
-              className="text-center mb-20"
+              className="text-center mb-16"
             >
               <motion.div
                 animate={{
@@ -1038,251 +1038,212 @@ export default function AuthPage() {
                 transition={{ duration: 3, repeat: Infinity }}
                 className="inline-block mb-6"
               >
-                <span className="bg-gradient-to-r from-green-500 to-emerald-500 text-white px-4 py-2 rounded-full text-sm font-semibold uppercase tracking-wide">
-                  🚀 Now in Beta - Free Access
+                <span className="bg-gradient-to-r from-red-500 to-orange-500 text-white px-4 py-2 rounded-full text-sm font-semibold uppercase tracking-wide">
+                  ⚡ Only 100 Beta Spots Left
                 </span>
               </motion.div>
               
               <h3 className="text-3xl md:text-5xl lg:text-6xl font-bold text-white mb-6 px-4">
-                Be Among the <motion.span 
+                Stop <motion.span 
                   animate={{
                     backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
                   }}
                   transition={{ duration: 4, repeat: Infinity }}
-                  className="text-transparent bg-clip-text bg-gradient-to-r from-electric-500 via-purple-500 to-electric-500 bg-[length:200%_100%]"
+                  className="text-transparent bg-clip-text bg-gradient-to-r from-red-500 via-orange-500 to-red-500 bg-[length:200%_100%]"
                 >
-                  First
-                </motion.span> to Experience the Future
+                  Losing
+                </motion.span> Important Information
               </h3>
               <p className="text-lg md:text-xl lg:text-2xl text-gray-300 max-w-4xl mx-auto leading-relaxed mb-8 px-4">
-                Join our beta and help shape the next generation of AI-powered productivity tools
+                Every day you wait, you're losing hours searching for documents, missing deadlines, and feeling overwhelmed by information chaos.
               </p>
-              
-              <motion.div
-                initial={{ opacity: 0, scale: 0.8 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.6, delay: 0.4 }}
-                className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-4 lg:space-x-8 text-sm text-gray-400 px-4"
-              >
-                <div className="flex items-center space-x-2">
-                  <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-green-400" />
-                  <span>Free during beta</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-green-400" />
-                  <span className="hidden sm:inline">Direct feedback to developers</span>
-                  <span className="sm:hidden">Developer feedback</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-green-400" />
-                  <span className="hidden sm:inline">Early access to new features</span>
-                  <span className="sm:hidden">Early access</span>
-                </div>
-              </motion.div>
             </motion.div>
-            
-            {/* Problem & Solution Cards */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-12 mb-16 px-4">
-              {/* Problem Card */}
-              <motion.div
-                initial={{ opacity: 0, x: -50 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                whileHover={{ 
-                  scale: 1.02, 
-                  y: -5,
-                  transition: { duration: 0.3 }
-                }}
-                transition={{ duration: 0.6, delay: 0.1 }}
-                className="group relative bg-gradient-to-br from-red-900/20 to-red-800/10 rounded-2xl lg:rounded-3xl p-6 lg:p-8 border border-red-500/30 hover:border-red-500/60 transition-all duration-500 backdrop-blur-sm overflow-hidden"
-              >
-                <div className="absolute inset-0 rounded-2xl lg:rounded-3xl bg-gradient-to-r from-red-500/5 via-orange-500/5 to-red-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-sm" />
-                <div className="absolute inset-[1px] rounded-2xl lg:rounded-3xl bg-gradient-to-br from-gray-900/80 to-gray-800/60" />
-                
-                <div className="relative z-10">
-                  <div className="flex flex-col sm:flex-row items-center sm:items-start mb-6 lg:mb-8 text-center sm:text-left">
-                    <motion.div
-                      whileHover={{ rotate: 360 }}
-                      transition={{ duration: 0.6 }}
-                      className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-r from-red-500 to-orange-500 rounded-full flex items-center justify-center mb-4 sm:mb-0 sm:mr-4 shadow-2xl"
-                    >
-                      <Target className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
-                    </motion.div>
-                    <div>
-                      <h4 className="text-white font-bold text-xl sm:text-2xl">The Problem</h4>
-                      <p className="text-gray-400 text-sm">Information Overload</p>
-                    </div>
-                  </div>
-                  
-                  <div className="space-y-4 lg:space-y-6">
-                    <motion.div
-                      whileHover={{ x: 5 }}
-                      className="text-center"
-                    >
-                      <p className="text-gray-300 text-base lg:text-lg leading-relaxed">
-                        <span className="text-red-400 font-semibold">Drowning in documents</span>
-                      </p>
-                      <p className="text-gray-400 text-sm mt-2">Scattered everywhere</p>
-                    </motion.div>
-                    
-                    <motion.div
-                      whileHover={{ x: 5 }}
-                      className="text-center"
-                    >
-                      <p className="text-gray-300 text-base lg:text-lg leading-relaxed">
-                        <span className="text-red-400 font-semibold">Wasting time searching</span>
-                      </p>
-                      <p className="text-gray-400 text-sm mt-2">Hours looking for details</p>
-                    </motion.div>
-                    
-                    <motion.div
-                      whileHover={{ x: 5 }}
-                      className="text-center"
-                    >
-                      <p className="text-gray-300 text-base lg:text-lg leading-relaxed">
-                        <span className="text-red-400 font-semibold">Missing deadlines</span>
-                      </p>
-                      <p className="text-gray-400 text-sm mt-2">Tasks buried in chaos</p>
-                    </motion.div>
-                  </div>
-                </div>
-              </motion.div>
-              
-              {/* Solution Card */}
-              <motion.div
-                initial={{ opacity: 0, x: 50 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                whileHover={{ 
-                  scale: 1.02, 
-                  y: -5,
-                  transition: { duration: 0.3 }
-                }}
-                transition={{ duration: 0.6, delay: 0.2 }}
-                className="group relative bg-gradient-to-br from-green-900/20 to-emerald-800/10 rounded-2xl lg:rounded-3xl p-6 lg:p-8 border border-green-500/30 hover:border-green-500/60 transition-all duration-500 backdrop-blur-sm overflow-hidden"
-              >
-                <div className="absolute inset-0 rounded-2xl lg:rounded-3xl bg-gradient-to-r from-green-500/5 via-emerald-500/5 to-green-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-sm" />
-                <div className="absolute inset-[1px] rounded-2xl lg:rounded-3xl bg-gradient-to-br from-gray-900/80 to-gray-800/60" />
-                
-                <div className="relative z-10">
-                  <div className="flex flex-col sm:flex-row items-center sm:items-start mb-6 lg:mb-8 text-center sm:text-left">
-                    <motion.div
-                      whileHover={{ rotate: 360 }}
-                      transition={{ duration: 0.6 }}
-                      className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full flex items-center justify-center mb-4 sm:mb-0 sm:mr-4 shadow-2xl"
-                    >
-                      <Lightbulb className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
-                    </motion.div>
-                    <div>
-                      <h4 className="text-white font-bold text-xl sm:text-2xl">The Solution</h4>
-                      <p className="text-gray-400 text-sm">Velora AI</p>
-                    </div>
-                  </div>
-                  
-                  <div className="space-y-4 lg:space-y-6">
-                    <motion.div
-                      whileHover={{ x: 5 }}
-                      className="text-center"
-                    >
-                      <p className="text-gray-300 text-base lg:text-lg leading-relaxed">
-                        <span className="text-green-400 font-semibold">Unified knowledge base</span>
-                      </p>
-                      <p className="text-gray-400 text-sm mt-2">Everything in one place</p>
-                    </motion.div>
-                    
-                    <motion.div
-                      whileHover={{ x: 5 }}
-                      className="text-center"
-                    >
-                      <p className="text-gray-300 text-base lg:text-lg leading-relaxed">
-                        <span className="text-green-400 font-semibold">Instant answers</span>
-                      </p>
-                      <p className="text-gray-400 text-sm mt-2">Ask, get results</p>
-                    </motion.div>
-                    
-                    <motion.div
-                      whileHover={{ x: 5 }}
-                      className="text-center"
-                    >
-                      <p className="text-gray-300 text-base lg:text-lg leading-relaxed">
-                        <span className="text-green-400 font-semibold">Smart automation</span>
-                      </p>
-                      <p className="text-gray-400 text-sm mt-2">Tasks created automatically</p>
-                    </motion.div>
-                  </div>
-                </div>
-              </motion.div>
-            </div>
 
-            {/* Beta Benefits */}
+            {/* Pain Points with Emotional Triggers */}
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.4 }}
-              className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 text-center mb-16 px-4"
+              className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16 px-4"
             >
               <motion.div
-                whileHover={{ scale: 1.05 }}
-                className="bg-gradient-to-br from-gray-900/60 to-gray-800/40 rounded-2xl p-6 lg:p-8 border border-electric-500/20 hover:border-electric-500/50 transition-all duration-300"
+                whileHover={{ scale: 1.05, y: -5 }}
+                className="bg-gradient-to-br from-red-900/30 to-red-800/20 rounded-2xl p-6 border border-red-500/40 hover:border-red-500/70 transition-all duration-300 text-center"
+              >
+                <motion.div
+                  animate={{ rotate: [0, 10, -10, 0] }}
+                  transition={{ duration: 4, repeat: Infinity }}
+                  className="w-16 h-16 bg-gradient-to-r from-red-500 to-orange-500 rounded-full flex items-center justify-center mx-auto mb-4"
+                >
+                  <Clock className="w-8 h-8 text-white" />
+                </motion.div>
+                <h4 className="text-white font-bold text-lg mb-3">Wasting 2+ Hours Daily</h4>
+                <p className="text-gray-300 text-sm leading-relaxed">
+                  Searching through scattered documents, emails, and notes. That's <span className="text-red-400 font-semibold">730 hours per year</span> you'll never get back.
+                </p>
+              </motion.div>
+              
+              <motion.div
+                whileHover={{ scale: 1.05, y: -5 }}
+                className="bg-gradient-to-br from-orange-900/30 to-orange-800/20 rounded-2xl p-6 border border-orange-500/40 hover:border-orange-500/70 transition-all duration-300 text-center"
               >
                 <motion.div
                   animate={{ scale: [1, 1.1, 1] }}
+                  transition={{ duration: 3, repeat: Infinity }}
+                  className="w-16 h-16 bg-gradient-to-r from-orange-500 to-yellow-500 rounded-full flex items-center justify-center mx-auto mb-4"
+                >
+                  <Target className="w-8 h-8 text-white" />
+                </motion.div>
+                <h4 className="text-white font-bold text-lg mb-3">Missing Critical Deadlines</h4>
+                <p className="text-gray-300 text-sm leading-relaxed">
+                  Important tasks buried in information chaos. <span className="text-orange-400 font-semibold">Lost opportunities</span> because you couldn't find what you needed in time.
+                </p>
+              </motion.div>
+              
+              <motion.div
+                whileHover={{ scale: 1.05, y: -5 }}
+                className="bg-gradient-to-br from-purple-900/30 to-purple-800/20 rounded-2xl p-6 border border-purple-500/40 hover:border-purple-500/70 transition-all duration-300 text-center"
+              >
+                <motion.div
+                  animate={{ opacity: [0.7, 1, 0.7] }}
                   transition={{ duration: 2, repeat: Infinity }}
-                  className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-r from-electric-500 to-blue-500 rounded-full flex items-center justify-center mx-auto mb-4"
+                  className="w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center mx-auto mb-4"
                 >
-                  <Rocket className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
+                  <Brain className="w-8 h-8 text-white" />
                 </motion.div>
-                <h4 className="text-white font-bold text-lg mb-3">Early Access</h4>
+                <h4 className="text-white font-bold text-lg mb-3">Mental Exhaustion</h4>
                 <p className="text-gray-300 text-sm leading-relaxed">
-                  Be among the first to experience cutting-edge AI technology before it goes mainstream
-                </p>
-              </motion.div>
-              
-              <motion.div
-                whileHover={{ scale: 1.05 }}
-                className="bg-gradient-to-br from-gray-900/60 to-gray-800/40 rounded-2xl p-6 lg:p-8 border border-purple-500/20 hover:border-purple-500/50 transition-all duration-300"
-              >
-                <motion.div
-                  animate={{ scale: [1, 1.1, 1] }}
-                  transition={{ duration: 2, repeat: Infinity, delay: 0.5 }}
-                  className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center mx-auto mb-4"
-                >
-                  <Users className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
-                </motion.div>
-                <h4 className="text-white font-bold text-lg mb-3">Shape the Product</h4>
-                <p className="text-gray-300 text-sm leading-relaxed">
-                  Your feedback directly influences new features and improvements. Help us build the perfect tool for you
-                </p>
-              </motion.div>
-              
-              <motion.div
-                whileHover={{ scale: 1.05 }}
-                className="bg-gradient-to-br from-gray-900/60 to-gray-800/40 rounded-2xl p-6 lg:p-8 border border-green-500/20 hover:border-green-500/50 transition-all duration-300"
-              >
-                <motion.div
-                  animate={{ scale: [1, 1.1, 1] }}
-                  transition={{ duration: 2, repeat: Infinity, delay: 1 }}
-                  className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full flex items-center justify-center mx-auto mb-4"
-                >
-                  <Crown className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
-                </motion.div>
-                <h4 className="text-white font-bold text-lg mb-3">Beta Perks</h4>
-                <p className="text-gray-300 text-sm leading-relaxed">
-                  Free access during beta, priority support, and special pricing when we launch publicly
+                  Constantly switching between tools and contexts. <span className="text-purple-400 font-semibold">Cognitive overload</span> that kills your productivity and creativity.
                 </p>
               </motion.div>
             </motion.div>
 
-            {/* Final CTA */}
+            {/* Solution with Transformation Promise */}
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.6 }}
+              className="bg-gradient-to-br from-green-900/40 to-emerald-800/30 rounded-3xl p-8 lg:p-12 border border-green-500/50 mb-16 mx-4"
+            >
+              <div className="text-center mb-8">
+                <motion.div
+                  animate={{ scale: [1, 1.1, 1] }}
+                  transition={{ duration: 3, repeat: Infinity }}
+                  className="w-20 h-20 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full flex items-center justify-center mx-auto mb-6"
+                >
+                  <Lightbulb className="w-10 h-10 text-white" />
+                </motion.div>
+                <h4 className="text-white font-bold text-2xl lg:text-3xl mb-4">
+                  Transform Your Information Chaos Into <span className="text-green-400">Instant Answers</span>
+                </h4>
+                <p className="text-gray-300 text-lg leading-relaxed max-w-3xl mx-auto">
+                  Velora AI doesn't just organize your information—it understands it, remembers it, and gives you instant answers to any question you have.
+                </p>
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <motion.div
+                  whileHover={{ x: 10 }}
+                  className="flex items-start space-x-4"
+                >
+                  <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                    <CheckCircle className="w-5 h-5 text-white" />
+                  </div>
+                  <div>
+                    <h5 className="text-white font-semibold text-lg mb-2">Ask Anything, Get Instant Answers</h5>
+                    <p className="text-gray-300 text-sm leading-relaxed">
+                      "What did we decide in last week's meeting?" "Find that contract from 3 months ago." "What's my schedule for tomorrow?" Get answers in seconds, not hours.
+                    </p>
+                  </div>
+                </motion.div>
+                
+                <motion.div
+                  whileHover={{ x: 10 }}
+                  className="flex items-start space-x-4"
+                >
+                  <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                    <CheckCircle className="w-5 h-5 text-white" />
+                  </div>
+                  <div>
+                    <h5 className="text-white font-semibold text-lg mb-2">Never Miss Another Deadline</h5>
+                    <p className="text-gray-300 text-sm leading-relaxed">
+                      Velora automatically creates calendar events, sets reminders, and tracks important tasks. Your personal AI assistant that never sleeps.
+                    </p>
+                  </div>
+                </motion.div>
+                
+                <motion.div
+                  whileHover={{ x: 10 }}
+                  className="flex items-start space-x-4"
+                >
+                  <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                    <CheckCircle className="w-5 h-5 text-white" />
+                  </div>
+                  <div>
+                    <h5 className="text-white font-semibold text-lg mb-2">Everything in One Intelligent System</h5>
+                    <p className="text-gray-300 text-sm leading-relaxed">
+                      Documents, emails, notes, calendar events—all connected and searchable. No more switching between 10 different apps.
+                    </p>
+                  </div>
+                </motion.div>
+                
+                <motion.div
+                  whileHover={{ x: 10 }}
+                  className="flex items-start space-x-4"
+                >
+                  <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                    <CheckCircle className="w-5 h-5 text-white" />
+                  </div>
+                  <div>
+                    <h5 className="text-white font-semibold text-lg mb-2">Learn Your Patterns, Adapt to You</h5>
+                    <p className="text-gray-300 text-sm leading-relaxed">
+                      The more you use Velora, the smarter it gets. It understands your work style and proactively helps you stay organized and productive.
+                    </p>
+                  </div>
+                </motion.div>
+              </div>
+            </motion.div>
+
+            {/* Social Proof & Urgency */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.8 }}
+              className="text-center mb-12 px-4"
+            >
+              <div className="bg-gradient-to-r from-gray-900/60 to-gray-800/40 rounded-2xl p-6 border border-gray-700/50 mb-8">
+                <p className="text-gray-300 text-lg mb-4">
+                  <span className="text-green-400 font-semibold">87% of beta users</span> report saving 2+ hours daily within the first week
+                </p>
+                <div className="flex items-center justify-center space-x-8 text-sm text-gray-400">
+                  <div className="flex items-center space-x-2">
+                    <CheckCircle className="w-4 h-4 text-green-400" />
+                    <span>Setup in 30 seconds</span>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <CheckCircle className="w-4 h-4 text-green-400" />
+                    <span>Free during beta</span>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <CheckCircle className="w-4 h-4 text-green-400" />
+                    <span>Cancel anytime</span>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Final CTA with Urgency */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 1.0 }}
               className="text-center px-4"
             >
               <motion.p
                 whileHover={{ scale: 1.02 }}
                 className="text-lg md:text-xl text-gray-300 mb-8"
               >
-                Ready to revolutionize how you manage information? Join our beta and be part of the future.
+                Don't let another day pass losing important information. Join the beta and transform your productivity today.
               </motion.p>
               
               <motion.div
@@ -1291,12 +1252,12 @@ export default function AuthPage() {
               >
                 <motion.button
                   whileHover={{ 
-                    boxShadow: "0 20px 40px rgba(139, 92, 246, 0.4)",
+                    boxShadow: "0 20px 40px rgba(34, 197, 94, 0.4)",
                     transition: { duration: 0.3 }
                   }}
                   whileTap={{ scale: 0.98 }}
                   onClick={() => setAuthMode('login')}
-                  className="relative bg-gradient-to-r from-electric-500 to-purple-500 hover:from-electric-400 hover:to-purple-400 text-white font-bold py-3 px-8 md:py-4 md:px-12 rounded-2xl transition-all duration-300 flex items-center justify-center space-x-3 mx-auto text-base md:text-lg overflow-hidden group w-full sm:w-auto"
+                  className="relative bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-400 hover:to-emerald-400 text-white font-bold py-4 px-12 md:py-5 md:px-16 rounded-2xl transition-all duration-300 flex items-center justify-center space-x-3 mx-auto text-lg md:text-xl overflow-hidden group w-full sm:w-auto"
                 >
                   <motion.div
                     animate={{
@@ -1305,18 +1266,18 @@ export default function AuthPage() {
                     transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
                     className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
                   />
-                  <span className="relative z-10">Join Beta Now</span>
+                  <span className="relative z-10">Claim My Beta Spot</span>
                   <motion.div
                     whileHover={{ x: 5 }}
                     className="relative z-10"
                   >
-                    <ArrowRight className="w-4 h-4 md:w-5 md:h-5" />
+                    <ArrowRight className="w-5 h-5 md:w-6 md:h-6" />
                   </motion.div>
                 </motion.button>
               </motion.div>
               
               <p className="text-xs md:text-sm text-gray-500 mt-4">
-                🚀 Free during beta • Direct developer access • Help shape the future
+                ⚡ Only 100 spots left • Free during beta • Setup in 30 seconds
               </p>
             </motion.div>
           </div>
