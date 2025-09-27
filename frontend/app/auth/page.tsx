@@ -1043,7 +1043,7 @@ export default function AuthPage() {
                 </span>
               </motion.div>
               
-              <h3 className="text-6xl font-bold text-white mb-6">
+              <h3 className="text-3xl md:text-5xl lg:text-6xl font-bold text-white mb-6 px-4">
                 Be Among the <motion.span 
                   animate={{
                     backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
@@ -1054,7 +1054,7 @@ export default function AuthPage() {
                   First
                 </motion.span> to Experience the Future
               </h3>
-              <p className="text-2xl text-gray-300 max-w-4xl mx-auto leading-relaxed mb-8">
+              <p className="text-lg md:text-xl lg:text-2xl text-gray-300 max-w-4xl mx-auto leading-relaxed mb-8 px-4">
                 Join our beta and help shape the next generation of AI-powered productivity tools
               </p>
               
@@ -1062,25 +1062,27 @@ export default function AuthPage() {
                 initial={{ opacity: 0, scale: 0.8 }}
                 whileInView={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.6, delay: 0.4 }}
-                className="flex items-center justify-center space-x-8 text-sm text-gray-400"
+                className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-4 lg:space-x-8 text-sm text-gray-400 px-4"
               >
                 <div className="flex items-center space-x-2">
-                  <CheckCircle className="w-5 h-5 text-green-400" />
+                  <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-green-400" />
                   <span>Free during beta</span>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <CheckCircle className="w-5 h-5 text-green-400" />
-                  <span>Direct feedback to developers</span>
+                  <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-green-400" />
+                  <span className="hidden sm:inline">Direct feedback to developers</span>
+                  <span className="sm:hidden">Developer feedback</span>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <CheckCircle className="w-5 h-5 text-green-400" />
-                  <span>Early access to new features</span>
+                  <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-green-400" />
+                  <span className="hidden sm:inline">Early access to new features</span>
+                  <span className="sm:hidden">Early access</span>
                 </div>
               </motion.div>
             </motion.div>
             
             {/* Problem & Solution Cards */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-12 mb-16 px-4">
               {/* Problem Card */}
               <motion.div
                 initial={{ opacity: 0, x: -50 }}
@@ -1091,32 +1093,32 @@ export default function AuthPage() {
                   transition: { duration: 0.3 }
                 }}
                 transition={{ duration: 0.6, delay: 0.1 }}
-                className="group relative bg-gradient-to-br from-red-900/20 to-red-800/10 rounded-3xl p-8 border border-red-500/30 hover:border-red-500/60 transition-all duration-500 backdrop-blur-sm overflow-hidden"
+                className="group relative bg-gradient-to-br from-red-900/20 to-red-800/10 rounded-2xl lg:rounded-3xl p-6 lg:p-8 border border-red-500/30 hover:border-red-500/60 transition-all duration-500 backdrop-blur-sm overflow-hidden"
               >
-                <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-red-500/5 via-orange-500/5 to-red-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-sm" />
-                <div className="absolute inset-[1px] rounded-3xl bg-gradient-to-br from-gray-900/80 to-gray-800/60" />
+                <div className="absolute inset-0 rounded-2xl lg:rounded-3xl bg-gradient-to-r from-red-500/5 via-orange-500/5 to-red-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-sm" />
+                <div className="absolute inset-[1px] rounded-2xl lg:rounded-3xl bg-gradient-to-br from-gray-900/80 to-gray-800/60" />
                 
                 <div className="relative z-10">
-                  <div className="flex items-center mb-8">
+                  <div className="flex flex-col sm:flex-row items-center sm:items-start mb-6 lg:mb-8 text-center sm:text-left">
                     <motion.div
                       whileHover={{ rotate: 360 }}
                       transition={{ duration: 0.6 }}
-                      className="w-16 h-16 bg-gradient-to-r from-red-500 to-orange-500 rounded-full flex items-center justify-center mr-4 shadow-2xl"
+                      className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-r from-red-500 to-orange-500 rounded-full flex items-center justify-center mb-4 sm:mb-0 sm:mr-4 shadow-2xl"
                     >
-                      <Target className="w-8 h-8 text-white" />
+                      <Target className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
                     </motion.div>
                     <div>
-                      <h4 className="text-white font-bold text-2xl">The Problem</h4>
+                      <h4 className="text-white font-bold text-xl sm:text-2xl">The Problem</h4>
                       <p className="text-gray-400 text-sm">Information Overload</p>
                     </div>
                   </div>
                   
-                  <div className="space-y-6">
+                  <div className="space-y-4 lg:space-y-6">
                     <motion.div
                       whileHover={{ x: 5 }}
                       className="text-center"
                     >
-                      <p className="text-gray-300 text-lg leading-relaxed">
+                      <p className="text-gray-300 text-base lg:text-lg leading-relaxed">
                         <span className="text-red-400 font-semibold">Drowning in documents</span>
                       </p>
                       <p className="text-gray-400 text-sm mt-2">Scattered everywhere</p>
@@ -1126,7 +1128,7 @@ export default function AuthPage() {
                       whileHover={{ x: 5 }}
                       className="text-center"
                     >
-                      <p className="text-gray-300 text-lg leading-relaxed">
+                      <p className="text-gray-300 text-base lg:text-lg leading-relaxed">
                         <span className="text-red-400 font-semibold">Wasting time searching</span>
                       </p>
                       <p className="text-gray-400 text-sm mt-2">Hours looking for details</p>
@@ -1136,7 +1138,7 @@ export default function AuthPage() {
                       whileHover={{ x: 5 }}
                       className="text-center"
                     >
-                      <p className="text-gray-300 text-lg leading-relaxed">
+                      <p className="text-gray-300 text-base lg:text-lg leading-relaxed">
                         <span className="text-red-400 font-semibold">Missing deadlines</span>
                       </p>
                       <p className="text-gray-400 text-sm mt-2">Tasks buried in chaos</p>
@@ -1155,32 +1157,32 @@ export default function AuthPage() {
                   transition: { duration: 0.3 }
                 }}
                 transition={{ duration: 0.6, delay: 0.2 }}
-                className="group relative bg-gradient-to-br from-green-900/20 to-emerald-800/10 rounded-3xl p-8 border border-green-500/30 hover:border-green-500/60 transition-all duration-500 backdrop-blur-sm overflow-hidden"
+                className="group relative bg-gradient-to-br from-green-900/20 to-emerald-800/10 rounded-2xl lg:rounded-3xl p-6 lg:p-8 border border-green-500/30 hover:border-green-500/60 transition-all duration-500 backdrop-blur-sm overflow-hidden"
               >
-                <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-green-500/5 via-emerald-500/5 to-green-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-sm" />
-                <div className="absolute inset-[1px] rounded-3xl bg-gradient-to-br from-gray-900/80 to-gray-800/60" />
+                <div className="absolute inset-0 rounded-2xl lg:rounded-3xl bg-gradient-to-r from-green-500/5 via-emerald-500/5 to-green-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-sm" />
+                <div className="absolute inset-[1px] rounded-2xl lg:rounded-3xl bg-gradient-to-br from-gray-900/80 to-gray-800/60" />
                 
                 <div className="relative z-10">
-                  <div className="flex items-center mb-8">
+                  <div className="flex flex-col sm:flex-row items-center sm:items-start mb-6 lg:mb-8 text-center sm:text-left">
                     <motion.div
                       whileHover={{ rotate: 360 }}
                       transition={{ duration: 0.6 }}
-                      className="w-16 h-16 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full flex items-center justify-center mr-4 shadow-2xl"
+                      className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full flex items-center justify-center mb-4 sm:mb-0 sm:mr-4 shadow-2xl"
                     >
-                      <Lightbulb className="w-8 h-8 text-white" />
+                      <Lightbulb className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
                     </motion.div>
                     <div>
-                      <h4 className="text-white font-bold text-2xl">The Solution</h4>
+                      <h4 className="text-white font-bold text-xl sm:text-2xl">The Solution</h4>
                       <p className="text-gray-400 text-sm">Velora AI</p>
                     </div>
                   </div>
                   
-                  <div className="space-y-6">
+                  <div className="space-y-4 lg:space-y-6">
                     <motion.div
                       whileHover={{ x: 5 }}
                       className="text-center"
                     >
-                      <p className="text-gray-300 text-lg leading-relaxed">
+                      <p className="text-gray-300 text-base lg:text-lg leading-relaxed">
                         <span className="text-green-400 font-semibold">Unified knowledge base</span>
                       </p>
                       <p className="text-gray-400 text-sm mt-2">Everything in one place</p>
@@ -1190,7 +1192,7 @@ export default function AuthPage() {
                       whileHover={{ x: 5 }}
                       className="text-center"
                     >
-                      <p className="text-gray-300 text-lg leading-relaxed">
+                      <p className="text-gray-300 text-base lg:text-lg leading-relaxed">
                         <span className="text-green-400 font-semibold">Instant answers</span>
                       </p>
                       <p className="text-gray-400 text-sm mt-2">Ask, get results</p>
@@ -1200,7 +1202,7 @@ export default function AuthPage() {
                       whileHover={{ x: 5 }}
                       className="text-center"
                     >
-                      <p className="text-gray-300 text-lg leading-relaxed">
+                      <p className="text-gray-300 text-base lg:text-lg leading-relaxed">
                         <span className="text-green-400 font-semibold">Smart automation</span>
                       </p>
                       <p className="text-gray-400 text-sm mt-2">Tasks created automatically</p>
@@ -1215,18 +1217,18 @@ export default function AuthPage() {
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.4 }}
-              className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center mb-16"
+              className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 text-center mb-16 px-4"
             >
               <motion.div
                 whileHover={{ scale: 1.05 }}
-                className="bg-gradient-to-br from-gray-900/60 to-gray-800/40 rounded-2xl p-8 border border-electric-500/20 hover:border-electric-500/50 transition-all duration-300"
+                className="bg-gradient-to-br from-gray-900/60 to-gray-800/40 rounded-2xl p-6 lg:p-8 border border-electric-500/20 hover:border-electric-500/50 transition-all duration-300"
               >
                 <motion.div
                   animate={{ scale: [1, 1.1, 1] }}
                   transition={{ duration: 2, repeat: Infinity }}
-                  className="w-16 h-16 bg-gradient-to-r from-electric-500 to-blue-500 rounded-full flex items-center justify-center mx-auto mb-4"
+                  className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-r from-electric-500 to-blue-500 rounded-full flex items-center justify-center mx-auto mb-4"
                 >
-                  <Rocket className="w-8 h-8 text-white" />
+                  <Rocket className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
                 </motion.div>
                 <h4 className="text-white font-bold text-lg mb-3">Early Access</h4>
                 <p className="text-gray-300 text-sm leading-relaxed">
@@ -1236,14 +1238,14 @@ export default function AuthPage() {
               
               <motion.div
                 whileHover={{ scale: 1.05 }}
-                className="bg-gradient-to-br from-gray-900/60 to-gray-800/40 rounded-2xl p-8 border border-purple-500/20 hover:border-purple-500/50 transition-all duration-300"
+                className="bg-gradient-to-br from-gray-900/60 to-gray-800/40 rounded-2xl p-6 lg:p-8 border border-purple-500/20 hover:border-purple-500/50 transition-all duration-300"
               >
                 <motion.div
                   animate={{ scale: [1, 1.1, 1] }}
                   transition={{ duration: 2, repeat: Infinity, delay: 0.5 }}
-                  className="w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center mx-auto mb-4"
+                  className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center mx-auto mb-4"
                 >
-                  <Users className="w-8 h-8 text-white" />
+                  <Users className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
                 </motion.div>
                 <h4 className="text-white font-bold text-lg mb-3">Shape the Product</h4>
                 <p className="text-gray-300 text-sm leading-relaxed">
@@ -1253,14 +1255,14 @@ export default function AuthPage() {
               
               <motion.div
                 whileHover={{ scale: 1.05 }}
-                className="bg-gradient-to-br from-gray-900/60 to-gray-800/40 rounded-2xl p-8 border border-green-500/20 hover:border-green-500/50 transition-all duration-300"
+                className="bg-gradient-to-br from-gray-900/60 to-gray-800/40 rounded-2xl p-6 lg:p-8 border border-green-500/20 hover:border-green-500/50 transition-all duration-300"
               >
                 <motion.div
                   animate={{ scale: [1, 1.1, 1] }}
                   transition={{ duration: 2, repeat: Infinity, delay: 1 }}
-                  className="w-16 h-16 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full flex items-center justify-center mx-auto mb-4"
+                  className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full flex items-center justify-center mx-auto mb-4"
                 >
-                  <Crown className="w-8 h-8 text-white" />
+                  <Crown className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
                 </motion.div>
                 <h4 className="text-white font-bold text-lg mb-3">Beta Perks</h4>
                 <p className="text-gray-300 text-sm leading-relaxed">
@@ -1274,11 +1276,11 @@ export default function AuthPage() {
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.6 }}
-              className="text-center"
+              className="text-center px-4"
             >
               <motion.p
                 whileHover={{ scale: 1.02 }}
-                className="text-xl text-gray-300 mb-8"
+                className="text-lg md:text-xl text-gray-300 mb-8"
               >
                 Ready to revolutionize how you manage information? Join our beta and be part of the future.
               </motion.p>
@@ -1294,7 +1296,7 @@ export default function AuthPage() {
                   }}
                   whileTap={{ scale: 0.98 }}
                   onClick={() => setAuthMode('login')}
-                  className="relative bg-gradient-to-r from-electric-500 to-purple-500 hover:from-electric-400 hover:to-purple-400 text-white font-bold py-4 px-12 rounded-2xl transition-all duration-300 flex items-center justify-center space-x-3 mx-auto text-lg overflow-hidden group"
+                  className="relative bg-gradient-to-r from-electric-500 to-purple-500 hover:from-electric-400 hover:to-purple-400 text-white font-bold py-3 px-8 md:py-4 md:px-12 rounded-2xl transition-all duration-300 flex items-center justify-center space-x-3 mx-auto text-base md:text-lg overflow-hidden group w-full sm:w-auto"
                 >
                   <motion.div
                     animate={{
@@ -1308,12 +1310,12 @@ export default function AuthPage() {
                     whileHover={{ x: 5 }}
                     className="relative z-10"
                   >
-                    <ArrowRight className="w-5 h-5" />
+                    <ArrowRight className="w-4 h-4 md:w-5 md:h-5" />
                   </motion.div>
                 </motion.button>
               </motion.div>
               
-              <p className="text-sm text-gray-500 mt-4">
+              <p className="text-xs md:text-sm text-gray-500 mt-4">
                 🚀 Free during beta • Direct developer access • Help shape the future
               </p>
             </motion.div>
