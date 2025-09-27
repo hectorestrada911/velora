@@ -659,123 +659,123 @@ export default function AuthPage() {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
-          className="mb-20 w-full"
+          className="mb-32 w-full"
         >
-          <div className="max-w-6xl mx-auto px-4">
-            <div className="text-center mb-16">
-              <h3 className="text-4xl font-bold text-white mb-6">
+          <div className="max-w-7xl mx-auto px-4">
+            <div className="text-center mb-20">
+              <h3 className="text-5xl font-bold text-white mb-8">
                 Just <span className="text-transparent bg-clip-text bg-gradient-to-r from-electric-500 to-purple-500">talk</span> to Velora
               </h3>
-              <p className="text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
-                No learning curve. No complex setup. Just natural conversation that gets things done.
+              <p className="text-2xl text-gray-300 max-w-4xl mx-auto leading-relaxed">
+                No learning curve. No complex setup. Just natural conversation.
               </p>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+            <div className="space-y-16">
               <motion.div
-                whileHover={{ scale: 1.02, y: -2 }}
-                className="bg-gradient-to-br from-gray-900/60 to-gray-800/40 rounded-2xl p-8 border border-electric-500/20 hover:border-electric-500/50 transition-all duration-300 backdrop-blur-sm"
+                whileHover={{ scale: 1.02, y: -5 }}
+                className="bg-gradient-to-br from-gray-900/60 to-gray-800/40 rounded-3xl p-12 border border-electric-500/20 hover:border-electric-500/50 transition-all duration-300 backdrop-blur-sm max-w-5xl mx-auto"
               >
-                <div className="flex items-start space-x-4">
+                <div className="flex items-center space-x-8">
                   <motion.div
                     animate={{ 
-                      scale: [1, 1.05, 1],
+                      scale: [1, 1.1, 1],
                     }}
-                    transition={{ duration: 2, repeat: Infinity }}
-                    className="w-12 h-12 bg-gradient-to-br from-electric-500/30 to-blue-500/30 rounded-xl flex items-center justify-center flex-shrink-0"
+                    transition={{ duration: 3, repeat: Infinity }}
+                    className="w-20 h-20 bg-gradient-to-br from-electric-500/30 to-blue-500/30 rounded-2xl flex items-center justify-center flex-shrink-0"
                   >
-                    <MessageSquare className="w-6 h-6 text-electric-400" />
+                    <MessageSquare className="w-10 h-10 text-electric-400" />
                   </motion.div>
-                  <div>
-                    <h4 className="text-lg font-bold text-white mb-3">
+                  <div className="flex-1">
+                    <h4 className="text-2xl font-bold text-white mb-4">
                       You say: <span className="text-electric-400">"I have a meeting with John next Tuesday"</span>
                     </h4>
-                    <p className="text-gray-300 text-sm leading-relaxed">
-                      Velora automatically creates the calendar event, sets a reminder, and remembers the context for future conversations.
+                    <p className="text-gray-300 text-lg leading-relaxed">
+                      Velora creates the calendar event and sets a reminder automatically.
                     </p>
                   </div>
                 </div>
               </motion.div>
               
               <motion.div
-                whileHover={{ scale: 1.02, y: -2 }}
-                className="bg-gradient-to-br from-gray-900/60 to-gray-800/40 rounded-2xl p-8 border border-purple-500/20 hover:border-purple-500/50 transition-all duration-300 backdrop-blur-sm"
+                whileHover={{ scale: 1.02, y: -5 }}
+                className="bg-gradient-to-br from-gray-900/60 to-gray-800/40 rounded-3xl p-12 border border-purple-500/20 hover:border-purple-500/50 transition-all duration-300 backdrop-blur-sm max-w-5xl mx-auto"
               >
-                <div className="flex items-start space-x-4">
+                <div className="flex items-center space-x-8">
                   <motion.div
                     animate={{ 
-                      scale: [1, 1.05, 1],
+                      scale: [1, 1.1, 1],
                     }}
-                    transition={{ duration: 2, repeat: Infinity, delay: 0.5 }}
-                    className="w-12 h-12 bg-gradient-to-br from-purple-500/30 to-pink-500/30 rounded-xl flex items-center justify-center flex-shrink-0"
+                    transition={{ duration: 3, repeat: Infinity, delay: 0.5 }}
+                    className="w-20 h-20 bg-gradient-to-br from-purple-500/30 to-pink-500/30 rounded-2xl flex items-center justify-center flex-shrink-0"
                   >
-                    <Brain className="w-6 h-6 text-purple-400" />
+                    <Brain className="w-10 h-10 text-purple-400" />
                   </motion.div>
-                  <div>
-                    <h4 className="text-lg font-bold text-white mb-3">
+                  <div className="flex-1">
+                    <h4 className="text-2xl font-bold text-white mb-4">
                       You ask: <span className="text-purple-400">"What did we decide in last week's meeting?"</span>
                     </h4>
-                    <p className="text-gray-300 text-sm leading-relaxed">
-                      Velora searches through your documents, emails, and notes to find the exact information you need instantly.
+                    <p className="text-gray-300 text-lg leading-relaxed">
+                      Velora searches your documents and emails to find the answer instantly.
                     </p>
                   </div>
                 </div>
               </motion.div>
               
               <motion.div
-                whileHover={{ scale: 1.02, y: -2 }}
-                className="bg-gradient-to-br from-gray-900/60 to-gray-800/40 rounded-2xl p-8 border border-green-500/20 hover:border-green-500/50 transition-all duration-300 backdrop-blur-sm"
+                whileHover={{ scale: 1.02, y: -5 }}
+                className="bg-gradient-to-br from-gray-900/60 to-gray-800/40 rounded-3xl p-12 border border-green-500/20 hover:border-green-500/50 transition-all duration-300 backdrop-blur-sm max-w-5xl mx-auto"
               >
-                <div className="flex items-start space-x-4">
+                <div className="flex items-center space-x-8">
                   <motion.div
                     animate={{ 
-                      scale: [1, 1.05, 1],
+                      scale: [1, 1.1, 1],
                     }}
-                    transition={{ duration: 2, repeat: Infinity, delay: 1 }}
-                    className="w-12 h-12 bg-gradient-to-br from-green-500/30 to-emerald-500/30 rounded-xl flex items-center justify-center flex-shrink-0"
+                    transition={{ duration: 3, repeat: Infinity, delay: 1 }}
+                    className="w-20 h-20 bg-gradient-to-br from-green-500/30 to-emerald-500/30 rounded-2xl flex items-center justify-center flex-shrink-0"
                   >
-                    <Bell className="w-6 h-6 text-green-400" />
+                    <Bell className="w-10 h-10 text-green-400" />
                   </motion.div>
-                  <div>
-                    <h4 className="text-lg font-bold text-white mb-3">
+                  <div className="flex-1">
+                    <h4 className="text-2xl font-bold text-white mb-4">
                       You tell: <span className="text-green-400">"Remind me to call the client tomorrow"</span>
                     </h4>
-                    <p className="text-gray-300 text-sm leading-relaxed">
-                      Velora sets a smart reminder that knows when you actually need it, not just a random alarm.
+                    <p className="text-gray-300 text-lg leading-relaxed">
+                      Velora sets a smart reminder that knows when you actually need it.
                     </p>
                   </div>
                 </div>
               </motion.div>
               
               <motion.div
-                whileHover={{ scale: 1.02, y: -2 }}
-                className="bg-gradient-to-br from-gray-900/60 to-gray-800/40 rounded-2xl p-8 border border-yellow-500/20 hover:border-yellow-500/50 transition-all duration-300 backdrop-blur-sm"
+                whileHover={{ scale: 1.02, y: -5 }}
+                className="bg-gradient-to-br from-gray-900/60 to-gray-800/40 rounded-3xl p-12 border border-yellow-500/20 hover:border-yellow-500/50 transition-all duration-300 backdrop-blur-sm max-w-5xl mx-auto"
               >
-                <div className="flex items-start space-x-4">
+                <div className="flex items-center space-x-8">
                   <motion.div
                     animate={{ 
-                      scale: [1, 1.05, 1],
+                      scale: [1, 1.1, 1],
                     }}
-                    transition={{ duration: 2, repeat: Infinity, delay: 1.5 }}
-                    className="w-12 h-12 bg-gradient-to-br from-yellow-500/30 to-orange-500/30 rounded-xl flex items-center justify-center flex-shrink-0"
+                    transition={{ duration: 3, repeat: Infinity, delay: 1.5 }}
+                    className="w-20 h-20 bg-gradient-to-br from-yellow-500/30 to-orange-500/30 rounded-2xl flex items-center justify-center flex-shrink-0"
                   >
-                    <FileText className="w-6 h-6 text-yellow-400" />
+                    <FileText className="w-10 h-10 text-yellow-400" />
                   </motion.div>
-                  <div>
-                    <h4 className="text-lg font-bold text-white mb-3">
+                  <div className="flex-1">
+                    <h4 className="text-2xl font-bold text-white mb-4">
                       You upload: <span className="text-yellow-400">A 50-page research paper</span>
                     </h4>
-                    <p className="text-gray-300 text-sm leading-relaxed">
-                      Velora reads, understands, and organizes it. Ask questions about it anytime, anywhere.
+                    <p className="text-gray-300 text-lg leading-relaxed">
+                      Velora reads, understands, and organizes it. Ask questions anytime.
                     </p>
                   </div>
                 </div>
               </motion.div>
             </div>
             
-            <div className="text-center mt-12">
-              <p className="text-lg text-gray-300 mb-6">
-                That's it. No steps. No complexity. Just <span className="text-electric-400">natural conversation</span> that makes your life easier.
+            <div className="text-center mt-20">
+              <p className="text-2xl text-gray-300 mb-10">
+                That's it. No steps. No complexity. Just <span className="text-electric-400">natural conversation</span>.
               </p>
               <motion.div
                 whileHover={{ scale: 1.05 }}
@@ -783,10 +783,10 @@ export default function AuthPage() {
               >
                 <button
                   onClick={() => setAuthMode('login')}
-                  className="bg-gradient-to-r from-electric-500 to-purple-500 hover:from-electric-400 hover:to-purple-400 text-white font-semibold py-3 px-8 rounded-lg transition-all duration-200 hover:scale-105 flex items-center justify-center space-x-2 mx-auto"
+                  className="bg-gradient-to-r from-electric-500 to-purple-500 hover:from-electric-400 hover:to-purple-400 text-white font-semibold py-4 px-12 rounded-xl transition-all duration-200 hover:scale-105 flex items-center justify-center space-x-3 mx-auto text-lg"
                 >
                   <span>Start Talking to Velora</span>
-                  <ArrowRight className="w-5 h-5" />
+                  <ArrowRight className="w-6 h-6" />
                 </button>
               </motion.div>
             </div>
