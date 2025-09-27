@@ -1143,88 +1143,74 @@ export default function AuthPage() {
               </motion.div>
             </motion.div>
 
-            {/* Solution with Enhanced UI */}
+            {/* Solution with Visual Impact */}
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.6 }}
-              className="bg-gradient-to-br from-green-900/40 to-emerald-800/30 rounded-3xl p-8 lg:p-12 border border-green-500/50 mb-16 mx-4"
+              className="text-center mb-16 px-4"
             >
-              <div className="text-center mb-8">
-                <motion.div
-                  animate={{ scale: [1, 1.1, 1] }}
-                  transition={{ duration: 3, repeat: Infinity }}
-                  className="w-20 h-20 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full flex items-center justify-center mx-auto mb-6"
-                >
-                  <Lightbulb className="w-10 h-10 text-white" />
-                </motion.div>
-                <h4 className="text-white font-bold text-2xl lg:text-3xl mb-4">
-                  Transform Your Information Chaos Into <span className="text-green-400">Instant Answers</span>
-                </h4>
-                <p className="text-gray-300 text-lg leading-relaxed max-w-3xl mx-auto">
-                  Velora AI doesn't just organize your information—it understands it, remembers it, and gives you instant answers to any question you have.
-                </p>
-              </div>
+              <motion.div
+                animate={{ scale: [1, 1.1, 1] }}
+                transition={{ duration: 3, repeat: Infinity }}
+                className="w-24 h-24 bg-gradient-to-r from-electric-500 to-purple-500 rounded-full flex items-center justify-center mx-auto mb-8"
+              >
+                <Lightbulb className="w-12 h-12 text-white" />
+              </motion.div>
               
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <h4 className="text-white font-bold text-3xl lg:text-4xl mb-6">
+                Transform Your Information Chaos Into <span className="text-transparent bg-clip-text bg-gradient-to-r from-electric-500 to-purple-500">Instant Answers</span>
+              </h4>
+              
+              <p className="text-gray-300 text-xl leading-relaxed max-w-4xl mx-auto mb-12">
+                Velora AI doesn't just organize your information—it understands it, remembers it, and gives you instant answers to any question you have.
+              </p>
+              
+              {/* Visual Benefits - Minimal Text */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
                 <motion.div
-                  whileHover={{ x: 10 }}
-                  className="flex items-start space-x-4"
+                  whileHover={{ scale: 1.05, y: -5 }}
+                  className="text-center"
                 >
-                  <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                    <CheckCircle className="w-5 h-5 text-white" />
-                  </div>
-                  <div>
-                    <h5 className="text-white font-semibold text-lg mb-2">Ask Anything, Get Instant Answers</h5>
-                    <p className="text-gray-300 text-sm leading-relaxed">
-                      "What did we decide in last week's meeting?" "Find that contract from 3 months ago." "What's my schedule for tomorrow?" Get answers in seconds, not hours.
-                    </p>
-                  </div>
+                  <motion.div
+                    animate={{ rotate: [0, 360] }}
+                    transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+                    className="w-16 h-16 bg-gradient-to-r from-electric-500 to-purple-500 rounded-full flex items-center justify-center mx-auto mb-4"
+                  >
+                    <MessageSquare className="w-8 h-8 text-white" />
+                  </motion.div>
+                  <h5 className="text-white font-semibold text-lg mb-2">Ask Anything</h5>
+                  <p className="text-gray-400 text-sm">Get instant answers</p>
                 </motion.div>
                 
                 <motion.div
-                  whileHover={{ x: 10 }}
-                  className="flex items-start space-x-4"
+                  whileHover={{ scale: 1.05, y: -5 }}
+                  className="text-center"
                 >
-                  <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                    <CheckCircle className="w-5 h-5 text-white" />
-                  </div>
-                  <div>
-                    <h5 className="text-white font-semibold text-lg mb-2">Never Miss Another Deadline</h5>
-                    <p className="text-gray-300 text-sm leading-relaxed">
-                      Velora automatically creates calendar events, sets reminders, and tracks important tasks. Your personal AI assistant that never sleeps.
-                    </p>
-                  </div>
+                  <motion.div
+                    animate={{ scale: [1, 1.1, 1] }}
+                    transition={{ duration: 2, repeat: Infinity }}
+                    className="w-16 h-16 bg-gradient-to-r from-electric-500 to-purple-500 rounded-full flex items-center justify-center mx-auto mb-4"
+                  >
+                    <Calendar className="w-8 h-8 text-white" />
+                  </motion.div>
+                  <h5 className="text-white font-semibold text-lg mb-2">Never Miss Deadlines</h5>
+                  <p className="text-gray-400 text-sm">Smart automation</p>
                 </motion.div>
                 
                 <motion.div
-                  whileHover={{ x: 10 }}
-                  className="flex items-start space-x-4"
+                  whileHover={{ scale: 1.05, y: -5 }}
+                  className="text-center"
                 >
-                  <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                    <CheckCircle className="w-5 h-5 text-white" />
-                  </div>
-                  <div>
-                    <h5 className="text-white font-semibold text-lg mb-2">Everything in One Intelligent System</h5>
-                    <p className="text-gray-300 text-sm leading-relaxed">
-                      Documents, emails, notes, calendar events—all connected and searchable. No more switching between 10 different apps.
-                    </p>
-                  </div>
-                </motion.div>
-                
-                <motion.div
-                  whileHover={{ x: 10 }}
-                  className="flex items-start space-x-4"
-                >
-                  <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                    <CheckCircle className="w-5 h-5 text-white" />
-                  </div>
-                  <div>
-                    <h5 className="text-white font-semibold text-lg mb-2">Learn Your Patterns, Adapt to You</h5>
-                    <p className="text-gray-300 text-sm leading-relaxed">
-                      The more you use Velora, the smarter it gets. It understands your work style and proactively helps you stay organized and productive.
-                    </p>
-                  </div>
+                  <motion.div
+                    animate={{ opacity: [0.7, 1, 0.7] }}
+                    transition={{ duration: 3, repeat: Infinity }}
+                    className="w-16 h-16 bg-gradient-to-r from-electric-500 to-purple-500 rounded-full flex items-center justify-center mx-auto mb-4"
+                  >
+                    <Brain className="w-8 h-8 text-white" />
+                  </motion.div>
+                  <h5 className="text-white font-semibold text-lg mb-2">Learns Your Patterns</h5>
+                  <p className="text-gray-400 text-sm">Adapts to you</p>
                 </motion.div>
               </div>
             </motion.div>
