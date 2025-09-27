@@ -1132,94 +1132,238 @@ export default function AuthPage() {
               </motion.p>
             </motion.div>
 
-            {/* Revolutionary Pain Points */}
+            {/* Revolutionary Pain Points with Advanced UI/UX */}
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.4 }}
-              className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-20 px-4"
+              className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-20 px-4"
             >
+              {/* Card 1: Wasting Time */}
               <motion.div
                 whileHover={{ 
-                  scale: 1.05, 
-                  y: -10,
-                  rotateX: 5,
-                  rotateY: 5,
-                  boxShadow: "0 25px 50px rgba(239, 68, 68, 0.3)"
+                  scale: 1.08, 
+                  y: -20,
+                  rotateX: 8,
+                  rotateY: 8,
+                  boxShadow: "0 40px 80px rgba(239, 68, 68, 0.4)"
                 }}
-                className="group relative bg-gradient-to-br from-red-900/20 to-red-800/10 rounded-3xl p-8 border border-red-500/30 hover:border-red-500/60 transition-all duration-500 backdrop-blur-sm overflow-hidden"
+                className="group relative overflow-hidden"
               >
-                <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-red-500/5 via-orange-500/5 to-red-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-sm" />
-                <div className="absolute inset-[1px] rounded-3xl bg-gradient-to-br from-gray-900/80 to-gray-800/60" />
+                {/* Multi-layer background effects */}
+                <div className="absolute inset-0 bg-gradient-to-br from-red-900/30 to-red-800/20 rounded-3xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+                <div className="absolute inset-0 bg-gradient-to-r from-red-500/10 via-orange-500/10 to-red-500/10 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                <div className="absolute inset-[1px] bg-gradient-to-br from-gray-900/90 to-gray-800/70 rounded-3xl backdrop-blur-sm" />
                 
-                <div className="relative z-10 text-center">
+                {/* Animated border */}
+                <motion.div
+                  animate={{
+                    background: [
+                      "linear-gradient(45deg, rgba(239, 68, 68, 0.3), rgba(245, 158, 11, 0.3))",
+                      "linear-gradient(225deg, rgba(245, 158, 11, 0.3), rgba(239, 68, 68, 0.3))",
+                      "linear-gradient(45deg, rgba(239, 68, 68, 0.3), rgba(245, 158, 11, 0.3))"
+                    ]
+                  }}
+                  transition={{ duration: 3, repeat: Infinity }}
+                  className="absolute inset-0 rounded-3xl p-[2px]"
+                >
+                  <div className="w-full h-full bg-gray-900 rounded-3xl" />
+                </motion.div>
+                
+                <div className="relative z-10 p-10 text-center">
                   <motion.div
-                    animate={{ rotate: [0, 10, -10, 0] }}
+                    animate={{ 
+                      rotate: [0, 15, -15, 0],
+                      scale: [1, 1.1, 1]
+                    }}
                     transition={{ duration: 4, repeat: Infinity }}
-                    className="w-20 h-20 bg-gradient-to-r from-red-500 to-orange-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-2xl"
+                    className="w-24 h-24 bg-gradient-to-r from-red-500 via-orange-500 to-red-500 rounded-full flex items-center justify-center mx-auto mb-8 shadow-2xl relative"
                   >
-                    <Clock className="w-10 h-10 text-white" />
+                    <motion.div
+                      animate={{ rotate: [0, 360] }}
+                      transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+                      className="absolute inset-0 rounded-full bg-gradient-to-r from-red-500/50 to-orange-500/50 blur-md"
+                    />
+                    <Clock className="w-12 h-12 text-white relative z-10" />
                   </motion.div>
-                  <h4 className="text-white font-bold text-xl mb-4">Wasting 2+ Hours Daily</h4>
-                  <p className="text-gray-300 text-base leading-relaxed">
-                    Searching through scattered documents, emails, and notes. That's <span className="text-red-400 font-semibold">730 hours per year</span> you'll never get back.
-                  </p>
+                  
+                  <motion.h4 
+                    whileHover={{ scale: 1.05, x: 5 }}
+                    className="text-white font-black text-2xl mb-6"
+                  >
+                    Wasting 2+ Hours Daily
+                  </motion.h4>
+                  
+                  <motion.p 
+                    whileHover={{ scale: 1.02 }}
+                    className="text-gray-300 text-lg leading-relaxed"
+                  >
+                    Searching through scattered documents, emails, and notes. That's <motion.span 
+                      animate={{
+                        textShadow: [
+                          "0 0 10px rgba(239, 68, 68, 0.5)",
+                          "0 0 20px rgba(245, 158, 11, 0.5)",
+                          "0 0 10px rgba(239, 68, 68, 0.5)"
+                        ]
+                      }}
+                      transition={{ duration: 2, repeat: Infinity }}
+                      className="text-red-400 font-bold"
+                    >
+                      730 hours per year
+                    </motion.span> you'll never get back.
+                  </motion.p>
                 </div>
               </motion.div>
               
+              {/* Card 2: Missing Deadlines */}
               <motion.div
                 whileHover={{ 
-                  scale: 1.05, 
-                  y: -10,
-                  rotateX: 5,
-                  rotateY: 5,
-                  boxShadow: "0 25px 50px rgba(245, 158, 11, 0.3)"
+                  scale: 1.08, 
+                  y: -20,
+                  rotateX: 8,
+                  rotateY: 8,
+                  boxShadow: "0 40px 80px rgba(245, 158, 11, 0.4)"
                 }}
-                className="group relative bg-gradient-to-br from-orange-900/20 to-orange-800/10 rounded-3xl p-8 border border-orange-500/30 hover:border-orange-500/60 transition-all duration-500 backdrop-blur-sm overflow-hidden"
+                className="group relative overflow-hidden"
               >
-                <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-orange-500/5 via-yellow-500/5 to-orange-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-sm" />
-                <div className="absolute inset-[1px] rounded-3xl bg-gradient-to-br from-gray-900/80 to-gray-800/60" />
+                {/* Multi-layer background effects */}
+                <div className="absolute inset-0 bg-gradient-to-br from-orange-900/30 to-orange-800/20 rounded-3xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+                <div className="absolute inset-0 bg-gradient-to-r from-orange-500/10 via-yellow-500/10 to-orange-500/10 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                <div className="absolute inset-[1px] bg-gradient-to-br from-gray-900/90 to-gray-800/70 rounded-3xl backdrop-blur-sm" />
                 
-                <div className="relative z-10 text-center">
+                {/* Animated border */}
+                <motion.div
+                  animate={{
+                    background: [
+                      "linear-gradient(45deg, rgba(245, 158, 11, 0.3), rgba(251, 191, 36, 0.3))",
+                      "linear-gradient(225deg, rgba(251, 191, 36, 0.3), rgba(245, 158, 11, 0.3))",
+                      "linear-gradient(45deg, rgba(245, 158, 11, 0.3), rgba(251, 191, 36, 0.3))"
+                    ]
+                  }}
+                  transition={{ duration: 3, repeat: Infinity }}
+                  className="absolute inset-0 rounded-3xl p-[2px]"
+                >
+                  <div className="w-full h-full bg-gray-900 rounded-3xl" />
+                </motion.div>
+                
+                <div className="relative z-10 p-10 text-center">
                   <motion.div
-                    animate={{ scale: [1, 1.1, 1] }}
+                    animate={{ 
+                      scale: [1, 1.2, 1],
+                      rotate: [0, 5, -5, 0]
+                    }}
                     transition={{ duration: 3, repeat: Infinity }}
-                    className="w-20 h-20 bg-gradient-to-r from-orange-500 to-yellow-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-2xl"
+                    className="w-24 h-24 bg-gradient-to-r from-orange-500 via-yellow-500 to-orange-500 rounded-full flex items-center justify-center mx-auto mb-8 shadow-2xl relative"
                   >
-                    <Target className="w-10 h-10 text-white" />
+                    <motion.div
+                      animate={{ scale: [1, 1.3, 1] }}
+                      transition={{ duration: 2, repeat: Infinity }}
+                      className="absolute inset-0 rounded-full bg-gradient-to-r from-orange-500/50 to-yellow-500/50 blur-md"
+                    />
+                    <Target className="w-12 h-12 text-white relative z-10" />
                   </motion.div>
-                  <h4 className="text-white font-bold text-xl mb-4">Missing Critical Deadlines</h4>
-                  <p className="text-gray-300 text-base leading-relaxed">
-                    Important tasks buried in information chaos. <span className="text-orange-400 font-semibold">Lost opportunities</span> because you couldn't find what you needed in time.
-                  </p>
+                  
+                  <motion.h4 
+                    whileHover={{ scale: 1.05, x: 5 }}
+                    className="text-white font-black text-2xl mb-6"
+                  >
+                    Missing Critical Deadlines
+                  </motion.h4>
+                  
+                  <motion.p 
+                    whileHover={{ scale: 1.02 }}
+                    className="text-gray-300 text-lg leading-relaxed"
+                  >
+                    Important tasks buried in information chaos. <motion.span 
+                      animate={{
+                        textShadow: [
+                          "0 0 10px rgba(245, 158, 11, 0.5)",
+                          "0 0 20px rgba(251, 191, 36, 0.5)",
+                          "0 0 10px rgba(245, 158, 11, 0.5)"
+                        ]
+                      }}
+                      transition={{ duration: 2, repeat: Infinity }}
+                      className="text-orange-400 font-bold"
+                    >
+                      Lost opportunities
+                    </motion.span> because you couldn't find what you needed in time.
+                  </motion.p>
                 </div>
               </motion.div>
               
+              {/* Card 3: Mental Exhaustion */}
               <motion.div
                 whileHover={{ 
-                  scale: 1.05, 
-                  y: -10,
-                  rotateX: 5,
-                  rotateY: 5,
-                  boxShadow: "0 25px 50px rgba(139, 92, 246, 0.3)"
+                  scale: 1.08, 
+                  y: -20,
+                  rotateX: 8,
+                  rotateY: 8,
+                  boxShadow: "0 40px 80px rgba(139, 92, 246, 0.4)"
                 }}
-                className="group relative bg-gradient-to-br from-purple-900/20 to-purple-800/10 rounded-3xl p-8 border border-purple-500/30 hover:border-purple-500/60 transition-all duration-500 backdrop-blur-sm overflow-hidden"
+                className="group relative overflow-hidden"
               >
-                <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-purple-500/5 via-pink-500/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-sm" />
-                <div className="absolute inset-[1px] rounded-3xl bg-gradient-to-br from-gray-900/80 to-gray-800/60" />
+                {/* Multi-layer background effects */}
+                <div className="absolute inset-0 bg-gradient-to-br from-purple-900/30 to-purple-800/20 rounded-3xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+                <div className="absolute inset-0 bg-gradient-to-r from-purple-500/10 via-pink-500/10 to-purple-500/10 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                <div className="absolute inset-[1px] bg-gradient-to-br from-gray-900/90 to-gray-800/70 rounded-3xl backdrop-blur-sm" />
                 
-                <div className="relative z-10 text-center">
+                {/* Animated border */}
+                <motion.div
+                  animate={{
+                    background: [
+                      "linear-gradient(45deg, rgba(139, 92, 246, 0.3), rgba(236, 72, 153, 0.3))",
+                      "linear-gradient(225deg, rgba(236, 72, 153, 0.3), rgba(139, 92, 246, 0.3))",
+                      "linear-gradient(45deg, rgba(139, 92, 246, 0.3), rgba(236, 72, 153, 0.3))"
+                    ]
+                  }}
+                  transition={{ duration: 3, repeat: Infinity }}
+                  className="absolute inset-0 rounded-3xl p-[2px]"
+                >
+                  <div className="w-full h-full bg-gray-900 rounded-3xl" />
+                </motion.div>
+                
+                <div className="relative z-10 p-10 text-center">
                   <motion.div
-                    animate={{ opacity: [0.7, 1, 0.7] }}
+                    animate={{ 
+                      opacity: [0.7, 1, 0.7],
+                      scale: [1, 1.1, 1]
+                    }}
                     transition={{ duration: 2, repeat: Infinity }}
-                    className="w-20 h-20 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-2xl"
+                    className="w-24 h-24 bg-gradient-to-r from-purple-500 via-pink-500 to-purple-500 rounded-full flex items-center justify-center mx-auto mb-8 shadow-2xl relative"
                   >
-                    <Brain className="w-10 h-10 text-white" />
+                    <motion.div
+                      animate={{ opacity: [0.3, 0.7, 0.3] }}
+                      transition={{ duration: 3, repeat: Infinity }}
+                      className="absolute inset-0 rounded-full bg-gradient-to-r from-purple-500/50 to-pink-500/50 blur-md"
+                    />
+                    <Brain className="w-12 h-12 text-white relative z-10" />
                   </motion.div>
-                  <h4 className="text-white font-bold text-xl mb-4">Mental Exhaustion</h4>
-                  <p className="text-gray-300 text-base leading-relaxed">
-                    Constantly switching between tools and contexts. <span className="text-purple-400 font-semibold">Cognitive overload</span> that kills your productivity and creativity.
-                  </p>
+                  
+                  <motion.h4 
+                    whileHover={{ scale: 1.05, x: 5 }}
+                    className="text-white font-black text-2xl mb-6"
+                  >
+                    Mental Exhaustion
+                  </motion.h4>
+                  
+                  <motion.p 
+                    whileHover={{ scale: 1.02 }}
+                    className="text-gray-300 text-lg leading-relaxed"
+                  >
+                    Constantly switching between tools and contexts. <motion.span 
+                      animate={{
+                        textShadow: [
+                          "0 0 10px rgba(139, 92, 246, 0.5)",
+                          "0 0 20px rgba(236, 72, 153, 0.5)",
+                          "0 0 10px rgba(139, 92, 246, 0.5)"
+                        ]
+                      }}
+                      transition={{ duration: 2, repeat: Infinity }}
+                      className="text-purple-400 font-bold"
+                    >
+                      Cognitive overload
+                    </motion.span> that kills your productivity and creativity.
+                  </motion.p>
                 </div>
               </motion.div>
             </motion.div>
