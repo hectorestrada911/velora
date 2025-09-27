@@ -341,63 +341,88 @@ export default function AuthPage() {
           </motion.div>
         )}
 
-        {/* Hero Section */}
-        <div className="min-h-screen flex flex-col items-center justify-center p-6">
-        {/* Main Content - Responsive Layout */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
-          className="w-full"
-        >
-          {/* Desktop Layout - Side by Side */}
-          <div className="hidden lg:flex items-center justify-between max-w-7xl mx-auto px-4 mb-12">
-            {/* Left Side - Text Content */}
-            <div className="flex-1 max-w-2xl">
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 }}
-                className="mb-4"
-              >
-                <motion.span
-                  animate={{ 
-                    opacity: [0.7, 1, 0.7],
-                    scale: [1, 1.02, 1]
-                  }}
-                  transition={{ duration: 2, repeat: Infinity }}
-                  className="inline-flex items-center space-x-2 text-electric-400 text-sm font-medium"
+        {/* Hero Section - Minimalist UI/UX Excellence */}
+        <div className="min-h-screen flex flex-col items-center justify-center p-6 relative overflow-hidden">
+          {/* Subtle Background Effects */}
+          <div className="absolute inset-0 -z-10">
+            <motion.div
+              animate={{
+                scale: [1, 1.1, 1],
+                opacity: [0.1, 0.2, 0.1],
+              }}
+              transition={{ duration: 8, repeat: Infinity }}
+              className="absolute top-1/4 left-1/4 w-96 h-96 bg-gradient-to-r from-electric-500/10 to-purple-500/10 rounded-full blur-3xl"
+            />
+            <motion.div
+              animate={{
+                scale: [1.1, 1, 1.1],
+                opacity: [0.1, 0.2, 0.1],
+              }}
+              transition={{ duration: 10, repeat: Infinity, delay: 2 }}
+              className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-gradient-to-r from-purple-500/10 to-pink-500/10 rounded-full blur-3xl"
+            />
+          </div>
+
+          {/* Main Content - Clean Layout */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+            className="w-full max-w-7xl mx-auto"
+          >
+            {/* Desktop Layout - Side by Side */}
+            <div className="hidden lg:flex items-center justify-between px-4 mb-12">
+              {/* Left Side - Minimalist Typography */}
+              <div className="flex-1 max-w-2xl">
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.2 }}
+                  className="mb-4"
                 >
-                  <Zap className="w-4 h-4" />
-                  <span>AI-Powered Memory</span>
-                </motion.span>
-              </motion.div>
-              
-              <h2 className="text-5xl xl:text-6xl font-bold text-white mb-6 leading-tight">
-                Never lose a <span className="text-transparent bg-clip-text bg-gradient-to-r from-electric-500 to-purple-500">thought</span> with <span className="text-transparent bg-clip-text bg-gradient-to-r from-electric-500 to-purple-500">Velora AI</span>
-              </h2>
-              <p className="text-xl text-gray-300 mb-4 leading-relaxed">
-                Your AI-powered personal assistant that remembers everything, organizes your life, and helps you find information instantly.
-              </p>
-              <p className="text-lg text-gray-400 mb-8 leading-relaxed">
-                Stop drowning in information. <span className="text-electric-400">Velora AI</span> connects your emails, documents, and calendar to create your personal knowledge base.
-              </p>
-              
-              {/* Call-to-Action Button - Desktop - Simplified to just Sign In */}
-              <div className="flex items-center space-x-4">
-                <button
-                  onClick={() => setAuthMode('login')}
-                  className="bg-gradient-to-r from-electric-500 to-purple-500 hover:from-electric-400 hover:to-purple-400 text-white font-semibold py-3 px-8 rounded-lg transition-all duration-200 hover:scale-105 flex items-center justify-center space-x-2 text-lg"
-                >
-                  <span>Sign In</span>
-                  <ArrowRight className="w-5 h-5" />
-                </button>
-                <div className="flex items-center space-x-2 text-sm text-gray-400">
-                  <CheckCircle className="w-4 h-4 text-green-400" />
-                  <span>Free to try</span>
+                  <motion.span
+                    animate={{ 
+                      opacity: [0.7, 1, 0.7],
+                      scale: [1, 1.02, 1]
+                    }}
+                    transition={{ duration: 2, repeat: Infinity }}
+                    className="inline-flex items-center space-x-2 text-electric-400 text-sm font-medium"
+                  >
+                    <Zap className="w-4 h-4" />
+                    <span>AI-Powered Memory</span>
+                  </motion.span>
+                </motion.div>
+                
+                <h2 className="text-5xl xl:text-6xl font-bold text-white mb-6 leading-tight">
+                  Never lose a <span className="text-transparent bg-clip-text bg-gradient-to-r from-electric-500 to-purple-500">thought</span> with <span className="text-transparent bg-clip-text bg-gradient-to-r from-electric-500 to-purple-500">Velora AI</span>
+                </h2>
+                
+                <p className="text-xl text-gray-300 mb-4 leading-relaxed">
+                  Your AI-powered personal assistant that remembers everything, organizes your life, and helps you find information instantly.
+                </p>
+                
+                <p className="text-lg text-gray-400 mb-8 leading-relaxed">
+                  Stop drowning in information. <span className="text-electric-400">Velora AI</span> connects your emails, documents, and calendar to create your personal knowledge base.
+                </p>
+                
+                {/* Clean CTA Button */}
+                <div className="flex items-center space-x-4">
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => setAuthMode('login')}
+                    className="bg-gradient-to-r from-electric-500 to-purple-500 hover:from-electric-400 hover:to-purple-400 text-white font-semibold py-3 px-8 rounded-lg transition-all duration-200 hover:scale-105 flex items-center justify-center space-x-2 text-lg"
+                  >
+                    <span>Sign In</span>
+                    <ArrowRight className="w-5 h-5" />
+                  </motion.button>
+                  
+                  <div className="flex items-center space-x-2 text-sm text-gray-400">
+                    <CheckCircle className="w-4 h-4 text-green-400" />
+                    <span>Free to try</span>
+                  </div>
                 </div>
               </div>
-            </div>
             
             {/* Right Side - Dynamic Visual Experience */}
             <div className="flex-1 flex justify-center">
