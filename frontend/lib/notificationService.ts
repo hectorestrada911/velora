@@ -373,11 +373,19 @@ class NotificationService {
   // Utility methods
   private getRelativeTime(date: Date): string {
     const now = new Date()
-    const diff = now.getTime() - date.getTime()
-    const minutes = Math.floor(diff / (1000 * 60))
-    const hours = Math.floor(diff / (1000 * 60 * 60))
-    const days = Math.floor(diff / (1000 * 60 * 60 * 24))
+    const diff = date.getTime() - now.getTime() // Changed to future - now
+    const minutes = Math.floor(Math.abs(diff) / (1000 * 60))
+    const hours = Math.floor(Math.abs(diff) / (1000 * 60 * 60))
+    const days = Math.floor(Math.abs(diff) / (1000 * 60 * 60 * 24))
 
+    // Handle future dates
+    if (diff > 0) {
+      if (minutes < 60) return `in ${minutes} min`
+      if (hours < 24) return `in ${hours} hour${hours > 1 ? 's' : ''}`
+      return `in ${days} day${days > 1 ? 's' : ''}`
+    }
+
+    // Handle past dates
     if (minutes < 60) return `${minutes} min ago`
     if (hours < 24) return `${hours} hour${hours > 1 ? 's' : ''} ago`
     return `${days} day${days > 1 ? 's' : ''} ago`
