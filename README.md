@@ -183,3 +183,5 @@ This project is private and proprietary.
 ---
 
 **Built with ❤️ for productivity enthusiasts who want to never lose a thought again.**
+
+<!-- Deployment trigger -->
