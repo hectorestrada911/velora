@@ -100,7 +100,24 @@ RESPONSE STYLE:
 - Don't over-analyze simple greetings or questions
 - Use user-focused follow-up questions ("Show me my calendar" not "Would you like me to check your calendar?")
 
-Return ONLY valid JSON:`
+Return ONLY valid JSON in this exact format (no markdown, no code blocks, just pure JSON):
+{
+  "type": "other",
+  "priority": "medium", 
+  "summary": "Brief description",
+  "tags": ["conversation"],
+  "extractedData": {
+    "people": [],
+    "dates": [],
+    "actions": [],
+    "topics": []
+  },
+  "calendarEvent": null,
+  "reminder": null,
+  "aiResponse": "Your response here",
+  "followUpQuestions": ["Show me my calendar", "Help me with reminders"],
+  "featureSuggestions": ["calendar", "reminder"]
+}`
 
     const userPrompt = `Please analyze this content:${fullContext}
 
@@ -119,7 +136,40 @@ Return JSON with type, priority, summary, tags, extractedData, calendarEvent, re
       max_tokens: 1000, // Reduced for faster responses
     })
 
-    const analysis = JSON.parse(completion.choices[0].message.content || '{}')
+    // Parse AI response, handling markdown code blocks
+    let aiResponse = completion.choices[0].message.content || '{}'
+    
+    // Remove markdown code blocks if present
+    if (aiResponse.includes('```json')) {
+      aiResponse = aiResponse.replace(/```json\n?/g, '').replace(/```\n?/g, '')
+    }
+    if (aiResponse.includes('```')) {
+      aiResponse = aiResponse.replace(/```\n?/g, '')
+    }
+    
+    // Clean up any extra whitespace
+    aiResponse = aiResponse.trim()
+    
+    let analysis
+    try {
+      analysis = JSON.parse(aiResponse)
+    } catch (parseError) {
+      console.error('JSON parse error:', parseError)
+      console.error('Raw AI response:', aiResponse)
+      // Fallback to basic response
+      analysis = {
+        type: 'other',
+        priority: 'medium',
+        summary: content.substring(0, 100),
+        tags: ['conversation'],
+        extractedData: { people: [], dates: [], actions: [], topics: [] },
+        calendarEvent: null,
+        reminder: null,
+        aiResponse: "I understand. How can I help you today?",
+        followUpQuestions: ["Help me organize my day", "Show me my calendar"],
+        featureSuggestions: ["calendar", "reminder"]
+      }
+    }
 
     // Return optimized response
     return res.status(200).json({
