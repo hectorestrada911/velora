@@ -542,12 +542,11 @@ Please analyze this document and respond to the user's request. If they didn't s
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          message: aiPrompt,
+          content: aiPrompt,
           conversationHistory: messages.slice(-10), // Last 10 messages for context
-          memories: [...relevantMemories, ...recallInfo.memories],
-          documents: documents,
-          calendarEvents: calendarEvents,
-          reminders: reminders
+          relevantMemories: [...relevantMemories, ...recallInfo.memories],
+          recallSuggestions: recallInfo.suggestions,
+          currentDate: new Date().toISOString()
         }),
       })
 
