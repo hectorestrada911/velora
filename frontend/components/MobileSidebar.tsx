@@ -159,13 +159,13 @@ export default function MobileSidebar({
                 
                 <button
                   onClick={() => {
-                    onNavigate('/reminders')
+                    onNavigate('/notifications')
                     onClose()
                   }}
                   className="w-full flex items-center space-x-3 p-3 text-gray-300 hover:text-white hover:bg-gray-800 rounded-lg transition-colors"
                 >
                   <Bell className="w-5 h-5" />
-                  <span>Reminders</span>
+                  <span>Notifications</span>
                 </button>
                 
                 <button

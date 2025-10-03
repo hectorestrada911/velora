@@ -85,9 +85,9 @@ export default function VoicePage() {
               <Calendar className="w-4 h-4 md:w-5 md:h-5" />
             </button>
             <button 
-              onClick={() => window.location.href = '/reminders'}
+              onClick={() => window.location.href = '/notifications'}
               className="p-2 md:p-2 text-gray-400 hover:text-white transition-colors duration-200 hover:bg-gray-800 rounded-lg"
-              title="View Reminders"
+              title="View Notifications"
             >
               <Bell className="w-4 h-4 md:w-5 md:h-5" />
             </button>

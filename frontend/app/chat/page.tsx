@@ -1491,14 +1491,14 @@ Please analyze this document and respond to the user's request. If they didn't s
                           <span>Calendar</span>
             </button>
             <button 
-                          onClick={() => {
-                            window.location.href = '/reminders'
-                            setShowOrganizeMenu(false)
-                          }}
-                          className="w-full flex items-center gap-3 px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-700 transition-colors"
-                        >
-                          <Bell className="w-4 h-4" />
-                          <span>Reminders</span>
+              onClick={() => {
+                window.location.href = '/notifications'
+                setShowOrganizeMenu(false)
+              }}
+              className="w-full flex items-center gap-3 px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-700 transition-colors"
+            >
+              <Bell className="w-4 h-4" />
+              <span>Notifications</span>
             </button>
             <button 
                           onClick={() => {

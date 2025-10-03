@@ -19,7 +19,7 @@ export default function DocumentsPage() {
           <div className="flex items-center space-x-4 mb-4">
             <button
               onClick={() => router.back()}
-              className="flex items-center space-x-2 text-gray-400 hover:text-white transition-colors"
+              className="flex items-center space-x-2 text-gray-400 hover:text-white transition-colors p-2 hover:bg-gray-800/50 rounded-lg"
             >
               <ArrowLeft className="w-5 h-5" />
               <span>Back</span>
