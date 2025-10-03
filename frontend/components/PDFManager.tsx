@@ -30,7 +30,7 @@ interface PDFManagerProps {
   onPDFSelected?: (pdf: PDFDocument) => void;
 }
 
-export default function PDFManager({ onPDFSelected }: PDFManagerProps) {
+const PDFManager = ({ onPDFSelected }: PDFManagerProps) => {
   const { user } = useAuth();
   const [documents, setDocuments] = useState<Document[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
@@ -591,4 +591,6 @@ export default function PDFManager({ onPDFSelected }: PDFManagerProps) {
       </div>
     </div>
   );
-}
+};
+
+export default PDFManager;
