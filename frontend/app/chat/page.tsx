@@ -1105,7 +1105,13 @@ Please analyze this document and respond to the user's request. If they didn't s
       id: Date.now().toString(),
       type: 'user',
       content: messageContent,
-      timestamp: new Date()
+      timestamp: new Date(),
+      analysis: fileToProcess ? {
+        type: 'document_upload',
+        priority: 'high',
+        documentName: fileToProcess.name,
+        summary: `User uploaded ${fileToProcess.name}`
+      } : undefined
     }
 
     setMessages(prev => [...prev, userMessage])
@@ -1772,6 +1778,21 @@ Please analyze this document and respond to the user's request. If they didn't s
                     : 'bg-gray-900 text-gray-200 border border-gray-700'
                 }`}
               >
+                {/* Show attached file if present */}
+                {message.analysis?.documentName && (
+                  <div className="mb-3 p-3 bg-gray-800/50 border border-gray-600 rounded-lg flex items-center space-x-3">
+                    <div className="w-8 h-8 bg-red-500 rounded flex items-center justify-center">
+                      <FileText className="w-4 h-4 text-white" />
+                    </div>
+                    <div>
+                      <p className="text-white text-sm font-medium">{message.analysis.documentName}</p>
+                      <p className="text-gray-400 text-xs uppercase">
+                        {message.analysis.documentName.split('.').pop() || 'FILE'}
+                      </p>
+                    </div>
+                  </div>
+                )}
+                
                 <div className="text-sm md:text-base leading-relaxed whitespace-pre-wrap">{message.content}</div>
                 
                 {message.analysis && (
