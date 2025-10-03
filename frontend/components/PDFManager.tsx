@@ -114,16 +114,6 @@ export default function PDFManager({ onPDFSelected }: PDFManagerProps) {
     handleFilter();
   }, [filterType, filterImportance]);
 
-  const handleDeletePDF = (id: string) => {
-    if (confirm('Are you sure you want to delete this PDF? This action cannot be undone.')) {
-      pdfService.deletePDF(id);
-      loadPDFs();
-      if (selectedPDF?.id === id) {
-        setSelectedPDF(null);
-      }
-      toast.success('PDF deleted successfully');
-    }
-  };
 
   const handleExportPDF = (pdf: PDFDocument) => {
     const dataStr = JSON.stringify(pdf, null, 2);
