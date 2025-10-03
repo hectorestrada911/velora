@@ -1685,25 +1685,34 @@ Please analyze this document and respond to the user's request. If they didn't s
             animate={{ opacity: 1, y: 0 }}
             className="mb-6"
           >
-            <div className="bg-gradient-to-r from-red-500/10 to-orange-500/10 border border-red-500/20 rounded-xl p-4">
+            <div className="bg-gradient-to-r from-purple-500/10 to-blue-500/10 border border-purple-500/20 rounded-xl p-3">
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-3">
-                  <div className="w-8 h-8 bg-red-500 rounded-lg flex items-center justify-center">
-                    <X className="w-4 h-4 text-white" />
-                  </div>
+                  <motion.div
+                    animate={{ 
+                      scale: [1, 1.1, 1],
+                      opacity: [0.6, 1, 0.6]
+                    }}
+                    transition={{ 
+                      duration: 2, 
+                      repeat: Infinity 
+                    }}
+                    className="w-2 h-2 bg-purple-400 rounded-full"
+                  />
                   <div>
-                    <h4 className="text-white font-medium">Google Workspace Not Connected</h4>
-                    <p className="text-gray-300 text-sm">Connect to analyze your emails and calendar</p>
+                    <p className="text-gray-300 text-sm">
+                      Connect Google Workspace to unlock email and calendar features
+                    </p>
                   </div>
                 </div>
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={handleConnectGoogle}
-                  className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-400 hover:to-purple-400 text-white font-medium py-2 px-4 rounded-lg transition-all duration-200 flex items-center space-x-2 text-sm"
+                  className="text-purple-400 hover:text-purple-300 text-sm font-medium transition-colors duration-200 flex items-center space-x-1"
                 >
+                  <span>Connect</span>
                   <ExternalLink className="w-3 h-3" />
-                  <span>Connect Google</span>
                 </motion.button>
               </div>
             </div>
