@@ -189,106 +189,161 @@ export default function MemoryView({ onClose }: MemoryViewProps) {
   }
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
       <motion.div
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        exit={{ opacity: 0, scale: 0.95 }}
-        className="bg-gray-900 rounded-xl border border-gray-700 w-full max-w-4xl max-h-[80vh] overflow-hidden"
+        initial={{ opacity: 0, scale: 0.95, y: 20 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.95, y: 20 }}
+        className="bg-gradient-to-br from-gray-900/95 to-gray-800/90 rounded-2xl border border-gray-700/50 backdrop-blur-sm w-full max-w-4xl max-h-[80vh] overflow-hidden relative shadow-2xl"
       >
+        {/* Background Effects */}
+        <div className="absolute inset-0 bg-gradient-to-r from-electric-500/5 via-transparent to-purple-500/5 rounded-2xl"></div>
+        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-electric-500 to-purple-500"></div>
+        
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-gray-700">
-          <div className="flex items-center space-x-3">
-            <div className="w-8 h-8 bg-gradient-to-r from-electric-500 to-purple-500 rounded-lg flex items-center justify-center">
-              <Brain className="w-4 h-4 text-white" />
-            </div>
+        <div className="relative z-10 flex items-center justify-between p-6 border-b border-gray-700/50">
+          <div className="flex items-center space-x-4">
+            <motion.div 
+              animate={{ 
+                scale: [1, 1.05, 1],
+                boxShadow: [
+                  "0 0 20px rgba(59, 130, 246, 0.3)",
+                  "0 0 40px rgba(168, 85, 247, 0.5)",
+                  "0 0 20px rgba(59, 130, 246, 0.3)"
+                ]
+              }}
+              transition={{ duration: 3, repeat: Infinity }}
+              className="w-10 h-10 bg-gradient-to-br from-electric-500/60 to-purple-500/60 rounded-xl flex items-center justify-center border border-electric-500/30"
+            >
+              <Brain className="w-5 h-5 text-electric-400" />
+            </motion.div>
             <div>
-              <h2 className="text-xl font-semibold text-white">REMEMBER</h2>
+              <h2 className="text-2xl font-bold text-white bg-gradient-to-r from-electric-400 to-purple-400 bg-clip-text text-transparent">REMEMBER</h2>
               <p className="text-gray-400 text-sm">Your memories and reminders</p>
             </div>
           </div>
-          <button
+          <motion.button
+            whileHover={{ scale: 1.1, rotate: 90 }}
+            whileTap={{ scale: 0.9 }}
             onClick={onClose}
-            className="p-2 hover:bg-gray-800 rounded-lg transition-colors"
+            className="p-2 hover:bg-gray-800/50 rounded-xl transition-all duration-200 border border-gray-600/30 hover:border-gray-500/50"
           >
-            <X className="w-5 h-5 text-gray-400" />
-          </button>
+            <X className="w-5 h-5 text-gray-400 hover:text-white" />
+          </motion.button>
         </div>
 
         {/* Content */}
-        <div className="p-6 space-y-4">
+        <div className="relative z-10 p-6 space-y-6">
           {/* Search and Add Reminder */}
-          <div className="flex space-x-3">
+          <div className="flex space-x-4">
             <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
               <input
                 type="text"
                 placeholder="Search your memories and reminders..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-electric-500"
+                className="w-full pl-12 pr-4 py-4 bg-gray-800/50 border border-gray-600/30 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:border-electric-500/60 focus:bg-gray-800/70 transition-all duration-200 backdrop-blur-sm"
               />
             </div>
-            <button
+            <motion.button
+              whileHover={{ scale: 1.05, boxShadow: "0 10px 30px rgba(59, 130, 246, 0.3)" }}
+              whileTap={{ scale: 0.95 }}
               onClick={() => setShowAddReminder(true)}
-              className="px-4 py-3 bg-gradient-to-r from-purple-500 to-blue-500 text-white rounded-lg font-medium hover:from-purple-400 hover:to-blue-400 transition-colors flex items-center space-x-2"
+              className="px-6 py-4 bg-gradient-to-r from-electric-500/80 to-purple-500/80 text-white rounded-xl hover:from-electric-500 hover:to-purple-500 transition-all duration-200 font-medium border border-electric-400/30 shadow-lg flex items-center space-x-2"
             >
-              <Plus className="w-4 h-4" />
+              <Plus className="w-5 h-5" />
               <span>Add Reminder</span>
-            </button>
+            </motion.button>
           </div>
 
           {/* Items List */}
-          <div className="space-y-3 max-h-96 overflow-y-auto">
+          <div className="space-y-4 max-h-96 overflow-y-auto pr-2">
             {filteredItems.length === 0 ? (
-              <div className="text-center py-8">
-                <Brain className="w-12 h-12 text-gray-600 mx-auto mb-4" />
-                <p className="text-gray-400">
-                  {searchQuery ? 'No items found matching your search.' : 'No memories or reminders saved yet.'}
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="text-center py-12"
+              >
+                <motion.div
+                  animate={{ 
+                    scale: [1, 1.1, 1],
+                    rotate: [0, 5, -5, 0]
+                  }}
+                  transition={{ duration: 4, repeat: Infinity }}
+                  className="w-16 h-16 bg-gradient-to-br from-gray-700/50 to-gray-800/50 rounded-2xl flex items-center justify-center mx-auto mb-6 border border-gray-600/30"
+                >
+                  <Brain className="w-8 h-8 text-gray-400" />
+                </motion.div>
+                <h3 className="text-lg font-semibold text-white mb-2">
+                  {searchQuery ? 'No items found' : 'Start Building Your Memory Bank'}
+                </h3>
+                <p className="text-gray-400 mb-4">
+                  {searchQuery ? 'Try a different search term.' : 'Save important information and set reminders.'}
                 </p>
-                <p className="text-gray-500 text-sm mt-2">
-                  Try saying "REMEMBER I prefer morning meetings" or "Create a reminder to call mom tomorrow"
-                </p>
-              </div>
+                <div className="bg-gray-800/30 rounded-xl p-4 border border-gray-700/30">
+                  <p className="text-gray-500 text-sm">
+                    <span className="text-electric-400">Try:</span> "REMEMBER I prefer morning meetings"
+                  </p>
+                  <p className="text-gray-500 text-sm mt-1">
+                    <span className="text-purple-400">Or:</span> "Create a reminder to call mom tomorrow"
+                  </p>
+                </div>
+              </motion.div>
             ) : (
-              filteredItems.map((item) => (
+              filteredItems.map((item, index) => (
                 <motion.div
                   key={item.id}
-                  initial={{ opacity: 0, y: 10 }}
+                  initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className={`bg-gray-800 rounded-lg p-4 border border-gray-700 ${
-                    item.type === 'reminder' && item.completed ? 'opacity-60' : ''
+                  transition={{ delay: index * 0.1 }}
+                  whileHover={{ scale: 1.02, y: -2 }}
+                  className={`bg-gradient-to-r from-gray-800/60 to-gray-700/40 rounded-xl p-5 border backdrop-blur-sm transition-all duration-300 ${
+                    item.type === 'reminder' && item.completed 
+                      ? 'opacity-60 border-gray-600/30' 
+                      : 'border-gray-600/40 hover:border-electric-500/30 hover:shadow-lg hover:shadow-electric-500/10'
                   }`}
                 >
-                  <div className="flex items-start space-x-3">
-                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${getCategoryColor(item.category)}`}>
-                      {item.type === 'memory' ? getCategoryIcon(item.category) : <Bell className="w-4 h-4" />}
-                    </div>
+                  <div className="flex items-start space-x-4">
+                    <motion.div 
+                      whileHover={{ scale: 1.1, rotate: 5 }}
+                      className={`w-10 h-10 rounded-xl flex items-center justify-center border ${getCategoryColor(item.category)}`}
+                    >
+                      {item.type === 'memory' ? getCategoryIcon(item.category) : <Bell className="w-5 h-5" />}
+                    </motion.div>
                     <div className="flex-1">
-                      <div className="flex items-center space-x-2 mb-1">
-                        <p className={`text-sm ${item.type === 'reminder' && item.completed ? 'line-through text-gray-400' : 'text-white'}`}>
+                      <div className="flex items-center space-x-3 mb-2">
+                        <p className={`text-base font-medium ${item.type === 'reminder' && item.completed ? 'line-through text-gray-400' : 'text-white'}`}>
                           {item.content}
                         </p>
                         {item.type === 'reminder' && item.completed && (
-                          <CheckCircle className="w-4 h-4 text-green-400" />
+                          <motion.div
+                            initial={{ scale: 0 }}
+                            animate={{ scale: 1 }}
+                            className="w-5 h-5 bg-green-500/20 rounded-full flex items-center justify-center border border-green-500/30"
+                          >
+                            <CheckCircle className="w-3 h-3 text-green-400" />
+                          </motion.div>
                         )}
                       </div>
                       
-                      <div className="flex items-center space-x-2">
-                        <span className={`px-2 py-1 rounded text-xs font-medium ${getCategoryColor(item.category)}`}>
+                      <div className="flex items-center space-x-2 flex-wrap gap-2">
+                        <span className={`px-3 py-1 rounded-full text-xs font-medium ${getCategoryColor(item.category)}`}>
                           {item.category}
                         </span>
-                        <span className="text-gray-500 text-xs">
+                        <span className="text-gray-400 text-xs px-2 py-1 bg-gray-700/30 rounded-full">
                           {item.type === 'memory' ? 'Memory' : 'Reminder'}
                         </span>
                         {item.type === 'reminder' && item.priority && (
-                          <span className={`px-2 py-1 rounded text-xs font-medium ${getPriorityColor(item.priority)}`}>
+                          <span className={`px-3 py-1 rounded-full text-xs font-medium ${getPriorityColor(item.priority)}`}>
                             {item.priority}
                           </span>
                         )}
                         {item.type === 'reminder' && item.dueDate && (
-                          <span className={`text-xs flex items-center space-x-1 ${
-                            isOverdue(item.dueDate) ? 'text-red-400' : 'text-gray-500'
+                          <span className={`text-xs flex items-center space-x-1 px-2 py-1 rounded-full ${
+                            isOverdue(item.dueDate) 
+                              ? 'text-red-400 bg-red-500/20 border border-red-500/30' 
+                              : 'text-gray-400 bg-gray-700/30'
                           }`}>
                             <Clock className="w-3 h-3" />
                             <span>{item.dueDate.toLocaleDateString()}</span>
@@ -301,26 +356,30 @@ export default function MemoryView({ onClose }: MemoryViewProps) {
                     {/* Action Buttons */}
                     <div className="flex items-center space-x-2">
                       {item.type === 'reminder' && (
-                        <button
+                        <motion.button
+                          whileHover={{ scale: 1.1 }}
+                          whileTap={{ scale: 0.9 }}
                           onClick={() => toggleReminderComplete(item.id)}
-                          className={`p-2 rounded-lg transition-colors ${
+                          className={`p-2 rounded-xl transition-all duration-200 border ${
                             item.completed 
-                              ? 'bg-green-500/20 text-green-400 hover:bg-green-500/30'
-                              : 'bg-gray-700 text-gray-400 hover:bg-gray-600'
+                              ? 'bg-green-500/20 text-green-400 hover:bg-green-500/30 border-green-500/30' 
+                              : 'bg-gray-700/50 text-gray-400 hover:bg-gray-600/50 border-gray-600/30 hover:border-gray-500/50'
                           }`}
                           title={item.completed ? 'Mark as incomplete' : 'Mark as complete'}
                         >
                           <CheckCircle className="w-4 h-4" />
-                        </button>
+                        </motion.button>
                       )}
                       
-                      <button
+                      <motion.button
+                        whileHover={{ scale: 1.1 }}
+                        whileTap={{ scale: 0.9 }}
                         onClick={() => item.type === 'memory' ? deleteMemory(item.id) : deleteReminder(item.id)}
-                        className="p-2 rounded-lg bg-red-500/20 text-red-400 hover:bg-red-500/30 transition-colors"
+                        className="p-2 rounded-xl bg-red-500/20 text-red-400 hover:bg-red-500/30 border border-red-500/30 hover:border-red-400/50 transition-all duration-200"
                         title={`Delete ${item.type}`}
                       >
                         <Trash2 className="w-4 h-4" />
-                      </button>
+                      </motion.button>
                     </div>
                   </div>
                 </motion.div>
