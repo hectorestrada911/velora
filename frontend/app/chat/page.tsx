@@ -650,6 +650,19 @@ Please analyze this document and respond to the user's request. If they didn't s
 
     const file = files[0]
     
+    // File size validation (10MB limit)
+    const maxSize = 10 * 1024 * 1024 // 10MB in bytes
+    if (file.size > maxSize) {
+      toast.error(`File size too large. Maximum size is 10MB. Your file is ${(file.size / (1024 * 1024)).toFixed(1)}MB.`)
+      return
+    }
+    
+    // File type validation (PDF only for now)
+    if (file.type !== 'application/pdf') {
+      toast.error('Only PDF files are supported at the moment.')
+      return
+    }
+    
     // Store the file for later processing (ChatGPT style)
     setPendingFile(file)
     
@@ -657,6 +670,8 @@ Please analyze this document and respond to the user's request. If they didn't s
     if (fileInputRef.current) {
       fileInputRef.current.value = ''
     }
+    
+    toast.success(`"${file.name}" ready for upload (${(file.size / (1024 * 1024)).toFixed(1)}MB)`)
   }
 
   const readFileContent = async (file: File): Promise<string> => {

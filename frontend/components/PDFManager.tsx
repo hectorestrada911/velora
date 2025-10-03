@@ -19,7 +19,8 @@ import {
   BookOpen,
   Archive,
   ChevronDown,
-  Tag
+  Tag,
+  Sparkles
 } from 'lucide-react';
 import { pdfService, PDFDocument } from '../lib/pdfService';
 import { documentService, Document } from '../lib/documentService';
@@ -44,6 +45,12 @@ const PDFManager = ({ onPDFSelected }: PDFManagerProps) => {
     highPriority: 0
   });
 
+  const [storageUsage, setStorageUsage] = useState({
+    used: 0,
+    limit: 5 * 1024 * 1024 * 1024, // 5GB in bytes
+    percentage: 0
+  });
+
   useEffect(() => {
     if (user) {
       documentService.setUserId(user.uid);
@@ -63,12 +70,21 @@ const PDFManager = ({ onPDFSelected }: PDFManagerProps) => {
   };
 
   const updateStats = (docs: Document[]) => {
+    const totalSize = docs.reduce((sum, doc) => sum + doc.size, 0);
+    const percentage = (totalSize / storageUsage.limit) * 100;
+    
     setStats({
       totalPDFs: docs.length,
       actionItems: 0, // TODO: Calculate from document analysis
       reminders: 0,   // TODO: Calculate from document analysis
       highPriority: 0 // TODO: Calculate from document analysis
     });
+
+    setStorageUsage(prev => ({
+      ...prev,
+      used: totalSize,
+      percentage: percentage
+    }));
   };
 
   const handleDeleteDocument = async (documentId: string) => {
@@ -147,6 +163,27 @@ const PDFManager = ({ onPDFSelected }: PDFManagerProps) => {
     }
   };
 
+  const formatFileSize = (bytes: number) => {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+  };
+
+  const generateSummary = async (doc: Document) => {
+    try {
+      toast.loading('Generating summary...', { id: 'summary' });
+      // TODO: Implement AI summary generation
+      // For now, just show a placeholder
+      setTimeout(() => {
+        toast.success('Summary generated!', { id: 'summary' });
+      }, 2000);
+    } catch (error) {
+      toast.error('Failed to generate summary', { id: 'summary' });
+    }
+  };
+
   return (
     <div className="w-full max-w-7xl mx-auto relative">
       {/* Background Effects */}
@@ -194,6 +231,43 @@ const PDFManager = ({ onPDFSelected }: PDFManagerProps) => {
           <p className="text-gray-400 text-lg max-w-2xl mx-auto">
             Your intelligent document hub - upload, analyze, and organize with AI-powered insights
           </p>
+        </motion.div>
+
+        {/* Storage Usage Indicator */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+          className="bg-gradient-to-br from-gray-900/90 to-gray-800/70 rounded-2xl p-6 border border-gray-700/50 backdrop-blur-sm mb-8 relative overflow-hidden"
+        >
+          <div className="absolute inset-0 bg-gradient-to-r from-electric-500/5 via-transparent to-blue-500/5 rounded-2xl"></div>
+          <div className="relative z-10">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-semibold text-white">Storage Usage</h3>
+              <span className={`text-sm font-medium ${
+                storageUsage.percentage > 80 ? 'text-red-400' : 
+                storageUsage.percentage > 60 ? 'text-yellow-400' : 'text-green-400'
+              }`}>
+                {formatFileSize(storageUsage.used)} of {formatFileSize(storageUsage.limit)}
+              </span>
+            </div>
+            <div className="w-full bg-gray-700/50 rounded-full h-3 mb-2">
+              <motion.div
+                className={`h-3 rounded-full ${
+                  storageUsage.percentage > 80 ? 'bg-gradient-to-r from-red-500 to-red-400' :
+                  storageUsage.percentage > 60 ? 'bg-gradient-to-r from-yellow-500 to-yellow-400' :
+                  'bg-gradient-to-r from-green-500 to-green-400'
+                }`}
+                initial={{ width: 0 }}
+                animate={{ width: `${Math.min(storageUsage.percentage, 100)}%` }}
+                transition={{ duration: 1, delay: 0.5 }}
+              />
+            </div>
+            <div className="flex justify-between text-xs text-gray-400">
+              <span>{storageUsage.percentage.toFixed(1)}% used</span>
+              <span>{formatFileSize(storageUsage.limit - storageUsage.used)} remaining</span>
+            </div>
+          </div>
         </motion.div>
 
         {/* Enhanced Stats Cards */}
@@ -387,39 +461,81 @@ const PDFManager = ({ onPDFSelected }: PDFManagerProps) => {
                     
                     <div className="relative z-10">
                       <div className="flex items-start justify-between mb-4">
-                        <div className="flex items-center space-x-4">
+                        <div className="flex items-center space-x-4 flex-1 min-w-0">
+                          {/* Document Thumbnail */}
                           <motion.div 
-                            className="w-12 h-12 bg-gradient-to-br from-electric-500/40 to-blue-500/40 rounded-xl flex items-center justify-center border border-electric-500/60"
+                            className="w-12 h-16 bg-gradient-to-br from-electric-500/40 to-blue-500/40 rounded-xl flex items-center justify-center border border-electric-500/60 flex-shrink-0"
                             whileHover={{ scale: 1.1, rotate: 5 }}
                             transition={{ duration: 0.2 }}
                           >
-                            {getTypeIcon(doc.category || 'other')}
+                            <FileText className="w-6 h-6 text-electric-400" />
                           </motion.div>
-                          <div>
-                            <h3 className="text-white font-semibold text-lg mb-1">
+                          
+                          <div className="flex-1 min-w-0">
+                            <h3 className="text-white font-semibold text-lg mb-1 truncate">
                               {doc.name}
                             </h3>
-                            <p className="text-gray-400 text-sm">
-                              {doc.uploadedAt.toLocaleDateString()}
-                            </p>
+                            <div className="flex items-center space-x-2 text-sm text-gray-400 mb-1">
+                              <span>{doc.uploadedAt.toLocaleDateString()}</span>
+                              <span>•</span>
+                              <span>{formatFileSize(doc.size)}</span>
+                              <span>•</span>
+                              <span className="capitalize">{doc.type.split('/')[1]}</span>
+                            </div>
+                            {doc.summary && (
+                              <p className="text-gray-500 text-xs line-clamp-1">{doc.summary}</p>
+                            )}
                           </div>
                         </div>
                         
-                        <div className="flex items-center space-x-2">
+                        <div className="flex items-center space-x-2 flex-shrink-0">
                           <span className={`px-3 py-1 rounded-full text-xs font-medium ${getImportanceColor('medium')}`}>
                             {doc.category || 'other'}
                           </span>
-                          <motion.button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleDeleteDocument(doc.id);
-                            }}
-                            className="text-gray-400 hover:text-red-400 transition-colors p-2 hover:bg-red-500/10 rounded-lg"
-                            whileHover={{ scale: 1.1 }}
-                            whileTap={{ scale: 0.9 }}
-                          >
-                            <Trash2 className="w-5 h-5" />
-                          </motion.button>
+                          
+                          {/* Quick Actions */}
+                          <div className="flex items-center space-x-1">
+                            <motion.button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                window.open(doc.downloadUrl, '_blank');
+                              }}
+                              className="text-gray-400 hover:text-blue-400 transition-colors p-2 hover:bg-blue-500/10 rounded-lg"
+                              whileHover={{ scale: 1.1 }}
+                              whileTap={{ scale: 0.9 }}
+                              title="Download"
+                            >
+                              <Download className="w-4 h-4" />
+                            </motion.button>
+                            
+                            {!doc.summary && (
+                              <motion.button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  generateSummary(doc);
+                                }}
+                                className="text-gray-400 hover:text-electric-400 transition-colors p-2 hover:bg-electric-500/10 rounded-lg"
+                                whileHover={{ scale: 1.1 }}
+                                whileTap={{ scale: 0.9 }}
+                                title="Generate Summary"
+                              >
+                                <Sparkles className="w-4 h-4" />
+                              </motion.button>
+                            )}
+                            
+                            <motion.button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleDeleteDocument(doc.id);
+                              }}
+                              className="text-gray-400 hover:text-red-400 transition-colors p-2 hover:bg-red-500/10 rounded-lg"
+                              whileHover={{ scale: 1.1 }}
+                              whileTap={{ scale: 0.9 }}
+                              title="Delete"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </motion.button>
+                          </div>
                         </div>
                       </div>
 
