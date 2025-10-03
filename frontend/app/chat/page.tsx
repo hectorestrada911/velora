@@ -1088,29 +1088,36 @@ Please analyze this document and respond to the user's request. If they didn't s
   const handleSendMessage = async () => {
     if (!inputValue.trim()) return
 
+    // Store the input value before clearing it
+    const messageContent = inputValue.trim()
+    const fileToProcess = pendingFile
+
+    // Clear input and file immediately for better UX
+    setInputValue('')
+    setPendingFile(null)
+    setShowSuggestions(false)
+    setHasUserInteracted(false)
+
     // Detect greeting (safe - just logs, doesn't change behavior)
-    const isGreeting = detectGreeting(inputValue)
+    const isGreeting = detectGreeting(messageContent)
 
     const userMessage: Message = {
       id: Date.now().toString(),
       type: 'user',
-      content: inputValue,
+      content: messageContent,
       timestamp: new Date()
     }
 
     setMessages(prev => [...prev, userMessage])
 
     // If there's a pending file, process it with the user's prompt
-    if (pendingFile) {
-      await processPendingFile(pendingFile, inputValue)
-      // Clear the pending file and input
-      setPendingFile(null)
-      setInputValue('')
+    if (fileToProcess) {
+      await processPendingFile(fileToProcess, messageContent)
       return
     }
     
     // Check for "remember" commands and process memories
-    const rememberCommand = memoryService.parseRememberCommand(inputValue)
+    const rememberCommand = memoryService.parseRememberCommand(messageContent)
     if (rememberCommand) {
       const memory = memoryService.addMemory(
         rememberCommand.content,
@@ -1121,8 +1128,8 @@ Please analyze this document and respond to the user's request. If they didn't s
     }
 
     // Get relevant memories for context and recall information
-    const relevantMemories = memoryService.getContextualMemories(inputValue)
-    const recallInfo = memoryService.recallInformation(inputValue)
+    const relevantMemories = memoryService.getContextualMemories(messageContent)
+    const recallInfo = memoryService.recallInformation(messageContent)
     
     // Get calendar events and reminders for context
     const calendarEvents = calendarService.getStoredEvents()
@@ -1143,11 +1150,7 @@ Please analyze this document and respond to the user's request. If they didn't s
       ).join('\n')}` : ''
     
     // Generate smart suggestions based on user input with message context
-    generateSmartSuggestions(inputValue, userMessage.id)
-    
-    setInputValue('')
-    setShowSuggestions(false)
-    setHasUserInteracted(false)
+    generateSmartSuggestions(messageContent, userMessage.id)
     
     // Ensure loading state is set after other state updates
     setTimeout(() => {
@@ -1168,7 +1171,7 @@ Please analyze this document and respond to the user's request. If they didn't s
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ 
-          content: inputValue + calendarContext + reminderContext,
+          content: messageContent + calendarContext + reminderContext,
           conversationHistory: conversationHistory,
           relevantMemories: [...relevantMemories, ...recallInfo.memories],
           recallSuggestions: recallInfo.suggestions,
@@ -1186,9 +1189,9 @@ Please analyze this document and respond to the user's request. If they didn't s
       await autoCreateFromMessage(analysis)
       
       // Check if user is asking about documents
-      const lowerInput = inputValue.toLowerCase()
+      const lowerInput = messageContent.toLowerCase()
       if (lowerInput.includes('find') && (lowerInput.includes('resume') || lowerInput.includes('document') || lowerInput.includes('file'))) {
-        const searchQuery = inputValue.replace(/find|my|the|a|an|in|documents?|files?/gi, '').trim()
+        const searchQuery = messageContent.replace(/find|my|the|a|an|in|documents?|files?/gi, '').trim()
         searchDocuments(searchQuery)
         // Add a small delay to ensure typing animation is visible
         setTimeout(() => {
@@ -1200,7 +1203,7 @@ Please analyze this document and respond to the user's request. If they didn't s
       const aiMessage: Message = {
         id: (Date.now() + 1).toString(),
         type: 'ai',
-        content: analysis.aiResponse || `I've analyzed your request: "${inputValue}"`,
+        content: analysis.aiResponse || `I've analyzed your request: "${messageContent}"`,
         timestamp: new Date(),
         analysis: analysis
       }
@@ -1222,7 +1225,7 @@ Please analyze this document and respond to the user's request. If they didn't s
           let conversationId = currentConversationId
           if (!conversationId) {
             conversationId = await firestoreService.createConversation(
-              inputValue.length > 50 ? inputValue.substring(0, 50) + '...' : inputValue
+              messageContent.length > 50 ? messageContent.substring(0, 50) + '...' : messageContent
             )
             setCurrentConversationId(conversationId)
           }
@@ -1230,9 +1233,9 @@ Please analyze this document and respond to the user's request. If they didn't s
           // Add user message to Firestore
           await firestoreService.addMessageToConversation(conversationId, {
             role: 'user',
-            content: inputValue,
+            content: messageContent,
             metadata: {
-              crossReferences: crossReferenceService.findRelatedContent(inputValue).map(ref => ref.id),
+              crossReferences: crossReferenceService.findRelatedContent(messageContent).map(ref => ref.id),
               memoryContent: relevantMemories
             }
           })
@@ -1299,7 +1302,7 @@ Please analyze this document and respond to the user's request. If they didn't s
         analysis: {
           type: 'note',
           priority: 'medium',
-          summary: inputValue,
+          summary: messageContent,
           calendarEvent: null,
           reminder: null
         }
