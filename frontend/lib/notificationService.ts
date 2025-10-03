@@ -345,6 +345,9 @@ class NotificationService {
     try {
       await calendarService.markReminderComplete(reminderId)
       console.log('Reminder completed:', reminderId)
+      
+      // Reload notifications to update the UI
+      await this.loadNotifications()
     } catch (error) {
       console.error('Error completing reminder:', error)
     }
