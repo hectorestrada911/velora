@@ -591,4 +591,4 @@ export default function PDFManager({ onPDFSelected }: PDFManagerProps) {
       </div>
     </div>
   );
-}
+};
