@@ -20,6 +20,8 @@ import {
   Archive
 } from 'lucide-react';
 import { pdfService, PDFDocument } from '../lib/pdfService';
+import { documentService, Document } from '../lib/documentService';
+import { useAuth } from './providers/AuthProvider';
 import { toast } from 'react-hot-toast';
 
 interface PDFManagerProps {
@@ -27,44 +29,85 @@ interface PDFManagerProps {
 }
 
 export default function PDFManager({ onPDFSelected }: PDFManagerProps) {
-  const [pdfs, setPdfs] = useState<PDFDocument[]>([]);
+  const { user } = useAuth();
+  const [documents, setDocuments] = useState<Document[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [filterType, setFilterType] = useState('all');
   const [filterImportance, setFilterImportance] = useState('all');
-  const [selectedPDF, setSelectedPDF] = useState<PDFDocument | null>(null);
-  const [stats, setStats] = useState(pdfService.getStats());
+  const [selectedDocument, setSelectedDocument] = useState<Document | null>(null);
+  const [stats, setStats] = useState({
+    totalPDFs: 0,
+    actionItems: 0,
+    reminders: 0,
+    highPriority: 0
+  });
 
   useEffect(() => {
-    loadPDFs();
-  }, []);
+    if (user) {
+      documentService.setUserId(user.uid);
+      loadDocuments();
+    }
+  }, [user]);
 
-  const loadPDFs = () => {
-    setPdfs(pdfService.getAllPDFs());
-    setStats(pdfService.getStats());
+  const loadDocuments = async () => {
+    try {
+      const docs = await documentService.getDocuments();
+      setDocuments(docs);
+      updateStats(docs);
+    } catch (error) {
+      console.error('Error loading documents:', error);
+      toast.error('Failed to load documents');
+    }
   };
 
-  const handleSearch = (query: string) => {
+  const updateStats = (docs: Document[]) => {
+    setStats({
+      totalPDFs: docs.length,
+      actionItems: 0, // TODO: Calculate from document analysis
+      reminders: 0,   // TODO: Calculate from document analysis
+      highPriority: 0 // TODO: Calculate from document analysis
+    });
+  };
+
+  const handleDeleteDocument = async (documentId: string) => {
+    try {
+      await documentService.deleteDocument(documentId);
+      await loadDocuments();
+      toast.success('Document deleted successfully');
+    } catch (error) {
+      console.error('Error deleting document:', error);
+      toast.error('Failed to delete document');
+    }
+  };
+
+  const handleSearch = async (query: string) => {
     setSearchQuery(query);
     if (query.trim()) {
-      const results = pdfService.searchPDFs(query, 20);
-      setPdfs(results.map(result => result.document));
+      try {
+        const results = await documentService.searchDocuments(query);
+        setDocuments(results);
+      } catch (error) {
+        console.error('Error searching documents:', error);
+        toast.error('Failed to search documents');
+      }
     } else {
-      loadPDFs();
+      await loadDocuments();
     }
   };
 
   const handleFilter = () => {
-    let filtered = pdfService.getAllPDFs();
+    let filtered = documents;
 
     if (filterType !== 'all') {
-      filtered = filtered.filter(pdf => pdf.documentType === filterType);
+      filtered = filtered.filter(doc => doc.category === filterType);
     }
 
     if (filterImportance !== 'all') {
-      filtered = filtered.filter(pdf => pdf.importance === filterImportance);
+      // TODO: Add importance field to Document interface
+      // filtered = filtered.filter(doc => doc.importance === filterImportance);
     }
 
-    setPdfs(filtered);
+    setDocuments(filtered);
   };
 
   useEffect(() => {
@@ -234,44 +277,63 @@ export default function PDFManager({ onPDFSelected }: PDFManagerProps) {
         <div className="lg:col-span-2">
           <div className="space-y-4">
             <AnimatePresence>
-              {pdfs.map((pdf, index) => (
+              {documents.map((doc, index) => (
                 <motion.div
-                  key={pdf.id}
+                  key={doc.id}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
                   transition={{ delay: index * 0.1 }}
                   className={`bg-gray-800/50 rounded-lg p-4 border border-gray-700 cursor-pointer transition-all duration-200 ${
-                    selectedPDF?.id === pdf.id ? 'border-blue-500 bg-blue-500/10' : 'hover:border-gray-600'
+                    selectedDocument?.id === doc.id ? 'border-blue-500 bg-blue-500/10' : 'hover:border-gray-600'
                   }`}
                   onClick={() => {
-                    setSelectedPDF(pdf);
-                    onPDFSelected?.(pdf);
+                    setSelectedDocument(doc);
+                    // Convert Document to PDFDocument for compatibility
+                    const pdfDoc: PDFDocument = {
+                      id: doc.id,
+                      fileName: doc.name,
+                      fileSize: doc.size,
+                      uploadDate: doc.uploadedAt.toISOString(),
+                      summary: doc.summary || '',
+                      documentType: doc.category || 'other',
+                      importance: 'medium',
+                      keyPoints: [],
+                      extractedData: { people: [], dates: [], amounts: [], deadlines: [], topics: [] },
+                      actionItems: [],
+                      reminders: [],
+                      calendarEvents: [],
+                      memorySuggestions: [],
+                      aiResponse: '',
+                      followUpQuestions: [],
+                      content: doc.content || ''
+                    };
+                    onPDFSelected?.(pdfDoc);
                   }}
                 >
                   <div className="flex items-start justify-between mb-3">
                     <div className="flex items-center space-x-3">
                       <div className="p-2 bg-gray-700 rounded-lg">
-                        {getTypeIcon(pdf.documentType)}
+                        {getTypeIcon(doc.category || 'other')}
                       </div>
                       <div>
                         <h3 className="text-white font-medium truncate max-w-xs">
-                          {pdf.fileName}
+                          {doc.name}
                         </h3>
                         <p className="text-gray-400 text-sm">
-                          {new Date(pdf.uploadDate).toLocaleDateString()}
+                          {doc.uploadedAt.toLocaleDateString()}
                         </p>
                       </div>
                     </div>
                     
                     <div className="flex items-center space-x-2">
-                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${getImportanceColor(pdf.importance)}`}>
-                        {pdf.importance}
+                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${getImportanceColor('medium')}`}>
+                        {doc.category || 'other'}
                       </span>
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
-                          handleDeletePDF(pdf.id);
+                          handleDeleteDocument(doc.id);
                         }}
                         className="text-gray-400 hover:text-red-400 transition-colors"
                       >

@@ -565,13 +565,13 @@ Please analyze this document and respond to the user's request. If they didn't s
       const aiMessage: Message = {
         id: Date.now().toString(),
         type: 'ai',
-        content: data.response,
+        content: data.aiResponse || data.response || `I've analyzed your document "${file.name}". ${data.summary || 'Document analysis complete.'}`,
         timestamp: new Date(),
         analysis: {
           type: 'document_analysis',
-          priority: 'high',
+          priority: data.importance || 'high',
           documentName: file.name,
-          summary: data.response.substring(0, 100) + '...'
+          summary: data.summary || data.aiResponse || 'Document analysis complete'
         }
       }
       
