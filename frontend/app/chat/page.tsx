@@ -748,6 +748,40 @@ Please analyze this document and respond to the user's request. If they didn't s
         const errorMessage = error instanceof Error ? error.message : 'Unknown error'
         throw new Error(`PDF processing failed: ${errorMessage}`)
       }
+    } else if (file.type.startsWith('image/')) {
+      try {
+        console.log('Processing image file...')
+        // Use the image processing API for image files
+        const formData = new FormData()
+        formData.append('file', file)
+        
+        const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://velora-production.up.railway.app'
+        const apiUrl = baseUrl.replace('/api/analyze', '') // Remove /api/analyze if present
+        const response = await fetch(`${apiUrl}/api/pdf-analyze`, {
+          method: 'POST',
+          body: formData,
+        })
+        
+        console.log('Image API response status:', response.status)
+        
+        if (!response.ok) {
+          const errorText = await response.text()
+          console.error('Image API error:', errorText)
+          throw new Error(`Image processing failed: ${response.status} - ${errorText}`)
+        }
+        
+        const result = await response.json()
+        console.log('Image processing result:', result)
+        
+        const content = result.summary || result.aiResponse || 'Image processed successfully'
+        console.log('Extracted content length:', content.length)
+        
+        return content
+      } catch (error) {
+        console.error('Image processing error:', error)
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error'
+        throw new Error(`Image processing failed: ${errorMessage}`)
+      }
     } else {
       // For text files, use FileReader
       console.log('Processing text file...')
