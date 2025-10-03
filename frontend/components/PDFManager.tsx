@@ -180,7 +180,7 @@ export default function PDFManager({ onPDFSelected }: PDFManagerProps) {
             <CheckCircle className="w-5 h-5 text-green-400" />
             <span className="text-gray-400 text-sm">Action Items</span>
           </div>
-          <div className="text-2xl font-bold text-white mt-1">{stats.totalActionItems}</div>
+          <div className="text-2xl font-bold text-white mt-1">{stats.actionItems}</div>
         </motion.div>
 
         <motion.div
@@ -193,7 +193,7 @@ export default function PDFManager({ onPDFSelected }: PDFManagerProps) {
             <Clock className="w-5 h-5 text-yellow-400" />
             <span className="text-gray-400 text-sm">Reminders</span>
           </div>
-          <div className="text-2xl font-bold text-white mt-1">{stats.totalReminders}</div>
+          <div className="text-2xl font-bold text-white mt-1">{stats.reminders}</div>
         </motion.div>
 
         <motion.div
@@ -206,7 +206,7 @@ export default function PDFManager({ onPDFSelected }: PDFManagerProps) {
             <AlertCircle className="w-5 h-5 text-red-400" />
             <span className="text-gray-400 text-sm">High Priority</span>
           </div>
-          <div className="text-2xl font-bold text-white mt-1">{stats.byImportance.high || 0}</div>
+          <div className="text-2xl font-bold text-white mt-1">{stats.highPriority}</div>
         </motion.div>
       </div>
 
