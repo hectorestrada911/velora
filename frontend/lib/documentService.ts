@@ -70,16 +70,23 @@ export class DocumentService {
     }
 
     try {
+      // For images and large content, truncate content to avoid Firestore size limits
+      let processedContent = content || ''
+      if (processedContent.length > 800000) { // 800KB limit to be safe
+        console.log(`Content too large (${processedContent.length} bytes), truncating for Firestore`)
+        processedContent = processedContent.substring(0, 800000) + '...[truncated]'
+      }
+
       const documentData = {
         name: storedFile.name,
         type: storedFile.type,
         size: storedFile.size,
         storageId: storedFile.id,
         downloadUrl: storedFile.url,
-        content: content || '',
+        content: processedContent,
         summary: summary || '',
-        tags: this.extractTags(storedFile.name, content),
-        category: this.categorizeDocument(storedFile.name, content),
+        tags: this.extractTags(storedFile.name, processedContent),
+        category: this.categorizeDocument(storedFile.name, processedContent),
         userId: this.getCurrentUserId(),
         uploadedAt: Timestamp.now(),
         updatedAt: Timestamp.now()
