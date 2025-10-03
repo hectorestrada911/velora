@@ -115,16 +115,16 @@ export default function PDFManager({ onPDFSelected }: PDFManagerProps) {
   }, [filterType, filterImportance]);
 
 
-  const handleExportPDF = (pdf: PDFDocument) => {
-    const dataStr = JSON.stringify(pdf, null, 2);
+  const handleExportPDF = (doc: Document) => {
+    const dataStr = JSON.stringify(doc, null, 2);
     const dataBlob = new Blob([dataStr], { type: 'application/json' });
     const url = URL.createObjectURL(dataBlob);
     const link = document.createElement('a');
     link.href = url;
-    link.download = `${pdf.fileName.replace('.pdf', '')}_analysis.json`;
+    link.download = `${doc.name.replace('.pdf', '')}_analysis.json`;
     link.click();
     URL.revokeObjectURL(url);
-    toast.success('PDF analysis exported');
+    toast.success('Document analysis exported');
   };
 
   const getImportanceColor = (importance: string) => {
@@ -367,7 +367,7 @@ export default function PDFManager({ onPDFSelected }: PDFManagerProps) {
 
         {/* PDF Details */}
         <div className="lg:col-span-1">
-          {selectedPDF ? (
+          {selectedDocument ? (
             <motion.div
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
@@ -376,7 +376,7 @@ export default function PDFManager({ onPDFSelected }: PDFManagerProps) {
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-lg font-semibold text-white">PDF Details</h3>
                 <button
-                  onClick={() => handleExportPDF(selectedPDF)}
+                  onClick={() => handleExportPDF(selectedDocument)}
                   className="text-gray-400 hover:text-blue-400 transition-colors"
                 >
                   <Download className="w-4 h-4" />
@@ -385,11 +385,11 @@ export default function PDFManager({ onPDFSelected }: PDFManagerProps) {
 
               <div className="space-y-4">
                 {/* Key Points */}
-                {selectedPDF.keyPoints.length > 0 && (
+                {selectedDocument.keyPoints && selectedDocument.keyPoints.length > 0 && (
                   <div>
                     <h4 className="text-sm font-medium text-gray-300 mb-2">Key Points</h4>
                     <ul className="space-y-1">
-                      {selectedPDF.keyPoints.map((point, index) => (
+                      {selectedDocument.keyPoints.map((point, index) => (
                         <li key={index} className="text-gray-400 text-sm flex items-start">
                           <span className="text-blue-400 mr-2 mt-1">•</span>
                           {point}
@@ -400,11 +400,11 @@ export default function PDFManager({ onPDFSelected }: PDFManagerProps) {
                 )}
 
                 {/* Action Items */}
-                {selectedPDF.actionItems.length > 0 && (
+                {selectedDocument.actionItems && selectedDocument.actionItems.length > 0 && (
                   <div>
                     <h4 className="text-sm font-medium text-gray-300 mb-2">Action Items</h4>
                     <div className="space-y-2">
-                      {selectedPDF.actionItems.map((item, index) => (
+                      {selectedDocument.actionItems.map((item, index) => (
                         <div key={index} className="p-2 bg-gray-700/50 rounded border border-gray-600">
                           <div className="text-white text-sm">{item.task}</div>
                           {item.deadline && (
@@ -419,11 +419,11 @@ export default function PDFManager({ onPDFSelected }: PDFManagerProps) {
                 )}
 
                 {/* People Mentioned */}
-                {selectedPDF.extractedData.people.length > 0 && (
+                {selectedDocument.extractedData && selectedDocument.extractedData.people && selectedDocument.extractedData.people.length > 0 && (
                   <div>
                     <h4 className="text-sm font-medium text-gray-300 mb-2">People Mentioned</h4>
                     <div className="flex flex-wrap gap-1">
-                      {selectedPDF.extractedData.people.map((person, index) => (
+                      {selectedDocument.extractedData.people.map((person, index) => (
                         <span
                           key={index}
                           className="px-2 py-1 bg-blue-500/20 text-blue-300 text-xs rounded-full"
@@ -436,11 +436,11 @@ export default function PDFManager({ onPDFSelected }: PDFManagerProps) {
                 )}
 
                 {/* Topics */}
-                {selectedPDF.extractedData.topics.length > 0 && (
+                {selectedDocument.extractedData && selectedDocument.extractedData.topics && selectedDocument.extractedData.topics.length > 0 && (
                   <div>
                     <h4 className="text-sm font-medium text-gray-300 mb-2">Topics</h4>
                     <div className="flex flex-wrap gap-1">
-                      {selectedPDF.extractedData.topics.map((topic, index) => (
+                      {selectedDocument.extractedData.topics.map((topic, index) => (
                         <span
                           key={index}
                           className="px-2 py-1 bg-purple-500/20 text-purple-300 text-xs rounded-full"
