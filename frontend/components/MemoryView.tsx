@@ -203,7 +203,7 @@ export default function MemoryView({ onClose }: MemoryViewProps) {
               <Brain className="w-4 h-4 text-white" />
             </div>
             <div>
-              <h2 className="text-xl font-semibold text-white">Memory Bank</h2>
+              <h2 className="text-xl font-semibold text-white">REMEMBER</h2>
               <p className="text-gray-400 text-sm">Your memories and reminders</p>
             </div>
           </div>
