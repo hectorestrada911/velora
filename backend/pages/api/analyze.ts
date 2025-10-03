@@ -146,8 +146,8 @@ Return JSON with type, priority, summary, tags, extractedData, calendarEvent, re
         { role: "system", content: systemPrompt },
         { role: "user", content: userPrompt }
       ],
-      temperature: 0.7,
       max_completion_tokens: 1000, // GPT-5 uses max_completion_tokens instead of max_tokens
+      // GPT-5-mini only supports default temperature (1), so we omit temperature parameter
     })
 
     // Parse AI response, handling markdown code blocks
