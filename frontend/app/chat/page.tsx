@@ -657,9 +657,9 @@ Please analyze this document and respond to the user's request. If they didn't s
       return
     }
     
-    // File type validation (PDF only for now)
-    if (file.type !== 'application/pdf') {
-      toast.error('Only PDF files are supported at the moment.')
+    // File type validation (PDF and images)
+    if (file.type !== 'application/pdf' && !file.type.startsWith('image/')) {
+      toast.error('Only PDF files and images are supported.')
       return
     }
     
@@ -672,6 +672,42 @@ Please analyze this document and respond to the user's request. If they didn't s
     }
     
     toast.success(`"${file.name}" ready for upload (${(file.size / (1024 * 1024)).toFixed(1)}MB)`)
+  }
+
+  const handlePaste = async (event: React.ClipboardEvent) => {
+    const items = event.clipboardData?.items
+    if (!items) return
+
+    for (let i = 0; i < items.length; i++) {
+      const item = items[i]
+      
+      // Check if the pasted item is an image
+      if (item.type.startsWith('image/')) {
+        event.preventDefault() // Prevent default paste behavior
+        
+        const file = item.getAsFile()
+        if (!file) continue
+
+        // File size validation (10MB limit)
+        const maxSize = 10 * 1024 * 1024 // 10MB in bytes
+        if (file.size > maxSize) {
+          toast.error(`Image too large. Maximum size is 10MB. Your image is ${(file.size / (1024 * 1024)).toFixed(1)}MB.`)
+          return
+        }
+
+        // Create a proper File object with a name
+        const imageFile = new File([file], `pasted-image-${Date.now()}.${file.type.split('/')[1]}`, {
+          type: file.type,
+          lastModified: Date.now()
+        })
+
+        // Store the file for later processing
+        setPendingFile(imageFile)
+        
+        toast.success(`Image pasted and ready for analysis (${(file.size / (1024 * 1024)).toFixed(1)}MB)`)
+        return
+      }
+    }
   }
 
   const readFileContent = async (file: File): Promise<string> => {
@@ -1935,12 +1971,13 @@ Please analyze this document and respond to the user's request. If they didn't s
                     setHasUserInteracted(true)
                   }}
                   onKeyPress={handleKeyPress}
+                  onPaste={handlePaste}
                   placeholder={
                     isVoiceListening 
                       ? "🎤 Voice recording active..." 
                       : pendingFile 
                         ? "Ask anything about this document..." 
-                        : "Tell me what you need to remember, schedule, or organize..."
+                        : "Tell me what you need to remember, schedule, or organize... (You can also paste images!)"
                   }
                   className={`w-full bg-gray-800 border rounded-xl px-4 sm:px-5 py-3.5 sm:py-4 text-white placeholder-gray-400 focus:outline-none focus:border-electric-500 focus:ring-1 focus:ring-electric-500 transition-all duration-200 resize-none text-sm sm:text-base ${
                     isVoiceListening 
@@ -1959,7 +1996,7 @@ Please analyze this document and respond to the user's request. If they didn't s
                 <input
                   ref={fileInputRef}
                   type="file"
-                  accept=".pdf,.txt,.doc,.docx,.md"
+                  accept=".pdf,.txt,.doc,.docx,.md,image/*"
                   onChange={handleFileUpload}
                   className="hidden"
                 />
@@ -1968,7 +2005,7 @@ Please analyze this document and respond to the user's request. If they didn't s
                   onClick={() => fileInputRef.current?.click()}
                   disabled={isUploading}
                   className="p-3 sm:p-4 bg-gray-800 hover:bg-gray-700 text-gray-400 hover:text-white border border-gray-600 rounded-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed min-w-[56px] min-h-[56px] flex items-center justify-center"
-                  title={isUploading ? "Uploading..." : "Upload Document"}
+                  title={isUploading ? "Uploading..." : "Upload Document or Image"}
                 >
                   {isUploading ? (
                     <div className="w-4 h-4 sm:w-5 sm:h-5 animate-spin rounded-full border-2 border-gray-400 border-t-transparent"></div>
