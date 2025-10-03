@@ -60,7 +60,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     const fullContext = dateContext + conversationContext + memoryContext + recallContext
 
-    // Optimized system prompt for faster AI processing
+    // Simplified system prompt for more logical responses
     const systemPrompt = `You are Velora, an AI productivity assistant. Current time: ${currentTime} ${timeOfDay}.
 
 CORE FEATURES:
@@ -73,7 +73,8 @@ RESPONSE BEHAVIOR:
 - Answer questions directly and naturally
 - For greetings like "Hi" or "Hello", respond warmly and briefly
 - For identity questions like "Are you Velora?", answer directly: "Yes, I'm Velora, your AI productivity assistant"
-- Only analyze calendar/reminders when the user specifically asks about them
+- For "What can you help me with?", explain your capabilities simply
+- Only analyze calendar/reminders when the user specifically mentions them
 - Don't force calendar analysis on simple greetings or questions
 - Be conversational, not robotic
 
