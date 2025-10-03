@@ -262,7 +262,7 @@ Provide a comprehensive analysis following the JSON format above.`
 
   // Call OpenAI API
   const response = await openai.chat.completions.create({
-    model: "gpt-4o",
+    model: "gpt-5",
     messages: [
       { role: "system", content: systemPrompt },
       { role: "user", content: userPrompt }
@@ -292,7 +292,7 @@ Provide a comprehensive analysis following the JSON format above.`
     fileSize: Math.round(file.size / 1024),
     textLength: textContent.length,
     processingTime: new Date().toISOString(),
-    aiModel: 'gpt-4o',
+    aiModel: 'gpt-5',
     fileType: fileType
   }
 
@@ -368,7 +368,7 @@ Provide a comprehensive analysis following the JSON format above.`
 
   // Call OpenAI API with image using GPT-4o
   const response = await openai.chat.completions.create({
-    model: "gpt-4o",
+    model: "gpt-5",
     messages: [
       { role: "system", content: systemPrompt },
       { 
@@ -408,7 +408,7 @@ Provide a comprehensive analysis following the JSON format above.`
     fileName: file.originalFilename || 'image.jpg',
     fileSize: Math.round(file.size / 1024),
     processingTime: new Date().toISOString(),
-    aiModel: 'gpt-4o',
+    aiModel: 'gpt-5',
     fileType: 'image'
   }
 

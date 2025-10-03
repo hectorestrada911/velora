@@ -157,7 +157,7 @@ Return ONLY valid JSON in this exact format:
 }`;
 
     const aiResponse = await openai.chat.completions.create({
-      model: "gpt-5",
+      model: "gpt-4o",
       messages: [
         { role: "system", content: analysisPrompt },
         { role: "user", content: `Please analyze this Google Drive document: ${fileName || file.name}` }

@@ -141,7 +141,7 @@ Return JSON with type, priority, summary, tags, extractedData, calendarEvent, re
 
     // Use GPT-4o-mini for faster responses
     const completion = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
+      model: "gpt-5-mini",
       messages: [
         { role: "system", content: systemPrompt },
         { role: "user", content: userPrompt }
@@ -203,7 +203,7 @@ Return JSON with type, priority, summary, tags, extractedData, calendarEvent, re
       aiResponse: analysis.aiResponse || "I've analyzed your content and organized it for you!",
       followUpQuestions: analysis.followUpQuestions || ["Show me what I have planned today", "Help me set a reminder for something"],
       featureSuggestions: analysis.featureSuggestions || [],
-      aiModel: 'gpt-4o-mini',
+      aiModel: 'gpt-5-mini',
       processingTime: Date.now() - now.getTime()
     })
 
