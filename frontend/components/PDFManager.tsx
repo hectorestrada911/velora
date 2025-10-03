@@ -560,6 +560,7 @@ export default function PDFManager({ onPDFSelected }: PDFManagerProps) {
                     </div>
                   )}
                 </div>
+              </div>
             </motion.div>
           ) : (
             <motion.div 
