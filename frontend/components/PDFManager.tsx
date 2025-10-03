@@ -333,37 +333,23 @@ export default function PDFManager({ onPDFSelected }: PDFManagerProps) {
                   </div>
 
                   <p className="text-gray-300 text-sm mb-3 line-clamp-2">
-                    {pdf.summary}
+                    {doc.summary || 'No summary available'}
                   </p>
 
                   <div className="flex items-center justify-between text-xs text-gray-400">
                     <div className="flex items-center space-x-4">
-                      {pdf.extractedData.people.length > 0 && (
-                        <div className="flex items-center space-x-1">
-                          <Users className="w-3 h-3" />
-                          <span>{pdf.extractedData.people.length}</span>
-                        </div>
-                      )}
-                      {pdf.extractedData.deadlines.length > 0 && (
-                        <div className="flex items-center space-x-1">
-                          <Calendar className="w-3 h-3" />
-                          <span>{pdf.extractedData.deadlines.length}</span>
-                        </div>
-                      )}
-                      {pdf.actionItems.length > 0 && (
-                        <div className="flex items-center space-x-1">
-                          <CheckCircle className="w-3 h-3" />
-                          <span>{pdf.actionItems.length}</span>
-                        </div>
-                      )}
+                      <div className="flex items-center space-x-1">
+                        <FileText className="w-3 h-3" />
+                        <span>{doc.category || 'document'}</span>
+                      </div>
                     </div>
-                    <span>{(pdf.fileSize / 1024).toFixed(1)} KB</span>
+                    <span>{(doc.size / 1024).toFixed(1)} KB</span>
                   </div>
                 </motion.div>
               ))}
             </AnimatePresence>
 
-            {pdfs.length === 0 && (
+            {documents.length === 0 && (
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
