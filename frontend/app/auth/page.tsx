@@ -675,14 +675,14 @@ export default function AuthPage() {
             {/* Full Width Calendar Showcase */}
             <motion.div
               whileHover={{ scale: 1.01, y: -10 }}
-              className="bg-gradient-to-br from-gray-900/90 to-gray-800/70 rounded-3xl p-12 border border-purple-500/30 hover:border-purple-500/60 transition-all duration-500 backdrop-blur-sm relative overflow-hidden"
+              className="bg-gradient-to-br from-gray-900/90 to-gray-800/70 rounded-3xl p-6 md:p-12 border border-purple-500/30 hover:border-purple-500/60 transition-all duration-500 backdrop-blur-sm relative overflow-hidden"
             >
               {/* Background Glow Effect */}
               <div className="absolute inset-0 bg-gradient-to-r from-purple-500/5 via-transparent to-pink-500/5 rounded-3xl"></div>
               
               {/* Calendar Grid - Full Width */}
               <div className="relative z-10">
-                <div className="grid grid-cols-7 gap-4 text-center text-sm text-gray-400 mb-6">
+                <div className="grid grid-cols-7 gap-1 md:gap-4 text-center text-xs md:text-sm text-gray-400 mb-4 md:mb-6">
                   <div className="font-semibold">MON</div>
                   <div className="font-semibold">TUE</div>
                   <div className="font-semibold">WED</div>
@@ -692,7 +692,7 @@ export default function AuthPage() {
                   <div className="font-semibold">SUN</div>
                 </div>
                 
-                <div className="grid grid-cols-7 gap-4">
+                <div className="grid grid-cols-7 gap-1 md:gap-4">
                   {[...Array(35)].map((_, i) => (
                     <motion.div
                       key={i}
@@ -706,7 +706,7 @@ export default function AuthPage() {
                         repeat: Infinity, 
                         delay: i * 0.05 
                       }}
-                      className={`h-16 rounded-xl flex items-center justify-center text-sm font-medium transition-all duration-300 ${
+                      className={`h-10 md:h-16 rounded-lg md:rounded-xl flex items-center justify-center text-xs md:text-sm font-medium transition-all duration-300 ${
                         i === 15 ? 'bg-gradient-to-br from-purple-500/40 to-pink-500/40 text-purple-200 border border-purple-500/50 shadow-lg shadow-purple-500/25' :
                         i === 8 || i === 22 || i === 29 ? 'bg-gradient-to-br from-blue-500/30 to-cyan-500/30 text-blue-200 border border-blue-500/40 shadow-lg shadow-blue-500/20' :
                         i === 1 || i === 16 || i === 30 ? 'bg-gradient-to-br from-green-500/30 to-emerald-500/30 text-green-200 border border-green-500/40 shadow-lg shadow-green-500/20' :
@@ -718,17 +718,17 @@ export default function AuthPage() {
                   ))}
                 </div>
                 
-                {/* Floating Metrics */}
-                <div className="absolute top-8 right-8 space-y-4">
+                {/* Floating Metrics - Responsive */}
+                <div className="absolute top-4 md:top-8 right-4 md:right-8 space-y-2 md:space-y-4">
                   <motion.div
                     animate={{ 
                       scale: [1, 1.05, 1],
                       rotate: [0, 2, -2, 0]
                     }}
                     transition={{ duration: 4, repeat: Infinity }}
-                    className="bg-gradient-to-r from-purple-500/20 to-pink-500/20 backdrop-blur-sm rounded-2xl p-4 border border-purple-500/30"
+                    className="bg-gradient-to-r from-purple-500/20 to-pink-500/20 backdrop-blur-sm rounded-xl md:rounded-2xl p-2 md:p-4 border border-purple-500/30"
                   >
-                    <div className="text-2xl font-bold text-purple-400">12</div>
+                    <div className="text-lg md:text-2xl font-bold text-purple-400">12</div>
                     <div className="text-xs text-gray-400">UPCOMING</div>
                   </motion.div>
                   <motion.div
@@ -737,9 +737,9 @@ export default function AuthPage() {
                       rotate: [0, -2, 2, 0]
                     }}
                     transition={{ duration: 4, repeat: Infinity, delay: 0.5 }}
-                    className="bg-gradient-to-r from-blue-500/20 to-cyan-500/20 backdrop-blur-sm rounded-2xl p-4 border border-blue-500/30"
+                    className="bg-gradient-to-r from-blue-500/20 to-cyan-500/20 backdrop-blur-sm rounded-xl md:rounded-2xl p-2 md:p-4 border border-blue-500/30"
                   >
-                    <div className="text-2xl font-bold text-blue-400">3</div>
+                    <div className="text-lg md:text-2xl font-bold text-blue-400">3</div>
                     <div className="text-xs text-gray-400">TODAY</div>
                   </motion.div>
                 </div>
@@ -787,16 +787,16 @@ export default function AuthPage() {
             {/* Memory Visualization - Full Width */}
             <motion.div
               whileHover={{ scale: 1.01, y: -10 }}
-              className="bg-gradient-to-br from-gray-900/90 to-gray-800/70 rounded-3xl p-12 border border-electric-500/30 hover:border-electric-500/60 transition-all duration-500 backdrop-blur-sm relative overflow-hidden"
+              className="bg-gradient-to-br from-gray-900/90 to-gray-800/70 rounded-3xl p-6 md:p-12 border border-electric-500/30 hover:border-electric-500/60 transition-all duration-500 backdrop-blur-sm relative overflow-hidden"
             >
               {/* Background Glow Effect */}
               <div className="absolute inset-0 bg-gradient-to-r from-electric-500/5 via-transparent to-blue-500/5 rounded-3xl"></div>
               
               {/* Memory Network Visualization */}
               <div className="relative z-10">
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
                   {/* Central Memory Hub */}
-                  <div className="lg:col-span-1 flex justify-center">
+                  <div className="lg:col-span-1 flex justify-center mb-6 lg:mb-0">
                     <motion.div
                       animate={{ 
                         scale: [1, 1.1, 1],
@@ -812,14 +812,14 @@ export default function AuthPage() {
                         rotate: { duration: 20, repeat: Infinity, ease: "linear" },
                         boxShadow: { duration: 2, repeat: Infinity }
                       }}
-                      className="w-32 h-32 bg-gradient-to-br from-electric-500/40 to-blue-500/40 rounded-full flex items-center justify-center border border-electric-500/60 backdrop-blur-sm"
+                      className="w-24 h-24 md:w-32 md:h-32 bg-gradient-to-br from-electric-500/40 to-blue-500/40 rounded-full flex items-center justify-center border border-electric-500/60 backdrop-blur-sm"
                     >
-                      <Database className="w-16 h-16 text-electric-400" />
+                      <Database className="w-12 h-12 md:w-16 md:h-16 text-electric-400" />
                     </motion.div>
                   </div>
                   
                   {/* Memory Nodes */}
-                  <div className="lg:col-span-2 space-y-6">
+                  <div className="lg:col-span-2 space-y-4 md:space-y-6">
                     {[
                       { text: "John's birthday is March 15th", color: "electric", delay: 0 },
                       { text: "Project Alpha deadline: Q2", color: "blue", delay: 0.5 },
@@ -833,7 +833,7 @@ export default function AuthPage() {
                         whileInView={{ opacity: 1, x: 0 }}
                         transition={{ delay: memory.delay }}
                         whileHover={{ scale: 1.05, x: 10 }}
-                        className={`flex items-center space-x-4 p-4 rounded-2xl bg-gradient-to-r from-${memory.color}-500/10 to-${memory.color}-500/5 border border-${memory.color}-500/20 hover:border-${memory.color}-500/40 transition-all duration-300`}
+                        className={`flex items-center space-x-3 md:space-x-4 p-3 md:p-4 rounded-xl md:rounded-2xl bg-gradient-to-r from-${memory.color}-500/10 to-${memory.color}-500/5 border border-${memory.color}-500/20 hover:border-${memory.color}-500/40 transition-all duration-300`}
                       >
                         <motion.div
                           animate={{ 
@@ -845,9 +845,9 @@ export default function AuthPage() {
                             repeat: Infinity, 
                             delay: memory.delay 
                           }}
-                          className={`w-4 h-4 bg-${memory.color}-400 rounded-full`}
+                          className={`w-3 h-3 md:w-4 md:h-4 bg-${memory.color}-400 rounded-full`}
                         />
-                        <span className="text-gray-300 text-lg">"{memory.text}"</span>
+                        <span className="text-gray-300 text-sm md:text-lg">"{memory.text}"</span>
                         <motion.div
                           animate={{ 
                             scale: [1, 1.1, 1],
@@ -858,7 +858,7 @@ export default function AuthPage() {
                             repeat: Infinity, 
                             delay: memory.delay + 0.5 
                           }}
-                          className="ml-auto text-xs text-gray-500"
+                          className="ml-auto text-xs text-gray-500 hidden md:block"
                         >
                           ✓ Stored
                         </motion.div>
@@ -867,17 +867,17 @@ export default function AuthPage() {
                   </div>
                 </div>
                 
-                {/* Floating Stats */}
-                <div className="absolute top-8 right-8 space-y-4">
+                {/* Floating Stats - Responsive */}
+                <div className="absolute top-4 md:top-8 right-4 md:right-8 space-y-2 md:space-y-4">
                   <motion.div
                     animate={{ 
                       scale: [1, 1.05, 1],
                       rotate: [0, 2, -2, 0]
                     }}
                     transition={{ duration: 4, repeat: Infinity }}
-                    className="bg-gradient-to-r from-electric-500/20 to-blue-500/20 backdrop-blur-sm rounded-2xl p-4 border border-electric-500/30"
+                    className="bg-gradient-to-r from-electric-500/20 to-blue-500/20 backdrop-blur-sm rounded-xl md:rounded-2xl p-2 md:p-4 border border-electric-500/30"
                   >
-                    <div className="text-2xl font-bold text-electric-400">2,847</div>
+                    <div className="text-lg md:text-2xl font-bold text-electric-400">2,847</div>
                     <div className="text-xs text-gray-400">MEMORIES</div>
                   </motion.div>
                   <motion.div
@@ -886,9 +886,9 @@ export default function AuthPage() {
                       rotate: [0, -2, 2, 0]
                     }}
                     transition={{ duration: 4, repeat: Infinity, delay: 0.5 }}
-                    className="bg-gradient-to-r from-green-500/20 to-emerald-500/20 backdrop-blur-sm rounded-2xl p-4 border border-green-500/30"
+                    className="bg-gradient-to-r from-green-500/20 to-emerald-500/20 backdrop-blur-sm rounded-xl md:rounded-2xl p-2 md:p-4 border border-green-500/30"
                   >
-                    <div className="text-2xl font-bold text-green-400">0.3s</div>
+                    <div className="text-lg md:text-2xl font-bold text-green-400">0.3s</div>
                     <div className="text-xs text-gray-400">RECALL</div>
                   </motion.div>
                 </div>
@@ -936,17 +936,17 @@ export default function AuthPage() {
             {/* Document Intelligence Visualization - Full Width */}
             <motion.div
               whileHover={{ scale: 1.01, y: -10 }}
-              className="bg-gradient-to-br from-gray-900/90 to-gray-800/70 rounded-3xl p-12 border border-green-500/30 hover:border-green-500/60 transition-all duration-500 backdrop-blur-sm relative overflow-hidden"
+              className="bg-gradient-to-br from-gray-900/90 to-gray-800/70 rounded-3xl p-6 md:p-12 border border-green-500/30 hover:border-green-500/60 transition-all duration-500 backdrop-blur-sm relative overflow-hidden"
             >
               {/* Background Glow Effect */}
               <div className="absolute inset-0 bg-gradient-to-r from-green-500/5 via-transparent to-emerald-500/5 rounded-3xl"></div>
               
               {/* Document Processing Visualization */}
               <div className="relative z-10">
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12">
                   {/* Document Input Side */}
-                  <div className="space-y-6">
-                    <h4 className="text-2xl font-bold text-white mb-6">Documents In</h4>
+                  <div className="space-y-4 md:space-y-6">
+                    <h4 className="text-xl md:text-2xl font-bold text-white mb-4 md:mb-6">Documents In</h4>
                     {[
                       { name: "Q3_Report.pdf", status: "Analyzed", color: "green" },
                       { name: "Meeting_Notes.docx", status: "Processed", color: "blue" },
@@ -959,9 +959,9 @@ export default function AuthPage() {
                         whileInView={{ opacity: 1, x: 0 }}
                         transition={{ delay: index * 0.2 }}
                         whileHover={{ scale: 1.05, x: 10 }}
-                        className="flex items-center justify-between p-4 rounded-2xl bg-gradient-to-r from-gray-800/50 to-gray-700/30 border border-gray-600/30 hover:border-gray-500/50 transition-all duration-300"
+                        className="flex items-center justify-between p-3 md:p-4 rounded-xl md:rounded-2xl bg-gradient-to-r from-gray-800/50 to-gray-700/30 border border-gray-600/30 hover:border-gray-500/50 transition-all duration-300"
                       >
-                        <div className="flex items-center space-x-4">
+                        <div className="flex items-center space-x-3 md:space-x-4">
                           <motion.div
                             animate={{ 
                               scale: [1, 1.1, 1],
@@ -972,11 +972,11 @@ export default function AuthPage() {
                               repeat: Infinity, 
                               delay: index * 0.3 
                             }}
-                            className="w-8 h-8 bg-gradient-to-br from-gray-600/40 to-gray-500/40 rounded-lg flex items-center justify-center"
+                            className="w-6 h-6 md:w-8 md:h-8 bg-gradient-to-br from-gray-600/40 to-gray-500/40 rounded-lg flex items-center justify-center"
                           >
-                            <MessageSquare className="w-4 h-4 text-gray-400" />
+                            <MessageSquare className="w-3 h-3 md:w-4 md:h-4 text-gray-400" />
                           </motion.div>
-                          <span className="text-gray-300 text-lg">{doc.name}</span>
+                          <span className="text-gray-300 text-sm md:text-lg">{doc.name}</span>
                         </div>
                         <motion.div
                           animate={{ 
@@ -988,7 +988,7 @@ export default function AuthPage() {
                             repeat: Infinity, 
                             delay: index * 0.2 
                           }}
-                          className={`text-sm px-3 py-1 rounded-full bg-${doc.color}-500/20 text-${doc.color}-400 border border-${doc.color}-500/30`}
+                          className={`text-xs md:text-sm px-2 md:px-3 py-1 rounded-full bg-${doc.color}-500/20 text-${doc.color}-400 border border-${doc.color}-500/30`}
                         >
                           ✓ {doc.status}
                         </motion.div>
@@ -997,8 +997,8 @@ export default function AuthPage() {
                   </div>
                   
                   {/* Insights Output Side */}
-                  <div className="space-y-6">
-                    <h4 className="text-2xl font-bold text-white mb-6">Insights Out</h4>
+                  <div className="space-y-4 md:space-y-6">
+                    <h4 className="text-xl md:text-2xl font-bold text-white mb-4 md:mb-6">Insights Out</h4>
                     {[
                       { insight: "Revenue increased 23% Q3", confidence: "98%", color: "green" },
                       { insight: "User engagement peaked in September", confidence: "94%", color: "blue" },
@@ -1011,20 +1011,20 @@ export default function AuthPage() {
                         whileInView={{ opacity: 1, x: 0 }}
                         transition={{ delay: index * 0.2 }}
                         whileHover={{ scale: 1.05, x: -10 }}
-                        className={`p-4 rounded-2xl bg-gradient-to-r from-${insight.color}-500/10 to-${insight.color}-500/5 border border-${insight.color}-500/20 hover:border-${insight.color}-500/40 transition-all duration-300`}
+                        className={`p-3 md:p-4 rounded-xl md:rounded-2xl bg-gradient-to-r from-${insight.color}-500/10 to-${insight.color}-500/5 border border-${insight.color}-500/20 hover:border-${insight.color}-500/40 transition-all duration-300`}
                       >
                         <div className="flex items-center justify-between mb-2">
-                          <span className="text-gray-300 text-lg">"{insight.insight}"</span>
+                          <span className="text-gray-300 text-sm md:text-lg">"{insight.insight}"</span>
                           <span className={`text-xs px-2 py-1 rounded-full bg-${insight.color}-500/20 text-${insight.color}-400`}>
                             {insight.confidence}
                           </span>
                         </div>
-                        <div className="w-full bg-gray-700/30 rounded-full h-2">
+                        <div className="w-full bg-gray-700/30 rounded-full h-1.5 md:h-2">
                           <motion.div
                             initial={{ width: 0 }}
                             whileInView={{ width: insight.confidence }}
                             transition={{ delay: index * 0.2 + 0.5, duration: 1 }}
-                            className={`h-2 rounded-full bg-gradient-to-r from-${insight.color}-500 to-${insight.color}-400`}
+                            className={`h-1.5 md:h-2 rounded-full bg-gradient-to-r from-${insight.color}-500 to-${insight.color}-400`}
                           />
                         </div>
                       </motion.div>
@@ -1032,17 +1032,17 @@ export default function AuthPage() {
                   </div>
                 </div>
                 
-                {/* Floating Stats */}
-                <div className="absolute top-8 right-8 space-y-4">
+                {/* Floating Stats - Responsive */}
+                <div className="absolute top-4 md:top-8 right-4 md:right-8 space-y-2 md:space-y-4">
                   <motion.div
                     animate={{ 
                       scale: [1, 1.05, 1],
                       rotate: [0, 2, -2, 0]
                     }}
                     transition={{ duration: 4, repeat: Infinity }}
-                    className="bg-gradient-to-r from-green-500/20 to-emerald-500/20 backdrop-blur-sm rounded-2xl p-4 border border-green-500/30"
+                    className="bg-gradient-to-r from-green-500/20 to-emerald-500/20 backdrop-blur-sm rounded-xl md:rounded-2xl p-2 md:p-4 border border-green-500/30"
                   >
-                    <div className="text-2xl font-bold text-green-400">1,247</div>
+                    <div className="text-lg md:text-2xl font-bold text-green-400">1,247</div>
                     <div className="text-xs text-gray-400">DOCUMENTS</div>
                   </motion.div>
                   <motion.div
@@ -1051,9 +1051,9 @@ export default function AuthPage() {
                       rotate: [0, -2, 2, 0]
                     }}
                     transition={{ duration: 4, repeat: Infinity, delay: 0.5 }}
-                    className="bg-gradient-to-r from-blue-500/20 to-cyan-500/20 backdrop-blur-sm rounded-2xl p-4 border border-blue-500/30"
+                    className="bg-gradient-to-r from-blue-500/20 to-cyan-500/20 backdrop-blur-sm rounded-xl md:rounded-2xl p-2 md:p-4 border border-blue-500/30"
                   >
-                    <div className="text-2xl font-bold text-blue-400">3,891</div>
+                    <div className="text-lg md:text-2xl font-bold text-blue-400">3,891</div>
                     <div className="text-xs text-gray-400">INSIGHTS</div>
                   </motion.div>
                 </div>
