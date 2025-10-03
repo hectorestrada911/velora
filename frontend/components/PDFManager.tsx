@@ -384,68 +384,52 @@ export default function PDFManager({ onPDFSelected }: PDFManagerProps) {
               </div>
 
               <div className="space-y-4">
-                {/* Key Points */}
-                {selectedDocument.keyPoints && selectedDocument.keyPoints.length > 0 && (
-                  <div>
-                    <h4 className="text-sm font-medium text-gray-300 mb-2">Key Points</h4>
-                    <ul className="space-y-1">
-                      {selectedDocument.keyPoints.map((point, index) => (
-                        <li key={index} className="text-gray-400 text-sm flex items-start">
-                          <span className="text-blue-400 mr-2 mt-1">•</span>
-                          {point}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-
-                {/* Action Items */}
-                {selectedDocument.actionItems && selectedDocument.actionItems.length > 0 && (
-                  <div>
-                    <h4 className="text-sm font-medium text-gray-300 mb-2">Action Items</h4>
-                    <div className="space-y-2">
-                      {selectedDocument.actionItems.map((item, index) => (
-                        <div key={index} className="p-2 bg-gray-700/50 rounded border border-gray-600">
-                          <div className="text-white text-sm">{item.task}</div>
-                          {item.deadline && (
-                            <div className="text-gray-400 text-xs mt-1">
-                              Due: {new Date(item.deadline).toLocaleDateString()}
-                            </div>
-                          )}
-                        </div>
-                      ))}
+                {/* Document Info */}
+                <div>
+                  <h4 className="text-sm font-medium text-gray-300 mb-2">Document Information</h4>
+                  <div className="space-y-2 text-sm">
+                    <div className="flex justify-between">
+                      <span className="text-gray-400">Name:</span>
+                      <span className="text-white">{selectedDocument.name}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-400">Type:</span>
+                      <span className="text-white">{selectedDocument.type}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-400">Size:</span>
+                      <span className="text-white">{(selectedDocument.size / 1024).toFixed(1)} KB</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-400">Category:</span>
+                      <span className="text-white">{selectedDocument.category || 'Uncategorized'}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-400">Uploaded:</span>
+                      <span className="text-white">{new Date(selectedDocument.uploadedAt).toLocaleDateString()}</span>
                     </div>
                   </div>
-                )}
+                </div>
 
-                {/* People Mentioned */}
-                {selectedDocument.extractedData && selectedDocument.extractedData.people && selectedDocument.extractedData.people.length > 0 && (
+                {/* Summary */}
+                {selectedDocument.summary && (
                   <div>
-                    <h4 className="text-sm font-medium text-gray-300 mb-2">People Mentioned</h4>
-                    <div className="flex flex-wrap gap-1">
-                      {selectedDocument.extractedData.people.map((person, index) => (
-                        <span
-                          key={index}
-                          className="px-2 py-1 bg-blue-500/20 text-blue-300 text-xs rounded-full"
-                        >
-                          {person}
-                        </span>
-                      ))}
-                    </div>
+                    <h4 className="text-sm font-medium text-gray-300 mb-2">Summary</h4>
+                    <p className="text-gray-400 text-sm leading-relaxed">{selectedDocument.summary}</p>
                   </div>
                 )}
 
-                {/* Topics */}
-                {selectedDocument.extractedData && selectedDocument.extractedData.topics && selectedDocument.extractedData.topics.length > 0 && (
+                {/* Tags */}
+                {selectedDocument.tags && selectedDocument.tags.length > 0 && (
                   <div>
-                    <h4 className="text-sm font-medium text-gray-300 mb-2">Topics</h4>
+                    <h4 className="text-sm font-medium text-gray-300 mb-2">Tags</h4>
                     <div className="flex flex-wrap gap-1">
-                      {selectedDocument.extractedData.topics.map((topic, index) => (
+                      {selectedDocument.tags.map((tag, index) => (
                         <span
                           key={index}
                           className="px-2 py-1 bg-purple-500/20 text-purple-300 text-xs rounded-full"
                         >
-                          {topic}
+                          {tag}
                         </span>
                       ))}
                     </div>
