@@ -1062,61 +1062,195 @@ export default function AuthPage() {
           </div>
         </motion.div>
 
-        {/* New Interactive Demo Section */}
+        {/* Enhanced Final CTA Section */}
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
+          transition={{ duration: 0.8 }}
           viewport={{ once: true }}
-          className="mb-20 w-full"
+          className="mb-32 w-full relative"
         >
-          <div className="max-w-6xl mx-auto px-4">
-            <div className="text-center mb-16">
-              <motion.div
-                animate={{ 
-                  scale: [1, 1.1, 1],
-                  boxShadow: [
-                    "0 0 40px rgba(59, 130, 246, 0.5)",
-                    "0 0 80px rgba(59, 130, 246, 0.8)",
-                    "0 0 40px rgba(59, 130, 246, 0.5)"
-                  ]
-                }}
-                transition={{ 
-                  scale: { duration: 4, repeat: Infinity },
-                  boxShadow: { duration: 2, repeat: Infinity }
-                }}
-                className="w-32 h-32 bg-gradient-to-br from-electric-500/50 to-purple-500/50 rounded-full flex items-center justify-center border border-electric-500/70 backdrop-blur-sm mx-auto mb-8"
-              >
+          {/* Background Pattern */}
+          <div className="absolute inset-0 bg-gradient-to-br from-electric-500/5 via-transparent to-purple-500/5 rounded-3xl"></div>
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(59,130,246,0.1),transparent_50%)]"></div>
+          
+          {/* Floating Background Elements */}
+          {[...Array(6)].map((_, i) => (
+            <motion.div
+              key={i}
+              animate={{
+                y: [0, -20, 0],
+                opacity: [0.1, 0.3, 0.1],
+                scale: [1, 1.1, 1]
+              }}
+              transition={{
+                duration: 4 + i * 0.5,
+                repeat: Infinity,
+                delay: i * 0.8
+              }}
+              className="absolute w-2 h-2 bg-electric-400 rounded-full"
+              style={{
+                left: `${20 + (i * 15)}%`,
+                top: `${30 + (i % 3) * 20}%`
+              }}
+            />
+          ))}
+          
+          <div className="max-w-6xl mx-auto px-4 relative z-10">
+            <div className="text-center">
+              {/* Enhanced Icon with Particles */}
+              <div className="relative mb-12">
                 <motion.div
-                  animate={{
-                    scale: [1, 1.2, 1]
+                  animate={{ 
+                    scale: [1, 1.05, 1],
+                    rotate: [0, 5, -5, 0],
+                    boxShadow: [
+                      "0 0 40px rgba(59, 130, 246, 0.4)",
+                      "0 0 80px rgba(59, 130, 246, 0.8)",
+                      "0 0 120px rgba(168, 85, 247, 0.6)",
+                      "0 0 40px rgba(59, 130, 246, 0.4)"
+                    ]
                   }}
                   transition={{ 
-                    scale: { duration: 2, repeat: Infinity }
+                    scale: { duration: 4, repeat: Infinity },
+                    rotate: { duration: 6, repeat: Infinity },
+                    boxShadow: { duration: 3, repeat: Infinity }
                   }}
+                  className="w-32 h-32 md:w-40 md:h-40 bg-gradient-to-br from-electric-500/60 to-purple-500/60 rounded-full flex items-center justify-center border border-electric-500/70 backdrop-blur-sm mx-auto relative"
                 >
-                  <Users className="w-16 h-16 text-electric-400" />
+                  <motion.div
+                    animate={{
+                      scale: [1, 1.2, 1],
+                      rotate: [0, 360]
+                    }}
+                    transition={{ 
+                      scale: { duration: 3, repeat: Infinity },
+                      rotate: { duration: 20, repeat: Infinity, ease: "linear" }
+                    }}
+                  >
+                    <Users className="w-16 h-16 md:w-20 md:h-20 text-electric-400" />
+                  </motion.div>
+                  
+                  {/* Orbiting Elements */}
+                  {[...Array(3)].map((_, i) => (
+                    <motion.div
+                      key={i}
+                      animate={{ rotate: 360 }}
+                      transition={{ 
+                        duration: 8 + i * 2, 
+                        repeat: Infinity, 
+                        ease: "linear" 
+                      }}
+                      className="absolute inset-0"
+                    >
+                      <motion.div
+                        animate={{ 
+                          scale: [1, 1.3, 1],
+                          opacity: [0.6, 1, 0.6]
+                        }}
+                        transition={{ 
+                          duration: 2, 
+                          repeat: Infinity, 
+                          delay: i * 0.5 
+                        }}
+                        className={`absolute w-3 h-3 rounded-full ${
+                          i === 0 ? 'bg-electric-400' : 
+                          i === 1 ? 'bg-purple-400' : 'bg-pink-400'
+                        }`}
+                        style={{
+                          top: '10%',
+                          left: '50%',
+                          transform: 'translateX(-50%)',
+                          transformOrigin: '50% 400%'
+                        }}
+                      />
+                    </motion.div>
+                  ))}
                 </motion.div>
+              </div>
+              
+              {/* Enhanced Typography with Staggered Animation */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2, duration: 0.6 }}
+                viewport={{ once: true }}
+              >
+                <h3 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
+                  Ready to build your{' '}
+                  <motion.span
+                    animate={{ 
+                      backgroundPosition: ['0% 50%', '100% 50%', '0% 50%']
+                    }}
+                    transition={{ 
+                      duration: 3, 
+                      repeat: Infinity, 
+                      ease: "linear" 
+                    }}
+                    className="text-transparent bg-clip-text bg-gradient-to-r from-electric-500 via-purple-500 to-electric-500 bg-[length:200%_100%]"
+                  >
+                    AI Second Brain
+                  </motion.span>
+                  ?
+                </h3>
               </motion.div>
-              <h3 className="text-5xl font-bold text-white mb-6">
-                Ready to build your <span className="text-transparent bg-clip-text bg-gradient-to-r from-electric-500 to-purple-500">AI Second Brain</span>?
-              </h3>
-              <p className="text-2xl text-gray-300 max-w-4xl mx-auto leading-relaxed mb-12">
-                Join the future of personal knowledge management. <span className="text-electric-400">Your AI assistant for everything you know.</span>
-              </p>
               
               <motion.div
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="inline-block"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4, duration: 0.6 }}
+                viewport={{ once: true }}
               >
-                <button
-                  onClick={() => setAuthMode('login')}
-                  className="bg-gradient-to-r from-electric-500 to-purple-500 hover:from-electric-400 hover:to-purple-400 text-white font-bold text-xl py-4 px-12 rounded-2xl transition-all duration-200 hover:scale-105 flex items-center justify-center space-x-3 shadow-2xl shadow-electric-500/25"
+                <p className="text-lg md:text-xl lg:text-2xl text-gray-300 max-w-4xl mx-auto leading-relaxed mb-12">
+                  Join the future of personal knowledge management.{' '}
+                  <span className="text-electric-400 font-medium">Your AI assistant for everything you know.</span>
+                </p>
+              </motion.div>
+              
+              {/* Enhanced CTA Button */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.6, duration: 0.6 }}
+                viewport={{ once: true }}
+                className="flex flex-col items-center space-y-6"
+              >
+                <motion.div
+                  whileHover={{ scale: 1.05, y: -2 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="relative group"
                 >
-                  <span>Sign In</span>
-                  <ArrowRight className="w-6 h-6" />
-                </button>
+                  {/* Button Glow Effect */}
+                  <div className="absolute inset-0 bg-gradient-to-r from-electric-500 to-purple-500 rounded-2xl blur-lg opacity-0 group-hover:opacity-50 transition-opacity duration-300"></div>
+                  
+                  <button
+                    onClick={() => setAuthMode('login')}
+                    className="relative bg-gradient-to-r from-electric-500 to-purple-500 hover:from-electric-400 hover:to-purple-400 text-white font-bold text-lg md:text-xl py-4 md:py-5 px-8 md:px-12 rounded-2xl transition-all duration-300 hover:scale-105 flex items-center justify-center space-x-3 shadow-2xl shadow-electric-500/25 border border-electric-400/20"
+                  >
+                    <span>Sign In</span>
+                    <motion.div
+                      animate={{ x: [0, 3, 0] }}
+                      transition={{ duration: 1.5, repeat: Infinity }}
+                    >
+                      <ArrowRight className="w-5 h-5 md:w-6 md:h-6" />
+                    </motion.div>
+                  </button>
+                </motion.div>
+                
+                {/* Enhanced Secondary CTA */}
+                <motion.button
+                  onClick={handleSkip}
+                  whileHover={{ scale: 1.02, y: -1 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="text-gray-400 hover:text-white font-medium py-2 px-4 transition-all duration-300 text-sm md:text-base group"
+                >
+                  <span className="relative">
+                    Try Demo First
+                    <motion.div
+                      className="absolute bottom-0 left-0 w-0 h-px bg-gradient-to-r from-electric-400 to-purple-400 group-hover:w-full transition-all duration-300"
+                    />
+                  </span>
+                </motion.button>
               </motion.div>
             </div>
           </div>
