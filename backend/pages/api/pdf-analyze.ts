@@ -18,14 +18,14 @@ export const config = {
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   // Handle CORS preflight
   if (req.method === 'OPTIONS') {
-    res.setHeader('Access-Control-Allow-Origin', 'https://velora-beta-one.vercel.app')
+    res.setHeader('Access-Control-Allow-Origin', '*')
     res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS')
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization')
     return res.status(200).end()
   }
 
   // Set CORS headers for all responses
-  res.setHeader('Access-Control-Allow-Origin', 'https://velora-beta-one.vercel.app')
+  res.setHeader('Access-Control-Allow-Origin', '*')
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS')
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization')
 
@@ -262,7 +262,7 @@ Provide a comprehensive analysis following the JSON format above.`
 
   // Call OpenAI API
   const response = await openai.chat.completions.create({
-    model: "gpt-5",
+    model: "gpt-4o",
     messages: [
       { role: "system", content: systemPrompt },
       { role: "user", content: userPrompt }
@@ -366,9 +366,9 @@ SIZE: ${Math.round(file.size / 1024)} KB
 
 Provide a comprehensive analysis following the JSON format above.`
 
-  // Call OpenAI API with image using GPT-5
+  // Call OpenAI API with image using GPT-4o
   const response = await openai.chat.completions.create({
-    model: "gpt-5",
+    model: "gpt-4o",
     messages: [
       { role: "system", content: systemPrompt },
       { 
