@@ -670,6 +670,10 @@ export default function AuthPage() {
               <p className="text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
                 Never miss another meeting. <span className="text-purple-400">Smart scheduling</span> that adapts to your workflow.
               </p>
+              <div className="mt-6 space-y-2">
+                <p className="text-sm text-gray-400">Try: <span className="text-purple-400">"Schedule a meeting with John next Tuesday"</span></p>
+                <p className="text-sm text-gray-400">Or: <span className="text-purple-400">"What do I have tomorrow?"</span></p>
+              </div>
             </div>
 
             {/* Full Width Calendar Showcase */}
@@ -782,6 +786,10 @@ export default function AuthPage() {
               <p className="text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
                 Remember everything instantly. <span className="text-electric-400">"What did I decide in last week's meeting?"</span> Get the answer in seconds.
               </p>
+              <div className="mt-6 space-y-2">
+                <p className="text-sm text-gray-400">Try: <span className="text-electric-400">"REMEMBER I prefer morning meetings"</span></p>
+                <p className="text-sm text-gray-400">Or: <span className="text-electric-400">"What do I know about John?"</span></p>
+              </div>
             </div>
 
             {/* Memory Visualization - Full Width */}
@@ -821,11 +829,11 @@ export default function AuthPage() {
                   {/* Memory Nodes */}
                   <div className="lg:col-span-2 space-y-4 md:space-y-6">
                     {[
-                      { text: "John's birthday is March 15th", color: "electric", delay: 0 },
-                      { text: "Project Alpha deadline: Q2", color: "blue", delay: 0.5 },
-                      { text: "Meeting notes: Focus on user experience", color: "green", delay: 1 },
-                      { text: "Sarah's favorite coffee: Oat milk latte", color: "purple", delay: 1.5 },
-                      { text: "Team standup: Every Tuesday 9 AM", color: "pink", delay: 2 }
+                      { text: "REMEMBER John's birthday is March 15th", color: "electric", delay: 0 },
+                      { text: "REMEMBER Project Alpha deadline: Q2", color: "blue", delay: 0.5 },
+                      { text: "REMEMBER I prefer morning meetings", color: "green", delay: 1 },
+                      { text: "REMEMBER Sarah's favorite coffee: Oat milk latte", color: "purple", delay: 1.5 },
+                      { text: "REMEMBER I parked in section B", color: "pink", delay: 2 }
                     ].map((memory, index) => (
                       <motion.div
                         key={index}
@@ -931,6 +939,10 @@ export default function AuthPage() {
               <p className="text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
                 Turn any document into insights. <span className="text-green-400">"Summarize my Q3 report"</span> gets instant analysis.
               </p>
+              <div className="mt-6 space-y-2">
+                <p className="text-sm text-gray-400">Try: <span className="text-green-400">"What's this resume about?"</span></p>
+                <p className="text-sm text-gray-400">Or: <span className="text-green-400">"Extract key points from my contract"</span></p>
+              </div>
             </div>
 
             {/* Document Intelligence Visualization - Full Width */}
