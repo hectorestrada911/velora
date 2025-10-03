@@ -116,7 +116,6 @@ const PDFManager = ({ onPDFSelected }: PDFManagerProps) => {
     handleFilter();
   }, [filterType, filterImportance]);
 
-
   const handleExportPDF = (doc: Document) => {
     const dataStr = JSON.stringify(doc, null, 2);
     const dataBlob = new Blob([dataStr], { type: 'application/json' });
@@ -340,253 +339,254 @@ const PDFManager = ({ onPDFSelected }: PDFManagerProps) => {
           </div>
         </motion.div>
 
-      {/* PDF List */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* PDF Cards */}
-        <div className="lg:col-span-2">
-          <div className="space-y-4">
-            <AnimatePresence>
-              {documents.map((doc, index) => (
+        {/* PDF List */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* PDF Cards */}
+          <div className="lg:col-span-2">
+            <div className="space-y-4">
+              <AnimatePresence>
+                {documents.map((doc, index) => (
+                  <motion.div
+                    key={doc.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}
+                    transition={{ delay: index * 0.1 }}
+                    whileHover={{ scale: 1.02, y: -5 }}
+                    className={`bg-gradient-to-br from-gray-900/90 to-gray-800/70 rounded-2xl p-6 border backdrop-blur-sm cursor-pointer transition-all duration-500 relative overflow-hidden ${
+                      selectedDocument?.id === doc.id 
+                        ? 'border-electric-500/60 bg-electric-500/10' 
+                        : 'border-gray-700/50 hover:border-gray-600/50'
+                    }`}
+                    onClick={() => {
+                      setSelectedDocument(doc);
+                      // Convert Document to PDFDocument for compatibility
+                      const pdfDoc: PDFDocument = {
+                        id: doc.id,
+                        fileName: doc.name,
+                        fileSize: doc.size,
+                        uploadDate: doc.uploadedAt.toISOString(),
+                        summary: doc.summary || '',
+                        documentType: doc.category || 'other',
+                        importance: 'medium',
+                        keyPoints: [],
+                        extractedData: { people: [], dates: [], amounts: [], deadlines: [], topics: [] },
+                        actionItems: [],
+                        reminders: [],
+                        calendarEvents: [],
+                        memorySuggestions: [],
+                        aiResponse: '',
+                        followUpQuestions: [],
+                        content: doc.content || ''
+                      };
+                      onPDFSelected?.(pdfDoc);
+                    }}
+                  >
+                    {/* Background Glow Effect */}
+                    <div className="absolute inset-0 bg-gradient-to-r from-electric-500/5 via-transparent to-blue-500/5 rounded-2xl"></div>
+                    
+                    <div className="relative z-10">
+                      <div className="flex items-start justify-between mb-4">
+                        <div className="flex items-center space-x-4">
+                          <motion.div 
+                            className="w-12 h-12 bg-gradient-to-br from-electric-500/40 to-blue-500/40 rounded-xl flex items-center justify-center border border-electric-500/60"
+                            whileHover={{ scale: 1.1, rotate: 5 }}
+                            transition={{ duration: 0.2 }}
+                          >
+                            {getTypeIcon(doc.category || 'other')}
+                          </motion.div>
+                          <div>
+                            <h3 className="text-white font-semibold text-lg mb-1">
+                              {doc.name}
+                            </h3>
+                            <p className="text-gray-400 text-sm">
+                              {doc.uploadedAt.toLocaleDateString()}
+                            </p>
+                          </div>
+                        </div>
+                        
+                        <div className="flex items-center space-x-2">
+                          <span className={`px-3 py-1 rounded-full text-xs font-medium ${getImportanceColor('medium')}`}>
+                            {doc.category || 'other'}
+                          </span>
+                          <motion.button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleDeleteDocument(doc.id);
+                            }}
+                            className="text-gray-400 hover:text-red-400 transition-colors p-2 hover:bg-red-500/10 rounded-lg"
+                            whileHover={{ scale: 1.1 }}
+                            whileTap={{ scale: 0.9 }}
+                          >
+                            <Trash2 className="w-5 h-5" />
+                          </motion.button>
+                        </div>
+                      </div>
+
+                      <p className="text-gray-300 text-sm mb-4 line-clamp-2 leading-relaxed">
+                        {doc.summary || 'No summary available'}
+                      </p>
+
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center space-x-4">
+                          <div className="flex items-center space-x-2 px-3 py-1 bg-gray-800/50 rounded-full border border-gray-600/50">
+                            <FileText className="w-3 h-3 text-gray-400" />
+                            <span className="text-gray-300 text-xs font-medium">{doc.category || 'document'}</span>
+                          </div>
+                        </div>
+                        <div className="text-gray-400 text-xs font-medium">
+                          {(doc.size / 1024).toFixed(1)} KB
+                        </div>
+                      </div>
+                    </div>
+                  </motion.div>
+                ))}
+              </AnimatePresence>
+
+              {documents.length === 0 && (
                 <motion.div
-                  key={doc.id}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -20 }}
-                  transition={{ delay: index * 0.1 }}
-                  whileHover={{ scale: 1.02, y: -5 }}
-                  className={`bg-gradient-to-br from-gray-900/90 to-gray-800/70 rounded-2xl p-6 border backdrop-blur-sm cursor-pointer transition-all duration-500 relative overflow-hidden ${
-                    selectedDocument?.id === doc.id 
-                      ? 'border-electric-500/60 bg-electric-500/10' 
-                      : 'border-gray-700/50 hover:border-gray-600/50'
-                  }`}
-                  onClick={() => {
-                    setSelectedDocument(doc);
-                    // Convert Document to PDFDocument for compatibility
-                    const pdfDoc: PDFDocument = {
-                      id: doc.id,
-                      fileName: doc.name,
-                      fileSize: doc.size,
-                      uploadDate: doc.uploadedAt.toISOString(),
-                      summary: doc.summary || '',
-                      documentType: doc.category || 'other',
-                      importance: 'medium',
-                      keyPoints: [],
-                      extractedData: { people: [], dates: [], amounts: [], deadlines: [], topics: [] },
-                      actionItems: [],
-                      reminders: [],
-                      calendarEvents: [],
-                      memorySuggestions: [],
-                      aiResponse: '',
-                      followUpQuestions: [],
-                      content: doc.content || ''
-                    };
-                    onPDFSelected?.(pdfDoc);
-                  }}
+                  className="text-center py-16"
                 >
-                  {/* Background Glow Effect */}
-                  <div className="absolute inset-0 bg-gradient-to-r from-electric-500/5 via-transparent to-blue-500/5 rounded-2xl"></div>
-                  
-                  <div className="relative z-10">
-                    <div className="flex items-start justify-between mb-4">
-                      <div className="flex items-center space-x-4">
-                        <motion.div 
-                          className="w-12 h-12 bg-gradient-to-br from-electric-500/40 to-blue-500/40 rounded-xl flex items-center justify-center border border-electric-500/60"
-                          whileHover={{ scale: 1.1, rotate: 5 }}
-                          transition={{ duration: 0.2 }}
-                        >
-                          {getTypeIcon(doc.category || 'other')}
-                        </motion.div>
-                        <div>
-                          <h3 className="text-white font-semibold text-lg mb-1">
-                            {doc.name}
-                          </h3>
-                          <p className="text-gray-400 text-sm">
-                            {doc.uploadedAt.toLocaleDateString()}
-                          </p>
-                        </div>
-                      </div>
-                      
-                      <div className="flex items-center space-x-2">
-                        <span className={`px-3 py-1 rounded-full text-xs font-medium ${getImportanceColor('medium')}`}>
-                          {doc.category || 'other'}
-                        </span>
-                        <motion.button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleDeleteDocument(doc.id);
-                          }}
-                          className="text-gray-400 hover:text-red-400 transition-colors p-2 hover:bg-red-500/10 rounded-lg"
-                          whileHover={{ scale: 1.1 }}
-                          whileTap={{ scale: 0.9 }}
-                        >
-                          <Trash2 className="w-5 h-5" />
-                        </motion.button>
-                      </div>
-                    </div>
-
-                    <p className="text-gray-300 text-sm mb-4 line-clamp-2 leading-relaxed">
-                      {doc.summary || 'No summary available'}
-                    </p>
-
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-4">
-                        <div className="flex items-center space-x-2 px-3 py-1 bg-gray-800/50 rounded-full border border-gray-600/50">
-                          <FileText className="w-3 h-3 text-gray-400" />
-                          <span className="text-gray-300 text-xs font-medium">{doc.category || 'document'}</span>
-                        </div>
-                      </div>
-                      <div className="text-gray-400 text-xs font-medium">
-                        {(doc.size / 1024).toFixed(1)} KB
-                      </div>
-                    </div>
-                  </div>
+                  <motion.div
+                    animate={{ 
+                      scale: [1, 1.1, 1],
+                      rotate: [0, 5, -5, 0]
+                    }}
+                    transition={{ duration: 4, repeat: Infinity }}
+                    className="w-20 h-20 bg-gradient-to-br from-gray-800/50 to-gray-700/50 rounded-2xl flex items-center justify-center mx-auto mb-6 border border-gray-600/50"
+                  >
+                    <Archive className="w-10 h-10 text-gray-400" />
+                  </motion.div>
+                  <h3 className="text-2xl font-semibold text-gray-300 mb-3">No Documents Found</h3>
+                  <p className="text-gray-400 text-lg max-w-md mx-auto">
+                    {searchQuery ? 'Try adjusting your search terms or filters' : 'Upload your first document to get started with AI-powered analysis'}
+                  </p>
                 </motion.div>
-              ))}
-            </AnimatePresence>
+              )}
+            </div>
+          </div>
 
-            {documents.length === 0 && (
+          {/* Enhanced Document Details Panel */}
+          <div className="lg:col-span-1">
+            {selectedDocument ? (
               <motion.div
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                className="bg-gradient-to-br from-gray-900/90 to-gray-800/70 rounded-2xl p-6 border border-gray-700/50 hover:border-gray-600/50 transition-all duration-500 backdrop-blur-sm sticky top-4 relative overflow-hidden"
+              >
+                {/* Background Glow Effect */}
+                <div className="absolute inset-0 bg-gradient-to-r from-electric-500/5 via-transparent to-blue-500/5 rounded-2xl"></div>
+                
+                <div className="relative z-10">
+                  <div className="flex items-center justify-between mb-6">
+                    <h3 className="text-xl font-bold bg-gradient-to-r from-electric-400 to-blue-400 bg-clip-text text-transparent">
+                      Document Details
+                    </h3>
+                    <motion.button
+                      onClick={() => handleExportPDF(selectedDocument)}
+                      className="text-gray-400 hover:text-electric-400 transition-colors p-2 hover:bg-electric-500/10 rounded-lg"
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.9 }}
+                    >
+                      <Download className="w-5 h-5" />
+                    </motion.button>
+                  </div>
+
+                  <div className="space-y-6">
+                    {/* Document Info */}
+                    <div className="bg-gray-800/30 rounded-xl p-4 border border-gray-700/50">
+                      <h4 className="text-sm font-semibold text-electric-400 mb-3 flex items-center">
+                        <FileText className="w-4 h-4 mr-2" />
+                        Document Information
+                      </h4>
+                      <div className="space-y-3 text-sm">
+                        <div className="flex justify-between items-center">
+                          <span className="text-gray-400">Name:</span>
+                          <span className="text-white font-medium text-right max-w-[60%] truncate">{selectedDocument.name}</span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span className="text-gray-400">Type:</span>
+                          <span className="text-white">{selectedDocument.type}</span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span className="text-gray-400">Size:</span>
+                          <span className="text-white">{(selectedDocument.size / 1024).toFixed(1)} KB</span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span className="text-gray-400">Category:</span>
+                          <span className="text-white">{selectedDocument.category || 'Uncategorized'}</span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span className="text-gray-400">Uploaded:</span>
+                          <span className="text-white">{new Date(selectedDocument.uploadedAt).toLocaleDateString()}</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Summary */}
+                    {selectedDocument.summary && (
+                      <div className="bg-gray-800/30 rounded-xl p-4 border border-gray-700/50">
+                        <h4 className="text-sm font-semibold text-electric-400 mb-3 flex items-center">
+                          <BookOpen className="w-4 h-4 mr-2" />
+                          Summary
+                        </h4>
+                        <p className="text-gray-300 text-sm leading-relaxed">{selectedDocument.summary}</p>
+                      </div>
+                    )}
+
+                    {/* Tags */}
+                    {selectedDocument.tags && selectedDocument.tags.length > 0 && (
+                      <div className="bg-gray-800/30 rounded-xl p-4 border border-gray-700/50">
+                        <h4 className="text-sm font-semibold text-electric-400 mb-3 flex items-center">
+                          <Tag className="w-4 h-4 mr-2" />
+                          Tags
+                        </h4>
+                        <div className="flex flex-wrap gap-2">
+                          {selectedDocument.tags.map((tag, index) => (
+                            <motion.span
+                              key={index}
+                              initial={{ opacity: 0, scale: 0.8 }}
+                              animate={{ opacity: 1, scale: 1 }}
+                              transition={{ delay: index * 0.1 }}
+                              className="px-3 py-1 bg-gradient-to-r from-purple-500/20 to-blue-500/20 text-purple-300 text-xs rounded-full border border-purple-500/30"
+                            >
+                              {tag}
+                            </motion.span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </motion.div>
+            ) : (
+              <motion.div 
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="text-center py-16"
+                className="bg-gradient-to-br from-gray-900/90 to-gray-800/70 rounded-2xl p-8 border border-gray-700/50 backdrop-blur-sm text-center relative overflow-hidden"
               >
-                <motion.div
-                  animate={{ 
-                    scale: [1, 1.1, 1],
-                    rotate: [0, 5, -5, 0]
-                  }}
-                  transition={{ duration: 4, repeat: Infinity }}
-                  className="w-20 h-20 bg-gradient-to-br from-gray-800/50 to-gray-700/50 rounded-2xl flex items-center justify-center mx-auto mb-6 border border-gray-600/50"
-                >
-                  <Archive className="w-10 h-10 text-gray-400" />
-                </motion.div>
-                <h3 className="text-2xl font-semibold text-gray-300 mb-3">No Documents Found</h3>
-                <p className="text-gray-400 text-lg max-w-md mx-auto">
-                  {searchQuery ? 'Try adjusting your search terms or filters' : 'Upload your first document to get started with AI-powered analysis'}
-                </p>
+                <div className="absolute inset-0 bg-gradient-to-r from-electric-500/5 via-transparent to-blue-500/5 rounded-2xl"></div>
+                <div className="relative z-10">
+                  <motion.div
+                    animate={{ 
+                      scale: [1, 1.1, 1],
+                      rotate: [0, 5, -5, 0]
+                    }}
+                    transition={{ duration: 4, repeat: Infinity }}
+                    className="w-16 h-16 bg-gradient-to-br from-gray-800/50 to-gray-700/50 rounded-2xl flex items-center justify-center mx-auto mb-6 border border-gray-600/50"
+                  >
+                    <Eye className="w-8 h-8 text-gray-400" />
+                  </motion.div>
+                  <h3 className="text-xl font-semibold text-gray-300 mb-3">Select a Document</h3>
+                  <p className="text-gray-400 text-sm leading-relaxed max-w-sm mx-auto">
+                    Choose a document from the list to view its details and AI-powered analysis
+                  </p>
+                </div>
               </motion.div>
             )}
           </div>
-        </div>
-
-        {/* Enhanced Document Details Panel */}
-        <div className="lg:col-span-1">
-          {selectedDocument ? (
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              className="bg-gradient-to-br from-gray-900/90 to-gray-800/70 rounded-2xl p-6 border border-gray-700/50 hover:border-gray-600/50 transition-all duration-500 backdrop-blur-sm sticky top-4 relative overflow-hidden"
-            >
-              {/* Background Glow Effect */}
-              <div className="absolute inset-0 bg-gradient-to-r from-electric-500/5 via-transparent to-blue-500/5 rounded-2xl"></div>
-              
-              <div className="relative z-10">
-                <div className="flex items-center justify-between mb-6">
-                  <h3 className="text-xl font-bold bg-gradient-to-r from-electric-400 to-blue-400 bg-clip-text text-transparent">
-                    Document Details
-                  </h3>
-                  <motion.button
-                    onClick={() => handleExportPDF(selectedDocument)}
-                    className="text-gray-400 hover:text-electric-400 transition-colors p-2 hover:bg-electric-500/10 rounded-lg"
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.9 }}
-                  >
-                    <Download className="w-5 h-5" />
-                  </motion.button>
-                </div>
-
-                <div className="space-y-6">
-                  {/* Document Info */}
-                  <div className="bg-gray-800/30 rounded-xl p-4 border border-gray-700/50">
-                    <h4 className="text-sm font-semibold text-electric-400 mb-3 flex items-center">
-                      <FileText className="w-4 h-4 mr-2" />
-                      Document Information
-                    </h4>
-                    <div className="space-y-3 text-sm">
-                      <div className="flex justify-between items-center">
-                        <span className="text-gray-400">Name:</span>
-                        <span className="text-white font-medium text-right max-w-[60%] truncate">{selectedDocument.name}</span>
-                      </div>
-                      <div className="flex justify-between items-center">
-                        <span className="text-gray-400">Type:</span>
-                        <span className="text-white">{selectedDocument.type}</span>
-                      </div>
-                      <div className="flex justify-between items-center">
-                        <span className="text-gray-400">Size:</span>
-                        <span className="text-white">{(selectedDocument.size / 1024).toFixed(1)} KB</span>
-                      </div>
-                      <div className="flex justify-between items-center">
-                        <span className="text-gray-400">Category:</span>
-                        <span className="text-white">{selectedDocument.category || 'Uncategorized'}</span>
-                      </div>
-                      <div className="flex justify-between items-center">
-                        <span className="text-gray-400">Uploaded:</span>
-                        <span className="text-white">{new Date(selectedDocument.uploadedAt).toLocaleDateString()}</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Summary */}
-                  {selectedDocument.summary && (
-                    <div className="bg-gray-800/30 rounded-xl p-4 border border-gray-700/50">
-                      <h4 className="text-sm font-semibold text-electric-400 mb-3 flex items-center">
-                        <BookOpen className="w-4 h-4 mr-2" />
-                        Summary
-                      </h4>
-                      <p className="text-gray-300 text-sm leading-relaxed">{selectedDocument.summary}</p>
-                    </div>
-                  )}
-
-                  {/* Tags */}
-                  {selectedDocument.tags && selectedDocument.tags.length > 0 && (
-                    <div className="bg-gray-800/30 rounded-xl p-4 border border-gray-700/50">
-                      <h4 className="text-sm font-semibold text-electric-400 mb-3 flex items-center">
-                        <Tag className="w-4 h-4 mr-2" />
-                        Tags
-                      </h4>
-                      <div className="flex flex-wrap gap-2">
-                        {selectedDocument.tags.map((tag, index) => (
-                          <motion.span
-                            key={index}
-                            initial={{ opacity: 0, scale: 0.8 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            transition={{ delay: index * 0.1 }}
-                            className="px-3 py-1 bg-gradient-to-r from-purple-500/20 to-blue-500/20 text-purple-300 text-xs rounded-full border border-purple-500/30"
-                          >
-                            {tag}
-                          </motion.span>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </motion.div>
-          ) : (
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="bg-gradient-to-br from-gray-900/90 to-gray-800/70 rounded-2xl p-8 border border-gray-700/50 backdrop-blur-sm text-center relative overflow-hidden"
-            >
-              <div className="absolute inset-0 bg-gradient-to-r from-electric-500/5 via-transparent to-blue-500/5 rounded-2xl"></div>
-              <div className="relative z-10">
-                <motion.div
-                  animate={{ 
-                    scale: [1, 1.1, 1],
-                    rotate: [0, 5, -5, 0]
-                  }}
-                  transition={{ duration: 4, repeat: Infinity }}
-                  className="w-16 h-16 bg-gradient-to-br from-gray-800/50 to-gray-700/50 rounded-2xl flex items-center justify-center mx-auto mb-6 border border-gray-600/50"
-                >
-                  <Eye className="w-8 h-8 text-gray-400" />
-                </motion.div>
-                <h3 className="text-xl font-semibold text-gray-300 mb-3">Select a Document</h3>
-                <p className="text-gray-400 text-sm leading-relaxed max-w-sm mx-auto">
-                  Choose a document from the list to view its details and AI-powered analysis
-                </p>
-              </div>
-            </motion.div>
-          )}
         </div>
       </div>
     </div>
