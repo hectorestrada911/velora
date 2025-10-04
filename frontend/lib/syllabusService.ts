@@ -156,35 +156,33 @@ export class SyllabusService {
         const eventTitle = `${analysis.courseInfo.courseCode}: ${classTime.type.charAt(0).toUpperCase() + classTime.type.slice(1)}`
         const eventDescription = `Location: ${classTime.location}\nCourse: ${analysis.courseInfo.courseName}`
         
-        await calendarService.addEvent({
+        await calendarService.addToLocalCalendar({
           title: eventTitle,
           description: eventDescription,
           startTime: this.parseClassTime(classTime.day, classTime.startTime),
           endTime: this.parseClassTime(classTime.day, classTime.endTime),
-          isRecurring: true,
-          recurrencePattern: 'weekly'
+          location: classTime.location
         })
       }
 
       // Create exam events
       for (const exam of analysis.exams) {
-        await calendarService.addEvent({
+        await calendarService.addToLocalCalendar({
           title: `Exam: ${exam.title}`,
           description: `Format: ${exam.format}\nLocation: ${exam.location}\nTopics: ${exam.topics.join(', ')}`,
           startTime: new Date(exam.date + ' ' + exam.time),
           endTime: new Date(new Date(exam.date + ' ' + exam.time).getTime() + 2 * 60 * 60 * 1000), // 2 hours
-          isRecurring: false
+          location: exam.location
         })
       }
 
       // Create assignment deadlines
       for (const assignment of analysis.assignments) {
-        await calendarService.addEvent({
+        await calendarService.addToLocalCalendar({
           title: `Due: ${assignment.title}`,
           description: `${assignment.description}\nPoints: ${assignment.points}\nType: ${assignment.type}`,
           startTime: new Date(assignment.dueDate),
-          endTime: new Date(assignment.dueDate),
-          isRecurring: false
+          endTime: new Date(assignment.dueDate)
         })
       }
 
@@ -202,12 +200,12 @@ export class SyllabusService {
           const reminderDate = new Date(importantDate.date)
           reminderDate.setDate(reminderDate.getDate() - importantDate.reminderDays)
 
-          await calendarService.addReminder({
+          await calendarService.createReminder({
             title: `Upcoming: ${importantDate.title}`,
             description: importantDate.description,
             dueDate: reminderDate,
             priority: importantDate.priority,
-            category: 'academic'
+            category: 'personal'
           })
         }
       }
@@ -220,24 +218,24 @@ export class SyllabusService {
         const weekBefore = new Date(examDate)
         weekBefore.setDate(weekBefore.getDate() - 7)
         
-        await calendarService.addReminder({
+        await calendarService.createReminder({
           title: `Study for ${exam.title}`,
           description: `Exam in 1 week. Topics: ${exam.topics.join(', ')}`,
           dueDate: weekBefore,
           priority: 'high',
-          category: 'study'
+          category: 'personal'
         })
 
         // 3 days before reminder
         const daysBefore = new Date(examDate)
         daysBefore.setDate(daysBefore.getDate() - 3)
         
-        await calendarService.addReminder({
+        await calendarService.createReminder({
           title: `Final Review: ${exam.title}`,
           description: `Exam in 3 days. Review key concepts and practice problems.`,
           dueDate: daysBefore,
           priority: 'high',
-          category: 'study'
+          category: 'personal'
         })
       }
 
