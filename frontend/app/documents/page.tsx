@@ -2,13 +2,15 @@
 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Upload, FileText, Search, Plus, ArrowLeft } from 'lucide-react';
+import { Upload, FileText, Search, Plus, ArrowLeft, GraduationCap } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import PDFManager from '../../components/PDFManager';
 import FileUpload from '../../components/FileUpload';
+import SyllabusScanner from '../../components/SyllabusScanner';
 
 export default function DocumentsPage() {
   const [activeTab, setActiveTab] = useState<'manager' | 'upload'>('manager');
+  const [showSyllabusScanner, setShowSyllabusScanner] = useState(false);
   const router = useRouter();
 
   return (
@@ -81,7 +83,7 @@ export default function DocumentsPage() {
         {/* Quick Actions */}
         <div className="mt-12 bg-gray-800/30 rounded-xl p-6 border border-gray-700">
           <h2 className="text-xl font-semibold text-white mb-4">Quick Actions</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <motion.button
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
@@ -118,6 +120,19 @@ export default function DocumentsPage() {
               <div className="text-left">
                 <div className="text-white font-medium">View All Documents</div>
                 <div className="text-gray-400 text-sm">Browse your document library</div>
+              </div>
+            </motion.button>
+
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={() => setShowSyllabusScanner(true)}
+              className="flex items-center space-x-3 p-4 bg-gradient-to-r from-green-500/10 to-blue-500/10 border border-green-500/20 rounded-lg hover:from-green-500/20 hover:to-blue-500/20 transition-all duration-200"
+            >
+              <GraduationCap className="w-5 h-5 text-green-400" />
+              <div className="text-left">
+                <div className="text-white font-medium">Smart Syllabus Scanner</div>
+                <div className="text-gray-400 text-sm">AI-powered course analysis</div>
               </div>
             </motion.button>
           </div>
@@ -171,6 +186,11 @@ export default function DocumentsPage() {
           </motion.div>
         </div>
       </div>
+
+      {/* Syllabus Scanner Modal */}
+      {showSyllabusScanner && (
+        <SyllabusScanner onClose={() => setShowSyllabusScanner(false)} />
+      )}
     </div>
   );
 }

@@ -20,6 +20,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
+        {/* Smart Syllabus Scanner v0.1.5 */}
         <AuthProvider>
           {children}
           <Toaster 

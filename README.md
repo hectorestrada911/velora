@@ -2,6 +2,8 @@
 
 **Never lose a thought with Velora AI** - Your intelligent AI assistant that remembers everything so you can focus on what matters most.
 
+<!-- Smart Syllabus Scanner deployment trigger - v0.1.5 -->
+
 A sophisticated AI-powered personal knowledge management system that combines voice-first interaction, intelligent document analysis, and seamless Google Workspace integration to create your personal second brain.
 
 ## 🧠 What is Velora AI?
