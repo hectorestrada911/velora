@@ -264,14 +264,14 @@ ${analysis.importantDates.map(date => `- ${date.title}: ${date.date} (${date.typ
 Success Tips:
 ${analysis.analysis.successTips.map(tip => `- ${tip}`).join('\n')}`
 
-      await memoryService.addMemory(courseMemory, ['academic', 'course', analysis.courseInfo.courseCode])
+      await memoryService.addMemory(courseMemory, 'personal', 'high')
 
       // Save grading information
       const gradingMemory = `Grading for ${analysis.courseInfo.courseCode}:
 ${analysis.grading.breakdown.map(item => `- ${item.category}: ${item.percentage}%`).join('\n')}
 Late Penalty: ${analysis.grading.latePenalty}`
 
-      await memoryService.addMemory(gradingMemory, ['academic', 'grading', analysis.courseInfo.courseCode])
+      await memoryService.addMemory(gradingMemory, 'personal', 'high')
 
       console.log('Course memory saved successfully')
     } catch (error) {
