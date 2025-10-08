@@ -95,6 +95,11 @@ class CostTracker {
    * Increment user's cost metrics
    */
   private async incrementCost(userId: string, metrics: Partial<CostMetrics>): Promise<void> {
+    if (!db) {
+      console.error('Firestore not initialized');
+      return;
+    }
+
     try {
       const dayKey = this.getDayKey();
       const docRef = doc(db, 'user_costs', `${userId}_${dayKey}`);
@@ -156,6 +161,11 @@ class CostTracker {
    * Get daily cost for user
    */
   async getDailyCost(userId: string): Promise<number> {
+    if (!db) {
+      console.error('Firestore not initialized');
+      return 0;
+    }
+
     try {
       const dayKey = this.getDayKey();
       const docRef = doc(db, 'user_costs', `${userId}_${dayKey}`);
@@ -176,6 +186,22 @@ class CostTracker {
    * Get detailed cost breakdown
    */
   async getCostBreakdown(userId: string): Promise<CostMetrics> {
+    if (!db) {
+      console.error('Firestore not initialized');
+      return {
+        emailsSent: 0,
+        emailCostUSD: 0,
+        tokensUsed: 0,
+        llmCostUSD: 0,
+        firestoreReads: 0,
+        firestoreWrites: 0,
+        firestoreCostUSD: 0,
+        totalCostUSD: 0,
+        lastUpdated: Date.now(),
+        period: 'day'
+      };
+    }
+
     try {
       const dayKey = this.getDayKey();
       const docRef = doc(db, 'user_costs', `${userId}_${dayKey}`);
