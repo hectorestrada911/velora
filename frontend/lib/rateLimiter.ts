@@ -195,4 +195,5 @@ export const rateLimiter = new RateLimiter();
 export default rateLimiter;
 
 // Export for backend use
-export { RateLimiter, RateLimitResult, RateLimitConfig };
+export { RateLimiter };
+export type { RateLimitResult, RateLimitConfig };

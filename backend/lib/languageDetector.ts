@@ -286,4 +286,4 @@ export const languageDetector = new LanguageDetector();
 export default languageDetector;
 
 // Export types
-export { DetectionPatterns, LanguageResult };
+export type { DetectionPatterns, LanguageResult };

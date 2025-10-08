@@ -298,4 +298,5 @@ export const icsGenerator = new ICSGenerator();
 export default icsGenerator;
 
 // Export types for use in other files
-export { ICSEvent, ICSGenerator };
+export type { ICSEvent };
+export { ICSGenerator };

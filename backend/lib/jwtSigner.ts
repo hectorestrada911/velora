@@ -169,4 +169,4 @@ export const jwtSigner = new JWTSigner();
 export default jwtSigner;
 
 // Export types for backend use
-export { ActionPayload, ActionLinkData };
+export type { ActionPayload, ActionLinkData };
