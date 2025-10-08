@@ -380,11 +380,18 @@ export default function AuthPage() {
                 Stop drowning in information. <span className="text-electric-400">Velora AI</span> remembers everything so you can focus on what matters most.
               </p>
               
-              {/* Call-to-Action Button - Desktop - Simplified to just Sign In */}
+              {/* Call-to-Action Buttons - Desktop */}
               <div className="flex items-center space-x-4">
                 <button
+                  onClick={() => window.location.href = '/radar'}
+                  className="bg-gradient-to-r from-electric-500 to-blue-500 hover:from-electric-400 hover:to-blue-400 text-white font-semibold py-3 px-8 rounded-lg transition-all duration-200 hover:scale-105 flex items-center justify-center space-x-2 text-lg border border-electric-500/30"
+                >
+                  <span>Try Radar</span>
+                  <ArrowRight className="w-5 h-5" />
+                </button>
+                <button
                   onClick={() => setAuthMode('login')}
-                  className="bg-gradient-to-r from-electric-500 to-purple-500 hover:from-electric-400 hover:to-purple-400 text-white font-semibold py-3 px-8 rounded-lg transition-all duration-200 hover:scale-105 flex items-center justify-center space-x-2 text-lg"
+                  className="bg-gray-800/50 hover:bg-gray-700/50 text-gray-300 font-semibold py-3 px-8 rounded-lg transition-all duration-200 hover:scale-105 flex items-center justify-center space-x-2 text-lg border border-gray-700/50"
                 >
                   <span>Sign In</span>
                   <ArrowRight className="w-5 h-5" />
@@ -615,7 +622,7 @@ export default function AuthPage() {
               Stop drowning in information. <span className="text-electric-400">Velora AI</span> remembers everything so you can focus on what matters most.
             </motion.p>
 
-            {/* CTA Buttons - Simplified to just Sign In */}
+            {/* CTA Buttons - Mobile */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -623,8 +630,15 @@ export default function AuthPage() {
               className="flex flex-col space-y-4"
             >
               <button
+                onClick={() => window.location.href = '/radar'}
+                className="w-full bg-gradient-to-r from-electric-500 to-blue-500 hover:from-electric-400 hover:to-blue-400 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 hover:scale-105 flex items-center justify-center space-x-2 border border-electric-500/30"
+              >
+                <span>Try Radar</span>
+                <ArrowRight className="w-4 h-4" />
+              </button>
+              <button
                 onClick={() => setAuthMode('login')}
-                className="w-full bg-gradient-to-r from-electric-500 to-purple-500 hover:from-electric-400 hover:to-purple-400 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 hover:scale-105 flex items-center justify-center space-x-2"
+                className="w-full bg-gray-800/50 hover:bg-gray-700/50 text-gray-300 font-semibold py-3 px-6 rounded-lg transition-all duration-200 hover:scale-105 flex items-center justify-center space-x-2 border border-gray-700/50"
               >
                 <span>Sign In</span>
                 <ArrowRight className="w-4 h-4" />
@@ -635,6 +649,156 @@ export default function AuthPage() {
         </div>
 
         {/* Feature Showcase Sections - Ultra Sleek */}
+        
+        {/* Follow-Up Radar Feature Showcase - FLAGSHIP */}
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          viewport={{ once: true }}
+          className="mb-32 w-full"
+        >
+          <div className="max-w-7xl mx-auto px-4">
+            {/* Section Header */}
+            <div className="text-center mb-16">
+              <motion.div
+                animate={{ 
+                  scale: [1, 1.05, 1],
+                  boxShadow: [
+                    "0 0 40px rgba(59, 130, 246, 0.3)",
+                    "0 0 80px rgba(59, 130, 246, 0.6)",
+                    "0 0 40px rgba(59, 130, 246, 0.3)"
+                  ]
+                }}
+                transition={{ duration: 3, repeat: Infinity }}
+                className="w-20 h-20 bg-gradient-to-br from-electric-500/50 to-blue-500/50 rounded-3xl flex items-center justify-center border border-electric-500/60 backdrop-blur-sm mx-auto mb-8 relative"
+              >
+                <svg className="w-10 h-10 text-electric-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <circle cx="12" cy="12" r="10" />
+                  <circle cx="12" cy="12" r="6" />
+                  <circle cx="12" cy="12" r="2" />
+                  <line x1="12" y1="2" x2="12" y2="4" />
+                  <line x1="12" y1="20" x2="12" y2="22" />
+                  <line x1="22" y1="12" x2="20" y2="12" />
+                  <line x1="4" y1="12" x2="2" y2="12" />
+                </svg>
+                <motion.span
+                  animate={{ opacity: [0, 1, 0] }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                  className="absolute -top-2 -right-2 px-2 py-1 bg-gradient-to-r from-electric-500 to-blue-500 text-white text-xs font-bold rounded-full"
+                >
+                  NEW
+                </motion.span>
+              </motion.div>
+              <h3 className="text-5xl font-bold text-white mb-6">
+                Follow-Up <span className="text-transparent bg-clip-text bg-gradient-to-r from-electric-500 to-blue-500">Radar</span>
+              </h3>
+              <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+                Emails that follow themselves. BCC Velora and get reminded at the right time with <span className="text-electric-400">ready-to-send drafts</span> and the exact quote that triggered it.
+              </p>
+              <div className="mt-6 space-y-2">
+                <p className="text-sm text-gray-400">Try: <span className="text-electric-400">BCC: 2d@in.velora.cc</span></p>
+                <p className="text-sm text-gray-400">Or: <span className="text-electric-400">BCC: follow@in.velora.cc</span></p>
+              </div>
+            </div>
+
+            {/* Full Width Radar Showcase */}
+            <motion.div
+              whileHover={{ scale: 1.01, y: -10 }}
+              className="bg-gradient-to-br from-gray-900/90 to-gray-800/70 rounded-3xl p-6 md:p-12 border border-electric-500/30 hover:border-electric-500/60 transition-all duration-500 backdrop-blur-sm relative overflow-hidden"
+            >
+              {/* Background Glow Effect */}
+              <div className="absolute inset-0 bg-gradient-to-r from-electric-500/5 via-transparent to-blue-500/5 rounded-3xl"></div>
+              
+              {/* Radar Interface Mockup */}
+              <div className="relative z-10">
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 md:gap-12">
+                  {/* Left Side - Stats Cards */}
+                  <div className="space-y-4">
+                    <h4 className="text-xl md:text-2xl font-bold text-white mb-4">Your Follow-ups</h4>
+                    <div className="grid grid-cols-2 gap-3">
+                      {[
+                        { label: 'Overdue', count: 2, color: 'red' },
+                        { label: 'Today', count: 3, color: 'orange' },
+                        { label: 'Upcoming', count: 5, color: 'blue' },
+                        { label: 'You Owe', count: 4, color: 'purple' }
+                      ].map((stat, i) => (
+                        <motion.div
+                          key={stat.label}
+                          initial={{ opacity: 0, scale: 0.8 }}
+                          whileInView={{ opacity: 1, scale: 1 }}
+                          transition={{ delay: i * 0.1 }}
+                          className="bg-gray-800/50 rounded-xl p-3 border border-gray-700/50 text-center"
+                        >
+                          <div className={`text-2xl font-bold text-${stat.color}-400`}>{stat.count}</div>
+                          <div className="text-xs text-gray-400">{stat.label}</div>
+                        </motion.div>
+                      ))}
+                    </div>
+                  </div>
+                  
+                  {/* Center - Follow-up Example */}
+                  <div className="space-y-4">
+                    <h4 className="text-xl md:text-2xl font-bold text-white mb-4">Recent Follow-up</h4>
+                    <motion.div
+                      initial={{ opacity: 0, x: -20 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.3 }}
+                      className="bg-gradient-to-br from-gray-800/80 to-gray-900/80 rounded-xl p-4 border border-electric-500/30"
+                    >
+                      <div className="flex items-start justify-between mb-3">
+                        <div>
+                          <h5 className="text-white font-medium">Budget follow-up</h5>
+                          <p className="text-sm text-gray-400">Alex Johnson</p>
+                        </div>
+                        <span className="px-2 py-1 bg-orange-500/20 text-orange-300 text-xs rounded">You owe</span>
+                      </div>
+                      <div className="bg-gray-800/50 rounded-lg p-3 mb-3">
+                        <p className="text-xs text-gray-500 mb-1">Triggered by:</p>
+                        <p className="text-sm text-gray-300 italic">"Can you confirm by Thursday?"</p>
+                      </div>
+                      <div className="bg-electric-500/10 rounded-lg p-3 mb-3">
+                        <p className="text-xs text-electric-400 mb-1">Draft ready:</p>
+                        <p className="text-sm text-gray-300">"Hi Alex, following up on the budget discussion..."</p>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm text-red-400 font-medium">2h overdue</span>
+                        <div className="flex gap-2">
+                          <button className="px-3 py-1 bg-electric-500/20 text-electric-300 text-xs rounded hover:bg-electric-500/30">Send</button>
+                          <button className="px-3 py-1 bg-green-500/20 text-green-300 text-xs rounded hover:bg-green-500/30">Done</button>
+                        </div>
+                      </div>
+                    </motion.div>
+                  </div>
+                  
+                  {/* Right Side - BCC Examples */}
+                  <div className="space-y-4">
+                    <h4 className="text-xl md:text-2xl font-bold text-white mb-4">BCC Aliases</h4>
+                    <div className="space-y-3">
+                      {[
+                        { alias: '2d@in.velora.cc', desc: 'Remind in 2 days' },
+                        { alias: 'follow@in.velora.cc', desc: 'Smart detect deadline' },
+                        { alias: 'eow@in.velora.cc', desc: 'End of week' },
+                        { alias: 'tomorrow8am@in.velora.cc', desc: 'Tomorrow at 8am' }
+                      ].map((item, i) => (
+                        <motion.div
+                          key={item.alias}
+                          initial={{ opacity: 0, x: 20 }}
+                          whileInView={{ opacity: 1, x: 0 }}
+                          transition={{ delay: 0.4 + i * 0.1 }}
+                          className="bg-gray-800/50 rounded-lg p-3 border border-gray-700/50"
+                        >
+                          <div className="font-mono text-electric-400 text-sm">{item.alias}</div>
+                          <div className="text-xs text-gray-400">{item.desc}</div>
+                        </motion.div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        </motion.div>
         
         {/* Calendar Feature Showcase - Full Width */}
         <motion.div
