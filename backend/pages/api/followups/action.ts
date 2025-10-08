@@ -54,9 +54,11 @@ export default async function handler(
         // Generate ICS file and redirect to calendar
         const followup = await radarService.getFollowup(followupId);
         if (followup) {
-          const icsContent = generateICS(followup);
-          res.setHeader('Content-Type', 'text/calendar');
+          const { icsGenerator } = await import('../../lib/icsGenerator');
+          const icsContent = icsGenerator.generateFollowupICS(followup);
+          res.setHeader('Content-Type', 'text/calendar; charset=utf-8');
           res.setHeader('Content-Disposition', `attachment; filename="followup-${followupId}.ics"`);
+          res.setHeader('Cache-Control', 'no-cache');
           return res.send(icsContent);
         }
         return res.status(404).json({ error: 'Followup not found' });
@@ -75,34 +77,4 @@ export default async function handler(
   }
 }
 
-/**
- * Generate ICS calendar file for followup
- */
-function generateICS(followup: any): string {
-  const now = new Date();
-  const startTime = new Date(followup.dueAt);
-  const endTime = new Date(startTime.getTime() + 25 * 60 * 1000); // 25 minutes
-
-  const formatDate = (date: Date): string => {
-    return date.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
-  };
-
-  const icsContent = [
-    'BEGIN:VCALENDAR',
-    'VERSION:2.0',
-    'PRODID:-//Velora//Follow-Up Radar//EN',
-    'BEGIN:VEVENT',
-    `UID:followup-${followup.id}@velora.cc`,
-    `DTSTAMP:${formatDate(now)}`,
-    `DTSTART:${formatDate(startTime)}`,
-    `DTEND:${formatDate(endTime)}`,
-    `SUMMARY:Follow-up: ${followup.subject}`,
-    `DESCRIPTION:Follow-up reminder for: ${followup.subject}\\n\\nTriggered by: "${followup.source.snippet}"`,
-    `LOCATION:Email`,
-    `STATUS:CONFIRMED`,
-    'END:VEVENT',
-    'END:VCALENDAR'
-  ].join('\r\n');
-
-  return icsContent;
-}
+// ICS generation is now handled by icsGenerator module

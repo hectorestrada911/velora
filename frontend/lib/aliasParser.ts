@@ -183,6 +183,7 @@ export class AliasParser {
 
   /**
    * Parse end of week (Friday 5pm)
+   * If Friday already passed or is a holiday, move to next Monday 9am
    */
   private parseEndOfWeek(): number {
     const today = new Date();
@@ -199,6 +200,71 @@ export class AliasParser {
     friday.setHours(17, 0, 0, 0); // 5pm
 
     return friday.getTime();
+  }
+
+  /**
+   * Adjust time if it lands on weekend - move to next Monday 9am
+   */
+  static adjustForWeekend(date: Date): number {
+    const day = date.getDay();
+    const adjustedDate = new Date(date);
+    
+    // If Saturday (6), move to Monday
+    if (day === 6) {
+      adjustedDate.setDate(adjustedDate.getDate() + 2);
+      adjustedDate.setHours(9, 0, 0, 0); // Monday 9am
+    }
+    
+    // If Sunday (0), move to Monday
+    if (day === 0) {
+      adjustedDate.setDate(adjustedDate.getDate() + 1);
+      adjustedDate.setHours(9, 0, 0, 0); // Monday 9am
+    }
+    
+    return adjustedDate.getTime();
+  }
+
+  /**
+   * Check if date is a weekend
+   */
+  static isWeekend(date: Date): boolean {
+    const day = date.getDay();
+    return day === 0 || day === 6; // Sunday or Saturday
+  }
+
+  /**
+   * Adjust EOD (end of day) to user's preferred time (default 5pm)
+   */
+  static getEODTime(date: Date, eodHour: number = 17): number {
+    const eod = new Date(date);
+    eod.setHours(eodHour, 0, 0, 0);
+    
+    // If EOD already passed today, move to tomorrow
+    if (eod.getTime() < Date.now()) {
+      eod.setDate(eod.getDate() + 1);
+    }
+    
+    return this.adjustForWeekend(eod);
+  }
+
+  /**
+   * Check for DST transitions and adjust time accordingly
+   */
+  static isDSTTransition(date: Date, timezone: string): boolean {
+    try {
+      const formatter = new Intl.DateTimeFormat('en-US', {
+        timeZone: timezone,
+        timeZoneName: 'short'
+      });
+      
+      const today = formatter.format(date);
+      const tomorrow = formatter.format(new Date(date.getTime() + 24 * 60 * 60 * 1000));
+      
+      // If timezone abbreviation changes, it's a DST transition
+      return today.split(' ').pop() !== tomorrow.split(' ').pop();
+    } catch {
+      return false;
+    }
   }
 
   /**
