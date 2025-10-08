@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Plus, Search, Filter, Calendar, Clock, CheckCircle, Bell, FileText, TrendingUp, Circle } from 'lucide-react'
+import { Plus, Search, Filter, Calendar, Clock, CheckCircle, Bell, FileText, TrendingUp, Circle, Radar, AlertCircle } from 'lucide-react'
 import { toast } from 'react-hot-toast'
 import { VoiceRecorder } from './VoiceRecorder'
 import { Calendar as CalendarComponent } from './Calendar'
@@ -180,6 +180,76 @@ export function Dashboard() {
           </div>
         </motion.div>
       </div>
+
+      {/* Follow-Up Radar - Flagship Feature */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.25 }}
+        className="relative overflow-hidden rounded-xl bg-gradient-to-br from-electric-500/10 to-purple-500/10 border border-electric-500/30 shadow-lg shadow-electric-500/20"
+      >
+        {/* Background Effects */}
+        <div className="absolute inset-0 bg-gradient-to-br from-electric-500/5 to-purple-500/5" />
+        <div className="absolute top-0 right-0 w-32 h-32 bg-electric-500/10 rounded-full blur-2xl" />
+        
+        <div className="relative p-6">
+          <div className="flex items-start justify-between mb-4">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 bg-gradient-to-br from-electric-500/20 to-purple-500/20 rounded-xl flex items-center justify-center backdrop-blur-xl border border-electric-500/30">
+                <Radar className="w-6 h-6 text-electric-400" />
+              </div>
+              <div>
+                <h3 className="text-xl font-bold text-white">Follow-Up Radar</h3>
+                <p className="text-electric-300 text-sm">Emails that follow themselves</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="px-2 py-1 rounded-full bg-electric-500/20 text-electric-300 text-xs font-medium">NEW</span>
+              <div className="flex items-center gap-1">
+                <AlertCircle className="w-4 h-4 text-red-400" />
+                <span className="text-red-400 font-bold text-lg">0</span>
+              </div>
+            </div>
+          </div>
+          
+          <p className="text-gray-300 mb-4">
+            BCC Velora on emails and get reminded at the right time with ready-to-send drafts and exact quotes that triggered them.
+          </p>
+          
+          <div className="flex items-center gap-3 mb-4">
+            <div className="flex items-center gap-2 text-sm text-gray-400">
+              <span className="font-mono bg-gray-800/50 px-2 py-1 rounded">2d@</span>
+              <span>2 days</span>
+            </div>
+            <div className="flex items-center gap-2 text-sm text-gray-400">
+              <span className="font-mono bg-gray-800/50 px-2 py-1 rounded">follow@</span>
+              <span>smart detect</span>
+            </div>
+            <div className="flex items-center gap-2 text-sm text-gray-400">
+              <span className="font-mono bg-gray-800/50 px-2 py-1 rounded">eow@</span>
+              <span>end of week</span>
+            </div>
+          </div>
+          
+          <div className="flex items-center gap-3">
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => window.location.href = '/radar'}
+              className="px-6 py-3 rounded-xl bg-gradient-to-r from-electric-500 to-purple-500 text-white font-medium hover:shadow-lg hover:shadow-electric-500/30 transition-all"
+            >
+              Open Radar
+            </motion.button>
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="px-4 py-2 rounded-xl bg-gray-800/50 hover:bg-gray-700/50 text-gray-300 transition-colors border border-gray-700/50"
+            >
+              Learn More
+            </motion.button>
+          </div>
+        </div>
+      </motion.div>
 
               {/* Quick Capture */}
         <motion.div
