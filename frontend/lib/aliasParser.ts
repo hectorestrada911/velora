@@ -217,11 +217,28 @@ export class AliasParser {
    * Examples:
    *   - hector+2d@in.velora.cc → hector
    *   - hector@in.velora.cc → hector
+   *   - 2d+hector@in.velora.cc → hector (user-bound format)
    */
   static extractUserId(emailAddress: string): string | null {
-    // Match user part before + or @
-    const match = emailAddress.match(/^([^+@]+)(?:\+[^@]*)?@/);
-    return match ? match[1] : null;
+    // User-bound format: alias+userId@domain
+    const userBoundMatch = emailAddress.match(/^[^+]+\+([^@]+)@/);
+    if (userBoundMatch) {
+      return userBoundMatch[1];
+    }
+
+    // Legacy format: userId+alias@domain
+    const legacyMatch = emailAddress.match(/^([^+@]+)(?:\+[^@]*)?@/);
+    return legacyMatch ? legacyMatch[1] : null;
+  }
+
+  /**
+   * Generate user-bound alias
+   * Examples:
+   *   - generateUserBoundAlias('2d', 'hector') → '2d+hector@in.velora.cc'
+   *   - generateUserBoundAlias('follow', 'user123') → 'follow+user123@in.velora.cc'
+   */
+  static generateUserBoundAlias(alias: string, userId: string): string {
+    return `${alias}+${userId}@in.velora.cc`;
   }
 
   /**

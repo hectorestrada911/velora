@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { detectFollowup } from '../../lib/followupDetector';
+import { rateLimiter } from '../../lib/rateLimiter';
 
 // Inbound Email Webhook Handler
 // Receives emails from Resend/Postmark and creates followups
@@ -30,11 +31,22 @@ export default async function handler(
       return res.status(400).json({ error: 'Invalid payload' });
     }
 
-    // Extract user from alias (e.g., hector+2d@in.velora.cc → hector)
+    // Extract user from alias (e.g., 2d+hector@in.velora.cc → hector)
     const userEmail = extractUserEmail(payload.to, payload.bcc);
     if (!userEmail) {
       console.log('No Velora alias found, skipping');
       return res.status(200).json({ ok: true, skipped: true });
+    }
+
+    // Check rate limits for this user
+    const rateLimitResult = await rateLimiter.checkEmailRateLimit(userEmail);
+    if (!rateLimitResult.allowed) {
+      console.log(`Rate limit exceeded for user ${userEmail}`);
+      return res.status(429).json({ 
+        error: 'Rate limit exceeded', 
+        retryAfter: rateLimitResult.retryAfter,
+        resetTime: rateLimitResult.resetTime
+      });
     }
 
     // Parse alias to get due time
@@ -197,10 +209,16 @@ function extractUserEmail(to: string[], bcc: string[]): string | null {
   
   for (const email of allRecipients) {
     if (isVeloraAlias(email)) {
-      // Extract user part: hector+2d@in.velora.cc → hector
-      const match = email.match(/^([^+@]+)(?:\+[^@]*)?@/);
-      if (match) {
-        return match[1] + '@sdsu.edu'; // TODO: Map to actual user email from database
+      // User-bound format: alias+userId@domain → userId
+      const userBoundMatch = email.match(/^[^+]+\+([^@]+)@/);
+      if (userBoundMatch) {
+        return userBoundMatch[1] + '@sdsu.edu'; // TODO: Map to actual user email from database
+      }
+
+      // Legacy format: userId+alias@domain → userId
+      const legacyMatch = email.match(/^([^+@]+)(?:\+[^@]*)?@/);
+      if (legacyMatch) {
+        return legacyMatch[1] + '@sdsu.edu'; // TODO: Map to actual user email from database
       }
     }
   }
