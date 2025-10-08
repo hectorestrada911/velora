@@ -46,6 +46,13 @@ API routes available at `/api/*`
 
 ## ✨ Core Features
 
+### 🎯 **Follow-Up Radar** (NEW - Flagship Feature)
+- **Emails that follow themselves**: BCC Velora and get reminded at the right time
+- **Ready-to-send drafts**: AI-generated follow-ups with the exact quote that triggered them
+- **Smart detection**: Automatically detects asks, promises, and deadlines from your emails
+- **One-click actions**: Mark done, snooze, or add to calendar in seconds
+- **BCC aliases**: `2d@`, `tomorrow@`, `follow@`, `eow@` - simple and memorable
+
 ### 🧠 **AI-Powered Memory Bank**
 - **Persistent Memory**: Velora AI remembers your preferences, important details, and context across conversations
 - **Smart Categorization**: Automatically organizes memories into Personal, Work, and Life categories
