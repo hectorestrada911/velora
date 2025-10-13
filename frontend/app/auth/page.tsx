@@ -329,6 +329,16 @@ export default function AuthPage() {
               </button>
               <button
                 onClick={() => {
+                  window.location.href = '/radar'
+                  setIsMenuOpen(false)
+                }}
+                className="w-full text-left px-4 py-3 text-purple-400 hover:bg-gray-800 rounded-md transition-colors duration-200 flex items-center space-x-3"
+              >
+                <Target className="w-4 h-4" />
+                <span>Try Radar</span>
+              </button>
+              <button
+                onClick={() => {
                   window.location.href = '/chat'
                   setIsMenuOpen(false)
                 }}
@@ -383,10 +393,10 @@ export default function AuthPage() {
               {/* Call-to-Action Buttons - Desktop */}
               <div className="flex items-center space-x-4">
                 <button
-                  onClick={() => window.location.href = '/radar'}
+                  onClick={handleTryDemo}
                   className="bg-gradient-to-r from-electric-500 to-blue-500 hover:from-electric-400 hover:to-blue-400 text-white font-semibold py-3 px-8 rounded-lg transition-all duration-200 hover:scale-105 flex items-center justify-center space-x-2 text-lg border border-electric-500/30"
                 >
-                  <span>Try Radar</span>
+                  <span>Try Demo</span>
                   <ArrowRight className="w-5 h-5" />
                 </button>
                 <button
@@ -630,10 +640,10 @@ export default function AuthPage() {
               className="flex flex-col space-y-4"
             >
               <button
-                onClick={() => window.location.href = '/radar'}
+                onClick={handleTryDemo}
                 className="w-full bg-gradient-to-r from-electric-500 to-blue-500 hover:from-electric-400 hover:to-blue-400 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 hover:scale-105 flex items-center justify-center space-x-2 border border-electric-500/30"
               >
-                <span>Try Radar</span>
+                <span>Try Demo</span>
                 <ArrowRight className="w-4 h-4" />
               </button>
               <button
