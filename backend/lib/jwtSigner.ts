@@ -1,9 +1,9 @@
 // JWT Signer for Follow-Up Radar Action Links
 // Provides secure, time-limited action links for email buttons
 
-import { SignJWT, jwtVerify } from 'jose';
+import { SignJWT, jwtVerify, JWTPayload } from 'jose';
 
-interface ActionPayload {
+interface ActionPayload extends JWTPayload {
   followupId: string;
   userId: string;
   action: 'snooze' | 'done' | 'draft' | 'calendar' | 'reply_forward';

@@ -106,6 +106,10 @@ class RateLimiter {
    * Get current count and increment atomically
    */
   private async getAndIncrement(key: string, ttlSeconds: number): Promise<{ count: number }> {
+    if (!db) {
+      throw new Error('Firebase not initialized');
+    }
+    
     const docRef = doc(db, 'rate_limits', key);
     
     try {
@@ -170,6 +174,10 @@ class RateLimiter {
     dayCount: number;
     limits: RateLimitConfig;
   }> {
+    if (!db) {
+      throw new Error('Firebase not initialized');
+    }
+    
     const now = Date.now();
     const minuteKey = Math.floor(now / (60 * 1000));
     const hourKey = Math.floor(now / (60 * 60 * 1000));
