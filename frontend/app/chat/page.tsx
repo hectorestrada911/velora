@@ -1256,6 +1256,15 @@ Please analyze this document and respond to the user's request. If they didn't s
       // Prepare conversation history for context
       const conversationHistory = messages.slice(-50) // Send last 50 messages for context
       
+      console.log('Sending request to:', apiUrl)
+      console.log('Request body:', { 
+        content: messageContent + calendarContext + reminderContext,
+        conversationHistory: conversationHistory,
+        relevantMemories: [...relevantMemories, ...recallInfo.memories],
+        recallSuggestions: recallInfo.suggestions,
+        currentDate: new Date().toISOString()
+      })
+      
       const response = await fetch(apiUrl, {
         method: 'POST',
         headers: {
@@ -1269,12 +1278,18 @@ Please analyze this document and respond to the user's request. If they didn't s
           currentDate: new Date().toISOString()
         }),
       })
+      
+      console.log('Response status:', response.status)
+      console.log('Response headers:', response.headers)
 
       if (!response.ok) {
-        throw new Error('AI analysis failed')
+        const errorText = await response.text()
+        console.error('API Error:', response.status, errorText)
+        throw new Error(`AI analysis failed: ${response.status} - ${errorText}`)
       }
 
       const analysis = await response.json()
+      console.log('Analysis response:', analysis)
       
       // Auto-create calendar events and reminders from AI analysis
       await autoCreateFromMessage(analysis)
