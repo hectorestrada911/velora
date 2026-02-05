@@ -1437,13 +1437,28 @@ Please analyze this document and respond to the user's request. If they didn't s
     let createdItems: Array<{ type: 'calendar' | 'reminder'; data: any }> = []
     
     // Try to add to calendar
-    if (analysis.calendarEvent) {
+    if (analysis.calendarEvent && analysis.calendarEvent.title && analysis.calendarEvent.startTime) {
       try {
+        // Ensure dates are Date objects
+        const startTime = analysis.calendarEvent.startTime instanceof Date 
+          ? analysis.calendarEvent.startTime 
+          : new Date(analysis.calendarEvent.startTime)
+        const endTime = analysis.calendarEvent.endTime instanceof Date
+          ? analysis.calendarEvent.endTime
+          : new Date(analysis.calendarEvent.endTime || startTime.getTime() + 60 * 60 * 1000) // Default 1 hour
+        
+        // Validate dates
+        if (isNaN(startTime.getTime())) {
+          console.error('Invalid start time:', analysis.calendarEvent.startTime)
+          throw new Error('Invalid start time')
+        }
+        
         const calendarSuccess = await calendarService.addToGoogleCalendar({
           title: analysis.calendarEvent.title,
-          startTime: analysis.calendarEvent.startTime,
-          endTime: analysis.calendarEvent.endTime,
-          description: analysis.calendarEvent.description
+          startTime: startTime,
+          endTime: endTime,
+          description: analysis.calendarEvent.description || '',
+          location: analysis.calendarEvent.location || ''
         })
         if (calendarSuccess) {
           createdItems.push({
@@ -1453,17 +1468,29 @@ Please analyze this document and respond to the user's request. If they didn't s
         }
       } catch (error) {
         console.error('Calendar error:', error)
+        toast.error('Failed to create calendar event. Check console for details.')
       }
     }
 
     // Try to create reminder
-    if (analysis.reminder) {
+    if (analysis.reminder && analysis.reminder.title && analysis.reminder.dueDate) {
       try {
+        // Ensure date is a Date object
+        const dueDate = analysis.reminder.dueDate instanceof Date
+          ? analysis.reminder.dueDate
+          : new Date(analysis.reminder.dueDate)
+        
+        // Validate date
+        if (isNaN(dueDate.getTime())) {
+          console.error('Invalid due date:', analysis.reminder.dueDate)
+          throw new Error('Invalid due date')
+        }
+        
         const reminderSuccess = await calendarService.createReminder({
           title: analysis.reminder.title,
-          dueDate: analysis.reminder.dueDate,
-          priority: analysis.priority || 'medium',
-          description: analysis.reminder.description
+          dueDate: dueDate,
+          priority: (analysis.priority || 'medium') as 'low' | 'medium' | 'high' | 'urgent',
+          description: analysis.reminder.description || ''
         })
         if (reminderSuccess) {
           createdItems.push({
@@ -1473,6 +1500,7 @@ Please analyze this document and respond to the user's request. If they didn't s
         }
       } catch (error) {
         console.error('Reminder error:', error)
+        toast.error('Failed to create reminder. Check console for details.')
       }
     }
 
