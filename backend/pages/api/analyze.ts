@@ -124,10 +124,29 @@ If scheduling mentioned → CREATE calendarEvent. Parse dates/times → ISO form
     let response: any
     let openaiTime = 0
     try {
+      // Use direct HTTP call for responses API since SDK doesn't support it
+      const apiKey = process.env.OPENAI_API_KEY
+      if (!apiKey) {
+        throw new Error('OPENAI_API_KEY is not set')
+      }
+      
       response = await Promise.race([
-        openai.responses.create({
-          model: "gpt-5-mini",
-          input: `${systemPrompt}\n\n${userPrompt}`,
+        fetch('https://api.openai.com/v1/responses', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${apiKey}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            model: "gpt-5-mini",
+            input: `${systemPrompt}\n\n${userPrompt}`,
+          }),
+        }).then(async (res) => {
+          if (!res.ok) {
+            const errorText = await res.text()
+            throw new Error(`OpenAI API error: ${res.status} - ${errorText}`)
+          }
+          return res.json()
         }),
         new Promise((_, reject) => 
           setTimeout(() => reject(new Error('OpenAI API timeout after 8 seconds')), 8000)
@@ -195,7 +214,7 @@ If scheduling mentioned → CREATE calendarEvent. Parse dates/times → ISO form
       followUpQuestions: analysis.followUpQuestions || ["Show me what I have planned today", "Help me set a reminder for something"],
       featureSuggestions: analysis.featureSuggestions || [],
       aiModel: 'gpt-5-mini',
-      processingTime: Date.now() - now.getTime()
+      processingTime: Date.now() - requestStartTime
     }
 
     // Cache simple queries (not scheduling/calendar related - those need fresh parsing)
