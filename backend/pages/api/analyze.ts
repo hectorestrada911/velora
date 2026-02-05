@@ -6,6 +6,11 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 })
 
+// Simple in-memory cache for common queries (in production, use Redis)
+const responseCache = new Map<string, { data: any; timestamp: number }>()
+const CACHE_TTL = 5 * 60 * 1000 // 5 minutes
+const MAX_CACHE_SIZE = 100 // Limit cache size
+
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   // Handle CORS preflight
   if (req.method === 'OPTIONS') {
@@ -29,6 +34,21 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     if (!content) {
       return res.status(400).json({ error: 'Content is required' })
+    }
+
+    // Check cache for exact matches (simple queries)
+    const cacheKey = content.toLowerCase().trim().substring(0, 100) // Use first 100 chars as key
+    const cached = responseCache.get(cacheKey)
+    if (cached && Date.now() - cached.timestamp < CACHE_TTL) {
+      console.log('Cache hit for:', cacheKey.substring(0, 50))
+      return res.status(200).json(cached.data)
+    }
+
+    // Clean old cache entries if needed
+    if (responseCache.size >= MAX_CACHE_SIZE) {
+      const oldestKey = Array.from(responseCache.entries())
+        .sort((a, b) => a[1].timestamp - b[1].timestamp)[0][0]
+      responseCache.delete(oldestKey)
     }
 
     // Get current date/time for time-aware responses
@@ -66,58 +86,28 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     const fullContext = dateContext + conversationContext + memoryContext + recallContext
 
-    // Optimized system prompt with explicit date parsing instructions
-    const systemPrompt = `You are Velora, an AI productivity assistant. Current date: ${currentDateStr} at ${currentTime} ${timeOfDay}.
+    // Optimized system prompt - concise but explicit about date parsing
+    const currentYear = now.getFullYear()
+    const todayISO = now.toISOString().split('T')[0]
+    const tomorrowISO = new Date(now.getTime() + 24*60*60*1000).toISOString().split('T')[0]
+    
+    const systemPrompt = `Velora AI assistant. Date: ${todayISO} ${currentTime} ${timeOfDay}.
 
-Features: Remember info, set reminders, schedule events, analyze documents.
+Rules: Answer directly. Create calendar events for meetings/appointments/scheduling.
 
-Response rules:
-- Answer directly, never generic responses like "I've analyzed your content"
-- For "What can you help with?", respond: "I'm Velora! I help with: remembering info, reminders, calendar, documents. What do you need?"
-- Use conversation history for context/pronouns
-- ALWAYS create calendar events when user mentions meetings, appointments, events, or scheduling
-- Be conversational, answer questions directly
+DATE PARSING (CRITICAL):
+- "February 6" → ${currentYear}-02-06 | "8 pm" → 20:00 | "2 pm" → 14:00 | "10 am" → 10:00
+- Combine: "Feb 6 at 8 pm" → ${currentYear}-02-06T20:00:00Z
+- "today" → ${todayISO} | "tomorrow" → ${tomorrowISO}
+- Format: YYYY-MM-DDTHH:MM:SSZ | Default duration: 1 hour
 
-CRITICAL - DATE PARSING:
-- Current date context: ${currentDateStr} (${now.toISOString().split('T')[0]})
-- Parse dates like "February 6" = ${now.getFullYear()}-02-06 (use current year)
-- Parse times like "8 pm" = 20:00 (24-hour format)
-- Combine date + time: "February 6 at 8 pm" = ${now.getFullYear()}-02-06T20:00:00Z
-- For "today" use: ${now.toISOString().split('T')[0]}
-- For "tomorrow" use: ${new Date(now.getTime() + 24*60*60*1000).toISOString().split('T')[0]}
-- Always return dates in ISO format: YYYY-MM-DDTHH:MM:SSZ
-- Default duration: 1 hour if endTime not specified
+CALENDAR: If user mentions meeting/appointment/event/schedule → CREATE calendarEvent with title, startTime, endTime (startTime+1h if missing).
 
-CALENDAR EVENT CREATION:
-- When user says "meeting", "appointment", "event", "schedule", "add to calendar" → CREATE calendarEvent
-- Extract: title (what the meeting is about), startTime (date + time), endTime (startTime + 1 hour if not specified)
-- Example: "meeting at 8 pm on February 6" → calendarEvent with title="Meeting", startTime="${now.getFullYear()}-02-06T20:00:00Z", endTime="${now.getFullYear()}-02-06T21:00:00Z"
+Return JSON: {"type":"meeting|task|reminder|note|other","priority":"high|medium|low","summary":"...","tags":[],"extractedData":{"people":[],"dates":[],"actions":[],"topics":[]},"calendarEvent":{"title":"Meeting","startTime":"${currentYear}-02-06T20:00:00Z","endTime":"${currentYear}-02-06T21:00:00Z","description":"..."} or null,"reminder":null,"aiResponse":"I've added your meeting for Feb 6 at 8 PM!","followUpQuestions":["Show me my calendar"],"featureSuggestions":["calendar"]}`
 
-Return JSON:
-{
-  "type": "meeting|task|reminder|note|other",
-  "priority": "high|medium|low",
-  "summary": "Brief description",
-  "tags": ["tag1"],
-  "extractedData": {"people": [], "dates": [], "actions": [], "topics": []},
-  "calendarEvent": {"title": "Meeting", "startTime": "2025-02-06T20:00:00Z", "endTime": "2025-02-06T21:00:00Z", "description": "..."} or null,
-  "reminder": {"title": "...", "dueDate": "2025-02-06T20:00:00Z", "priority": "medium", "description": "..."} or null,
-  "aiResponse": "I've added your meeting to your calendar for February 6 at 8 PM!",
-  "followUpQuestions": ["Show me my calendar"],
-  "featureSuggestions": ["calendar", "reminder"]
-}`
+    const userPrompt = `User: "${content}" | Date: ${now.toISOString().split('T')[0]}
 
-    const userPrompt = `User message: "${content}"
-Current date context: ${currentDateStr} (${now.toISOString().split('T')[0]})
-
-Instructions:
-- If user mentions a meeting, appointment, event, or scheduling → CREATE calendarEvent with proper date/time parsing
-- Parse dates relative to current date: ${now.toISOString().split('T')[0]}
-- Parse times: "8 pm" = 20:00, "2 pm" = 14:00, "10 am" = 10:00
-- Combine date + time into ISO format: YYYY-MM-DDTHH:MM:SSZ
-- For "February 6" use year ${now.getFullYear()}: ${now.getFullYear()}-02-06
-- Answer directly and confirm what you're creating
-- Return JSON with calendarEvent if scheduling is mentioned`
+If scheduling mentioned → CREATE calendarEvent. Parse dates/times → ISO format. Return JSON.`
 
     // Use GPT-5-mini with responses API (different from chat completions)
     const response = await openai.responses.create({
@@ -160,8 +150,8 @@ Instructions:
       }
     }
 
-    // Return optimized response
-    return res.status(200).json({
+    // Build response
+    const responseData = {
       type: analysis.type || 'other',
       priority: analysis.priority || 'medium',
       confidence: analysis.confidence || 0.8,
@@ -180,7 +170,14 @@ Instructions:
       featureSuggestions: analysis.featureSuggestions || [],
       aiModel: 'gpt-5-mini',
       processingTime: Date.now() - now.getTime()
-    })
+    }
+
+    // Cache simple queries (not scheduling/calendar related - those need fresh parsing)
+    if (!content.toLowerCase().match(/(meeting|appointment|event|schedule|calendar|reminder|february|march|april|may|june|july|august|september|october|november|december|january|\d{1,2}\/\d{1,2}|\d{1,2}:\d{2}|am|pm)/)) {
+      responseCache.set(cacheKey, { data: responseData, timestamp: Date.now() })
+    }
+
+    return res.status(200).json(responseData)
 
   } catch (error) {
     console.error('Analysis error:', error)
