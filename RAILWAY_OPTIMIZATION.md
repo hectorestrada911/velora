@@ -52,11 +52,14 @@ Vercel Edge Functions:
 
 ## Quick Fix: Enable Railway Always-On
 
-1. Go to Railway dashboard
-2. Select your backend service
-3. Settings → General
-4. Enable "Always On" or "Never Sleep"
-5. This prevents cold starts immediately
+1. Go to Railway dashboard → Select your backend service
+2. Click **"Settings"** tab
+3. In the right navigation menu, click **"Scale"**
+4. Look for **"Always On"** or **"Never Sleep"** setting
+5. Toggle it **ON**
+6. This prevents cold starts immediately
+
+**Note:** The "Always On" setting is in the **Scale** section, not General settings.
 
 ## Long-term Solution: Vercel Edge Functions
 
