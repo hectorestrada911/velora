@@ -543,7 +543,10 @@ Please analyze this document and respond to the user's request. If they didn't s
         },
         body: JSON.stringify({
           content: aiPrompt,
-          conversationHistory: messages.slice(-10), // Last 10 messages for context
+          conversationHistory: messages.slice(-5).map(m => ({ 
+            role: m.role, 
+            content: m.content.substring(0, 200)
+          })), // Last 5 messages, limited content
           relevantMemories: [...relevantMemories.slice(0, 3), ...recallInfo.memories.slice(0, 2)], // Limit to top 3+2
           recallSuggestions: recallInfo.suggestions.slice(0, 2), // Limit to top 2
           currentDate: new Date().toISOString()
