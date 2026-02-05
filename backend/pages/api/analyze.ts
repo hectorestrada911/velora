@@ -6,6 +6,11 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 })
 
+// Validate API key on startup
+if (!process.env.OPENAI_API_KEY || process.env.OPENAI_API_KEY === 'demo-api-key') {
+  console.warn('⚠️  WARNING: OPENAI_API_KEY is missing or set to demo value. API calls will fail.')
+}
+
 // Simple in-memory cache for common queries (in production, use Redis)
 const responseCache = new Map<string, { data: any; timestamp: number }>()
 const CACHE_TTL = 5 * 60 * 1000 // 5 minutes
@@ -116,17 +121,19 @@ Return JSON: {"type":"meeting|task|reminder|note|other","priority":"high|medium|
 
 If scheduling mentioned → CREATE calendarEvent. Parse dates/times → ISO format. Return JSON.`
 
-    // Use GPT-5-mini with chat completions API
+    // Use GPT-5-mini with chat completions API (fallback to gpt-4o-mini if unavailable)
     // Add timeout to OpenAI request to prevent hanging
     const openaiStartTime = Date.now()
-    console.log(`[${new Date().toISOString()}] Calling OpenAI API...`)
+    const modelName = process.env.OPENAI_MODEL || "gpt-5-mini"
+    console.log(`[${new Date().toISOString()}] Calling OpenAI API with model: ${modelName}...`)
     
     let response: any
     let openaiTime = 0
+    let usedModel = modelName
     try {
       response = await Promise.race([
         openai.chat.completions.create({
-          model: "gpt-5-mini",
+          model: modelName,
           messages: [
             { role: "system", content: systemPrompt },
             { role: "user", content: userPrompt }
@@ -139,10 +146,63 @@ If scheduling mentioned → CREATE calendarEvent. Parse dates/times → ISO form
       ]) as any
       openaiTime = Date.now() - openaiStartTime
       console.log(`[${new Date().toISOString()}] OpenAI API completed in ${openaiTime}ms`)
-    } catch (openaiError) {
+    } catch (openaiError: any) {
       openaiTime = Date.now() - openaiStartTime
-      console.error(`[${new Date().toISOString()}] OpenAI API error after ${openaiTime}ms:`, openaiError)
-      throw openaiError
+      const errorMessage = openaiError?.message || 'Unknown OpenAI API error'
+      const errorStatus = openaiError?.status || openaiError?.response?.status
+      const errorCode = openaiError?.code || openaiError?.response?.data?.error?.code
+      
+      console.error(`[${new Date().toISOString()}] OpenAI API error after ${openaiTime}ms:`)
+      console.error('Error message:', errorMessage)
+      console.error('Error status:', errorStatus)
+      console.error('Error code:', errorCode)
+      console.error('Full error:', JSON.stringify(openaiError, Object.getOwnPropertyNames(openaiError), 2))
+      
+      // Try fallback model if gpt-5-mini fails
+      if ((errorStatus === 404 || errorCode === 'model_not_found' || errorMessage?.includes('model')) && modelName === 'gpt-5-mini') {
+        console.log(`[${new Date().toISOString()}] Attempting fallback to gpt-4o-mini...`)
+        try {
+          const fallbackStart = Date.now()
+          response = await Promise.race([
+            openai.chat.completions.create({
+              model: "gpt-4o-mini",
+              messages: [
+                { role: "system", content: systemPrompt },
+                { role: "user", content: userPrompt }
+              ],
+              response_format: { type: "json_object" },
+            }),
+            new Promise((_, reject) => 
+              setTimeout(() => reject(new Error('OpenAI API timeout after 8 seconds')), 8000)
+            )
+          ]) as any
+          usedModel = 'gpt-4o-mini'
+          openaiTime = Date.now() - fallbackStart
+          console.log(`[${new Date().toISOString()}] Fallback model succeeded in ${openaiTime}ms`)
+        } catch (fallbackError: any) {
+          // Fallback also failed, throw original error with better message
+          if (errorStatus === 401 || errorCode === 'invalid_api_key') {
+            throw new Error('Invalid OpenAI API key. Please check your environment variables.')
+          } else if (errorStatus === 404 || errorCode === 'model_not_found') {
+            throw new Error(`Model "${modelName}" not found. Tried fallback to gpt-4o-mini but it also failed.`)
+          } else if (errorMessage?.includes('timeout')) {
+            throw new Error(`OpenAI API timeout: ${errorMessage}`)
+          } else {
+            throw new Error(`OpenAI API error: ${errorMessage} (Status: ${errorStatus}, Code: ${errorCode})`)
+          }
+        }
+      } else {
+        // Provide more specific error messages
+        if (errorStatus === 401 || errorCode === 'invalid_api_key') {
+          throw new Error('Invalid OpenAI API key. Please check your environment variables.')
+        } else if (errorStatus === 404 || errorCode === 'model_not_found') {
+          throw new Error(`Model "${modelName}" not found. Please verify the model name is correct.`)
+        } else if (errorMessage?.includes('timeout')) {
+          throw new Error(`OpenAI API timeout: ${errorMessage}`)
+        } else {
+          throw new Error(`OpenAI API error: ${errorMessage} (Status: ${errorStatus}, Code: ${errorCode})`)
+        }
+      }
     }
 
     // Parse AI response - standard chat completions format
@@ -198,7 +258,7 @@ If scheduling mentioned → CREATE calendarEvent. Parse dates/times → ISO form
       aiResponse: analysis.aiResponse || "I've analyzed your content and organized it for you!",
       followUpQuestions: analysis.followUpQuestions || ["Show me what I have planned today", "Help me set a reminder for something"],
       featureSuggestions: analysis.featureSuggestions || [],
-      aiModel: 'gpt-5-mini',
+      aiModel: usedModel,
       processingTime: Date.now() - requestStartTime
     }
 
@@ -216,13 +276,21 @@ If scheduling mentioned → CREATE calendarEvent. Parse dates/times → ISO form
       openaiTime: openaiTime
     })
 
-  } catch (error) {
+  } catch (error: any) {
     const totalTime = Date.now() - requestStartTime
-    console.error(`[${new Date().toISOString()}] Analysis error after ${totalTime}ms:`, error)
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error'
+    const errorStack = error instanceof Error ? error.stack : undefined
+    
+    console.error(`[${new Date().toISOString()}] Analysis error after ${totalTime}ms:`)
+    console.error('Error message:', errorMessage)
+    console.error('Error stack:', errorStack)
+    console.error('Full error:', JSON.stringify(error, Object.getOwnPropertyNames(error), 2))
+    
     return res.status(500).json({ 
       error: 'Failed to analyze content',
-      details: error instanceof Error ? error.message : 'Unknown error',
-      processingTime: totalTime
+      details: errorMessage,
+      processingTime: totalTime,
+      timestamp: new Date().toISOString()
     })
   }
 }
