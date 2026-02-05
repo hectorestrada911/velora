@@ -544,8 +544,8 @@ Please analyze this document and respond to the user's request. If they didn't s
         body: JSON.stringify({
           content: aiPrompt,
           conversationHistory: messages.slice(-10), // Last 10 messages for context
-          relevantMemories: [...relevantMemories, ...recallInfo.memories],
-          recallSuggestions: recallInfo.suggestions,
+          relevantMemories: [...relevantMemories.slice(0, 3), ...recallInfo.memories.slice(0, 2)], // Limit to top 3+2
+          recallSuggestions: recallInfo.suggestions.slice(0, 2), // Limit to top 2
           currentDate: new Date().toISOString()
         }),
       })
@@ -927,8 +927,11 @@ Please analyze this document and respond to the user's request. If they didn't s
           `- ${reminder.title} (Due: ${new Date(reminder.dueDate).toLocaleDateString()} at ${new Date(reminder.dueDate).toLocaleTimeString()})`
         ).join('\n')}` : ''
 
-      // Prepare conversation history for context
-      const conversationHistory = messages.slice(-50) // Send last 50 messages for context
+      // Prepare conversation history for context (limit to last 5 for performance)
+      const conversationHistory = messages.slice(-5).map(m => ({ 
+        role: m.role, 
+        content: m.content.substring(0, 200) // Limit content length
+      }))
       
       // Call AI backend
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://velora-production.up.railway.app/api/analyze'
@@ -940,8 +943,8 @@ Please analyze this document and respond to the user's request. If they didn't s
         body: JSON.stringify({ 
           content: transcript + calendarContext + reminderContext,
           conversationHistory: conversationHistory,
-          relevantMemories: [...relevantMemories, ...recallInfo.memories],
-          recallSuggestions: recallInfo.suggestions,
+          relevantMemories: [...relevantMemories.slice(0, 3), ...recallInfo.memories.slice(0, 2)], // Limit to top 3+2
+          recallSuggestions: recallInfo.suggestions.slice(0, 2), // Limit to top 2
           currentDate: new Date().toISOString()
         }),
       })
@@ -1253,31 +1256,32 @@ Please analyze this document and respond to the user's request. If they didn't s
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://velora-production.up.railway.app/api/analyze'
       console.log('API URL being used:', apiUrl)
       console.log('Environment variable:', process.env.NEXT_PUBLIC_API_URL)
-      // Prepare conversation history for context
-      const conversationHistory = messages.slice(-50) // Send last 50 messages for context
+      // Prepare conversation history for context (limit to last 5 for performance)
+      const conversationHistory = messages.slice(-5).map(m => ({ 
+        role: m.role, 
+        content: m.content.substring(0, 200) // Limit content length
+      }))
       
-      console.log('Sending request to:', apiUrl)
-      console.log('Request body:', { 
-        content: messageContent + calendarContext + reminderContext,
-        conversationHistory: conversationHistory,
-        relevantMemories: [...relevantMemories, ...recallInfo.memories],
-        recallSuggestions: recallInfo.suggestions,
-        currentDate: new Date().toISOString()
-      })
+      // Add timeout for faster failure detection
+      const controller = new AbortController()
+      const timeoutId = setTimeout(() => controller.abort(), 8000) // 8 second timeout
       
       const response = await fetch(apiUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
+        signal: controller.signal,
         body: JSON.stringify({ 
           content: messageContent + calendarContext + reminderContext,
           conversationHistory: conversationHistory,
-          relevantMemories: [...relevantMemories, ...recallInfo.memories],
-          recallSuggestions: recallInfo.suggestions,
+          relevantMemories: [...relevantMemories.slice(0, 3), ...recallInfo.memories.slice(0, 2)], // Limit to top 3+2
+          recallSuggestions: recallInfo.suggestions.slice(0, 2), // Limit to top 2
           currentDate: new Date().toISOString()
         }),
       })
+      
+      clearTimeout(timeoutId)
       
       console.log('Response status:', response.status)
       console.log('Response headers:', response.headers)
