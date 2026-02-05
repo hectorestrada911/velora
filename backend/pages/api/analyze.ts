@@ -141,14 +141,31 @@ If scheduling mentioned → CREATE calendarEvent. Parse dates/times → ISO form
     let response: any
     let openaiTime = 0
     let usedModel = modelName
-    let useResponsesAPI = modelName.startsWith('gpt-5')
     try {
       if (useResponsesAPI) {
-        // GPT-5 models use responses.create() API
+        // GPT-5 models use responses API - make direct HTTP call since SDK may not support it
+        const apiKey = process.env.OPENAI_API_KEY
+        if (!apiKey) {
+          throw new Error('OPENAI_API_KEY is not set')
+        }
+        
         response = await Promise.race([
-          (openai as any).responses.create({
-            model: modelName,
-            input: `${systemPrompt}\n\n${userPrompt}`,
+          fetch('https://api.openai.com/v1/responses', {
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${apiKey}`,
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              model: modelName,
+              input: `${systemPrompt}\n\n${userPrompt}`,
+            }),
+          }).then(async (res) => {
+            if (!res.ok) {
+              const errorText = await res.text()
+              throw new Error(`OpenAI API error: ${res.status} - ${errorText}`)
+            }
+            return res.json()
           }),
           new Promise((_, reject) => 
             setTimeout(() => reject(new Error('OpenAI API timeout after 8 seconds')), 8000)
@@ -210,8 +227,6 @@ If scheduling mentioned → CREATE calendarEvent. Parse dates/times → ISO form
           if (!response || !response.choices || !Array.isArray(response.choices) || response.choices.length === 0) {
             throw new Error('Fallback model returned invalid response structure')
           }
-          // Set flag for response parsing
-          useResponsesAPI = false
         } catch (fallbackError: any) {
           // Fallback also failed, throw original error with better message
           if (errorStatus === 401 || errorCode === 'invalid_api_key') {
