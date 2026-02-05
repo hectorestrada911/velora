@@ -162,19 +162,14 @@ Instructions:
 
 Return JSON with type, priority, summary, tags, extractedData, calendarEvent, reminder, aiResponse, followUpQuestions, featureSuggestions.`
 
-    // Use GPT-4o-mini for faster responses
-    const completion = await openai.chat.completions.create({
-      model: "gpt-4o-mini", // Fixed: was "gpt-5-mini" which doesn't exist
-      messages: [
-        { role: "system", content: systemPrompt },
-        { role: "user", content: userPrompt }
-      ],
-      max_tokens: 1000,
-      temperature: 0.7, // More consistent responses
+    // Use GPT-5-mini with responses API (different from chat completions)
+    const response = await openai.responses.create({
+      model: "gpt-5-mini",
+      input: `${systemPrompt}\n\n${userPrompt}`,
     })
 
-    // Parse AI response, handling markdown code blocks
-    let aiResponse = completion.choices[0].message.content || '{}'
+    // Parse AI response - GPT-5-mini uses output_text instead of choices[0].message.content
+    let aiResponse = response.output_text || '{}'
     
     // Remove markdown code blocks if present
     if (aiResponse.includes('```json')) {
@@ -226,7 +221,7 @@ Return JSON with type, priority, summary, tags, extractedData, calendarEvent, re
       aiResponse: analysis.aiResponse || "I've analyzed your content and organized it for you!",
       followUpQuestions: analysis.followUpQuestions || ["Show me what I have planned today", "Help me set a reminder for something"],
       featureSuggestions: analysis.featureSuggestions || [],
-      aiModel: 'gpt-4o-mini',
+      aiModel: 'gpt-5-mini',
       processingTime: Date.now() - now.getTime()
     })
 

@@ -80,28 +80,17 @@ ${followup.direction === 'YOU_OWE'
 }`;
 
   try {
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`
-      },
-      body: JSON.stringify({
-        model: 'gpt-4o-mini',
-        messages: [
-          { role: 'system', content: systemPrompt },
-          { role: 'user', content: userPrompt }
-        ],
-        max_completion_tokens: 150
-      })
+    // Use GPT-5-mini with responses API
+    const openai = new (await import('openai')).default({
+      apiKey: process.env.OPENAI_API_KEY
+    });
+    
+    const response = await openai.responses.create({
+      model: 'gpt-5-mini',
+      input: `${systemPrompt}\n\n${userPrompt}`,
     });
 
-    if (!response.ok) {
-      throw new Error('OpenAI API error');
-    }
-
-    const data = await response.json();
-    let draft = data.choices[0].message.content.trim();
+    let draft = response.output_text?.trim() || '';
 
     // Clean up common issues
     draft = draft.replace(/^(Hi|Hey|Hello|Dear)\s+\w+,?\s*/i, '');

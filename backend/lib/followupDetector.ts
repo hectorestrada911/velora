@@ -195,30 +195,23 @@ From: ${fromEmail} | To: ${toEmail} | Me: ${myEmail}
 Body (trimmed):
 ${trimmedBody}`;
 
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${openaiApiKey}`
-      },
-      body: JSON.stringify({
-        model: 'gpt-4o-mini',
-        messages: [
-          { role: 'system', content: systemPrompt },
-          { role: 'user', content: userPrompt }
-        ],
-        max_completion_tokens: 200,
-        response_format: { type: 'json_object' }
-      })
+    // Use GPT-5-mini with responses API
+    const OpenAI = (await import('openai')).default;
+    const openai = new OpenAI({
+      apiKey: openaiApiKey
     });
 
-    if (!response.ok) {
-      console.error('OpenAI API error:', await response.text());
+    const response = await openai.responses.create({
+      model: 'gpt-5-mini',
+      input: `${systemPrompt}\n\n${userPrompt}`,
+    });
+
+    if (!response.output_text) {
+      console.error('OpenAI API error: No output text');
       return null;
     }
 
-    const data = await response.json();
-    const result = JSON.parse(data.choices[0].message.content);
+    const result = JSON.parse(response.output_text);
 
     if (!result.direction || result.confidence < 0.6) {
       return null;

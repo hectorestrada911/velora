@@ -64,8 +64,8 @@ class CostTracker {
   /**
    * Track LLM usage cost
    */
-  async trackLLM(userId: string, tokensUsed: number, model: 'gpt-4o-mini' | 'gpt-4o'): Promise<void> {
-    const costPerToken = model === 'gpt-4o-mini' ? 0.001 / 1000 : 0.005 / 1000;
+  async trackLLM(userId: string, tokensUsed: number, model: 'gpt-5-mini' | 'gpt-5'): Promise<void> {
+    const costPerToken = model === 'gpt-5-mini' ? 0.001 / 1000 : 0.005 / 1000;
     const costUSD = tokensUsed * costPerToken;
     
     await this.incrementCost(userId, {
