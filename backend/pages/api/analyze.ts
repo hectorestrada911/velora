@@ -36,6 +36,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(405).json({ error: 'Method not allowed' })
   }
 
+  // Fail fast if API key is missing
+  if (!process.env.OPENAI_API_KEY || process.env.OPENAI_API_KEY === 'demo-api-key') {
+    console.error(`[${new Date().toISOString()}] ERROR: OPENAI_API_KEY is missing or invalid`)
+    return res.status(500).json({ 
+      error: 'OpenAI API key is not configured',
+      details: 'Please set OPENAI_API_KEY environment variable in Railway',
+      timestamp: new Date().toISOString()
+    })
+  }
+
   try {
     console.log(`[${new Date().toISOString()}] API request received`)
     const { content, conversationHistory, relevantMemories, recallSuggestions, currentDate: clientCurrentDate } = req.body
