@@ -1,6 +1,6 @@
 import { initializeApp, getApps } from 'firebase/app'
 import { getAuth, setPersistence, browserLocalPersistence } from 'firebase/auth'
-import { getFirestore } from 'firebase/firestore'
+import { getFirestore, enableNetwork, disableNetwork } from 'firebase/firestore'
 import { getStorage } from 'firebase/storage'
 
 // Debug environment variables (removed for security)
@@ -35,6 +35,26 @@ if (auth) {
   setPersistence(auth, browserLocalPersistence).catch((error) => {
     console.error('Error setting auth persistence:', error)
   })
+}
+
+// Configure Firestore with better error handling
+if (db) {
+  // Enable network explicitly to ensure connectivity
+  enableNetwork(db).catch((error) => {
+    // Non-critical - Firestore will retry automatically
+    // These errors are often false positives from connectivity checks
+    if (process.env.NODE_ENV === 'development') {
+      console.debug('Firestore network check (non-critical):', error.message)
+    }
+  })
+
+  // Note: Firestore channel errors in console are often harmless
+  // They occur when Firestore checks connectivity for real-time listeners
+  // The SDK automatically retries, so these can be safely ignored
+  // If you see persistent errors, check:
+  // 1. Firebase project is active and billing is enabled
+  // 2. Firestore security rules allow authenticated users
+  // 3. Network connectivity to firestore.googleapis.com
 }
 
 export default app

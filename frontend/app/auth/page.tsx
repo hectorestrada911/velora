@@ -1,14 +1,14 @@
 'use client'
 // Force deployment to use updated environment variables
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { motion as motion2 } from 'framer-motion'
 import { User, Lock, Mail, ArrowRight, Sparkles, Brain, Calendar, Bell, CheckCircle, Clock, Mic, Zap, Target, Lightbulb, MessageSquare, Database, Shield, Rocket, Star, TrendingUp, Users, Globe, Smartphone, Laptop, Crown } from 'lucide-react'
 import Link from 'next/link'
 import { toast } from 'react-hot-toast'
 import { useAuth } from '@/components/providers/AuthProvider'
-import { signInWithPopup, GoogleAuthProvider, sendPasswordResetEmail } from 'firebase/auth'
+import { signInWithPopup, signInWithRedirect, getRedirectResult, GoogleAuthProvider, sendPasswordResetEmail } from 'firebase/auth'
 import { auth } from '@/lib/firebase'
 
 export default function AuthPage() {
@@ -24,6 +24,27 @@ export default function AuthPage() {
   const [isLoading, setIsLoading] = useState(false)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [passwordError, setPasswordError] = useState('')
+
+  // Check for redirect result when page loads (for Google sign-in redirect flow)
+  useEffect(() => {
+    const handleRedirectResult = async () => {
+      if (!auth) return
+
+      try {
+        const result = await getRedirectResult(auth)
+        if (result) {
+          // User signed in via redirect
+          toast.success('Signed in with Google successfully!')
+          window.location.href = '/chat'
+        }
+      } catch (error: any) {
+        console.error('Redirect result error:', error)
+        // Don't show error toast here - user might not have initiated redirect
+      }
+    }
+
+    handleRedirectResult()
+  }, [auth])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -163,12 +184,26 @@ export default function AuthPage() {
       }
       
       const provider = new GoogleAuthProvider()
-      const result = await signInWithPopup(auth, provider)
       
-      toast.success('Signed in with Google successfully!')
-      
-      // Redirect to chat page
-      window.location.href = '/chat'
+      // Try popup first (better UX)
+      try {
+        const result = await signInWithPopup(auth, provider)
+        toast.success('Signed in with Google successfully!')
+        window.location.href = '/chat'
+        return
+      } catch (popupError: any) {
+        // If popup is blocked, fall back to redirect
+        if (popupError.code === 'auth/popup-blocked' || popupError.code === 'auth/popup-closed-by-user') {
+          console.log('Popup blocked or closed, falling back to redirect flow')
+          toast.loading('Redirecting to Google sign-in...', { id: 'google-redirect' })
+          // Use redirect instead - this will navigate away from the page
+          await signInWithRedirect(auth, provider)
+          // Note: signInWithRedirect will navigate away, so code after this won't run
+          return
+        }
+        // For other errors, throw to be handled below
+        throw popupError
+      }
     } catch (error: any) {
       console.error('Google sign-in error:', error)
       
@@ -181,7 +216,8 @@ export default function AuthPage() {
             userMessage = 'Sign-in cancelled. Please try again if you want to continue.'
             break
           case 'auth/popup-blocked':
-            userMessage = 'Popup was blocked. Please allow popups and try again.'
+            // This shouldn't happen now (we fallback to redirect), but keep for safety
+            userMessage = 'Popup was blocked. Using redirect instead...'
             break
           case 'auth/cancelled-popup-request':
             userMessage = 'Sign-in was cancelled. Please try again.'

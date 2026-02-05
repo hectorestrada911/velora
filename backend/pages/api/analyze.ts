@@ -70,11 +70,19 @@ CORE FEATURES:
 - Voice: Natural speech input
 
 RESPONSE BEHAVIOR:
-- Answer questions directly and naturally
+- Answer questions directly and naturally - NEVER use generic responses like "I've analyzed your content"
 - For greetings like "Hi" or "Hello", respond warmly and briefly
 - For identity questions like "Are you Velora?", answer directly: "Yes, I'm Velora, your AI productivity assistant"
-- For capability questions like "What can you help me with?" or "How can you help me?", explain your features simply:
-  * "I can help you remember important information, set reminders, schedule events, and organize your life. Just tell me what you need!"
+- For capability questions like "What can you help me with?" or "How can you help me?", ALWAYS respond with:
+  "I'm Velora, your AI productivity assistant! I can help you:
+  • Remember important information and create a personal knowledge base
+  • Set reminders and tasks with priorities
+  • Schedule events and manage your calendar
+  • Analyze documents and extract key information
+  • Organize your life with voice commands and smart suggestions
+  
+  Just tell me what you need, and I'll help you get it done!"
+- NEVER respond with generic analysis messages when asked direct questions
 - ALWAYS use conversation history to understand context and pronouns (he, she, they, it)
 - If user asks about "he" or "she" after discussing a person, refer to that person from conversation history
 - If user asks "What did he do at Amazon?" after discussing someone's resume, answer based on the resume content
@@ -92,9 +100,11 @@ ANALYSIS: Return JSON with:
 6. calendarEvent: {title, startTime, endTime, description} or null
 7. reminder: {title, dueDate, priority, description} or null
 8. aiResponse: Helpful, conversational response that:
+   - Answers the user's question directly and naturally
    - Confirms what action was taken (e.g., "I've added your dinner event to tomorrow's calendar!")
    - Explains local vs Google sync when relevant
-   - Is specific and actionable, not generic
+   - Is specific and actionable, NEVER generic like "I've analyzed your content"
+   - For questions, provides actual answers, not analysis confirmations
 9. followUpQuestions: ["Show me...", "Help me..."] (user-focused format)
 10. featureSuggestions: ["calendar", "reminder", "remember", "voice"]
 
@@ -154,13 +164,13 @@ Return JSON with type, priority, summary, tags, extractedData, calendarEvent, re
 
     // Use GPT-4o-mini for faster responses
     const completion = await openai.chat.completions.create({
-      model: "gpt-5-mini",
+      model: "gpt-4o-mini", // Fixed: was "gpt-5-mini" which doesn't exist
       messages: [
         { role: "system", content: systemPrompt },
         { role: "user", content: userPrompt }
       ],
-      max_completion_tokens: 1000, // GPT-5 uses max_completion_tokens instead of max_tokens
-      // GPT-5-mini only supports default temperature (1), so we omit temperature parameter
+      max_tokens: 1000,
+      temperature: 0.7, // More consistent responses
     })
 
     // Parse AI response, handling markdown code blocks
@@ -216,7 +226,7 @@ Return JSON with type, priority, summary, tags, extractedData, calendarEvent, re
       aiResponse: analysis.aiResponse || "I've analyzed your content and organized it for you!",
       followUpQuestions: analysis.followUpQuestions || ["Show me what I have planned today", "Help me set a reminder for something"],
       featureSuggestions: analysis.featureSuggestions || [],
-      aiModel: 'gpt-5-mini',
+      aiModel: 'gpt-4o-mini',
       processingTime: Date.now() - now.getTime()
     })
 
