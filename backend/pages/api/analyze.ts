@@ -131,10 +131,10 @@ Return JSON: {"type":"meeting|task|reminder|note|other","priority":"high|medium|
 
 If scheduling mentioned → CREATE calendarEvent. Parse dates/times → ISO format. Return JSON.`
 
-    // Use GPT-5-mini with chat completions API (fallback to gpt-4o-mini if unavailable)
+    // Use GPT-4o-mini as default (gpt-5-mini may not be available)
     // Add timeout to OpenAI request to prevent hanging
     const openaiStartTime = Date.now()
-    const modelName = process.env.OPENAI_MODEL || "gpt-5-mini"
+    const modelName = process.env.OPENAI_MODEL || "gpt-4o-mini"
     console.log(`[${new Date().toISOString()}] Calling OpenAI API with model: ${modelName}...`)
     
     let response: any
@@ -168,8 +168,8 @@ If scheduling mentioned → CREATE calendarEvent. Parse dates/times → ISO form
       console.error('Error code:', errorCode)
       console.error('Full error:', JSON.stringify(openaiError, Object.getOwnPropertyNames(openaiError), 2))
       
-      // Try fallback model if gpt-5-mini fails
-      if ((errorStatus === 404 || errorCode === 'model_not_found' || errorMessage?.includes('model')) && modelName === 'gpt-5-mini') {
+      // Try fallback model if primary model fails
+      if ((errorStatus === 404 || errorCode === 'model_not_found' || errorMessage?.includes('model')) && modelName !== 'gpt-4o-mini') {
         console.log(`[${new Date().toISOString()}] Attempting fallback to gpt-4o-mini...`)
         try {
           const fallbackStart = Date.now()
