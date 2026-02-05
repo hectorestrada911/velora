@@ -1265,46 +1265,66 @@ Please analyze this document and respond to the user's request. If they didn't s
         content: m.content.substring(0, 200) // Limit content length
       }))
       
-      // Add timeout for faster failure detection (increased to 15 seconds for slower responses)
-      const controller = new AbortController()
-      const timeoutId = setTimeout(() => controller.abort(), 15000) // 15 second timeout
+      // Retry logic with exponential backoff for reliability
+      const maxRetries = 2
+      let lastError: Error | null = null
       
-      let response: Response
-      try {
-        response = await fetch(apiUrl, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          signal: controller.signal,
-          body: JSON.stringify({ 
-            content: messageContent + calendarContext + reminderContext,
-            conversationHistory: conversationHistory,
-            relevantMemories: [...relevantMemories.slice(0, 3), ...recallInfo.memories.slice(0, 2)], // Limit to top 3+2
-            recallSuggestions: recallInfo.suggestions.slice(0, 2), // Limit to top 2
-            currentDate: new Date().toISOString()
-          }),
-        })
+      for (let attempt = 0; attempt <= maxRetries; attempt++) {
+        const controller = new AbortController()
+        // Shorter timeout: 10s for first attempt, 8s for retries
+        const timeout = attempt === 0 ? 10000 : 8000
+        const timeoutId = setTimeout(() => controller.abort(), timeout)
         
-        clearTimeout(timeoutId)
-      } catch (fetchError) {
-        clearTimeout(timeoutId)
-        // Re-throw with more context
-        if (fetchError instanceof Error && fetchError.name === 'AbortError') {
-          throw new Error('Request timeout: The API took too long to respond. Please try again.')
+        try {
+          const response = await fetch(apiUrl, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            signal: controller.signal,
+            body: JSON.stringify({ 
+              content: messageContent + calendarContext + reminderContext,
+              conversationHistory: conversationHistory,
+              relevantMemories: [...relevantMemories.slice(0, 3), ...recallInfo.memories.slice(0, 2)], // Limit to top 3+2
+              recallSuggestions: recallInfo.suggestions.slice(0, 2), // Limit to top 2
+              currentDate: new Date().toISOString()
+            }),
+          })
+          
+          clearTimeout(timeoutId)
+          
+          // Success - return response
+          if (response.ok) {
+            return response
+          }
+          
+          // Non-2xx response - don't retry
+          clearTimeout(timeoutId)
+          const errorText = await response.text()
+          throw new Error(`API error: ${response.status} - ${errorText}`)
+          
+        } catch (fetchError) {
+          clearTimeout(timeoutId)
+          lastError = fetchError instanceof Error ? fetchError : new Error(String(fetchError))
+          
+          // Don't retry on abort (timeout) or if it's the last attempt
+          if (attempt === maxRetries || (lastError.name === 'AbortError')) {
+            break
+          }
+          
+          // Exponential backoff: wait 500ms, 1000ms before retries
+          await new Promise(resolve => setTimeout(resolve, 500 * (attempt + 1)))
+          console.log(`Retry attempt ${attempt + 1}/${maxRetries}...`)
         }
-        throw fetchError
       }
       
-      console.log('Response status:', response.status)
-      console.log('Response headers:', response.headers)
-
-      if (!response.ok) {
-        const errorText = await response.text()
-        console.error('API Error:', response.status, errorText)
-        throw new Error(`AI analysis failed: ${response.status} - ${errorText}`)
+      // All retries failed
+      if (lastError?.name === 'AbortError') {
+        throw new Error('Request timeout: The backend is taking too long. This might be due to Railway cold starts or OpenAI API delays. Please try again.')
       }
-
+      throw lastError || new Error('Failed to connect to backend')
+      
+      // Response is already checked in retry logic above
       const analysis = await response.json()
       console.log('Analysis response:', analysis)
       

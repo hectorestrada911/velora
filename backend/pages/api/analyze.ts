@@ -110,10 +110,20 @@ Return JSON: {"type":"meeting|task|reminder|note|other","priority":"high|medium|
 If scheduling mentioned → CREATE calendarEvent. Parse dates/times → ISO format. Return JSON.`
 
     // Use GPT-5-mini with responses API (different from chat completions)
-    const response = await openai.responses.create({
-      model: "gpt-5-mini",
-      input: `${systemPrompt}\n\n${userPrompt}`,
-    })
+    // Add timeout to OpenAI request to prevent hanging
+    const startTime = Date.now()
+    const response = await Promise.race([
+      openai.responses.create({
+        model: "gpt-5-mini",
+        input: `${systemPrompt}\n\n${userPrompt}`,
+      }),
+      new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('OpenAI API timeout after 8 seconds')), 8000)
+      )
+    ]) as any
+    
+    const processingTime = Date.now() - startTime
+    console.log(`OpenAI API call took ${processingTime}ms`)
 
     // Parse AI response - GPT-5-mini uses output_text instead of choices[0].message.content
     let aiResponse = response.output_text || '{}'
