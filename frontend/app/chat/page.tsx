@@ -1293,15 +1293,116 @@ Please analyze this document and respond to the user's request. If they didn't s
           
           clearTimeout(timeoutId)
           
-          // Success - return response
-          if (response.ok) {
-            return response
+          // Success - check if OK, otherwise throw for retry
+          if (!response.ok) {
+            const errorText = await response.text()
+            throw new Error(`API error: ${response.status} - ${errorText}`)
           }
           
-          // Non-2xx response - don't retry
-          clearTimeout(timeoutId)
-          const errorText = await response.text()
-          throw new Error(`API error: ${response.status} - ${errorText}`)
+          // Success - break out of retry loop
+          const analysis = await response.json()
+          console.log('Analysis response:', analysis)
+          
+          // Show AI response IMMEDIATELY (don't wait for calendar creation or Firestore)
+          const aiMessage: Message = {
+            id: (Date.now() + 1).toString(),
+            type: 'ai',
+            content: analysis.aiResponse || `I've analyzed your request: "${messageContent}"`,
+            timestamp: new Date(),
+            analysis: analysis
+          }
+
+          setMessages(prev => {
+            const newMessages = [...prev, aiMessage]
+            return newMessages
+          })
+          
+          // Stop loading immediately - user sees response now
+          setIsLoading(false)
+          
+          // Create calendar/reminders in BACKGROUND (non-blocking)
+          autoCreateFromMessage(analysis).catch(error => {
+            console.error('Background calendar creation error:', error)
+          })
+          
+          // Check if user is asking about documents
+          const lowerInput = messageContent.toLowerCase()
+          if (lowerInput.includes('find') && (lowerInput.includes('resume') || lowerInput.includes('document') || lowerInput.includes('file'))) {
+            const searchQuery = messageContent.replace(/find|my|the|a|an|in|documents?|files?/gi, '').trim()
+            searchDocuments(searchQuery)
+            return
+          }
+
+          // Save to Firestore in background (non-blocking)
+          if (user) {
+            (async () => {
+              try {
+                firestoreService.setCurrentUser(user)
+                let conversationId = currentConversationId
+                if (!conversationId) {
+                  conversationId = await firestoreService.createConversation(
+                    messageContent.length > 50 ? messageContent.substring(0, 50) + '...' : messageContent
+                  )
+                  setCurrentConversationId(conversationId)
+                }
+                await firestoreService.addMessageToConversation(conversationId, {
+                  role: 'user',
+                  content: messageContent,
+                  metadata: {
+                    crossReferences: crossReferenceService.findRelatedContent(messageContent).map(ref => ref.id),
+                    memoryContent: relevantMemories
+                  }
+                })
+                await firestoreService.addMessageToConversation(conversationId, {
+                  role: 'assistant',
+                  content: aiMessage.content,
+                  metadata: {
+                    suggestions: analysis.followUpQuestions || []
+                  }
+                })
+              } catch (firestoreError) {
+                console.error('Error saving to Firestore:', firestoreError)
+              }
+            })()
+          }
+
+          // Add AI response to cross-reference system (background)
+          setTimeout(() => {
+            crossReferenceService.addCrossReference(
+              'conversation',
+              'AI Response',
+              aiMessage.content,
+              new Date(),
+              currentConversationId || undefined,
+              aiMessage.id,
+              crossReferenceService.getRecentContext(currentConversationId || undefined)
+            )
+          }, 0)
+          
+          // Show suggested items as interactive buttons instead of auto-creating
+          if (analysis.calendarEvent || analysis.reminder) {
+            const suggestionMessage: Message = {
+              id: (Date.now() + 2).toString(),
+              type: 'ai',
+              content: 'I can help you create these items. Help me:',
+              timestamp: new Date(),
+              analysis: {
+                type: 'suggestion',
+                priority: 'medium',
+                summary: 'Suggested actions',
+                calendarEvent: analysis.calendarEvent,
+                reminder: analysis.reminder,
+                showSuggestions: true
+              }
+            }
+            setMessages(prev => {
+              const newMessages = [...prev, suggestionMessage]
+              return newMessages
+            })
+          }
+          
+          // Success - exit function
+          return
           
         } catch (fetchError) {
           clearTimeout(timeoutId)
@@ -1324,122 +1425,8 @@ Please analyze this document and respond to the user's request. If they didn't s
       }
       throw lastError || new Error('Failed to connect to backend')
       
-      // Response is already checked in retry logic above
-      const analysis = await response.json()
-      console.log('Analysis response:', analysis)
-      
-      // Show AI response IMMEDIATELY (don't wait for calendar creation or Firestore)
-      const aiMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        type: 'ai',
-        content: analysis.aiResponse || `I've analyzed your request: "${messageContent}"`,
-        timestamp: new Date(),
-        analysis: analysis
-      }
-
-      setMessages(prev => {
-        const newMessages = [...prev, aiMessage]
-        return newMessages
-      })
-      
-      // Stop loading immediately - user sees response now
-      setIsLoading(false)
-      
-      // Create calendar/reminders in BACKGROUND (non-blocking)
-      // This makes the response feel instant while calendar creation happens async
-      autoCreateFromMessage(analysis).catch(error => {
-        console.error('Background calendar creation error:', error)
-        // Don't show error to user - calendar creation is best-effort
-      })
-      
-      // Check if user is asking about documents
-      const lowerInput = messageContent.toLowerCase()
-      if (lowerInput.includes('find') && (lowerInput.includes('resume') || lowerInput.includes('document') || lowerInput.includes('file'))) {
-        const searchQuery = messageContent.replace(/find|my|the|a|an|in|documents?|files?/gi, '').trim()
-        searchDocuments(searchQuery)
-        return
-      }
-
-      // Save to Firestore in background (non-blocking)
-      if (user) {
-        // Don't await - let it happen in background
-        (async () => {
-          try {
-            // Ensure firestoreService has the current user set
-            firestoreService.setCurrentUser(user)
-            
-            // Create conversation if it doesn't exist
-            let conversationId = currentConversationId
-            if (!conversationId) {
-              conversationId = await firestoreService.createConversation(
-                messageContent.length > 50 ? messageContent.substring(0, 50) + '...' : messageContent
-              )
-              setCurrentConversationId(conversationId)
-            }
-
-            // Add user message to Firestore
-            await firestoreService.addMessageToConversation(conversationId, {
-              role: 'user',
-              content: messageContent,
-              metadata: {
-                crossReferences: crossReferenceService.findRelatedContent(messageContent).map(ref => ref.id),
-                memoryContent: relevantMemories
-              }
-            })
-
-            // Add AI message to Firestore
-            await firestoreService.addMessageToConversation(conversationId, {
-              role: 'assistant',
-              content: aiMessage.content,
-              metadata: {
-                suggestions: analysis.followUpQuestions || []
-              }
-            })
-          } catch (firestoreError) {
-            console.error('Error saving to Firestore:', firestoreError)
-            // Don't show error to user, just log it
-          }
-        })()
-      }
-
-      // Add AI response to cross-reference system (background)
-      // Don't await - happens in background
-      setTimeout(() => {
-        crossReferenceService.addCrossReference(
-          'conversation',
-          'AI Response',
-          aiMessage.content,
-          new Date(),
-          currentConversationId || undefined,
-          aiMessage.id,
-          crossReferenceService.getRecentContext(currentConversationId || undefined)
-        )
-      }, 0)
-      
-      // Show suggested items as interactive buttons instead of auto-creating
-      if (analysis.calendarEvent || analysis.reminder) {
-        // Add suggestion buttons to the message
-        const suggestionMessage: Message = {
-          id: (Date.now() + 2).toString(),
-          type: 'ai',
-          content: 'I can help you create these items. Help me:',
-          timestamp: new Date(),
-          analysis: {
-            type: 'suggestion',
-            priority: 'medium',
-            summary: 'Suggested actions',
-            calendarEvent: analysis.calendarEvent,
-            reminder: analysis.reminder,
-            showSuggestions: true
-          }
-        }
-        setMessages(prev => {
-          const newMessages = [...prev, suggestionMessage]
-          // Save conversation after suggestion message
-          // Messages are now saved directly via firestoreService.addMessageToConversation
-          return newMessages
-        })
-      }
+      // This code should never be reached - retry logic handles everything above
+      throw new Error('Unexpected error: Response processing failed')
       
     } catch (error) {
       console.error('Error processing message:', error)
