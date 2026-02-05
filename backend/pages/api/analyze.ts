@@ -72,13 +72,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 Features: Remember info, set reminders, schedule events, analyze documents.
 
 Response rules:
-- Answer directly, never generic responses like "I've analyzed your content"
-- For "What can you help with?", respond: "I'm Velora! I help with: remembering info, reminders, calendar, documents. What do you need?"
-- Use conversation history for context/pronouns
-- ALWAYS create calendar events when user mentions meetings, appointments, events, or scheduling
-- Be conversational, answer questions directly
+- Answer naturally and conversationally
+- For greetings like "hey", "hi", "hello" → respond warmly, ask how you can help. Type: "other", NO calendarEvent
+- For questions → answer directly and helpfully. Type: "other" or "note", NO calendarEvent unless explicitly requested
+- Only create calendar events when user EXPLICITLY mentions scheduling (meeting, appointment, event, schedule, add to calendar)
+- Never create calendar events for greetings, questions, or general conversation
+- Be helpful and friendly, not robotic
 
-CRITICAL - DATE PARSING:
+CRITICAL - DATE PARSING (only when scheduling is mentioned):
 - Current date context: ${currentDateStr} (${now.toISOString().split('T')[0]})
 - Parse dates like "February 6" = ${now.getFullYear()}-02-06 (use current year)
 - Parse times like "8 pm" = 20:00 (24-hour format)
@@ -88,10 +89,11 @@ CRITICAL - DATE PARSING:
 - Always return dates in ISO format: YYYY-MM-DDTHH:MM:SSZ
 - Default duration: 1 hour if endTime not specified
 
-CALENDAR EVENT CREATION:
-- When user says "meeting", "appointment", "event", "schedule", "add to calendar" → CREATE calendarEvent
+CALENDAR EVENT CREATION (ONLY when explicitly requested):
+- ONLY create calendarEvent when user EXPLICITLY says: "meeting", "appointment", "event", "schedule", "add to calendar", "I have a meeting"
+- For greetings/questions → calendarEvent MUST be null
 - Extract: title (what the meeting is about), startTime (date + time), endTime (startTime + 1 hour if not specified)
-- Example: "meeting at 8 pm on February 6" → calendarEvent with title="Meeting", startTime="${now.getFullYear()}-02-06T20:00:00Z", endTime="${now.getFullYear()}-02-06T21:00:00Z"
+- Example: "I have a meeting at 8 pm on February 6" → calendarEvent with title="Meeting", startTime="${now.getFullYear()}-02-06T20:00:00Z", endTime="${now.getFullYear()}-02-06T21:00:00Z"
 
 Return JSON:
 {
@@ -102,7 +104,7 @@ Return JSON:
   "extractedData": {"people": [], "dates": [], "actions": [], "topics": []},
   "calendarEvent": {"title": "Meeting", "startTime": "2025-02-06T20:00:00Z", "endTime": "2025-02-06T21:00:00Z", "description": "..."} or null,
   "reminder": {"title": "...", "dueDate": "2025-02-06T20:00:00Z", "priority": "medium", "description": "..."} or null,
-  "aiResponse": "I've added your meeting to your calendar for February 6 at 8 PM!",
+  "aiResponse": "Natural, conversational response. For greetings: friendly greeting. For questions: helpful answer. For scheduling: confirmation.",
   "followUpQuestions": ["Show me my calendar"],
   "featureSuggestions": ["calendar", "reminder"]
 }`
@@ -111,13 +113,15 @@ Return JSON:
 Current date context: ${currentDateStr} (${now.toISOString().split('T')[0]})
 
 Instructions:
-- If user mentions a meeting, appointment, event, or scheduling → CREATE calendarEvent with proper date/time parsing
+- If this is a greeting (hey, hi, hello) → respond warmly, type: "other", calendarEvent: null
+- If this is a question → answer helpfully, type: "other" or "note", calendarEvent: null
+- ONLY if user EXPLICITLY mentions scheduling (meeting, appointment, event, schedule, add to calendar) → CREATE calendarEvent
 - Parse dates relative to current date: ${now.toISOString().split('T')[0]}
 - Parse times: "8 pm" = 20:00, "2 pm" = 14:00, "10 am" = 10:00
 - Combine date + time into ISO format: YYYY-MM-DDTHH:MM:SSZ
 - For "February 6" use year ${now.getFullYear()}: ${now.getFullYear()}-02-06
-- Answer directly and confirm what you're creating
-- Return JSON with calendarEvent if scheduling is mentioned`
+- Be natural and conversational in aiResponse
+- Return JSON with calendarEvent ONLY if scheduling is explicitly mentioned`
 
     // Use GPT-4o-mini with chat completions API (reliable and working)
     const response = await openai.chat.completions.create({
