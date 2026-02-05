@@ -12,6 +12,8 @@ const CACHE_TTL = 5 * 60 * 1000 // 5 minutes
 const MAX_CACHE_SIZE = 100 // Limit cache size
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  const requestStartTime = Date.now()
+  
   // Handle CORS preflight
   if (req.method === 'OPTIONS') {
     res.setHeader('Access-Control-Allow-Origin', '*')
@@ -30,6 +32,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   try {
+    console.log(`[${new Date().toISOString()}] API request received`)
     const { content, conversationHistory, relevantMemories, recallSuggestions, currentDate: clientCurrentDate } = req.body
 
     if (!content) {
@@ -37,12 +40,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     // Check cache for exact matches (simple queries)
+    const cacheCheckStart = Date.now()
     const cacheKey = content.toLowerCase().trim().substring(0, 100) // Use first 100 chars as key
     const cached = responseCache.get(cacheKey)
     if (cached && Date.now() - cached.timestamp < CACHE_TTL) {
-      console.log('Cache hit for:', cacheKey.substring(0, 50))
+      const cacheTime = Date.now() - cacheCheckStart
+      console.log(`[${new Date().toISOString()}] Cache hit (${cacheTime}ms):`, cacheKey.substring(0, 50))
       return res.status(200).json(cached.data)
     }
+    const cacheCheckTime = Date.now() - cacheCheckStart
+    console.log(`[${new Date().toISOString()}] Cache miss (${cacheCheckTime}ms)`)
 
     // Clean old cache entries if needed
     if (responseCache.size >= MAX_CACHE_SIZE) {
@@ -111,19 +118,28 @@ If scheduling mentioned → CREATE calendarEvent. Parse dates/times → ISO form
 
     // Use GPT-5-mini with responses API (different from chat completions)
     // Add timeout to OpenAI request to prevent hanging
-    const startTime = Date.now()
-    const response = await Promise.race([
-      openai.responses.create({
-        model: "gpt-5-mini",
-        input: `${systemPrompt}\n\n${userPrompt}`,
-      }),
-      new Promise((_, reject) => 
-        setTimeout(() => reject(new Error('OpenAI API timeout after 8 seconds')), 8000)
-      )
-    ]) as any
+    const openaiStartTime = Date.now()
+    console.log(`[${new Date().toISOString()}] Calling OpenAI API...`)
     
-    const processingTime = Date.now() - startTime
-    console.log(`OpenAI API call took ${processingTime}ms`)
+    let response: any
+    let openaiTime = 0
+    try {
+      response = await Promise.race([
+        openai.responses.create({
+          model: "gpt-5-mini",
+          input: `${systemPrompt}\n\n${userPrompt}`,
+        }),
+        new Promise((_, reject) => 
+          setTimeout(() => reject(new Error('OpenAI API timeout after 8 seconds')), 8000)
+        )
+      ]) as any
+      openaiTime = Date.now() - openaiStartTime
+      console.log(`[${new Date().toISOString()}] OpenAI API completed in ${openaiTime}ms`)
+    } catch (openaiError) {
+      openaiTime = Date.now() - openaiStartTime
+      console.error(`[${new Date().toISOString()}] OpenAI API error after ${openaiTime}ms:`, openaiError)
+      throw openaiError
+    }
 
     // Parse AI response - GPT-5-mini uses output_text instead of choices[0].message.content
     let aiResponse = response.output_text || '{}'
@@ -187,13 +203,22 @@ If scheduling mentioned → CREATE calendarEvent. Parse dates/times → ISO form
       responseCache.set(cacheKey, { data: responseData, timestamp: Date.now() })
     }
 
-    return res.status(200).json(responseData)
+    const totalTime = Date.now() - requestStartTime
+    console.log(`[${new Date().toISOString()}] Total request time: ${totalTime}ms`)
+    
+    return res.status(200).json({
+      ...responseData,
+      processingTime: totalTime,
+      openaiTime: openaiTime
+    })
 
   } catch (error) {
-    console.error('Analysis error:', error)
+    const totalTime = Date.now() - requestStartTime
+    console.error(`[${new Date().toISOString()}] Analysis error after ${totalTime}ms:`, error)
     return res.status(500).json({ 
       error: 'Failed to analyze content',
-      details: error instanceof Error ? error.message : 'Unknown error'
+      details: error instanceof Error ? error.message : 'Unknown error',
+      processingTime: totalTime
     })
   }
 }
