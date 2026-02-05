@@ -22,28 +22,66 @@ export default function AuthPage() {
   })
   const [rememberMe, setRememberMe] = useState(true)
   const [isLoading, setIsLoading] = useState(false)
+  const [isCheckingRedirect, setIsCheckingRedirect] = useState(false)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [passwordError, setPasswordError] = useState('')
 
   // Check for redirect result when page loads (for Google sign-in redirect flow)
   useEffect(() => {
     const handleRedirectResult = async () => {
-      if (!auth) return
+      if (!auth) {
+        console.log('Auth not initialized yet, waiting...')
+        return
+      }
+
+      // Check if we're coming back from a redirect (URL might have auth params)
+      const urlParams = new URLSearchParams(window.location.search)
+      const hasAuthParams = urlParams.has('apiKey') || urlParams.has('authType')
+      
+      if (!hasAuthParams) {
+        console.log('No auth params in URL - not a redirect return')
+        return
+      }
+
+      setIsCheckingRedirect(true)
+      console.log('Checking for redirect result...', { hasAuthParams })
 
       try {
         const result = await getRedirectResult(auth)
+        
         if (result) {
+          console.log('✅ Redirect result found! User:', result.user.email)
           // User signed in via redirect
           toast.success('Signed in with Google successfully!')
+          // Clear any loading states
+          setIsLoading(false)
+          setIsCheckingRedirect(false)
+          // Redirect to chat
           window.location.href = '/chat'
+        } else {
+          console.log('⚠️ No redirect result found - user did not complete sign-in')
+          setIsCheckingRedirect(false)
         }
       } catch (error: any) {
-        console.error('Redirect result error:', error)
-        // Don't show error toast here - user might not have initiated redirect
+        console.error('❌ Redirect result error:', error)
+        console.error('Error code:', error.code)
+        console.error('Error message:', error.message)
+        setIsCheckingRedirect(false)
+        
+        // Show error toast for actual errors (not just "no redirect")
+        if (error.code && error.code !== 'auth/no-auth-event') {
+          toast.error(`Sign-in error: ${error.message || 'Unknown error'}`)
+          setIsLoading(false)
+        }
       }
     }
 
-    handleRedirectResult()
+    // Small delay to ensure auth is fully initialized
+    const timer = setTimeout(() => {
+      handleRedirectResult()
+    }, 500)
+
+    return () => clearTimeout(timer)
   }, [auth])
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -210,11 +248,18 @@ export default function AuthPage() {
         // If popup is blocked, fall back to redirect
         if (popupError.code === 'auth/popup-blocked' || popupError.code === 'auth/popup-closed-by-user') {
           console.log('Popup blocked or closed, falling back to redirect flow')
-          toast.loading('Redirecting to Google sign-in...', { id: 'google-redirect' })
-          // Use redirect instead - this will navigate away from the page
-          await signInWithRedirect(auth, provider)
-          // Note: signInWithRedirect will navigate away, so code after this won't run
-          return
+          console.log('Initiating redirect to Google sign-in...')
+          
+          try {
+            // Use redirect instead - this will navigate away from the page
+            await signInWithRedirect(auth, provider)
+            // Note: signInWithRedirect will navigate away, so code after this won't run
+            // The redirect result will be handled by the useEffect hook when user returns
+            return
+          } catch (redirectError: any) {
+            console.error('Redirect initiation error:', redirectError)
+            throw redirectError
+          }
         }
         // For other errors, throw to be handled below
         throw popupError
@@ -1715,7 +1760,7 @@ export default function AuthPage() {
           {/* Google Sign-In Button */}
           <button
             onClick={handleGoogleSignIn}
-            disabled={isLoading}
+            disabled={isLoading || isCheckingRedirect}
             className="w-full bg-white hover:bg-gray-100 disabled:bg-gray-200 disabled:cursor-not-allowed text-gray-900 font-semibold py-3 px-6 rounded-lg transition-all duration-200 hover:scale-105 text-sm md:text-base flex items-center justify-center space-x-3"
           >
             <svg className="w-5 h-5" viewBox="0 0 24 24">
@@ -1724,7 +1769,7 @@ export default function AuthPage() {
               <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
               <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
             </svg>
-            <span>Continue with Google</span>
+            <span>{isLoading || isCheckingRedirect ? 'Signing in...' : 'Continue with Google'}</span>
           </button>
 
           <div className="mt-6 text-center space-y-3">
