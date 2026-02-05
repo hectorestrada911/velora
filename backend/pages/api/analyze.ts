@@ -6,11 +6,6 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 })
 
-// Validate API key on startup
-if (!process.env.OPENAI_API_KEY || process.env.OPENAI_API_KEY === 'demo-api-key') {
-  console.warn('⚠️  WARNING: OPENAI_API_KEY is missing or set to demo value. API calls will fail.')
-}
-
 // Simple in-memory cache for common queries (in production, use Redis)
 const responseCache = new Map<string, { data: any; timestamp: number }>()
 const CACHE_TTL = 5 * 60 * 1000 // 5 minutes
@@ -34,16 +29,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' })
-  }
-
-  // Fail fast if API key is missing
-  if (!process.env.OPENAI_API_KEY || process.env.OPENAI_API_KEY === 'demo-api-key') {
-    console.error(`[${new Date().toISOString()}] ERROR: OPENAI_API_KEY is missing or invalid`)
-    return res.status(500).json({ 
-      error: 'OpenAI API key is not configured',
-      details: 'Please set OPENAI_API_KEY environment variable in Railway',
-      timestamp: new Date().toISOString()
-    })
   }
 
   try {
@@ -134,157 +119,30 @@ If scheduling mentioned → CREATE calendarEvent. Parse dates/times → ISO form
     // Use GPT-5-mini with responses API (different from chat completions)
     // Add timeout to OpenAI request to prevent hanging
     const openaiStartTime = Date.now()
-    const modelName = process.env.OPENAI_MODEL || "gpt-5-mini"
-    const useResponsesAPI = modelName.startsWith('gpt-5')
-    console.log(`[${new Date().toISOString()}] Calling OpenAI API with model: ${modelName} (API: ${useResponsesAPI ? 'responses' : 'chat.completions'})...`)
+    console.log(`[${new Date().toISOString()}] Calling OpenAI API...`)
     
     let response: any
     let openaiTime = 0
-    let usedModel = modelName
     try {
-      if (useResponsesAPI) {
-        // GPT-5 models use responses API - make direct HTTP call since SDK may not support it
-        const apiKey = process.env.OPENAI_API_KEY
-        if (!apiKey) {
-          throw new Error('OPENAI_API_KEY is not set')
-        }
-        
-        response = await Promise.race([
-          fetch('https://api.openai.com/v1/responses', {
-            method: 'POST',
-            headers: {
-              'Authorization': `Bearer ${apiKey}`,
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              model: modelName,
-              input: `${systemPrompt}\n\n${userPrompt}`,
-            }),
-          }).then(async (res) => {
-            if (!res.ok) {
-              const errorText = await res.text()
-              let errorData
-              try {
-                errorData = JSON.parse(errorText)
-              } catch {
-                errorData = { message: errorText }
-              }
-              const error = new Error(`OpenAI API error: ${res.status} - ${errorData.error?.message || errorText}`) as any
-              error.status = res.status
-              error.code = errorData.error?.code
-              throw error
-            }
-            const data = await res.json()
-            console.log(`[${new Date().toISOString()}] OpenAI responses API returned:`, JSON.stringify(data).substring(0, 200))
-            return data
-          }),
-          new Promise((_, reject) => 
-            setTimeout(() => reject(new Error('OpenAI API timeout after 8 seconds')), 8000)
-          )
-        ]) as any
-      } else {
-        // GPT-4 and older models use chat.completions.create() API
-        response = await Promise.race([
-          openai.chat.completions.create({
-            model: modelName,
-            messages: [
-              { role: "system", content: systemPrompt },
-              { role: "user", content: userPrompt }
-            ],
-            response_format: { type: "json_object" },
-          }),
-          new Promise((_, reject) => 
-            setTimeout(() => reject(new Error('OpenAI API timeout after 8 seconds')), 8000)
-          )
-        ]) as any
-      }
+      response = await Promise.race([
+        openai.responses.create({
+          model: "gpt-5-mini",
+          input: `${systemPrompt}\n\n${userPrompt}`,
+        }),
+        new Promise((_, reject) => 
+          setTimeout(() => reject(new Error('OpenAI API timeout after 8 seconds')), 8000)
+        )
+      ]) as any
       openaiTime = Date.now() - openaiStartTime
       console.log(`[${new Date().toISOString()}] OpenAI API completed in ${openaiTime}ms`)
-    } catch (openaiError: any) {
+    } catch (openaiError) {
       openaiTime = Date.now() - openaiStartTime
-      const errorMessage = openaiError?.message || 'Unknown OpenAI API error'
-      const errorStatus = openaiError?.status || openaiError?.response?.status
-      const errorCode = openaiError?.code || openaiError?.response?.data?.error?.code
-      
-      console.error(`[${new Date().toISOString()}] OpenAI API error after ${openaiTime}ms:`)
-      console.error('Error message:', errorMessage)
-      console.error('Error status:', errorStatus)
-      console.error('Error code:', errorCode)
-      console.error('Full error:', JSON.stringify(openaiError, Object.getOwnPropertyNames(openaiError), 2))
-      
-      // Try fallback model if primary model fails
-      if ((errorStatus === 404 || errorCode === 'model_not_found' || errorMessage?.includes('model')) && modelName !== 'gpt-4o-mini') {
-        console.log(`[${new Date().toISOString()}] Attempting fallback to gpt-4o-mini...`)
-        try {
-          const fallbackStart = Date.now()
-          response = await Promise.race([
-            openai.chat.completions.create({
-              model: "gpt-4o-mini",
-              messages: [
-                { role: "system", content: systemPrompt },
-                { role: "user", content: userPrompt }
-              ],
-              response_format: { type: "json_object" },
-            }),
-            new Promise((_, reject) => 
-              setTimeout(() => reject(new Error('OpenAI API timeout after 8 seconds')), 8000)
-            )
-          ]) as any
-          usedModel = 'gpt-4o-mini'
-          openaiTime = Date.now() - fallbackStart
-          console.log(`[${new Date().toISOString()}] Fallback model succeeded in ${openaiTime}ms`)
-          
-          // Validate fallback response (chat completions format)
-          if (!response || !response.choices || !Array.isArray(response.choices) || response.choices.length === 0) {
-            throw new Error('Fallback model returned invalid response structure')
-          }
-        } catch (fallbackError: any) {
-          // Fallback also failed, throw original error with better message
-          if (errorStatus === 401 || errorCode === 'invalid_api_key') {
-            throw new Error('Invalid OpenAI API key. Please check your environment variables.')
-          } else if (errorStatus === 404 || errorCode === 'model_not_found') {
-            throw new Error(`Model "${modelName}" not found. Tried fallback to gpt-4o-mini but it also failed.`)
-          } else if (errorMessage?.includes('timeout')) {
-            throw new Error(`OpenAI API timeout: ${errorMessage}`)
-          } else {
-            throw new Error(`OpenAI API error: ${errorMessage} (Status: ${errorStatus}, Code: ${errorCode})`)
-          }
-        }
-      } else {
-        // Provide more specific error messages
-        if (errorStatus === 401 || errorCode === 'invalid_api_key') {
-          throw new Error('Invalid OpenAI API key. Please check your environment variables.')
-        } else if (errorStatus === 404 || errorCode === 'model_not_found') {
-          throw new Error(`Model "${modelName}" not found. Please verify the model name is correct.`)
-        } else if (errorMessage?.includes('timeout')) {
-          throw new Error(`OpenAI API timeout: ${errorMessage}`)
-        } else {
-          throw new Error(`OpenAI API error: ${errorMessage} (Status: ${errorStatus}, Code: ${errorCode})`)
-        }
-      }
+      console.error(`[${new Date().toISOString()}] OpenAI API error after ${openaiTime}ms:`, openaiError)
+      throw openaiError
     }
 
-    // Parse AI response - different format for responses API vs chat completions
-    let aiResponse: string
-    if (useResponsesAPI) {
-      // GPT-5 responses API uses output_text
-      if (!response || !response.output_text || typeof response.output_text !== 'string') {
-        console.error('Invalid OpenAI responses API structure:', JSON.stringify(response, null, 2))
-        throw new Error('Invalid response from OpenAI API: missing output_text')
-      }
-      aiResponse = response.output_text
-    } else {
-      // GPT-4 chat completions API uses choices[0].message.content
-      if (!response || !response.choices || !Array.isArray(response.choices) || response.choices.length === 0) {
-        console.error('Invalid OpenAI response structure:', JSON.stringify(response, null, 2))
-        throw new Error('Invalid response from OpenAI API: missing choices array')
-      }
-      aiResponse = response.choices[0]?.message?.content
-      if (!aiResponse || typeof aiResponse !== 'string') {
-        console.error('Invalid OpenAI response content:', JSON.stringify(response.choices[0], null, 2))
-        throw new Error('Invalid response from OpenAI API: missing or invalid content')
-      }
-    }
+    // Parse AI response - GPT-5-mini uses output_text instead of choices[0].message.content
+    let aiResponse = response.output_text || '{}'
     
     // Remove markdown code blocks if present
     if (aiResponse.includes('```json')) {
@@ -296,10 +154,6 @@ If scheduling mentioned → CREATE calendarEvent. Parse dates/times → ISO form
     
     // Clean up any extra whitespace
     aiResponse = aiResponse.trim()
-    
-    if (!aiResponse || aiResponse === '{}') {
-      throw new Error('Empty response from OpenAI API')
-    }
     
     let analysis
     try {
@@ -340,8 +194,8 @@ If scheduling mentioned → CREATE calendarEvent. Parse dates/times → ISO form
       aiResponse: analysis.aiResponse || "I've analyzed your content and organized it for you!",
       followUpQuestions: analysis.followUpQuestions || ["Show me what I have planned today", "Help me set a reminder for something"],
       featureSuggestions: analysis.featureSuggestions || [],
-      aiModel: usedModel,
-      processingTime: Date.now() - requestStartTime
+      aiModel: 'gpt-5-mini',
+      processingTime: Date.now() - now.getTime()
     }
 
     // Cache simple queries (not scheduling/calendar related - those need fresh parsing)
@@ -358,21 +212,13 @@ If scheduling mentioned → CREATE calendarEvent. Parse dates/times → ISO form
       openaiTime: openaiTime
     })
 
-  } catch (error: any) {
+  } catch (error) {
     const totalTime = Date.now() - requestStartTime
-    const errorMessage = error instanceof Error ? error.message : 'Unknown error'
-    const errorStack = error instanceof Error ? error.stack : undefined
-    
-    console.error(`[${new Date().toISOString()}] Analysis error after ${totalTime}ms:`)
-    console.error('Error message:', errorMessage)
-    console.error('Error stack:', errorStack)
-    console.error('Full error:', JSON.stringify(error, Object.getOwnPropertyNames(error), 2))
-    
+    console.error(`[${new Date().toISOString()}] Analysis error after ${totalTime}ms:`, error)
     return res.status(500).json({ 
       error: 'Failed to analyze content',
-      details: errorMessage,
-      processingTime: totalTime,
-      timestamp: new Date().toISOString()
+      details: error instanceof Error ? error.message : 'Unknown error',
+      processingTime: totalTime
     })
   }
 }
