@@ -1,6 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { detectFollowup } from '../../lib/followupDetector';
-import { rateLimiter } from '../../lib/rateLimiter';
+import { detectFollowup } from '@/lib/followupDetector';
+import { rateLimiter } from '@/lib/rateLimiter';
+import { AliasParser } from '@/lib/aliasParser';
+import { radarService } from '@/lib/radarService';
 
 // Inbound Email Webhook Handler
 // Receives emails from Resend/Postmark and creates followups
@@ -50,7 +52,6 @@ export default async function handler(
     }
 
     // Parse alias to get due time
-    const { AliasParser } = await import('../../lib/aliasParser');
     const parser = new AliasParser('America/Los_Angeles'); // TODO: Get from user profile
     
     let dueAt: number | undefined;
@@ -100,7 +101,6 @@ export default async function handler(
     const threadKey = generateThreadKey(payload.messageId, participants);
 
     // Create followup in Firestore
-    const { radarService } = await import('../../lib/radarService');
     
     // Check if followup already exists for this thread
     const existingFollowup = await radarService.findByThreadKey(userEmail, threadKey);

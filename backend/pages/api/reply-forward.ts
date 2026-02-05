@@ -1,4 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
+import { radarService } from '@/lib/radarService';
 
 // Reply-Forward Cancel Route
 // When users forward a reply to reply+<threadKey>@in.velora.cc, automatically mark followup as DONE
@@ -37,7 +38,6 @@ export default async function handler(
     console.log(`Reply-forward received for threadKey: ${threadKey}`);
 
     // Find and mark followup as DONE
-    const { radarService } = await import('../../lib/radarService');
     
     // Find followup by threadKey
     const followup = await radarService.findByThreadKey('system', threadKey); // TODO: Get actual userId

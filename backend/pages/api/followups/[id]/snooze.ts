@@ -1,4 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
+import { radarService } from '@/lib/radarService';
 
 // Snooze a followup until a specific time
 
@@ -23,7 +24,6 @@ export default async function handler(
     }
 
     // Update followup
-    const { radarService } = await import('../../../../lib/radarService');
     await radarService.snoozeFollowup(id, until);
 
     return res.status(200).json({ ok: true, snoozeUntil: until });

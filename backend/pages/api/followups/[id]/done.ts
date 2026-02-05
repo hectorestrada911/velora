@@ -1,4 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
+import { radarService } from '@/lib/radarService';
 
 // Mark a followup as done
 
@@ -18,7 +19,6 @@ export default async function handler(
     }
 
     // Update followup
-    const { radarService } = await import('../../../../lib/radarService');
     await radarService.markDone(id);
 
     return res.status(200).json({ ok: true });

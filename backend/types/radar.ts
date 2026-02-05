@@ -31,6 +31,8 @@ export interface FollowupAnalytics {
   draftsGenerated: number;
   lastDraftAt?: number;
   lastReminderAt?: number;
+  lastReplyForwardAt?: number;
+  replyForwardCount?: number;
 }
 
 export interface Followup {

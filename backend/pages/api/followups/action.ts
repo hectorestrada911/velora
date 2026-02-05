@@ -1,4 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
+import { jwtSigner } from '@/lib/jwtSigner';
+import { radarService } from '@/lib/radarService';
+import { icsGenerator } from '@/lib/icsGenerator';
 
 // JWT Action Handler
 // Handles signed action links from reminder emails (Snooze, Done, Draft, Calendar)
@@ -19,7 +22,6 @@ export default async function handler(
     }
 
     // Verify JWT token
-    const { jwtSigner } = await import('../../lib/jwtSigner');
     const validation = await jwtSigner.validateAndConsumeActionLink(token);
 
     if (!validation.valid) {
@@ -32,7 +34,6 @@ export default async function handler(
     const { followupId, userId, action, nonce } = validation.payload!;
 
     // Handle different actions
-    const { radarService } = await import('../../lib/radarService');
     
     switch (action) {
       case 'done':
@@ -54,7 +55,6 @@ export default async function handler(
         // Generate ICS file and redirect to calendar
         const followup = await radarService.getFollowup(followupId);
         if (followup) {
-          const { icsGenerator } = await import('../../lib/icsGenerator');
           const icsContent = icsGenerator.generateFollowupICS(followup);
           res.setHeader('Content-Type', 'text/calendar; charset=utf-8');
           res.setHeader('Content-Disposition', `attachment; filename="followup-${followupId}.ics"`);

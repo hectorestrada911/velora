@@ -1,4 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
+import { radarService } from '@/lib/radarService';
+import OpenAI from 'openai';
 
 // Generate draft follow-up email
 
@@ -19,7 +21,6 @@ export default async function handler(
     }
 
     // Get followup from Firestore
-    const { radarService } = await import('../../../../lib/radarService');
     const followup = await radarService.getFollowup(id);
 
     if (!followup) {
@@ -81,7 +82,7 @@ ${followup.direction === 'YOU_OWE'
 
   try {
     // Use GPT-5-mini with responses API
-    const openai = new (await import('openai')).default({
+    const openai = new OpenAI({
       apiKey: process.env.OPENAI_API_KEY
     });
     
