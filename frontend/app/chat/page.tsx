@@ -544,7 +544,7 @@ Please analyze this document and respond to the user's request. If they didn't s
         body: JSON.stringify({
           content: aiPrompt,
           conversationHistory: messages.slice(-5).map(m => ({ 
-            role: m.role, 
+            role: m.type === 'user' ? 'user' : 'assistant', 
             content: m.content.substring(0, 200)
           })), // Last 5 messages, limited content
           relevantMemories: [...relevantMemories.slice(0, 3), ...recallInfo.memories.slice(0, 2)], // Limit to top 3+2
@@ -932,7 +932,7 @@ Please analyze this document and respond to the user's request. If they didn't s
 
       // Prepare conversation history for context (limit to last 5 for performance)
       const conversationHistory = messages.slice(-5).map(m => ({ 
-        role: m.role, 
+        role: m.type === 'user' ? 'user' : 'assistant', 
         content: m.content.substring(0, 200) // Limit content length
       }))
       
@@ -1261,7 +1261,7 @@ Please analyze this document and respond to the user's request. If they didn't s
       console.log('Environment variable:', process.env.NEXT_PUBLIC_API_URL)
       // Prepare conversation history for context (limit to last 5 for performance)
       const conversationHistory = messages.slice(-5).map(m => ({ 
-        role: m.role, 
+        role: m.type === 'user' ? 'user' : 'assistant', 
         content: m.content.substring(0, 200) // Limit content length
       }))
       
