@@ -13,15 +13,14 @@
    - Click on the **"Settings"** tab (you're already there based on your screenshot)
 
 4. **Go to Scale Section**
-   - In the right-hand navigation menu, click on **"Scale"**
-   - This is where uptime and resource settings are located
+   - In the right-hand navigation menu, click on **"Scale"** (you're already here!)
 
-5. **Enable Always On**
-   - Look for a setting called:
-     - **"Always On"** or
-     - **"Never Sleep"** or
-     - **"Keep Container Running"**
-   - Toggle it **ON** (enabled)
+5. **Disable Serverless Mode**
+   - Scroll down to the **"Deploy"** section
+   - Look for **"Serverless"** toggle
+   - **DISABLE it** (turn it OFF)
+   - The description says: "Containers will scale down to zero and then scale up based on traffic"
+   - When Serverless is OFF, containers stay running (no cold starts)
 
 6. **Save Changes**
    - Changes should save automatically
