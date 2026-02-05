@@ -1265,26 +1265,36 @@ Please analyze this document and respond to the user's request. If they didn't s
         content: m.content.substring(0, 200) // Limit content length
       }))
       
-      // Add timeout for faster failure detection
+      // Add timeout for faster failure detection (increased to 15 seconds for slower responses)
       const controller = new AbortController()
-      const timeoutId = setTimeout(() => controller.abort(), 8000) // 8 second timeout
+      const timeoutId = setTimeout(() => controller.abort(), 15000) // 15 second timeout
       
-      const response = await fetch(apiUrl, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        signal: controller.signal,
-        body: JSON.stringify({ 
-          content: messageContent + calendarContext + reminderContext,
-          conversationHistory: conversationHistory,
-          relevantMemories: [...relevantMemories.slice(0, 3), ...recallInfo.memories.slice(0, 2)], // Limit to top 3+2
-          recallSuggestions: recallInfo.suggestions.slice(0, 2), // Limit to top 2
-          currentDate: new Date().toISOString()
-        }),
-      })
-      
-      clearTimeout(timeoutId)
+      let response: Response
+      try {
+        response = await fetch(apiUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          signal: controller.signal,
+          body: JSON.stringify({ 
+            content: messageContent + calendarContext + reminderContext,
+            conversationHistory: conversationHistory,
+            relevantMemories: [...relevantMemories.slice(0, 3), ...recallInfo.memories.slice(0, 2)], // Limit to top 3+2
+            recallSuggestions: recallInfo.suggestions.slice(0, 2), // Limit to top 2
+            currentDate: new Date().toISOString()
+          }),
+        })
+        
+        clearTimeout(timeoutId)
+      } catch (fetchError) {
+        clearTimeout(timeoutId)
+        // Re-throw with more context
+        if (fetchError instanceof Error && fetchError.name === 'AbortError') {
+          throw new Error('Request timeout: The API took too long to respond. Please try again.')
+        }
+        throw fetchError
+      }
       
       console.log('Response status:', response.status)
       console.log('Response headers:', response.headers)
@@ -1406,11 +1416,43 @@ Please analyze this document and respond to the user's request. If they didn't s
     } catch (error) {
       console.error('Error processing message:', error)
       
+      // Log detailed error information for debugging
+      if (error instanceof Error) {
+        console.error('Error name:', error.name)
+        console.error('Error message:', error.message)
+        console.error('Error stack:', error.stack)
+      }
+      
+      // Check if it's a timeout or network error
+      const isTimeout = error instanceof Error && (
+        error.message.includes('aborted') || 
+        error.message.includes('timeout') ||
+        error.name === 'AbortError'
+      )
+      
+      const isNetworkError = error instanceof Error && (
+        error.message.includes('Failed to fetch') ||
+        error.message.includes('NetworkError') ||
+        error.message.includes('network')
+      )
+      
+      // More helpful error message based on error type
+      let errorMessage = "I'm having trouble processing that right now."
+      if (isTimeout) {
+        errorMessage = "The request took too long. The backend might be slow or unavailable. Please try again."
+      } else if (isNetworkError) {
+        errorMessage = "I couldn't reach the server. Please check your internet connection and try again."
+      } else if (error instanceof Error && error.message.includes('500')) {
+        errorMessage = "The server encountered an error. Please try again in a moment."
+      } else if (error instanceof Error && error.message.includes('404')) {
+        errorMessage = "The API endpoint wasn't found. Please check the backend configuration."
+      }
+      
       // Fallback message if AI fails
       const fallbackMessage: Message = {
         id: (Date.now() + 1).toString(),
         type: 'ai',
-        content: "I'm having trouble processing that right now, but I've saved your message. Can you try rephrasing?",
+        content: `${errorMessage} I've saved your message. ${isTimeout || isNetworkError ? 'You can try rephrasing or check the console for more details.' : 'Can you try rephrasing?'}`,
         timestamp: new Date(),
         analysis: {
           type: 'note',
@@ -1422,7 +1464,10 @@ Please analyze this document and respond to the user's request. If they didn't s
       }
       
       setMessages(prev => [...prev, fallbackMessage])
-      toast.error(ErrorHandler.getOperationErrorMessage('ai-processing', error))
+      
+      // Show detailed error toast
+      const errorDetails = error instanceof Error ? error.message : String(error)
+      toast.error(`AI processing failed: ${errorDetails.substring(0, 100)}`)
     } finally {
       // Add a small delay to ensure typing animation is visible
       setTimeout(() => {
