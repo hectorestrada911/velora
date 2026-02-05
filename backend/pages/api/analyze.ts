@@ -163,9 +163,20 @@ If scheduling mentioned → CREATE calendarEvent. Parse dates/times → ISO form
           }).then(async (res) => {
             if (!res.ok) {
               const errorText = await res.text()
-              throw new Error(`OpenAI API error: ${res.status} - ${errorText}`)
+              let errorData
+              try {
+                errorData = JSON.parse(errorText)
+              } catch {
+                errorData = { message: errorText }
+              }
+              const error = new Error(`OpenAI API error: ${res.status} - ${errorData.error?.message || errorText}`) as any
+              error.status = res.status
+              error.code = errorData.error?.code
+              throw error
             }
-            return res.json()
+            const data = await res.json()
+            console.log(`[${new Date().toISOString()}] OpenAI responses API returned:`, JSON.stringify(data).substring(0, 200))
+            return data
           }),
           new Promise((_, reject) => 
             setTimeout(() => reject(new Error('OpenAI API timeout after 8 seconds')), 8000)
