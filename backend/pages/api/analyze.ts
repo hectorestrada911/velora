@@ -189,6 +189,11 @@ If scheduling mentioned → CREATE calendarEvent. Parse dates/times → ISO form
           usedModel = 'gpt-4o-mini'
           openaiTime = Date.now() - fallbackStart
           console.log(`[${new Date().toISOString()}] Fallback model succeeded in ${openaiTime}ms`)
+          
+          // Validate fallback response
+          if (!response || !response.choices || !Array.isArray(response.choices) || response.choices.length === 0) {
+            throw new Error('Fallback model returned invalid response structure')
+          }
         } catch (fallbackError: any) {
           // Fallback also failed, throw original error with better message
           if (errorStatus === 401 || errorCode === 'invalid_api_key') {
@@ -216,7 +221,16 @@ If scheduling mentioned → CREATE calendarEvent. Parse dates/times → ISO form
     }
 
     // Parse AI response - standard chat completions format
-    let aiResponse = response.choices?.[0]?.message?.content || '{}'
+    if (!response || !response.choices || !Array.isArray(response.choices) || response.choices.length === 0) {
+      console.error('Invalid OpenAI response structure:', JSON.stringify(response, null, 2))
+      throw new Error('Invalid response from OpenAI API: missing choices array')
+    }
+    
+    let aiResponse = response.choices[0]?.message?.content
+    if (!aiResponse || typeof aiResponse !== 'string') {
+      console.error('Invalid OpenAI response content:', JSON.stringify(response.choices[0], null, 2))
+      throw new Error('Invalid response from OpenAI API: missing or invalid content')
+    }
     
     // Remove markdown code blocks if present
     if (aiResponse.includes('```json')) {
@@ -228,6 +242,10 @@ If scheduling mentioned → CREATE calendarEvent. Parse dates/times → ISO form
     
     // Clean up any extra whitespace
     aiResponse = aiResponse.trim()
+    
+    if (!aiResponse || aiResponse === '{}') {
+      throw new Error('Empty response from OpenAI API')
+    }
     
     let analysis
     try {
