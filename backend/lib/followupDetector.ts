@@ -195,23 +195,28 @@ From: ${fromEmail} | To: ${toEmail} | Me: ${myEmail}
 Body (trimmed):
 ${trimmedBody}`;
 
-    // Use GPT-5-mini with responses API
+    // Use GPT-5-mini with chat completions API
     const OpenAI = (await import('openai')).default;
     const openai = new OpenAI({
       apiKey: openaiApiKey
     });
 
-    const response = await openai.responses.create({
+    const response = await openai.chat.completions.create({
       model: 'gpt-5-mini',
-      input: `${systemPrompt}\n\n${userPrompt}`,
+      messages: [
+        { role: "system", content: systemPrompt },
+        { role: "user", content: userPrompt }
+      ],
+      response_format: { type: "json_object" },
     });
 
-    if (!response.output_text) {
+    const outputText = response.choices?.[0]?.message?.content;
+    if (!outputText) {
       console.error('OpenAI API error: No output text');
       return null;
     }
 
-    const result = JSON.parse(response.output_text);
+    const result = JSON.parse(outputText);
 
     if (!result.direction || result.confidence < 0.6) {
       return null;

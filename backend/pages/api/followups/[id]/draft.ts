@@ -81,17 +81,20 @@ ${followup.direction === 'YOU_OWE'
 }`;
 
   try {
-    // Use GPT-5-mini with responses API
+    // Use GPT-5-mini with chat completions API
     const openai = new OpenAI({
       apiKey: process.env.OPENAI_API_KEY
     });
     
-    const response = await openai.responses.create({
+    const response = await openai.chat.completions.create({
       model: 'gpt-5-mini',
-      input: `${systemPrompt}\n\n${userPrompt}`,
+      messages: [
+        { role: "system", content: systemPrompt },
+        { role: "user", content: userPrompt }
+      ],
     });
 
-    let draft = response.output_text?.trim() || '';
+    let draft = response.choices?.[0]?.message?.content?.trim() || '';
 
     // Clean up common issues
     draft = draft.replace(/^(Hi|Hey|Hello|Dear)\s+\w+,?\s*/i, '');

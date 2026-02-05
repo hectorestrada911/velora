@@ -116,7 +116,7 @@ Return JSON: {"type":"meeting|task|reminder|note|other","priority":"high|medium|
 
 If scheduling mentioned → CREATE calendarEvent. Parse dates/times → ISO format. Return JSON.`
 
-    // Use GPT-5-mini with responses API (different from chat completions)
+    // Use GPT-5-mini with chat completions API
     // Add timeout to OpenAI request to prevent hanging
     const openaiStartTime = Date.now()
     console.log(`[${new Date().toISOString()}] Calling OpenAI API...`)
@@ -125,9 +125,13 @@ If scheduling mentioned → CREATE calendarEvent. Parse dates/times → ISO form
     let openaiTime = 0
     try {
       response = await Promise.race([
-        openai.responses.create({
+        openai.chat.completions.create({
           model: "gpt-5-mini",
-          input: `${systemPrompt}\n\n${userPrompt}`,
+          messages: [
+            { role: "system", content: systemPrompt },
+            { role: "user", content: userPrompt }
+          ],
+          response_format: { type: "json_object" },
         }),
         new Promise((_, reject) => 
           setTimeout(() => reject(new Error('OpenAI API timeout after 8 seconds')), 8000)
@@ -141,8 +145,8 @@ If scheduling mentioned → CREATE calendarEvent. Parse dates/times → ISO form
       throw openaiError
     }
 
-    // Parse AI response - GPT-5-mini uses output_text instead of choices[0].message.content
-    let aiResponse = response.output_text || '{}'
+    // Parse AI response - standard chat completions format
+    let aiResponse = response.choices?.[0]?.message?.content || '{}'
     
     // Remove markdown code blocks if present
     if (aiResponse.includes('```json')) {
@@ -195,7 +199,7 @@ If scheduling mentioned → CREATE calendarEvent. Parse dates/times → ISO form
       followUpQuestions: analysis.followUpQuestions || ["Show me what I have planned today", "Help me set a reminder for something"],
       featureSuggestions: analysis.featureSuggestions || [],
       aiModel: 'gpt-5-mini',
-      processingTime: Date.now() - now.getTime()
+      processingTime: Date.now() - requestStartTime
     }
 
     // Cache simple queries (not scheduling/calendar related - those need fresh parsing)
