@@ -131,29 +131,45 @@ Return JSON: {"type":"meeting|task|reminder|note|other","priority":"high|medium|
 
 If scheduling mentioned → CREATE calendarEvent. Parse dates/times → ISO format. Return JSON.`
 
-    // Use GPT-4o-mini as default (gpt-5-mini may not be available)
+    // Use GPT-5-mini with responses API (different from chat completions)
     // Add timeout to OpenAI request to prevent hanging
     const openaiStartTime = Date.now()
-    const modelName = process.env.OPENAI_MODEL || "gpt-4o-mini"
-    console.log(`[${new Date().toISOString()}] Calling OpenAI API with model: ${modelName}...`)
+    const modelName = process.env.OPENAI_MODEL || "gpt-5-mini"
+    const useResponsesAPI = modelName.startsWith('gpt-5')
+    console.log(`[${new Date().toISOString()}] Calling OpenAI API with model: ${modelName} (API: ${useResponsesAPI ? 'responses' : 'chat.completions'})...`)
     
     let response: any
     let openaiTime = 0
     let usedModel = modelName
+    let useResponsesAPI = modelName.startsWith('gpt-5')
     try {
-      response = await Promise.race([
-        openai.chat.completions.create({
-          model: modelName,
-          messages: [
-            { role: "system", content: systemPrompt },
-            { role: "user", content: userPrompt }
-          ],
-          response_format: { type: "json_object" },
-        }),
-        new Promise((_, reject) => 
-          setTimeout(() => reject(new Error('OpenAI API timeout after 8 seconds')), 8000)
-        )
-      ]) as any
+      if (useResponsesAPI) {
+        // GPT-5 models use responses.create() API
+        response = await Promise.race([
+          (openai as any).responses.create({
+            model: modelName,
+            input: `${systemPrompt}\n\n${userPrompt}`,
+          }),
+          new Promise((_, reject) => 
+            setTimeout(() => reject(new Error('OpenAI API timeout after 8 seconds')), 8000)
+          )
+        ]) as any
+      } else {
+        // GPT-4 and older models use chat.completions.create() API
+        response = await Promise.race([
+          openai.chat.completions.create({
+            model: modelName,
+            messages: [
+              { role: "system", content: systemPrompt },
+              { role: "user", content: userPrompt }
+            ],
+            response_format: { type: "json_object" },
+          }),
+          new Promise((_, reject) => 
+            setTimeout(() => reject(new Error('OpenAI API timeout after 8 seconds')), 8000)
+          )
+        ]) as any
+      }
       openaiTime = Date.now() - openaiStartTime
       console.log(`[${new Date().toISOString()}] OpenAI API completed in ${openaiTime}ms`)
     } catch (openaiError: any) {
@@ -190,10 +206,12 @@ If scheduling mentioned → CREATE calendarEvent. Parse dates/times → ISO form
           openaiTime = Date.now() - fallbackStart
           console.log(`[${new Date().toISOString()}] Fallback model succeeded in ${openaiTime}ms`)
           
-          // Validate fallback response
+          // Validate fallback response (chat completions format)
           if (!response || !response.choices || !Array.isArray(response.choices) || response.choices.length === 0) {
             throw new Error('Fallback model returned invalid response structure')
           }
+          // Set flag for response parsing
+          useResponsesAPI = false
         } catch (fallbackError: any) {
           // Fallback also failed, throw original error with better message
           if (errorStatus === 401 || errorCode === 'invalid_api_key') {
@@ -220,16 +238,26 @@ If scheduling mentioned → CREATE calendarEvent. Parse dates/times → ISO form
       }
     }
 
-    // Parse AI response - standard chat completions format
-    if (!response || !response.choices || !Array.isArray(response.choices) || response.choices.length === 0) {
-      console.error('Invalid OpenAI response structure:', JSON.stringify(response, null, 2))
-      throw new Error('Invalid response from OpenAI API: missing choices array')
-    }
-    
-    let aiResponse = response.choices[0]?.message?.content
-    if (!aiResponse || typeof aiResponse !== 'string') {
-      console.error('Invalid OpenAI response content:', JSON.stringify(response.choices[0], null, 2))
-      throw new Error('Invalid response from OpenAI API: missing or invalid content')
+    // Parse AI response - different format for responses API vs chat completions
+    let aiResponse: string
+    if (useResponsesAPI) {
+      // GPT-5 responses API uses output_text
+      if (!response || !response.output_text || typeof response.output_text !== 'string') {
+        console.error('Invalid OpenAI responses API structure:', JSON.stringify(response, null, 2))
+        throw new Error('Invalid response from OpenAI API: missing output_text')
+      }
+      aiResponse = response.output_text
+    } else {
+      // GPT-4 chat completions API uses choices[0].message.content
+      if (!response || !response.choices || !Array.isArray(response.choices) || response.choices.length === 0) {
+        console.error('Invalid OpenAI response structure:', JSON.stringify(response, null, 2))
+        throw new Error('Invalid response from OpenAI API: missing choices array')
+      }
+      aiResponse = response.choices[0]?.message?.content
+      if (!aiResponse || typeof aiResponse !== 'string') {
+        console.error('Invalid OpenAI response content:', JSON.stringify(response.choices[0], null, 2))
+        throw new Error('Invalid response from OpenAI API: missing or invalid content')
+      }
     }
     
     // Remove markdown code blocks if present
