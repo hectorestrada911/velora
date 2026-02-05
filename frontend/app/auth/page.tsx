@@ -183,7 +183,22 @@ export default function AuthPage() {
         throw new Error('Firebase not initialized. Please check your environment variables.')
       }
       
+      // Check for missing API key
+      if (!process.env.NEXT_PUBLIC_FIREBASE_API_KEY || process.env.NEXT_PUBLIC_FIREBASE_API_KEY === 'demo-api-key') {
+        console.error('Firebase API key missing or invalid')
+        toast.error('Firebase configuration error. Please check your environment variables.')
+        setIsLoading(false)
+        return
+      }
+      
       const provider = new GoogleAuthProvider()
+      
+      // Configure provider with explicit scopes and parameters
+      provider.addScope('profile')
+      provider.addScope('email')
+      provider.setCustomParameters({
+        prompt: 'select_account' // Force account selection for better UX
+      })
       
       // Try popup first (better UX)
       try {
@@ -206,6 +221,8 @@ export default function AuthPage() {
       }
     } catch (error: any) {
       console.error('Google sign-in error:', error)
+      console.error('Error code:', error.code)
+      console.error('Error message:', error.message)
       
       // Convert Google sign-in errors to user-friendly messages
       let userMessage = 'Google sign-in failed'
@@ -224,6 +241,17 @@ export default function AuthPage() {
             break
           case 'auth/network-request-failed':
             userMessage = 'Network error. Please check your connection and try again.'
+            break
+          case 'auth/internal-error':
+            console.error('Firebase internal error - this usually means:')
+            console.error('1. Google Sign-in provider is not enabled in Firebase Console')
+            console.error('2. Authorized domains are not configured correctly')
+            console.error('3. Firebase project configuration is incorrect')
+            userMessage = 'Google sign-in is not properly configured. Please ensure Google Sign-in is enabled in Firebase Console and your domain is authorized.'
+            break
+          case 'auth/operation-not-allowed':
+            console.error('Google Sign-in is not enabled in Firebase Console')
+            userMessage = 'Google Sign-in is not enabled. Please enable it in Firebase Console under Authentication > Sign-in method.'
             break
           default:
             userMessage = error.message || 'Google sign-in failed. Please try again.'
