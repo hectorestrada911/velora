@@ -115,13 +115,16 @@ Current date context: ${currentDateStr} (${now.toISOString().split('T')[0]})
 Instructions:
 - If this is a greeting (hey, hi, hello) → respond warmly, type: "other", calendarEvent: null
 - If this is a question → answer helpfully, type: "other" or "note", calendarEvent: null
-- ONLY if user EXPLICITLY mentions scheduling (meeting, appointment, event, schedule, add to calendar) → CREATE calendarEvent
+- If user says "yes", "add it", "go ahead", "okay add it", "please add" → check conversation history for dates mentioned in previous messages
+- If a date was mentioned in previous messages AND user is confirming, CREATE calendarEvent with that date immediately
+- If user EXPLICITLY mentions scheduling (meeting, appointment, event, schedule, add to calendar) → CREATE calendarEvent
 - Parse dates relative to current date: ${now.toISOString().split('T')[0]}
+- Parse dates like "February 10, 2026" or "February 10th 2026" → ${now.getFullYear()}-02-10T09:00:00Z (use 9 AM for exams if time not specified, 2-3 hour duration)
 - Parse times: "8 pm" = 20:00, "2 pm" = 14:00, "10 am" = 10:00
 - Combine date + time into ISO format: YYYY-MM-DDTHH:MM:SSZ
 - For "February 6" use year ${now.getFullYear()}: ${now.getFullYear()}-02-06
 - Be natural and conversational in aiResponse
-- Return JSON with calendarEvent ONLY if scheduling is explicitly mentioned`
+- Return JSON with calendarEvent when user confirms adding an event or explicitly requests it`
 
     // Use GPT-4o-mini with chat completions API (reliable and working)
     const response = await openai.chat.completions.create({

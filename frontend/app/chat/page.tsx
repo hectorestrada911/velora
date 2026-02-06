@@ -529,16 +529,18 @@ ${content}
 
 ${memoryContext}${calendarContext}${reminderContext}
 
-INSTRUCTIONS:
+CRITICAL CRITICAL INSTRUCTIONS:
 - Analyze the document and answer the user's question
-- If the user asks about dates (e.g., "when is the final exam?", "what's the deadline?", "when is the meeting?"), extract the date from the document
-- If a date is found and the user wants it added to calendar, create a calendarEvent with:
-  - title: Descriptive name (e.g., "Final Exam - [Course Name]" or "Deadline: [Assignment Name]")
-  - startTime: Date in ISO format (YYYY-MM-DDTHH:MM:SSZ), use reasonable time if not specified (e.g., 9:00 AM for exams, 11:59 PM for deadlines)
-  - endTime: startTime + appropriate duration (2-3 hours for exams, 1 hour for meetings)
-  - description: Relevant details from the document
-- If the user asks a question without requesting calendar creation, just answer the question (no calendarEvent)
-- Be helpful and extract the exact information requested`
+- If the user asks about dates AND mentions adding to calendar (e.g., "when is the final exam? add it to calendar", "what's the deadline? add it", "can you add it to my calendar", "add it"), you MUST create a calendarEvent
+- Extract the date from the document content above - look for dates like "February 10th 2026", "February 10, 2026", "Feb 10 2026"
+- When creating calendarEvent (REQUIRED when user asks to add to calendar):
+  - title: Descriptive name (e.g., "Final Exam - Math Class" or "Math Exam - February 10, 2026")
+  - startTime: Date in ISO format (YYYY-MM-DDTHH:MM:SSZ). Parse dates like "February 10th 2026" or "February 10, 2026" to ISO format like "2026-02-10T09:00:00Z". Use 9:00 AM (09:00) for exams, 11:59 PM (23:59) for deadlines if time not specified
+  - endTime: startTime + appropriate duration. For exams use 3 hours (add 3*60*60*1000ms), for meetings use 1 hour
+  - description: Include relevant details from document (e.g., "Math class final exam")
+- IMPORTANT: If user asks "can you add it?" or "yes, add it" or "go ahead" after you mentioned a date, create the calendarEvent immediately with the date you mentioned
+- Return calendarEvent in the response JSON - this is REQUIRED when user asks to add to calendar
+- If calendarEvent is created, confirm in aiResponse: "I've added [event name] to your calendar for [date]!"`
 
       console.log('Calling AI API with prompt length:', aiPrompt.length)
 
@@ -1281,10 +1283,41 @@ INSTRUCTIONS:
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://velora-production.up.railway.app/api/analyze'
       console.log('API URL being used:', apiUrl)
       console.log('Environment variable:', process.env.NEXT_PUBLIC_API_URL)
+      // Check if user is confirming/asking to add something from previous messages
+      const lowerMessage = messageContent.toLowerCase()
+      const isConfirmation = /^(yes|yeah|yep|okay|ok|sure|go ahead|add it|do it|please add|add to calendar)/i.test(messageContent.trim())
+      
+      // Look for dates in recent messages if this is a confirmation
+      let previousDateContext = ''
+      if (isConfirmation) {
+        // Check last 3 messages for dates mentioned
+        const recentMessages = messages.slice(-3)
+        for (const msg of recentMessages) {
+          if (msg.type === 'ai') {
+            // Extract date from AI's previous response (e.g., "February 10, 2026")
+            const dateMatch = msg.content.match(/(?:february|january|march|april|may|june|july|august|september|october|november|december)\s+\d{1,2}(?:st|nd|rd|th)?,?\s+\d{4}/i)
+            if (dateMatch) {
+              previousDateContext = `\n\nIMPORTANT: User is confirming to add an event. The date mentioned in previous message was: ${dateMatch[0]}. You MUST create a calendarEvent with this date.`
+              break
+            }
+            // Also check if there's a document analysis with a date
+            if (msg.analysis?.documentName) {
+              const docDateMatch = msg.content.match(/(?:february|january|march|april|may|june|july|august|september|october|november|december)\s+\d{1,2}(?:st|nd|rd|th)?,?\s+\d{4}/i)
+              if (docDateMatch) {
+                previousDateContext = `\n\nIMPORTANT: User is confirming to add an event from document. The date mentioned was: ${docDateMatch[0]}. You MUST create a calendarEvent with this date.`
+                break
+              }
+            }
+          }
+        }
+      }
+      
       // Prepare conversation history for context (limit to last 5 for performance)
-      const conversationHistory = messages.slice(-5).map(m => ({ 
+      // Include more context for confirmations
+      const historyLimit = isConfirmation ? 10 : 5
+      const conversationHistory = messages.slice(-historyLimit).map(m => ({ 
         role: m.type === 'user' ? 'user' : 'assistant', 
-        content: m.content.substring(0, 200) // Limit content length
+        content: m.content.substring(0, isConfirmation ? 500 : 200) // More context for confirmations
       }))
       
       // Retry logic with exponential backoff for reliability
@@ -1305,7 +1338,7 @@ INSTRUCTIONS:
             },
             signal: controller.signal,
             body: JSON.stringify({ 
-              content: messageContent + calendarContext + reminderContext,
+              content: messageContent + previousDateContext + calendarContext + reminderContext,
               conversationHistory: conversationHistory,
               relevantMemories: [...relevantMemories.slice(0, 3), ...recallInfo.memories.slice(0, 2)], // Limit to top 3+2
               recallSuggestions: recallInfo.suggestions.slice(0, 2), // Limit to top 2
