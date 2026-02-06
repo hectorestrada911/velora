@@ -1,0 +1,23 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    // Helper function to check if user is authenticated
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    // Helper function to check if user owns the file path
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+    
+    // Users can only access files in their own folder
+    match /users/{userId}/{fileName=**} {
+      // Allow read/write if user owns the folder
+      allow read, write: if isOwner(userId);
+      
+      // Allow create if user is authenticated and owns the folder
+      allow create: if isAuthenticated() && request.auth.uid == userId;
+    }
+  }
+}
