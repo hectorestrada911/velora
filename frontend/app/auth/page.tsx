@@ -426,16 +426,6 @@ export default function AuthPage() {
               </button>
               <button
                 onClick={() => {
-                  handleTryDemo()
-                  setIsMenuOpen(false)
-                }}
-                className="w-full text-left px-4 py-3 text-electric-400 hover:bg-gray-800 rounded-md transition-colors duration-200 flex items-center space-x-3"
-              >
-                <Sparkles className="w-4 h-4" />
-                <span>Try Demo</span>
-              </button>
-              <button
-                onClick={() => {
                   window.location.href = '/radar'
                   setIsMenuOpen(false)
                 }}
@@ -499,13 +489,6 @@ export default function AuthPage() {
               
               {/* Call-to-Action Buttons - Desktop */}
               <div className="flex items-center space-x-4">
-                <button
-                  onClick={handleTryDemo}
-                  className="bg-gradient-to-r from-electric-500 to-blue-500 hover:from-electric-400 hover:to-blue-400 text-white font-semibold py-3 px-8 rounded-lg transition-all duration-200 hover:scale-105 flex items-center justify-center space-x-2 text-lg border border-electric-500/30"
-                >
-                  <span>Try Demo</span>
-                  <ArrowRight className="w-5 h-5" />
-                </button>
                 <button
                   onClick={() => setAuthMode('login')}
                   className="bg-gray-800/50 hover:bg-gray-700/50 text-gray-300 font-semibold py-3 px-8 rounded-lg transition-all duration-200 hover:scale-105 flex items-center justify-center space-x-2 text-lg border border-gray-700/50"
@@ -747,15 +730,8 @@ export default function AuthPage() {
               className="flex flex-col space-y-4"
             >
               <button
-                onClick={handleTryDemo}
-                className="w-full bg-gradient-to-r from-electric-500 to-blue-500 hover:from-electric-400 hover:to-blue-400 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 hover:scale-105 flex items-center justify-center space-x-2 border border-electric-500/30"
-              >
-                <span>Try Demo</span>
-                <ArrowRight className="w-4 h-4" />
-              </button>
-              <button
                 onClick={() => setAuthMode('login')}
-                className="w-full bg-gray-800/50 hover:bg-gray-700/50 text-gray-300 font-semibold py-3 px-6 rounded-lg transition-all duration-200 hover:scale-105 flex items-center justify-center space-x-2 border border-gray-700/50"
+                className="w-full bg-gradient-to-r from-electric-500 to-blue-500 hover:from-electric-400 hover:to-blue-400 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 hover:scale-105 flex items-center justify-center space-x-2 border border-electric-500/30"
               >
                 <span>Sign In</span>
                 <ArrowRight className="w-4 h-4" />
@@ -1538,7 +1514,7 @@ export default function AuthPage() {
                   className="text-gray-400 hover:text-white font-medium py-2 px-4 transition-all duration-300 text-sm md:text-base group"
                 >
                   <span className="relative">
-                    Try Demo First
+                    Skip
                     <motion.div
                       className="absolute bottom-0 left-0 w-0 h-px bg-gradient-to-r from-electric-400 to-purple-400 group-hover:w-full transition-all duration-300"
                     />
@@ -1560,7 +1536,7 @@ export default function AuthPage() {
             onClick={handleSkip}
             className="text-gray-400 hover:text-white font-medium py-2 px-4 transition-colors duration-200 text-sm"
           >
-            Try Demo First
+            Skip
           </button>
         </motion.div>
         
