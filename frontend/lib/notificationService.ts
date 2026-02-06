@@ -381,8 +381,11 @@ class NotificationService {
     const hours = Math.floor(diff / (1000 * 60 * 60))
     const days = Math.floor(diff / (1000 * 60 * 60 * 24))
 
+    // Show minutes only if less than 60 minutes
     if (minutes < 60) return `${minutes} min ago`
+    // Show hours for 60+ minutes (e.g., 500 minutes = 8 hours ago)
     if (hours < 24) return `${hours} hour${hours > 1 ? 's' : ''} ago`
+    // Show days for 24+ hours
     return `${days} day${days > 1 ? 's' : ''} ago`
   }
 
