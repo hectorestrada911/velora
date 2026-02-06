@@ -377,16 +377,28 @@ class NotificationService {
   private getRelativeTime(date: Date): string {
     const now = new Date()
     const diff = now.getTime() - date.getTime()
-    const minutes = Math.floor(diff / (1000 * 60))
-    const hours = Math.floor(diff / (1000 * 60 * 60))
-    const days = Math.floor(diff / (1000 * 60 * 60 * 24))
+    const absDiff = Math.abs(diff)
+    const isFuture = diff < 0
+    
+    const minutes = Math.floor(absDiff / (1000 * 60))
+    const hours = Math.floor(absDiff / (1000 * 60 * 60))
+    const days = Math.floor(absDiff / (1000 * 60 * 60 * 24))
 
+    // Always use hours for 60+ minutes, regardless of past/future
+    if (hours >= 1) {
+      const timeStr = hours === 1 ? 'hour' : 'hours'
+      return isFuture ? `in ${hours} ${timeStr}` : `${hours} ${timeStr} ago`
+    }
+    
     // Show minutes only if less than 60 minutes
-    if (minutes < 60) return `${minutes} min ago`
-    // Show hours for 60+ minutes (e.g., 500 minutes = 8 hours ago)
-    if (hours < 24) return `${hours} hour${hours > 1 ? 's' : ''} ago`
+    if (minutes < 60) {
+      const timeStr = minutes === 1 ? 'min' : 'min'
+      return isFuture ? `in ${minutes} ${timeStr}` : `${minutes} ${timeStr} ago`
+    }
+    
     // Show days for 24+ hours
-    return `${days} day${days > 1 ? 's' : ''} ago`
+    const timeStr = days === 1 ? 'day' : 'days'
+    return isFuture ? `in ${days} ${timeStr}` : `${days} ${timeStr} ago`
   }
 
   private getOverdueTime(dueDate: string): string {
