@@ -529,7 +529,16 @@ ${content}
 
 ${memoryContext}${calendarContext}${reminderContext}
 
-Please analyze this document and respond to the user's request. If they didn't specify what they want, provide a helpful summary and ask what they'd like to do with the document.`
+INSTRUCTIONS:
+- Analyze the document and answer the user's question
+- If the user asks about dates (e.g., "when is the final exam?", "what's the deadline?", "when is the meeting?"), extract the date from the document
+- If a date is found and the user wants it added to calendar, create a calendarEvent with:
+  - title: Descriptive name (e.g., "Final Exam - [Course Name]" or "Deadline: [Assignment Name]")
+  - startTime: Date in ISO format (YYYY-MM-DDTHH:MM:SSZ), use reasonable time if not specified (e.g., 9:00 AM for exams, 11:59 PM for deadlines)
+  - endTime: startTime + appropriate duration (2-3 hours for exams, 1 hour for meetings)
+  - description: Relevant details from the document
+- If the user asks a question without requesting calendar creation, just answer the question (no calendarEvent)
+- Be helpful and extract the exact information requested`
 
       console.log('Calling AI API with prompt length:', aiPrompt.length)
 
@@ -564,7 +573,7 @@ Please analyze this document and respond to the user's request. If they didn't s
       const data = await response.json()
       console.log('AI API response received:', data)
       
-      // Create AI response
+      // Create AI response with full analysis data
       const aiMessage: Message = {
         id: Date.now().toString(),
         type: 'ai',
@@ -572,13 +581,26 @@ Please analyze this document and respond to the user's request. If they didn't s
         timestamp: new Date(),
         analysis: {
           type: 'document_analysis',
-          priority: data.importance || 'high',
+          priority: data.priority || data.importance || 'high',
           documentName: file.name,
-          summary: data.summary || data.aiResponse || 'Document analysis complete'
+          summary: data.summary || data.aiResponse || 'Document analysis complete',
+          calendarEvent: data.calendarEvent || null,
+          reminder: data.reminder || null
         }
       }
       
+      // Show AI response immediately
       setMessages(prev => [...prev, aiMessage])
+      
+      // Automatically create calendar event if one was found
+      if (data.calendarEvent) {
+        console.log('Creating calendar event from document analysis:', data.calendarEvent)
+        // Run in background so user sees response immediately
+        autoCreateFromMessage(data).catch(error => {
+          console.error('Background calendar creation error:', error)
+          toast.error('Failed to add event to calendar. Check console for details.')
+        })
+      }
       
       // Save to Firestore
       const firestoreMessage: Omit<FirestoreMessage, 'id' | 'timestamp'> = {
