@@ -34,17 +34,10 @@ export default function AuthPage() {
         return
       }
 
-      // Check if we're coming back from a redirect (URL might have auth params)
-      const urlParams = new URLSearchParams(window.location.search)
-      const hasAuthParams = urlParams.has('apiKey') || urlParams.has('authType')
-      
-      if (!hasAuthParams) {
-        console.log('No auth params in URL - not a redirect return')
-        return
-      }
-
+      // Always check for redirect result - Firebase stores it internally
+      // even if URL params aren't present
       setIsCheckingRedirect(true)
-      console.log('Checking for redirect result...', { hasAuthParams })
+      console.log('Checking for redirect result...')
 
       try {
         const result = await getRedirectResult(auth)
@@ -58,8 +51,9 @@ export default function AuthPage() {
           setIsCheckingRedirect(false)
           // Redirect to chat
           window.location.href = '/chat'
+          return
         } else {
-          console.log('⚠️ No redirect result found - user did not complete sign-in')
+          console.log('No redirect result found - user did not come from redirect flow')
           setIsCheckingRedirect(false)
         }
       } catch (error: any) {
@@ -69,6 +63,7 @@ export default function AuthPage() {
         setIsCheckingRedirect(false)
         
         // Show error toast for actual errors (not just "no redirect")
+        // auth/no-auth-event means no redirect happened, which is normal
         if (error.code && error.code !== 'auth/no-auth-event') {
           toast.error(`Sign-in error: ${error.message || 'Unknown error'}`)
           setIsLoading(false)
@@ -252,12 +247,15 @@ export default function AuthPage() {
           
           try {
             // Use redirect instead - this will navigate away from the page
+            // Firebase will redirect to Google, then back to this page
             await signInWithRedirect(auth, provider)
             // Note: signInWithRedirect will navigate away, so code after this won't run
             // The redirect result will be handled by the useEffect hook when user returns
+            // Don't set isLoading to false here - let the redirect happen
             return
           } catch (redirectError: any) {
             console.error('Redirect initiation error:', redirectError)
+            setIsLoading(false) // Only reset loading if redirect initiation fails
             throw redirectError
           }
         }
