@@ -50,17 +50,14 @@ export class DocumentService {
   private getCurrentUserId(): string {
     // Use the set user ID first, then fallback to auth.currentUser
     if (this.currentUserId && this.currentUserId !== 'current-user-id') {
-      console.log('DocumentService: Using set user ID:', this.currentUserId)
       return this.currentUserId
     }
     
     // Fallback to auth.currentUser
     if (auth && auth.currentUser) {
-      console.log('DocumentService: Using auth.currentUser ID:', auth.currentUser.uid)
       return auth.currentUser.uid
     }
     
-    console.log('DocumentService: No authenticated user, using fallback ID:', this.currentUserId)
     return this.currentUserId
   }
 

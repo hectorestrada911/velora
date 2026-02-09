@@ -359,19 +359,15 @@ export default function ChatPage() {
 
   const loadConversations = async () => {
     if (!user) {
-      console.log('loadConversations: No user, skipping')
       return
     }
     
-    console.log('loadConversations: Starting with user:', user.uid)
     setIsLoadingConversations(true)
     try {
       // Ensure firestoreService has the current user set
       firestoreService.setCurrentUser(user)
-      console.log('loadConversations: User set in firestoreService')
       
       const conversations = await firestoreService.getConversations()
-      console.log('loadConversations: Got conversations:', conversations.length)
       
       // Convert FirestoreConversation to Conversation format for compatibility
       const convertedConversations = conversations.map(conv => ({
@@ -389,7 +385,6 @@ export default function ChatPage() {
         userId: conv.userId
       }))
       setConversations(convertedConversations)
-      console.log('loadConversations: Successfully loaded', convertedConversations.length, 'conversations')
     } catch (error) {
       console.error('loadConversations: Error details:', {
         error,
@@ -399,10 +394,7 @@ export default function ChatPage() {
       })
       // Only show error toast if it's not a "no data" scenario
       if (ErrorHandler.shouldShowError(error, 'load-conversations')) {
-        console.log('loadConversations: Showing error toast')
         toast.error(ErrorHandler.getOperationErrorMessage('load-conversations', error))
-      } else {
-        console.log('loadConversations: Suppressing error (expected scenario)')
       }
     } finally {
       setIsLoadingConversations(false)
@@ -1281,8 +1273,6 @@ CRITICAL CRITICAL INSTRUCTIONS:
     try {
       // Call real AI backend
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://velora-production.up.railway.app/api/analyze'
-      console.log('API URL being used:', apiUrl)
-      console.log('Environment variable:', process.env.NEXT_PUBLIC_API_URL)
       // Check if user is confirming/asking to add something from previous messages
       const lowerMessage = messageContent.toLowerCase()
       const isConfirmation = /^(yes|yeah|yep|okay|ok|sure|go ahead|add it|do it|please add|add to calendar)/i.test(messageContent.trim())
@@ -1356,7 +1346,6 @@ CRITICAL CRITICAL INSTRUCTIONS:
           
           // Success - break out of retry loop
           const analysis = await response.json()
-          console.log('Analysis response:', analysis)
           
           // Show AI response IMMEDIATELY (don't wait for calendar creation or Firestore)
           const aiMessage: Message = {

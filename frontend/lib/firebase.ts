@@ -2,6 +2,7 @@ import { initializeApp, getApps } from 'firebase/app'
 import { getAuth, setPersistence, browserLocalPersistence } from 'firebase/auth'
 import { getFirestore, enableNetwork, disableNetwork } from 'firebase/firestore'
 import { getStorage } from 'firebase/storage'
+import { logger } from './logger'
 
 // Debug environment variables (removed for security)
 // console.log('Firebase API Key:', process.env.NEXT_PUBLIC_FIREBASE_API_KEY)
@@ -19,10 +20,10 @@ if (process.env.NEXT_PUBLIC_FIREBASE_API_KEY && process.env.NEXT_PUBLIC_FIREBASE
     appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
   }
   
-  console.log('Initializing Firebase with config:', firebaseConfig)
+  logger.log('Initializing Firebase with config:', firebaseConfig)
   app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0]
 } else {
-  console.log('Firebase not initialized - API key missing or demo key')
+  logger.log('Firebase not initialized - API key missing or demo key')
 }
 
 // Initialize Firebase services with fallback
