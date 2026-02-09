@@ -23,8 +23,11 @@ This project is organized into two main parts:
 Velora/
 ├── frontend/          # Next.js frontend application
 ├── backend/           # API routes and backend logic
+├── docs/              # Documentation and setup guides
 └── README.md          # This file
 ```
+
+📚 **Documentation**: All setup guides, troubleshooting docs, and feature documentation are in the [`docs/`](./docs/) folder. See [`docs/README.md`](./docs/README.md) for a complete index.
 
 ## 🚀 Quick Start
 

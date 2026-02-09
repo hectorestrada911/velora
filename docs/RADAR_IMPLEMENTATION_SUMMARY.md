@@ -368,7 +368,7 @@ SENDING_DOMAIN=mail.velora.cc
 
 ### 5. Email Provider
 
-Follow `RADAR_SETUP.md` for detailed Resend configuration.
+Follow `docs/RADAR_SETUP.md` for detailed Resend configuration.
 
 ---
 
@@ -397,8 +397,8 @@ Follow `RADAR_SETUP.md` for detailed Resend configuration.
 
 ### Documentation
 ```
-/RADAR_SETUP.md
-/RADAR_IMPLEMENTATION_SUMMARY.md (this file)
+/docs/RADAR_SETUP.md
+/docs/RADAR_IMPLEMENTATION_SUMMARY.md (this file)
 /README.md (updated with Radar feature)
 ```
 

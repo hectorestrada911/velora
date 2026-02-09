@@ -131,4 +131,4 @@
 
 ---
 
-**Full details**: See `VELORA_INTERVIEW_GUIDE.md`
+**Full details**: See `docs/VELORA_INTERVIEW_GUIDE.md`

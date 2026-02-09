@@ -87,7 +87,7 @@
 3. **Single deployment**: Railway (not globally distributed)
 4. **No pre-computed context**: Context built on every request
 
-### Future Improvements (See CHATGPT_SPEED_EXPLANATION.md)
+### Future Improvements (See `docs/CHATGPT_SPEED_EXPLANATION.md`)
 1. **Streaming responses** (Priority 1 - Biggest UX impact)
 2. **Response caching** (Priority 2)
 3. **Edge functions** (Priority 3)
