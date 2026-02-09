@@ -491,7 +491,7 @@ export default function AuthPage() {
               <div className="flex items-center space-x-4">
                 <button
                   onClick={() => setAuthMode('login')}
-                  className="bg-gray-800/50 hover:bg-gray-700/50 text-gray-300 font-semibold py-3 px-8 rounded-lg transition-all duration-200 hover:scale-105 flex items-center justify-center space-x-2 text-lg border border-gray-700/50"
+                  className="bg-gradient-to-r from-electric-500 via-blue-500 to-purple-500 hover:from-electric-400 hover:via-blue-400 hover:to-purple-400 text-white font-bold py-4 px-8 rounded-xl transition-all duration-200 hover:scale-105 flex items-center justify-center space-x-3 border-2 border-electric-400/50 shadow-lg shadow-electric-500/30 text-lg"
                 >
                   <span>Sign In</span>
                   <ArrowRight className="w-5 h-5" />
@@ -731,10 +731,10 @@ export default function AuthPage() {
             >
               <button
                 onClick={() => setAuthMode('login')}
-                className="w-full bg-gradient-to-r from-electric-500 to-blue-500 hover:from-electric-400 hover:to-blue-400 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 hover:scale-105 flex items-center justify-center space-x-2 border border-electric-500/30"
+                className="w-full bg-gradient-to-r from-electric-500 via-blue-500 to-purple-500 hover:from-electric-400 hover:via-blue-400 hover:to-purple-400 text-white font-bold py-4 px-8 rounded-xl transition-all duration-200 hover:scale-105 flex items-center justify-center space-x-3 border-2 border-electric-400/50 shadow-lg shadow-electric-500/30 text-lg"
               >
                 <span>Sign In</span>
-                <ArrowRight className="w-4 h-4" />
+                <ArrowRight className="w-5 h-5" />
               </button>
             </motion.div>
           </div>

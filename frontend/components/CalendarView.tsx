@@ -13,6 +13,20 @@ export default function CalendarView() {
   const [currentDate, setCurrentDate] = useState(new Date())
   const [events, setEvents] = useState<CalendarEvent[]>([])
   const [selectedDate, setSelectedDate] = useState<Date | null>(null)
+  
+  // Helper function to compare dates by year, month, day only (ignoring time)
+  const isSameDay = (date1: Date | null, date2: Date | null): boolean => {
+    if (!date1 || !date2) return false
+    return date1.getFullYear() === date2.getFullYear() &&
+           date1.getMonth() === date2.getMonth() &&
+           date1.getDate() === date2.getDate()
+  }
+  
+  // Get today's date (normalized to avoid timezone issues)
+  const getToday = (): Date => {
+    const now = new Date()
+    return new Date(now.getFullYear(), now.getMonth(), now.getDate())
+  }
   const [showAddEvent, setShowAddEvent] = useState(false)
   const [showEditEvent, setShowEditEvent] = useState(false)
   const [editingEvent, setEditingEvent] = useState<CalendarEvent | null>(null)
@@ -467,11 +481,11 @@ export default function CalendarView() {
                     className={`min-h-[100px] md:min-h-[140px] p-2 md:p-3 border rounded-lg md:rounded-xl transition-all duration-200 ${
                       day ? 'bg-gray-800 hover:bg-gray-700 cursor-pointer border-gray-600 hover:border-electric-500/50 hover:shadow-lg' : 'bg-transparent border-transparent'
                     } ${
-                      day && day.toDateString() === new Date().toDateString() 
+                      day && isSameDay(day, getToday())
                         ? 'ring-2 ring-electric-500 shadow-glow' 
                         : ''
                     } ${
-                      selectedDate && day && day.toDateString() === selectedDate.toDateString()
+                      selectedDate && day && isSameDay(day, selectedDate)
                         ? 'ring-2 ring-purple-500 bg-purple-500/10'
                         : ''
                     }`}
@@ -488,7 +502,7 @@ export default function CalendarView() {
                       <>
                         <div className="text-right mb-2">
                           <span className={`text-sm md:text-sm font-medium ${
-                            day.toDateString() === new Date().toDateString() 
+                            isSameDay(day, getToday())
                               ? 'text-electric-400' 
                               : 'text-gray-300'
                           }`}>
@@ -568,7 +582,7 @@ export default function CalendarView() {
                     whileHover={{ scale: 1.01 }}
                     whileTap={{ scale: 0.99 }}
                     className={`p-3 rounded-lg border transition-all duration-200 ${
-                      day.toDateString() === new Date().toDateString()
+                      isSameDay(day, getToday())
                         ? 'bg-electric-600/20 border-electric-500/50'
                         : 'bg-gray-800 border-gray-600'
                     }`}
@@ -577,14 +591,14 @@ export default function CalendarView() {
                     <div className="flex items-center justify-between mb-2">
                       <div className="flex items-center space-x-3">
                         <span className={`text-sm font-medium ${
-                          day.toDateString() === new Date().toDateString()
+                          isSameDay(day, getToday())
                             ? 'text-electric-400'
                             : 'text-gray-300'
                         }`}>
                           {day.toLocaleDateString('en-US', { weekday: 'short' })}
                         </span>
                         <span className={`text-lg font-bold ${
-                          day.toDateString() === new Date().toDateString()
+                          isSameDay(day, getToday())
                             ? 'text-electric-400'
                             : 'text-white'
                         }`}>
